@@ -4,3 +4,4 @@ openidl-mapper/referenceJson2.json
 **/node_modules
 openidl-mapper/schema/Hack_openIDL_Tier3.json
 openidl-insurance-data-manager/server/config/*.json
+openidl-secrets-manager/config/*.json
