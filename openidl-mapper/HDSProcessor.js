@@ -235,12 +235,58 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
     return structure
 }
 
+convertStringToFloat = (num) => {
+    if (num.length === 0) {
+        return 0
+    } else if (num.includes('.')) {
+        return parseFloat(num)
+    }
+    var code = num[num.length - 1]
+    var base = num.substring(0, num.length -1)
+    newLastDigit = numberTypeCode[code].digit
+    var multiplier = numberTypeCode[code].multiplier
+    return multiplier * parseFloat(base + newLastDigit) / 100
+}
+
+const numberTypeCode = {
+        "}": {"digit":"0","multiplier":-1},
+        "J": {"digit":"1","multiplier":-1},
+        "K": {"digit":"2","multiplier":-1},
+        "L": {"digit":"3","multiplier":-1},
+        "M": {"digit":"4","multiplier":-1},
+        "N": {"digit":"5","multiplier":-1},
+        "O": {"digit":"6","multiplier":-1},
+        "P": {"digit":"7","multiplier":-1},
+        "Q": {"digit":"8","multiplier":-1},
+        "R": {"digit":"9","multiplier":-1},
+        "0": {"digit":"0","multiplier":1},
+        "1": {"digit":"1","multiplier":1},
+        "2": {"digit":"2","multiplier":1},
+        "3": {"digit":"3","multiplier":1},
+        "4": {"digit":"4","multiplier":1},
+        "5": {"digit":"5","multiplier":1},
+        "6": {"digit":"6","multiplier":1},
+        "7": {"digit":"7","multiplier":1},
+        "8": {"digit":"8","multiplier":1},
+        "9": {"digit":"9","multiplier":1},
+        "{": {"digit":"0","multiplier":1},
+        "A": {"digit":"1","multiplier":1},
+        "B": {"digit":"2","multiplier":1},
+        "C": {"digit":"3","multiplier":1},
+        "D": {"digit":"4","multiplier":1},
+        "E": {"digit":"5","multiplier":1},
+        "F": {"digit":"6","multiplier":1},
+        "G": {"digit":"7","multiplier":1},
+        "H": {"digit":"8","multiplier":1},
+        "I": {"digit":"9","multiplier":1}
+    }
+
 module.exports.baseMapping = (flatJson, batchId, batchHash) => {
     var mapping = {
         mapTransactionCode: () => { return flatJson.transactionCode },
         mapLineOfInsurance: () => { return flatJson.lineOfInsurance },
         mapCompanyCode: () => { return flatJson.companyCode },
-        mapPremiumAmount: () => { return flatJson.premiumLossAmount ? parseInt(flatJson.premiumLossAmount.trim()) : null },
+        mapPremiumAmount: () => { return flatJson.premiumLossAmount ? convertStringToFloat(flatJson.premiumLossAmount.trim()) : null },
         mapExposureAmount: () => { return flatJson.exposureClaimCount ? parseInt(flatJson.exposureClaimCount.trim()) : null },
         mapClaimCount: () => { return flatJson.exposureClaimCount ? parseInt(flatJson.exposureClaimCount.trim()) : null },
         mapPremiumAccountingDate: () => { return flatJson.accountingDate ? convert4DigitDate(flatJson.accountingDate) : null },
