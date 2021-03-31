@@ -1,0 +1,14 @@
+# npm
+node_modules/**
+
+# Tests
+.nyc_output/**
+
+# IDE
+.vscode/**
+
+# OSX
+**/.DS_Store
+
+# fabric-network
+**/WALLETS/**
