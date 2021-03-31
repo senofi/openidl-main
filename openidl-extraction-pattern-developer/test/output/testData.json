@@ -1,0 +1,124 @@
+[
+    {
+        "batchId": "1111",
+        "chunkId": "0",
+        "carrierId": "9999",
+        "records": [
+            {
+                "policy": {
+                    "Line_of_insurance": {
+                        "Legacy_code": "49",
+                        "Name": "Businessowners"
+                    },
+                    "Company": {
+                        "Code": "9999",
+                        "Name": "AAIS-Test2"
+                    },
+                    "Policy_structure": {
+                        "Coverages": [
+                            {
+                                "TODO": "Need a way to identify which coverage",
+                                "Currency_payment": {
+                                    "Transaction_type": "Premium Statistical Transaction",
+                                    "Transaction_code": "1"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "policy": {
+                    "Line_of_insurance": {
+                        "Legacy_code": "49",
+                        "Name": "Businessowners"
+                    },
+                    "Company": {
+                        "Code": "9999",
+                        "Name": "AAIS-Test2"
+                    },
+                    "Policy_structure": {
+                        "Coverages": [
+                            {
+                                "TODO": "Need a way to identify which coverage",
+                                "Currency_payment": {
+                                    "Transaction_type": "Premium Statistical Transaction",
+                                    "Transaction_code": "8"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "policy": {
+                    "Line_of_insurance": {
+                        "Legacy_code": "49",
+                        "Name": "Businessowners"
+                    },
+                    "Company": {
+                        "Code": "9999",
+                        "Name": "AAIS-Test2"
+                    },
+                    "Policy_structure": {
+                        "Coverages": [
+                            {
+                                "TODO": "Need a way to identify which coverage",
+                                "Currency_payment": {
+                                    "Transaction_type": "Premium Statistical Transaction",
+                                    "Transaction_code": "9"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "policy": {
+                    "Line_of_insurance": {
+                        "Legacy_code": "49",
+                        "Name": "Businessowners"
+                    },
+                    "Company": {
+                        "Code": "9999",
+                        "Name": "AAIS-Test2"
+                    },
+                    "Policy_structure": {
+                        "Coverages": [
+                            {
+                                "TODO": "Need a way to identify which coverage",
+                                "Currency_payment": {
+                                    "Transaction_type": "Premium Statistical Transaction",
+                                    "Transaction_code": "1"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "policy": {
+                    "Line_of_insurance": {
+                        "Legacy_code": "49",
+                        "Name": "Businessowners"
+                    },
+                    "Company": {
+                        "Code": "9999",
+                        "Name": "AAIS-Test2"
+                    },
+                    "Policy_structure": {
+                        "Coverages": [
+                            {
+                                "TODO": "Need a way to identify which coverage",
+                                "Currency_payment": {
+                                    "Transaction_type": "Premium Statistical Transaction",
+                                    "Transaction_code": "8"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+]

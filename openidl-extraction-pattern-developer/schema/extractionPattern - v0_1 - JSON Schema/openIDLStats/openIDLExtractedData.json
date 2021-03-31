@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "openIDLExtractedData",
+    "description": "Valid format for data that is the result of an extraction pattern.",
+    "properties": {
+        "key": {
+            "type": "array",
+            "additionalItems": true,
+            "items": {
+                "type": "string"
+            }
+        },
+        "value": {
+            "type": "object",
+            "properties": {
+                "chunkid": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "chunkid"
+            ]
+        }
+    },
+    "required": [
+        "key",
+        "value"
+    ]
+}

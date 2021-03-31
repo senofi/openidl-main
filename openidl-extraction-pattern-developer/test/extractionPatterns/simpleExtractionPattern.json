@@ -1,0 +1,17 @@
+{
+  "$schema": "../../schema/extractionPattern - v0_1 - JSON Schema/openIDLStats/openIDLStatsExtractionPattern.json",
+    "extractionPatternID":"Pattern_01",
+    "extractionPatternName":"Insurance Claim Demo Version",
+    "description":"Sample description",
+    "viewDefinition":{
+      "map":"function map() {emit( this.policy.policyNumber, {'premium': this.policy.premium, 'limit':this.policy.limit})}",
+      "reduce":"function reduce(key,values) {var totals = {'premium':0,'limit':0}; for (value of values) {totals.premium += value.premium; totals.limit += value.limit}; return totals; }"
+    },
+    "dbType":"mongo",
+    "version":"1",
+    "isActive":true,
+    "effectiveStartTs":"2020-01-30T18:30:00Z",
+    "effectiveEndTs":"2022-01-30T18:30:00Z",
+    "updatedTs":"2020-07-16T06:13:41.571Z",
+    "updatedBy":"aaisstatagent@aais.com"
+}

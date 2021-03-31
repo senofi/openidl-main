@@ -1,0 +1,372 @@
+{
+    "modelName": "Extraction Pattern",
+    "collections": [
+        {
+            "collectionName": "openIDLStatsExtractionPattern",
+            "type": "object",
+            "properties": [
+                {
+                    "code": "",
+                    "type": "string",
+                    "primaryKey": false,
+                    "name": "extractionPatternID",
+                    "GUID": "29acee54-567a-11eb-b61f-d3a856a2ed25",
+                    "required": true,
+                    "isActivated": true,
+                    "sample": "Pattern_01",
+                    "description": "A unique identifier across all extraction patterns.\nFollow the naming convention:\nTBD"
+                },
+                {
+                    "code": "",
+                    "type": "string",
+                    "primaryKey": false,
+                    "name": "extractionPatternName",
+                    "GUID": "29acee55-567a-11eb-b61f-d3a856a2ed25",
+                    "required": true,
+                    "isActivated": true,
+                    "sample": "Insurance Claim Demo Version",
+                    "description": "A name that is unique across all extraction patterns.\nFollow the naming convention:\nTBD - something like: <purpose>-<version>"
+                },
+                {
+                    "code": "",
+                    "type": "string",
+                    "primaryKey": false,
+                    "name": "description",
+                    "GUID": "29acee51-567a-11eb-b61f-d3a856a2ed25",
+                    "required": true,
+                    "isActivated": true,
+                    "sample": "Sample description",
+                    "description": "Describes the extraction pattern.\nShould include sections:\n- purpose\n- author\n- expected input format\n- expected output format"
+                },
+                {
+                    "code": "",
+                    "type": "document",
+                    "primaryKey": false,
+                    "properties": [
+                        {
+                            "code": "",
+                            "type": "string",
+                            "primaryKey": false,
+                            "name": "map",
+                            "GUID": "29ad1565-567a-11eb-b61f-d3a856a2ed25",
+                            "required": true,
+                            "isActivated": true,
+                            "sample": "function map() {emit( this.policy.policyNumber, {'premium': this.policy.premium, 'limit':this.policy.limit})}",
+                            "description": "Javascript code to extract data from the expected input formatted data."
+                        },
+                        {
+                            "code": "",
+                            "type": "string",
+                            "primaryKey": false,
+                            "name": "reduce",
+                            "GUID": "29ad1566-567a-11eb-b61f-d3a856a2ed25",
+                            "required": true,
+                            "isActivated": true,
+                            "sample": "function reduce(key,values) {var totals = {'premium':0,'limit':0}; for (value of values) {totals.premium += value.premium; totals.limit += value.limit}; return totals; }",
+                            "description": "Javascript code to convert the mapped data into reduced data used for the reports."
+                        }
+                    ],
+                    "name": "viewDefinition",
+                    "GUID": "29ad1564-567a-11eb-b61f-d3a856a2ed25",
+                    "required": true,
+                    "isActivated": true,
+                    "description": "Container element for the map and reduce elements."
+                },
+                {
+                    "code": "",
+                    "type": "string",
+                    "primaryKey": false,
+                    "name": "dbType",
+                    "GUID": "29acee50-567a-11eb-b61f-d3a856a2ed25",
+                    "required": true,
+                    "isActivated": true,
+                    "sample": "mongo",
+                    "description": "The input database type.",
+                    "enum": [
+                        "mongo",
+                        "cloudant"
+                    ],
+                    "error": {
+                        "enum": false,
+                        "enums": [
+                            false,
+                            false
+                        ]
+                    }
+                },
+                {
+                    "code": "",
+                    "type": "string",
+                    "primaryKey": false,
+                    "name": "version",
+                    "GUID": "29ad1563-567a-11eb-b61f-d3a856a2ed25",
+                    "required": true,
+                    "isActivated": true,
+                    "sample": "1",
+                    "description": "A semantic version for the extraction pattern.\n<major>.<minor>.<patch>"
+                },
+                {
+                    "code": "",
+                    "type": "boolean",
+                    "primaryKey": false,
+                    "name": "isActive",
+                    "GUID": "29ad1560-567a-11eb-b61f-d3a856a2ed25",
+                    "required": true,
+                    "isActivated": true,
+                    "sample": true,
+                    "description": "Defines if this extraction pattern is active."
+                },
+                {
+                    "code": "",
+                    "type": "string",
+                    "primaryKey": false,
+                    "format": "date-time",
+                    "name": "effectiveStartTs",
+                    "GUID": "29acee53-567a-11eb-b61f-d3a856a2ed25",
+                    "required": true,
+                    "isActivated": true,
+                    "sample": "2020-01-30T18:30:00Z",
+                    "description": "Effective date of the extraction.  Is matched against the data to filter inputs.\nTBD - is this actually working?"
+                },
+                {
+                    "code": "",
+                    "type": "string",
+                    "primaryKey": false,
+                    "format": "date-time",
+                    "name": "effectiveEndTs",
+                    "GUID": "29acee52-567a-11eb-b61f-d3a856a2ed25",
+                    "required": true,
+                    "isActivated": true,
+                    "sample": "2022-01-30T18:30:00Z",
+                    "description": "Expiration date used to filter data.\nTBD - does this work?"
+                },
+                {
+                    "code": "",
+                    "type": "string",
+                    "primaryKey": false,
+                    "format": "date-time",
+                    "name": "updatedTs",
+                    "GUID": "29ad1562-567a-11eb-b61f-d3a856a2ed25",
+                    "required": true,
+                    "isActivated": true,
+                    "sample": "2020-07-16T06:13:41.571Z",
+                    "description": "Time stamp of last update."
+                },
+                {
+                    "code": "",
+                    "type": "string",
+                    "primaryKey": false,
+                    "name": "updatedBy",
+                    "GUID": "29ad1561-567a-11eb-b61f-d3a856a2ed25",
+                    "required": true,
+                    "isActivated": true,
+                    "sample": "aaisstatagent@aais.com",
+                    "description": "Identifier of last updater."
+                }
+            ],
+            "definitions": {
+                "GUID": "29c88ca0-567a-11eb-b61f-d3a856a2ed25",
+                "properties": [],
+                "type": "definitions"
+            },
+            "isActivated": true,
+            "GUID": "29c7f060-567a-11eb-b61f-d3a856a2ed25",
+            "code": "",
+            "hackoladeMeta": {},
+            "bucketId": "29cbe800-567a-11eb-b61f-d3a856a2ed25"
+        },
+        {
+            "collectionName": "openIDLExtractedData",
+            "type": "object",
+            "properties": [
+                {
+                    "type": "array",
+                    "properties": [
+                        {
+                            "type": "string",
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "GUID": "720a2600-5c32-11eb-8d2e-8b516bd073bc",
+                            "arrayItem": true,
+                            "arrayParentType": "array"
+                        }
+                    ],
+                    "additionalItems": true,
+                    "name": "key",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "GUID": "72014c60-5c32-11eb-8d2e-8b516bd073bc",
+                    "required": true
+                },
+                {
+                    "type": "document",
+                    "properties": [
+                        {
+                            "type": "string",
+                            "name": "chunkid",
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "GUID": "e56f7820-5c32-11eb-8d2e-8b516bd073bc",
+                            "required": true
+                        }
+                    ],
+                    "name": "value",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "GUID": "83ef4b70-5c32-11eb-8d2e-8b516bd073bc",
+                    "required": true
+                }
+            ],
+            "definitions": {
+                "type": "definitions",
+                "properties": [],
+                "GUID": "50f907b0-5c32-11eb-8d2e-8b516bd073bc"
+            },
+            "isActivated": true,
+            "GUID": "50efb8e0-5c32-11eb-8d2e-8b516bd073bc",
+            "bucketId": "29cbe800-567a-11eb-b61f-d3a856a2ed25",
+            "description": "Valid format for data that is the result of an extraction pattern."
+        }
+    ],
+    "buckets": [
+        {
+            "name": "openIDLStats",
+            "type": "bucket",
+            "collectionIds": [
+                "29c7f060-567a-11eb-b61f-d3a856a2ed25",
+                "50efb8e0-5c32-11eb-8d2e-8b516bd073bc"
+            ],
+            "backgroundColor": {
+                "r": 216,
+                "g": 0,
+                "b": 115,
+                "a": 1
+            },
+            "show": true,
+            "isActivated": true,
+            "GUID": "29cbe800-567a-11eb-b61f-d3a856a2ed25",
+            "code": "",
+            "hackoladeMeta": {}
+        }
+    ],
+    "views": [],
+    "relationships": [],
+    "users": [],
+    "diagramViews": [],
+    "idToNameHashTable": {
+        "29cbe800-567a-11eb-b61f-d3a856a2ed25": "openIDLStats",
+        "29acee54-567a-11eb-b61f-d3a856a2ed25": "extractionPatternID",
+        "29acee55-567a-11eb-b61f-d3a856a2ed25": "extractionPatternName",
+        "29acee51-567a-11eb-b61f-d3a856a2ed25": "description",
+        "29ad1564-567a-11eb-b61f-d3a856a2ed25": "viewDefinition",
+        "29ad1565-567a-11eb-b61f-d3a856a2ed25": "map",
+        "29ad1566-567a-11eb-b61f-d3a856a2ed25": "reduce",
+        "29acee50-567a-11eb-b61f-d3a856a2ed25": "dbType",
+        "29ad1563-567a-11eb-b61f-d3a856a2ed25": "version",
+        "29ad1560-567a-11eb-b61f-d3a856a2ed25": "isActive",
+        "29acee53-567a-11eb-b61f-d3a856a2ed25": "effectiveStartTs",
+        "29acee52-567a-11eb-b61f-d3a856a2ed25": "effectiveEndTs",
+        "29ad1562-567a-11eb-b61f-d3a856a2ed25": "updatedTs",
+        "29ad1561-567a-11eb-b61f-d3a856a2ed25": "updatedBy",
+        "29c7f060-567a-11eb-b61f-d3a856a2ed25": "openIDLStatsExtractionPattern",
+        "50efb8e0-5c32-11eb-8d2e-8b516bd073bc": "openIDLExtractedData",
+        "72014c60-5c32-11eb-8d2e-8b516bd073bc": "key",
+        "83ef4b70-5c32-11eb-8d2e-8b516bd073bc": "value",
+        "e56f7820-5c32-11eb-8d2e-8b516bd073bc": "chunkid"
+    },
+    "definitions": {
+        "type": "definitions",
+        "properties": [],
+        "GUID": "bf074fc1-5672-11eb-b61f-d3a856a2ed25"
+    },
+    "externalDefinitions": {
+        "type": "externalDefinitions",
+        "properties": [],
+        "GUID": "bf074fc2-5672-11eb-b61f-d3a856a2ed25"
+    },
+    "decorativeSymbols": [],
+    "dbVendor": "Plain JSON--no DB",
+    "appTarget": "JSON",
+    "creationTS": "2021-01-14T14:13:59.612Z",
+    "GUID": "bf074fc0-5672-11eb-b61f-d3a856a2ed25",
+    "hackoladeMeta": {
+        "validationErrors": {
+            "code": false
+        },
+        "customPropertiesUpdated": true
+    },
+    "code": "extractionPattern",
+    "description": "The extraction pattern is used to map reduce data from the harmonized data store into a data call.",
+    "author": "Ken Sayers",
+    "version": "0.1",
+    "lastModifTS": "2021-01-21T21:52:16.604Z",
+    "persistenceSchemaVersion": "4",
+    "isCreatedByPlugin": true,
+    "pluginInformation": {
+        "pluginEngineVersion": "1.0.0"
+    },
+    "applicationInformation": {
+        "version": "4.3.2"
+    },
+    "settings": {
+        "centralPane": {
+            "dbLevel": {
+                "erd": [
+                    {
+                        "GUID": "29c7f060-567a-11eb-b61f-d3a856a2ed25",
+                        "x": 90,
+                        "y": 230,
+                        "width": 314,
+                        "height": 211,
+                        "color": {}
+                    },
+                    {
+                        "GUID": "50efb8e0-5c32-11eb-8d2e-8b516bd073bc",
+                        "x": 40,
+                        "y": 40,
+                        "width": 249,
+                        "height": 89,
+                        "color": {}
+                    }
+                ],
+                "buckets": [
+                    {
+                        "x": 50,
+                        "y": 190,
+                        "GUID": "29cbe800-567a-11eb-b61f-d3a856a2ed25"
+                    }
+                ],
+                "collapsedNodes": [],
+                "activeRelationship": "",
+                "activeRelationshipFields": {
+                    "childField": [],
+                    "parentField": []
+                },
+                "selectedCollections": [],
+                "displayColorPicker": false,
+                "graphView": {
+                    "erd": [],
+                    "buckets": [],
+                    "decorativeSymbols": [],
+                    "hideRelationshipName": false,
+                    "showPropertiesBoxes": false,
+                    "nameAlongTheLine": false,
+                    "forceLayout": true,
+                    "defaultLinkLength": 300
+                },
+                "diagramViews": [],
+                "decorativeSymbols": [],
+                "nestedCollectionsLayout": "horizontal",
+                "options": []
+            },
+            "collectionLevel": {},
+            "changed": false
+        },
+        "dtDiagram": {
+            "collapsedNodes": [],
+            "details": true,
+            "hideErdDetails": false,
+            "shouldDistributeCollections": false
+        }
+    }
+}

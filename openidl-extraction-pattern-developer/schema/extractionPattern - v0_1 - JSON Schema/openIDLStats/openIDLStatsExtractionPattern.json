@@ -1,0 +1,85 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "openIDLStatsExtractionPattern",
+    "properties": {
+        "extractionPatternID": {
+            "type": "string",
+            "description": "A unique identifier across all extraction patterns.\nFollow the naming convention:\nTBD"
+        },
+        "extractionPatternName": {
+            "type": "string",
+            "description": "A name that is unique across all extraction patterns.\nFollow the naming convention:\nTBD - something like: <purpose>-<version>"
+        },
+        "description": {
+            "type": "string",
+            "description": "Describes the extraction pattern.\nShould include sections:\n- purpose\n- author\n- expected input format\n- expected output format"
+        },
+        "viewDefinition": {
+            "type": "object",
+            "description": "Container element for the map and reduce elements.",
+            "properties": {
+                "map": {
+                    "type": "string",
+                    "description": "Javascript code to extract data from the expected input formatted data."
+                },
+                "reduce": {
+                    "type": "string",
+                    "description": "Javascript code to convert the mapped data into reduced data used for the reports."
+                }
+            },
+            "required": [
+                "map",
+                "reduce"
+            ]
+        },
+        "dbType": {
+            "type": "string",
+            "description": "The input database type.",
+            "enum": [
+                "mongo",
+                "cloudant"
+            ]
+        },
+        "version": {
+            "type": "string",
+            "description": "A semantic version for the extraction pattern.\n<major>.<minor>.<patch>"
+        },
+        "isActive": {
+            "type": "boolean",
+            "description": "Defines if this extraction pattern is active."
+        },
+        "effectiveStartTs": {
+            "type": "string",
+            "description": "Effective date of the extraction.  Is matched against the data to filter inputs.\nTBD - is this actually working?",
+            "format": "date-time"
+        },
+        "effectiveEndTs": {
+            "type": "string",
+            "description": "Expiration date used to filter data.\nTBD - does this work?",
+            "format": "date-time"
+        },
+        "updatedTs": {
+            "type": "string",
+            "description": "Time stamp of last update.",
+            "format": "date-time"
+        },
+        "updatedBy": {
+            "type": "string",
+            "description": "Identifier of last updater."
+        }
+    },
+    "required": [
+        "extractionPatternID",
+        "extractionPatternName",
+        "description",
+        "viewDefinition",
+        "dbType",
+        "version",
+        "isActive",
+        "effectiveStartTs",
+        "effectiveEndTs",
+        "updatedTs",
+        "updatedBy"
+    ]
+}

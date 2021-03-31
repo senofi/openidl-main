@@ -1,0 +1,65 @@
+[
+    {
+        "policy" : {
+            "policyNumber" : "00000001",
+            "premium" : 100,
+            "limit" : 100000,
+            "coverages" : [
+                {
+                    "name": "Business Interrupation",
+                    "code": "BI",
+                    "limit": 10000
+                }
+            ]
+        }
+    },
+    {
+        "policy" : {
+            "policyNumber" : "00000002",
+            "premium" : 100,
+            "limit" : 100000
+        }
+    },
+    {
+        "policy" : {
+            "policyNumber" : "00000002",
+            "premium" : 100,
+            "limit" : 100000
+        }
+    },
+    {
+        "policy" : {
+            "policyNumber" : "00000002",
+            "premium" : 100,
+            "limit" : 100000
+        }
+    },
+    {
+        "policy" : {
+            "policyNumber" : "00000003",
+            "premium" : 100,
+            "limit" : 100000
+        }
+    },
+    {
+        "policy" : {
+            "policyNumber" : "00000003",
+            "premium" : 100,
+            "limit" : 100000
+        }
+    },
+    {
+        "policy" : {
+            "policyNumber" : "00000003",
+            "premium" : 100,
+            "limit" : 100000
+        }
+    },
+    {
+        "policy" : {
+            "policyNumber" : "00000003",
+            "premium" : 100,
+            "limit" : 100000
+        }
+    }
+]
