@@ -1,0 +1,26 @@
+{
+    "off-chain-db-credentials": {
+        "searchPatterns": [
+            "cloudfoundry:off-chain-db",
+            "env:OFF_CHAIN_DB_CONFIG",
+            "file:/server/config/local-cloudant-config.json"
+        ]
+    },
+    "off-chain-db-credentials-mongo": {
+        "searchPatterns": [
+            "file:/server/config/local-mongo-config.json"
+        ]
+    },
+    "appid-credentials": {
+        "searchPatterns": [
+            "env:APPID_CONFIG",
+            "file:/server/config/local-appid-config.json"
+        ]
+    },
+    "IBM-certificate-manager-credentials": {
+        "searchPatterns": [
+            "env:IBM_CERTIFICATE_MANAGER_CONFIG",
+            "file:/server/config/local-certmanager-config.json"
+        ]
+    }
+}

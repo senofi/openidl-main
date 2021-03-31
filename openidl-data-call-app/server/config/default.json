@@ -1,0 +1,7 @@
+{
+  "logLevel": "debug",
+  "host": "localhost",
+  "port": "8080",
+  "timeout": 20000,
+  "targetDB": "carriers_db"
+}

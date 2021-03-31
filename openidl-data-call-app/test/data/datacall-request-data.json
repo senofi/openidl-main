@@ -1,0 +1,31 @@
+  {
+    "deadline": "2018-11-19T18:30:00.000Z",
+
+    "description": "description",
+
+    "detailedCriteria": "detailedCriteria",
+
+    "eligibilityRequirement": "eligibilityRequirement",
+
+    "intentToPublish": true,
+
+    "isShowParticipants": true,
+
+    "jurisdiction": "Ohio",
+
+    "lineOfBusiness": "Commercial",
+
+    "lossFromDate": "2018-11-14T18:30:00.000Z",
+
+    "lossToDate": "2018-11-26T18:30:00.000Z",
+
+    "name": "DataCall integration test",
+
+    "premiumFromDate": "2017-12-31T18:30:00.000Z",
+
+    "premiumToDate": "2018-12-30T18:30:00.000Z",
+
+    "purpose": "purpose",
+
+    "status": "DRAFT"
+  }
