@@ -1,0 +1,2 @@
+<app-header [selected]='selected' [fieldChanged] = 'hasFieldChanged'></app-header>
+<app-form (create)='redirect()' (fieldChangeEvent)='fieldChange()' [isClone] = 'isClone'></app-form>
