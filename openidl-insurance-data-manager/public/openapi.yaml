@@ -1,0 +1,241 @@
+openapi: '3.0.0'
+info:
+  title: 'OpenIDL Insurance Data Manager API(s)'
+  version: '1.0.0'
+  description: >-
+    > This interface enables the testers to quickly test the API(s) developed by the Dev Team. If you dont have your token  then first generate the token.
+    for testing the API(S).
+  
+paths:
+ 
+  "/openidl/api/health":
+    get:
+      tags:
+      - Monitor Health
+
+      operationId: monitorHealth
+      summary: Get health status of app
+      description: Get health status of app
+      responses:
+        default:
+          description: Health check response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  status:
+                    type: string
+                    example: "UP"
+                  message:
+                    type: string
+                    example: "Server is up!"
+      security:
+      - bearerAuth: []
+
+  "/openidl/api/ping":
+    get:
+      summary: Get ping status of fabric network
+      tags:
+      - Test Ping
+      description: Get ping status of fabric network
+      responses:
+        default:
+          description: Ping Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  result:
+                    type: string
+                    example: "Ping OK"
+
+      security:
+      - bearerAuth: []
+    
+  "/openidl/api/load-insurance-data":
+    post:
+      tags:
+        - Stores Insurance data into HDS and  Hash value into Blockchain
+      description: Stores Insurance data into HDS, the respective stored data into Blockchain as hash.
+      summary: Stores Insurance data into HDS, the respective stored data into Blockchain as hash.
+      responses:
+        '200':
+          description: 'Stores Insurance data into HDS, the respective stored data into Blockchain as hash'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/postResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/insuranceData'
+
+        required: true
+      security:
+      - bearerAuth: []
+
+  "/openidl/api/sendemail":
+    post:
+      tags:
+        - Send Email
+      description: Email will be send the configured user in the system for the specific service type.
+      summary: Email will be send the configured user in the system for the specific service type.
+      responses:
+        '200':
+          description: 'Email Sent Successfully'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/postResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailData'
+
+        required: true
+      security:
+      - bearerAuth: []
+
+  "/openidl/api/ins-data-hds-err":
+    post:
+      tags:
+        - Stores Error Insurance Data in HDS
+      description: Stores error insurance data in HDS.
+      summary: Stores error insurance data hash in HDS.
+      responses:
+        '200':
+          description: 'Stores error insurance data hash in HDS'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/postResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/insuranceDataHDSError'
+
+        required: true
+      security:
+      - bearerAuth: []
+
+components:
+  schemas:
+
+    "emailData":
+      type: object
+      properties:
+        serviceType:
+          type: string
+          example: "DBDOWN"
+        bodycontent: 
+          type: string
+          example: "MongoDB is down. Please reach out to cirtical support team"
+
+    "insuranceDataHDSError":
+      type: object
+      properties:
+        batchId:
+          type: string
+          example: "0t8y7-ad67-6578-cfhdgsnsjde3"
+        carrierId: 
+          type: string
+          example: "0000"
+        batchHash: 
+          type: string
+          example: "yagja6-bdt56-yeebndhj56jd0n-98vcdf"
+        lineOfInsurance:
+          type: string
+          example: "test"
+        lineOfInsuranceDesc:
+          type: string
+          example: "test"
+        companyCode:
+          type: string
+          example: "test"
+
+
+    "insuranceDataHDS":
+      type: object
+      properties:
+        batchId:
+          type: string
+          example: "1234-ad67-6578-cfhdgsnsjde3"
+        carrierId: 
+          type: string
+          example: "0000"
+        batchHash: 
+          type: string
+          example: "4373h-bdt56-yeebndhj56jd0n-98vcdf"
+        lineOfInsurance:
+          type: string
+          example: "test"
+        lineOfInsuranceDesc:
+          type: string
+          example: "test"
+        companyCode:
+          type: string
+          example: "test"
+
+    "insuranceDataHash":
+      type: object
+      properties:
+        batchId:
+          type: string
+          example: "1234-ad67-6578-cfhdgsnsjde3"
+        carrierId: 
+          type: string
+          example: "0000"
+        hash: 
+          type: string
+          example: "4373h-bdt56-yeebndhj56jd0n-98vcdf"
+          
+    "insuranceData":
+      type: object
+      properties:     
+        batchId:        
+          type: string
+          example: "2020-08-27 14:11:56BP_100K_1.txt"
+        chunkId:        
+          type: string
+          example: "dfa35a84-a9af-4b07-9194-2b98cdf8b74b"
+        carrierId:        
+          type: string
+          example: "00002"
+        records:
+          $ref: '#/components/schemas/record'          
+
+    "record":
+      type: array
+      items:
+        type: object
+        
+                              
+    
+               
+    "postResponse":
+      type: object
+      description: This represents transaction submission response format
+      properties:
+        success:
+          type: string
+          example: "true"
+        message: 
+          type: string
+          example: "OK"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

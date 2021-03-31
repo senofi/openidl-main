@@ -1,0 +1,526 @@
+{
+    "batchId": "2020-08-27 14:11:56BP_100K_1.txt",
+    "chunkId": "dfa35a84-a9af-4b07-9194-2b98cdf8b74b",
+    "carrierId": "11111",
+    "records": [
+      {
+      "agrmnt" : {
+          "bsnssActvty" : [ 
+              {
+                  "enmTyp" : null,
+                  "indstryCd" : "1234",
+                  "nm" : null,
+                  "oid" : "sic"
+              }
+          ],
+          "cmmrclAgrmnt" : [ 
+              {
+                  "enmTyp" : "",
+                  "nm" : "",
+                  "oid" : "policyNum"
+              }
+          ],
+          "fnnclSrvcsAgrmntGrp" : [ 
+              {
+                  "enmTyp" : "",
+                  "extrnlRfrnc" : "",
+                  "nm" : "",
+                  "oid" : "pool"
+              }
+          ],
+          "gnrcMnyPrvsn" : [ 
+              {
+                  "mnyPrvsnDtrmnr" : [ 
+                      {
+                          "enmTyp" : "",
+                          "extrnlRfrnc" : "",
+                          "nm" : "",
+                          "oid" : "moneyProvisionDeterminerAgreement"
+                      }
+                  ],
+                  "oid" : "genericMoneyProvisionAgreement"
+              }
+          ],
+          "indvdlAgrmnt" : [ 
+              {
+                  "cnsntToRt" : "",
+                  "oid" : "cnsntToRt"
+              }, 
+              {
+                  "enmTyp" : "",
+                  "nm" : "",
+                  "oid" : "policyNum"
+              }, 
+              {
+                  "oid" : "stExcs",
+                  "sttExcptns" : [ 
+                      {
+                          "extrnlRfrnc" : "",
+                          "oid" : "stExc"
+                      }, 
+                      {
+                          "extrnlRfrnc" : "",
+                          "oid" : "stExcA"
+                      }, 
+                      {
+                          "extrnlRfrnc" : "",
+                          "oid" : "stExcC"
+                      }, 
+                      {
+                          "extrnlRfrnc" : "",
+                          "oid" : "stExcB"
+                      }
+                  ]
+              }
+          ],
+          "oid" : "agreement",
+          "othrCtgry" : [ 
+              {
+                  "enmTyp" : "Number of Employees",
+                  "mxmmSz" : "20",
+                  "oid" : "numEmp"
+              }, 
+              {
+                  "enmTyp" : "",
+                  "extrnlRfrnc" : "",
+                  "nm" : "",
+                  "oid" : "progCd"
+              }
+          ],
+          "othrRgstrtn" : [ 
+              {
+                  "enmTyp" : null,
+                  "extrnlRfrnc" : "010",
+                  "nm" : null,
+                  "oid" : "asl"
+              }, 
+              {
+                  "enmTyp" : null,
+                  "extrnlRfrnc" : "7777",
+                  "nm" : null,
+                  "oid" : "companyCode"
+              }, 
+              {
+                  "enmTyp" : "Tax ID",
+                  "extrnlRfrnc" : "123456789",
+                  "oid" : "taxID"
+              }
+          ],
+          "plc" : [ 
+              {
+                  "addrss" : "45 Turnpike Road                                                                                                                                      ",
+                  "oid" : "address"
+              }
+          ],
+          "prdctGrp" : [ 
+              {
+                  "enmTyp" : null,
+                  "extrnlRfrnc" : "49",
+                  "nm" : null,
+                  "oid" : "line"
+              }
+          ],
+          "prlCtgry" : [ 
+              {
+                  "enmTyp" : "",
+                  "extrnlRfrnc" : "",
+                  "nm" : "",
+                  "oid" : "majorPeril"
+              }, 
+              {
+                  "awyFrmPrmssThftPrtctnTyp" : "",
+                  "ddctblTyp" : [ 
+                      {
+                          "enmTyp" : "",
+                          "extrnlRfrnc" : "",
+                          "nm" : "",
+                          "oid" : "dedType"
+                      }
+                  ],
+                  "gnrcMnyPrvsn" : [ 
+                      {
+                          "mnyPrvsnDtrmnr" : [ 
+                              {
+                                  "enmTyp" : "",
+                                  "extrnlRfrnc" : "",
+                                  "nm" : "",
+                                  "oid" : "moneyProvisionDeterminerPeril"
+                              }
+                          ],
+                          "oid" : "genericMoneyProvisionPeril"
+                      }
+                  ],
+                  "oid" : "agreementPC",
+                  "wndHlCvrgStts" : ""
+              }
+          ],
+          "prtclrMnyPrvsn" : [ 
+              {
+                  "mnyPrvsnCshFlw" : [ 
+                      {
+                          "mnyPrvsnPrt" : [ 
+                              {
+                                  "accntSttmnt" : [ 
+                                      {
+                                          "oid" : "accountStatement",
+                                          "prdStrtDt" : ""
+                                      }
+                                  ],
+                                  "amnt" : "",
+                                  "enmTyp" : "",
+                                  "fnnclTrnsctn" : [ 
+                                      {
+                                          "enmTyp" : "",
+                                          "extrnlRfrnc" : "",
+                                          "nm" : "",
+                                          "oid" : "financialTransaction"
+                                      }
+                                  ],
+                                  "mnthsCvrd" : [ 
+                                      {
+                                          "enmTyp" : "",
+                                          "extrnlRfrnc" : "",
+                                          "nm" : "",
+                                          "oid" : "monthsCoveredPol"
+                                      }
+                                  ],
+                                  "oid" : "moneyProvisionPart"
+                              }
+                          ],
+                          "oid" : "moneyProvisionCashFlow"
+                      }
+                  ],
+                  "oid" : "particularMoneyProvision"
+              }
+          ],
+          "stndrdTxtSpcfctn" : [ 
+              {
+                  "cmpstTxtBlck" : [ 
+                      {
+                          "enmTyp" : "",
+                          "extrnlRfrnc" : "",
+                          "nm" : "",
+                          "oid" : "compositeTextBlock",
+                          "plcyCvrgs" : [ 
+                              {
+                                  "cvrgFlg" : false,
+                                  "enmTyp" : null,
+                                  "oid" : "pcVE"
+                              }, 
+                              {
+                                  "cvrgFlg" : false,
+                                  "enmTyp" : null,
+                                  "oid" : "pcPD"
+                              }, 
+                              {
+                                  "cvrgFlg" : false,
+                                  "enmTyp" : null,
+                                  "oid" : "pcBI"
+                              }
+                          ],
+                          "plcyFrmEdtn" : "PFE123456"
+                      }
+                  ],
+                  "oid" : "standardTextSpecification"
+              }
+          ],
+          "strctrlCmpnnt" : [ 
+              {
+                  "cvrgCmpnnt" : [ 
+                      {
+                          "enmTyp" : "",
+                          "expsrAmnt" : "",
+                          "extrnlRfrnc" : "",
+                          "gnrcMnyPrvsn" : [ 
+                              {
+                                  "mnyPrvsnDtrmnr" : [ 
+                                      {
+                                          "amnt" : "",
+                                          "enmTyp" : "",
+                                          "extrnlRfrnc" : "",
+                                          "oid" : "moneyProvisionDeterminerCoverage"
+                                      }
+                                  ],
+                                  "oid" : "genericMoneyProvisionCoverage"
+                              }
+                          ],
+                          "nm" : "",
+                          "oid" : "agreementCoverageComponant",
+                          "prtclrMnyPrvsn" : [ 
+                              {
+                                  "mnyPrvsnCshFlw" : [ 
+                                      {
+                                          "mnyPrvsnPrt" : [ 
+                                              {
+                                                  "accntSttmnt" : [ 
+                                                      {
+                                                          "oid" : "accountStatement",
+                                                          "prdStrtDt" : ""
+                                                      }
+                                                  ],
+                                                  "amnt" : "",
+                                                  "enmTyp" : "",
+                                                  "fnnclTrnsctn" : [ 
+                                                      {
+                                                          "enmTyp" : "",
+                                                          "extrnlRfrnc" : "",
+                                                          "nm" : "",
+                                                          "oid" : "financialTransaction"
+                                                      }
+                                                  ],
+                                                  "mnthsCvrd" : [ 
+                                                      {
+                                                          "enmTyp" : "",
+                                                          "extrnlRfrnc" : "",
+                                                          "nm" : "",
+                                                          "oid" : "monthsCoveredCov"
+                                                      }
+                                                  ],
+                                                  "oid" : "moneyProvisionPart"
+                                              }
+                                          ],
+                                          "oid" : "moneyProvisionCashFlow"
+                                      }
+                                  ],
+                                  "oid" : "particularMoneyProvision"
+                              }
+                          ],
+                          "rskExpsr" : [ 
+                              {
+                                  "enmTyp" : null,
+                                  "extrnlRfrnc" : "99903",
+                                  "lssSttlmntIndctr" : [ 
+                                      {
+                                          "ctgry" : "",
+                                          "enmTyp" : "",
+                                          "extrnlRfrnc" : "",
+                                          "oid" : "lossSettlementInd"
+                                      }
+                                  ],
+                                  "nm" : null,
+                                  "oid" : "riskExposure",
+                                  "sttlmnt" : ""
+                              }
+                          ],
+                          "stndrdTxtSpcfctn" : [ 
+                              {
+                                  "cmpstTxtBlck" : [ 
+                                      {
+                                          "enmTyp" : null,
+                                          "extrnlRfrnc" : "14",
+                                          "nm" : null,
+                                          "oid" : "compositeTextBlock"
+                                      }
+                                  ],
+                                  "oid" : "standardTextSpecification"
+                              }
+                          ]
+                      }
+                  ],
+                  "hrrcnExclsnEndrsmntSttsTyp" : "",
+                  "ldLbltyExclsnSttsTyp" : "",
+                  "oid" : "agreementStructural",
+                  "physclObjct" : [ 
+                      {
+                          "oid" : "agreementPhysicalObject",
+                          "strctr" : [ 
+                              {
+                                  "cnstrctnDt" : "",
+                                  "cnstrctnTyp" : "",
+                                  "cnstrctnYrBnd" : "",
+                                  "dsgnStyl" : "",
+                                  "inspctn" : "",
+                                  "ldLbltyIntrmCntrlLttr" : "",
+                                  "ldLbltyUntCnt" : "",
+                                  "ldPsnngLbltyStts" : "",
+                                  "occpncyTyp" : "",
+                                  "oid" : "agreementStructure",
+                                  "prtctnClss" : "",
+                                  "rfCvrngCttgry" : "",
+                                  "rfDckAttchmntTyp" : "",
+                                  "rfDckIntrnlPrssrDsgnTyp" : "",
+                                  "rfDckMtrl" : "",
+                                  "rfDckMxmmWndSpd" : "",
+                                  "rfShpTyp" : "",
+                                  "rfToWllCnnctnTyp" : "",
+                                  "rnvtnDt" : "",
+                                  "scndryWtrRsstncRfIndctr" : "",
+                                  "sndryLssMtgtnBldngFtrTyp" : "",
+                                  "strctrCds" : [ 
+                                      {
+                                          "enmTyp" : "",
+                                          "extrnlRfrnc" : "",
+                                          "oid" : "occupancy"
+                                      }, 
+                                      {
+                                          "ctgry" : "",
+                                          "enmTyp" : "",
+                                          "extrnlRfrnc" : "",
+                                          "oid" : "numFam"
+                                      }, 
+                                      {
+                                          "ctgry" : "",
+                                          "enmTyp" : "",
+                                          "extrnlRfrnc" : "",
+                                          "oid" : "fireProt"
+                                      }, 
+                                      {
+                                          "enmTyp" : "",
+                                          "extrnlRfrnc" : "",
+                                          "oid" : "cnstrctnCd"
+                                      }
+                                  ],
+                                  "strmShttrsPrsnt" : "",
+                                  "wndBrnDbrsIndctr" : "",
+                                  "wndLssMtgtnFtrTyp" : "",
+                                  "wndRsstncOpnngPrtctn" : "",
+                                  "wndstrmPrtctvDvc" : ""
+                              }
+                          ]
+                      }
+                  ],
+                  "plc" : [ 
+                      {
+                          "ggrphcArea" : [ 
+                              {
+                                  "ggrphcAreaCds" : [ 
+                                      {
+                                          "enmTyp" : "",
+                                          "extrnlRfrnc" : "",
+                                          "oid" : "cty"
+                                      }, 
+                                      {
+                                          "abbrvtn" : null,
+                                          "enmTyp" : null,
+                                          "extrnlRfrnc" : "01",
+                                          "oid" : "st"
+                                      }
+                                  ],
+                                  "oid" : "agreementGeoArea",
+                                  "pstlCd" : "06040",
+                                  "rgn" : null,
+                                  "sbrgn" : ""
+                              }
+                          ],
+                          "oid" : "agreementPlace"
+                      }
+                  ],
+                  "plcAssssmnt" : [ 
+                      {
+                          "bldngCdEffctvnssGrd" : [ 
+                              {
+                                  "ctgry" : "",
+                                  "enmTyp" : "",
+                                  "extrnlRfrnc" : "",
+                                  "oid" : "agreementPABCEG"
+                              }
+                          ],
+                          "oid" : "agreementPA",
+                          "stndrdsClssfctn" : ""
+                      }
+                  ],
+                  "wrpArndEndrsmntSttsIndctr" : ""
+              }
+          ]
+      },
+      "clm" : {
+          "clmFldr" : [ 
+              {
+                  "elmntryClm" : [ 
+                      {
+                          "clmOffr" : [ 
+                              {
+                                  "lssSttlmntIndctr" : [ 
+                                      {
+                                          "ctgry" : "",
+                                          "enmTyp" : "",
+                                          "extrnlRfrnc" : "",
+                                          "oid" : "lossSettlementIndLoss"
+                                      }
+                                  ],
+                                  "oid" : "claimOffer",
+                                  "pymnt" : [ 
+                                      {
+                                          "amnt" : 95.67,
+                                          "enmTyp" : "Paid Loss Amount",
+                                          "oid" : "paidLoss"
+                                      }
+                                  ],
+                                  "sttlmntMthd" : ""
+                              }
+                          ],
+                          "enmTyp" : "Claim ID",
+                          "evnt" : [ 
+                              {
+                                  "csOfLss" : [ 
+                                      {
+                                          "ctgry" : null,
+                                          "enmTyp" : null,
+                                          "extrnlRfrnc" : "50",
+                                          "oid" : "elemClaimEventCOL"
+                                      }
+                                  ],
+                                  "lssEvntCtgry" : null,
+                                  "oid" : "elementaryClaimEvent"
+                              }
+                          ],
+                          "nm" : "  ",
+                          "oid" : "elementaryClaimListItem",
+                          "prtclrMnyPrvsn" : [ 
+                              {
+                                  "mnyPrvsnCshFlw" : [ 
+                                      {
+                                          "mnyPrvsnPrt" : [ 
+                                              {
+                                                  "accntSttmnt" : [ 
+                                                      {
+                                                          "oid" : "claimAS",
+                                                          "prdStrtDt" : "01/2009"
+                                                      }
+                                                  ],
+                                                  "amnt" : "",
+                                                  "clmsCnt" : 1,
+                                                  "enmTyp" : "",
+                                                  "fnnclTrnsctn" : [ 
+                                                      {
+                                                          "enmTyp" : null,
+                                                          "extrnlRfrnc" : "2",
+                                                          "nm" : null,
+                                                          "oid" : "claimFT"
+                                                      }
+                                                  ],
+                                                  "oid" : "claimMPP"
+                                              }
+                                          ],
+                                          "oid" : "claimMPCF"
+                                      }
+                                  ],
+                                  "oid" : "claimPMPItem"
+                              }
+                          ]
+                      }
+                  ],
+                  "enmTyp" : "Claim Number",
+                  "evnt" : [ 
+                      {
+                          "oid" : "claimEventFolder",
+                          "strtDt" : "02/03/2009"
+                      }
+                  ],
+                  "nm" : "BP1234567891",
+                  "oid" : "claimFolderItem",
+                  "stts" : null
+              }
+          ],
+          "oid" : "claim"
+      },
+      "errrFlg" : false,
+      "errrLst" : [],
+      "chunkId" : "01",
+      "policyNo" : "",
+      "carrierId" : "11111",
+      "SequenceNum" : 1,
+      "batchId" : "01"
+  }
+    ]
+  }

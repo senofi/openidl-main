@@ -1,0 +1,158 @@
+{
+  "carrier_id": "12345",
+  "batch_id": "76321438-a9ed-4119-b640-cf94aa8f38de",
+  "records": [
+    {
+      "class": "Agreement",
+      "type": "HO",
+      "transaction_id": "ID1",
+      "carrier_id": "12345",
+      "data_year": "2010",
+      "effective_date": "10/21/10",
+      "expiration_date": "10/21/11",
+      "policy_form": "HO3",
+      "product_group": "Homeowners",
+      "policyyr": "Renewal",
+      "cova": 255000,
+      "covb": 32767,
+      "covc": 127500,
+      "covd": 25500,
+      "cove": 300000,
+      "covf": 5000,
+      "tiv": 459000,
+      "property_aoi": 54,
+      "exposure": 2992,
+      "components": {
+        "coverage": {
+          "selected": true,
+          "sinkhole_coverage": {
+            "selected": true,
+            "is_active": true
+          },
+          "water_damage_coverage": {
+            "selected": true,
+            "coverage_type": "Full"
+          },
+          "mod": {
+            "selected": true,
+            "mod_value": "5"
+          },
+          "wind_coverage": {
+            "selected": true,
+            "ex_wind": "0",
+            "eligible_for_wind_pool": "0"
+          },
+          "aop_coverage": {
+            "selected": true,
+            "aop_ded": null
+          },
+          "hurricane_coverage": {
+            "selected": true,
+            "hurricane_ded": "2%"
+          }
+        },
+        "premium": {
+          "selected": true,
+          "written_premium": {
+            "selected": true,
+            "amount": 3150,
+            "house_years": 0.197300002,
+            "days_exposed": 72
+          },
+          "fees": {
+            "selected": true,
+            "amount": 0
+          },
+          "earned_premium": {
+            "selected": true,
+            "amount": 621,
+            "wind_factor": 0.324800014,
+            "non_wind_factor": 0.675199986
+          },
+          "hurricane_premium": {
+            "selected": true,
+            "wind_factor": 0.324800014,
+            "non_wind_factor": 0.675199986,
+            "written_hurr": 1023.119995,
+            "written_nhurr": 2127,
+            "earned_hurr": 201.7008057,
+            "earned_nhurr": 419
+          }
+        }
+      },
+      "risks": {
+        "ho": {
+          "risk_id_full": "SFIH0000006-05-0000",
+          "risk_id": "SFIH0000006",
+          "risk_id_report_year": "SFIH0000006-05-2010",
+          "details": {
+            "stories": 1,
+            "storiesgroup": "Single",
+            "screened_enclosure": "NC",
+            "screenenclosuredesc": "No Coverage",
+            "screened_enclosure_limit": 0,
+            "structure_type": "D",
+            "structuretype": "Dwelling",
+            "occupied_by": "O",
+            "occupancy": "Owner Occupied",
+            "occupancygroup": "Owner",
+            "usage_type": "P",
+            "usage": "Primary Residence",
+            "prop_address_zip": "32174",
+            "state": "FL",
+            "county": "VOLUSIA",
+            "countyid": "12127",
+            "czone": "8",
+            "territory": "442",
+            "rateterr": "VOLUSIA-B-9",
+            "protectionclass": "4",
+            "protectiongroup": "Protected",
+            "bceg": "99",
+            "construction": "F",
+            "constructiontype": "Frame",
+            "constructiongroup": "Frame",
+            "year_built": "1970",
+            "yeargroup": "1994 & Older",
+            "ageofhome": "40",
+            "ratinggroup": "F - $200,001-$300,000",
+            "agegroup": "31-40 Years",
+            "effectiveyrmonth": "2010-10",
+            "effectiveyr": "2010",
+            "secured_community": "0",
+            "non_smoker": "1",
+            "applicant_retired": "1",
+            "design_exposure": "S",
+            "designexposure": "Standard",
+            "opening_protection": "N",
+            "openingprotection": "None",
+            "internal_pressure_design": "E",
+            "internalpressuredesign": "Enclosed",
+            "roof_cover": "N",
+            "roofcover": "Non FBC equivalent",
+            "roof_deck_attachment": "A",
+            "roofdeckattachment": "6d at 6.5in spacing",
+            "roofmaterial": "Value Not Selected",
+            "roofmaterialgroup": "Other",
+            "roof_to_wall_attachment": "T",
+            "rooftowallattachment": "Toe Nails",
+            "roof_shape": "F",
+            "roofshape": "Flat",
+            "roofrenoyear": "1970",
+            "secondary_water_resistance": "0",
+            "secondarywaterresistance": "No",
+            "wind_speed_design": "120",
+            "windspeeddesign": "120 mph or greater",
+            "terrain_location": "B",
+            "terrainlocation": "All areas not C",
+            "wind_speed_location": "130",
+            "windspeedlocation": "130 mph or greater",
+            "census_block": "1.21271E+11",
+            "sqftgroup": "1,500 - 2,499"
+          }
+        }
+      }
+    }
+    
+    
+  ]
+}

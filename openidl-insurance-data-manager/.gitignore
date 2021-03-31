@@ -1,0 +1,13 @@
+node_modules/**
+
+# Tests
+.nyc_output/**
+
+# IDE
+.vscode/**
+
+#credentials
+server/config/local-appid-config.json
+server/config/local-cloudant-config.json
+server/config/openidl-ui-client-id.json
+
