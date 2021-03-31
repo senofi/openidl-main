@@ -1,0 +1,1328 @@
+{
+    "batchId": "11111",
+    "chunkId": "11111",
+    "carrierId": "9999",
+    "records": [
+        {
+            "agrmnt": {
+                "bsnssActvty": {
+                    "enmTyp": "SIC Code",
+                    "indstryCd": "1234",
+                    "nm": "TODO:Lookup"
+                },
+                "fnclSrvcsAgrmntGrp": {
+                    "enmTyp": "",
+                    "extrnlRfrnc": "",
+                    "nm": ""
+                },
+                "gnrcMnyPrvsn": {
+                    "mnyPrvsnDtrmnr": [
+                        {
+                            "addrss": "132 Tolland St                                                                                                                                        ",
+                            "amnt": "      9567",
+                            "enmTyp": "Address",
+                            "extrnlRfrnc": "",
+                            "nm": ""
+                        }
+                    ]
+                },
+                "indvdlAgrmnt": {
+                    "cnsntToRt": "",
+                    "enmTyp": "",
+                    "nm": "BP123456789123",
+                    "sttExcptns": ""
+                },
+                "othrCtgry": {
+                    "enmTyp": "",
+                    "extrnlRfrnc": "",
+                    "mxmmSz": "20    ",
+                    "nm": ""
+                },
+                "othrRgstrtn": [
+                    {
+                        "enmTyp": "Tax ID",
+                        "extrnlRfrnc": "123456789"
+                    },
+                    {
+                        "enmTyp": "Company Code",
+                        "extrnlRfrnc": "9999",
+                        "nm": "TODO:Lookup"
+                    }
+                ],
+                "prdctGrp": {
+                    "enmTyp": "Line of Insurance",
+                    "extrnlRfrnc": "49",
+                    "nm": "TODO:Lookup"
+                },
+                "prlCtgry": {
+                    "awyFrmPrmssThftPrtctnTyp": "",
+                    "enmTyp": "Covered Perils",
+                    "extrnlRfrnc": "TODO:?",
+                    "gnrcMnyPrvsn": {
+                        "mnyPrvsnDtrmnr": [
+                            {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": ""
+                            }
+                        ]
+                    },
+                    "nm": "Test Covered Perils Code",
+                    "wndHlCvrgSttsTyp": ""
+                },
+                "prtclrMnyPrvsn": {
+                    "mnyPrvsnCshFlw": {
+                        "mnyPrvsnPrt": {
+                            "accntSttmnt": {
+                                "prdStrtDt": ""
+                            },
+                            "amnt": "",
+                            "enmTyp": "",
+                            "fnnclTrnsctn": {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": ""
+                            }
+                        }
+                    }
+                },
+                "stndrdTxtSpcfctn": {
+                    "cmpstTxtBlck": {
+                        "enmTyp": "",
+                        "extrnlRfrnc": "",
+                        "nm": ""
+                    }
+                },
+                "strctrlCmpnnt": {
+                    "LdLbltyExclsnSttsTyp": "",
+                    "cvrgCmpnnt": {
+                        "assssmntRslt": {
+                            "plcAssssmnt": {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": "",
+                                "stndrdsClssfctn": ""
+                            }
+                        },
+                        "enmTyp": "",
+                        "expsrAmnt": "1",
+                        "extrnlRfrnc": "",
+                        "gnrcMnyPrvsn": {
+                            "mnyPrvsnDtrmnr": [
+                                {
+                                    "amnt": "",
+                                    "enmTyp": "",
+                                    "extrnlRfrnc": ""
+                                }
+                            ]
+                        },
+                        "nm": "",
+                        "physclObjct": {
+                            "strctr": {
+                                "cnstrctnTyp": "",
+                                "dsgnStyl": "",
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": "",
+                                "occpncyTyp": "",
+                                "prdStrtDt": "",
+                                "prtctnClss": ""
+                            }
+                        },
+                        "plc": {
+                            "ggrphcArea": {
+                                "abbrvtn": "TODO:Lookup",
+                                "enmTyp": "State Code",
+                                "extrnlRfrnc": "01",
+                                "postalCode": "TODO:parse address",
+                                "rgn": "TODO:Lookup",
+                                "sbRgn": ""
+                            }
+                        },
+                        "prtclrMnyPrvsn": {
+                            "mnyPrvsnCshFlw": {
+                                "mnyPrvsnPrt": {
+                                    "accntSttmnt": {
+                                        "prdStrtDt": "0109"
+                                    },
+                                    "amnt": "TODO:?",
+                                    "enmTyp": "",
+                                    "extrnlRfrnc": "",
+                                    "fnnclTrnsctn": {
+                                        "enmTyp": "Premium statistical transaction type",
+                                        "extrnlRfrnc": "1",
+                                        "nm": "Premium or Cancellation"
+                                    },
+                                    "nm": ""
+                                }
+                            }
+                        },
+                        "rskExpsr": {
+                            "enmTyp": "Class Code",
+                            "extrnlRfrnc": "99903",
+                            "nm": "Does not apply",
+                            "sttlmntMthd": ""
+                        },
+                        "stndrdTxtSpcfctn": {
+                            "cmpstTxtBlck": {
+                                "enmTyp": "Policy Form",
+                                "extrnlRfrnc": "14",
+                                "nm": "All other property endorsements"
+                            }
+                        }
+                    },
+                    "hrrcnExclsnEndrsmntSttsTyp": "",
+                    "physclObjct": {
+                        "strctr": {
+                            "cnstrctnDt": "",
+                            "cnstrctnYrBnd": "",
+                            "inspctnFlg": "",
+                            "ldLbltyIntrmCntrlLttr": "",
+                            "ldLbltyUntCnt": "",
+                            "ldPsnngLbltyStts": "",
+                            "rfCvrngCttgry": "",
+                            "rfDckAttchmntTyp": "",
+                            "rfDckIntrnlPrssrDsgnTyp": "",
+                            "rfDckMtrl": "",
+                            "rfDckMxmmWndSpd": "",
+                            "rfShpTyp": "",
+                            "rfToWllAttchmntTyp": "",
+                            "rnvtnDt": "",
+                            "scndryLssMtgtnBldngFtrTyp": "",
+                            "scndryWtrRsstncRfIndctr": "",
+                            "strmShttrsPrsnt": "",
+                            "wndBrnDbrsIndctr": "",
+                            "wndLssMtgtnFtrTyp": "",
+                            "wndRsstncOpnngPrtctn": "",
+                            "wndstrmPrtctvDvc": ""
+                        }
+                    },
+                    "wrpArndEndrsmntSttsIndctr": ""
+                }
+            },
+            "clm": {
+                "clmFldr": [
+                    {
+                        "elmntryClm": [
+                            {
+                                "clmOffr": [
+                                    {
+                                        "enmTyp": "",
+                                        "extrnlRfrnc": "",
+                                        "nm": "",
+                                        "sttlmntMthd": ""
+                                    }
+                                ],
+                                "enmType": "",
+                                "evnt": [
+                                    {
+                                        "csoflss": "",
+                                        "ctgryEnmTyp": [],
+                                        "extrnlRfrnc": "",
+                                        "nm": ""
+                                    }
+                                ],
+                                "nm": "",
+                                "prtclrMnyPrvsn": [
+                                    {
+                                        "mnyPrvsnCshFlw": [
+                                            {
+                                                "mnyPrvsnPrt": [
+                                                    {
+                                                        "accntSttmnt": {
+                                                            "prdStrtDt": ""
+                                                        },
+                                                        "amnt": "",
+                                                        "clmsCnt": "",
+                                                        "enmTyp": "",
+                                                        "fnnclTrnsctn": {
+                                                            "enmTyp": "",
+                                                            "extrnlRfrnc": "",
+                                                            "nm": ""
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "enmTyp": "",
+                        "evnt": [
+                            {
+                                "strtDt": ""
+                            }
+                        ],
+                        "nm": ""
+                    }
+                ]
+            },
+            "errrFlg": false,
+            "errrLst": [],
+            "extrnlRfrnc": "",
+            "uuid": "TODO:generate UUID",
+            "carrierId": "9999",
+            "docID": "TODO:doc ID?",
+            "SequenceNum": 1,
+            "policyNo": ""
+        },
+        {
+            "agrmnt": {
+                "bsnssActvty": {
+                    "enmTyp": "SIC Code",
+                    "indstryCd": "1234",
+                    "nm": "TODO:Lookup"
+                },
+                "fnclSrvcsAgrmntGrp": {
+                    "enmTyp": "",
+                    "extrnlRfrnc": "",
+                    "nm": ""
+                },
+                "gnrcMnyPrvsn": {
+                    "mnyPrvsnDtrmnr": [
+                        {
+                            "addrss": "90 Slate Venue                                                                                                                                        ",
+                            "amnt": "      1345",
+                            "enmTyp": "Address",
+                            "extrnlRfrnc": "",
+                            "nm": ""
+                        }
+                    ]
+                },
+                "indvdlAgrmnt": {
+                    "cnsntToRt": "",
+                    "enmTyp": "",
+                    "nm": "BP123456789124",
+                    "sttExcptns": ""
+                },
+                "othrCtgry": {
+                    "enmTyp": "",
+                    "extrnlRfrnc": "",
+                    "mxmmSz": "40    ",
+                    "nm": ""
+                },
+                "othrRgstrtn": [
+                    {
+                        "enmTyp": "Tax ID",
+                        "extrnlRfrnc": "123456789"
+                    },
+                    {
+                        "enmTyp": "Company Code",
+                        "extrnlRfrnc": "9999",
+                        "nm": "TODO:Lookup"
+                    }
+                ],
+                "prdctGrp": {
+                    "enmTyp": "Line of Insurance",
+                    "extrnlRfrnc": "49",
+                    "nm": "TODO:Lookup"
+                },
+                "prlCtgry": {
+                    "awyFrmPrmssThftPrtctnTyp": "",
+                    "enmTyp": "Covered Perils",
+                    "extrnlRfrnc": "TODO:?",
+                    "gnrcMnyPrvsn": {
+                        "mnyPrvsnDtrmnr": [
+                            {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": ""
+                            }
+                        ]
+                    },
+                    "nm": "Test Covered Perils Code",
+                    "wndHlCvrgSttsTyp": ""
+                },
+                "prtclrMnyPrvsn": {
+                    "mnyPrvsnCshFlw": {
+                        "mnyPrvsnPrt": {
+                            "accntSttmnt": {
+                                "prdStrtDt": ""
+                            },
+                            "amnt": "",
+                            "enmTyp": "",
+                            "fnnclTrnsctn": {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": ""
+                            }
+                        }
+                    }
+                },
+                "stndrdTxtSpcfctn": {
+                    "cmpstTxtBlck": {
+                        "enmTyp": "",
+                        "extrnlRfrnc": "",
+                        "nm": ""
+                    }
+                },
+                "strctrlCmpnnt": {
+                    "LdLbltyExclsnSttsTyp": "",
+                    "cvrgCmpnnt": {
+                        "assssmntRslt": {
+                            "plcAssssmnt": {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": "",
+                                "stndrdsClssfctn": ""
+                            }
+                        },
+                        "enmTyp": "",
+                        "expsrAmnt": "1",
+                        "extrnlRfrnc": "",
+                        "gnrcMnyPrvsn": {
+                            "mnyPrvsnDtrmnr": [
+                                {
+                                    "amnt": "",
+                                    "enmTyp": "",
+                                    "extrnlRfrnc": ""
+                                }
+                            ]
+                        },
+                        "nm": "",
+                        "physclObjct": {
+                            "strctr": {
+                                "cnstrctnTyp": "",
+                                "dsgnStyl": "",
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": "",
+                                "occpncyTyp": "",
+                                "prdStrtDt": "",
+                                "prtctnClss": ""
+                            }
+                        },
+                        "plc": {
+                            "ggrphcArea": {
+                                "abbrvtn": "TODO:Lookup",
+                                "enmTyp": "State Code",
+                                "extrnlRfrnc": "54",
+                                "postalCode": "TODO:parse address",
+                                "rgn": "TODO:Lookup",
+                                "sbRgn": ""
+                            }
+                        },
+                        "prtclrMnyPrvsn": {
+                            "mnyPrvsnCshFlw": {
+                                "mnyPrvsnPrt": {
+                                    "accntSttmnt": {
+                                        "prdStrtDt": "0710"
+                                    },
+                                    "amnt": "TODO:?",
+                                    "enmTyp": "",
+                                    "extrnlRfrnc": "",
+                                    "fnnclTrnsctn": {
+                                        "enmTyp": "Premium statistical transaction type",
+                                        "extrnlRfrnc": "8",
+                                        "nm": "Premium or Cancellation"
+                                    },
+                                    "nm": ""
+                                }
+                            }
+                        },
+                        "rskExpsr": {
+                            "enmTyp": "Class Code",
+                            "extrnlRfrnc": "99909",
+                            "nm": "Does not apply",
+                            "sttlmntMthd": ""
+                        },
+                        "stndrdTxtSpcfctn": {
+                            "cmpstTxtBlck": {
+                                "enmTyp": "Policy Form",
+                                "extrnlRfrnc": "64",
+                                "nm": "All other property endorsements"
+                            }
+                        }
+                    },
+                    "hrrcnExclsnEndrsmntSttsTyp": "",
+                    "physclObjct": {
+                        "strctr": {
+                            "cnstrctnDt": "",
+                            "cnstrctnYrBnd": "",
+                            "inspctnFlg": "",
+                            "ldLbltyIntrmCntrlLttr": "",
+                            "ldLbltyUntCnt": "",
+                            "ldPsnngLbltyStts": "",
+                            "rfCvrngCttgry": "",
+                            "rfDckAttchmntTyp": "",
+                            "rfDckIntrnlPrssrDsgnTyp": "",
+                            "rfDckMtrl": "",
+                            "rfDckMxmmWndSpd": "",
+                            "rfShpTyp": "",
+                            "rfToWllAttchmntTyp": "",
+                            "rnvtnDt": "",
+                            "scndryLssMtgtnBldngFtrTyp": "",
+                            "scndryWtrRsstncRfIndctr": "",
+                            "strmShttrsPrsnt": "",
+                            "wndBrnDbrsIndctr": "",
+                            "wndLssMtgtnFtrTyp": "",
+                            "wndRsstncOpnngPrtctn": "",
+                            "wndstrmPrtctvDvc": ""
+                        }
+                    },
+                    "wrpArndEndrsmntSttsIndctr": ""
+                }
+            },
+            "clm": {
+                "clmFldr": [
+                    {
+                        "elmntryClm": [
+                            {
+                                "clmOffr": [
+                                    {
+                                        "enmTyp": "",
+                                        "extrnlRfrnc": "",
+                                        "nm": "",
+                                        "sttlmntMthd": ""
+                                    }
+                                ],
+                                "enmType": "",
+                                "evnt": [
+                                    {
+                                        "csoflss": "",
+                                        "ctgryEnmTyp": [],
+                                        "extrnlRfrnc": "",
+                                        "nm": ""
+                                    }
+                                ],
+                                "nm": "",
+                                "prtclrMnyPrvsn": [
+                                    {
+                                        "mnyPrvsnCshFlw": [
+                                            {
+                                                "mnyPrvsnPrt": [
+                                                    {
+                                                        "accntSttmnt": {
+                                                            "prdStrtDt": ""
+                                                        },
+                                                        "amnt": "",
+                                                        "clmsCnt": "",
+                                                        "enmTyp": "",
+                                                        "fnnclTrnsctn": {
+                                                            "enmTyp": "",
+                                                            "extrnlRfrnc": "",
+                                                            "nm": ""
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "enmTyp": "",
+                        "evnt": [
+                            {
+                                "strtDt": ""
+                            }
+                        ],
+                        "nm": ""
+                    }
+                ]
+            },
+            "errrFlg": false,
+            "errrLst": [],
+            "extrnlRfrnc": "",
+            "uuid": "TODO:generate UUID",
+            "carrierId": "9999",
+            "docID": "TODO:doc ID?",
+            "SequenceNum": 1,
+            "policyNo": ""
+        },
+        {
+            "agrmnt": {
+                "bsnssActvty": {
+                    "enmTyp": "SIC Code",
+                    "indstryCd": "1234",
+                    "nm": "TODO:Lookup"
+                },
+                "fnclSrvcsAgrmntGrp": {
+                    "enmTyp": "",
+                    "extrnlRfrnc": "",
+                    "nm": ""
+                },
+                "gnrcMnyPrvsn": {
+                    "mnyPrvsnDtrmnr": [
+                        {
+                            "addrss": "78 Tamarack Ave                                                                                                                                       ",
+                            "amnt": "      3678",
+                            "enmTyp": "Address",
+                            "extrnlRfrnc": "",
+                            "nm": ""
+                        }
+                    ]
+                },
+                "indvdlAgrmnt": {
+                    "cnsntToRt": "",
+                    "enmTyp": "",
+                    "nm": "BP123456789125",
+                    "sttExcptns": ""
+                },
+                "othrCtgry": {
+                    "enmTyp": "",
+                    "extrnlRfrnc": "",
+                    "mxmmSz": "35    ",
+                    "nm": ""
+                },
+                "othrRgstrtn": [
+                    {
+                        "enmTyp": "Tax ID",
+                        "extrnlRfrnc": "123456789"
+                    },
+                    {
+                        "enmTyp": "Company Code",
+                        "extrnlRfrnc": "9999",
+                        "nm": "TODO:Lookup"
+                    }
+                ],
+                "prdctGrp": {
+                    "enmTyp": "Line of Insurance",
+                    "extrnlRfrnc": "49",
+                    "nm": "TODO:Lookup"
+                },
+                "prlCtgry": {
+                    "awyFrmPrmssThftPrtctnTyp": "",
+                    "enmTyp": "Covered Perils",
+                    "extrnlRfrnc": "TODO:?",
+                    "gnrcMnyPrvsn": {
+                        "mnyPrvsnDtrmnr": [
+                            {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": ""
+                            }
+                        ]
+                    },
+                    "nm": "Test Covered Perils Code",
+                    "wndHlCvrgSttsTyp": ""
+                },
+                "prtclrMnyPrvsn": {
+                    "mnyPrvsnCshFlw": {
+                        "mnyPrvsnPrt": {
+                            "accntSttmnt": {
+                                "prdStrtDt": ""
+                            },
+                            "amnt": "",
+                            "enmTyp": "",
+                            "fnnclTrnsctn": {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": ""
+                            }
+                        }
+                    }
+                },
+                "stndrdTxtSpcfctn": {
+                    "cmpstTxtBlck": {
+                        "enmTyp": "",
+                        "extrnlRfrnc": "",
+                        "nm": ""
+                    }
+                },
+                "strctrlCmpnnt": {
+                    "LdLbltyExclsnSttsTyp": "",
+                    "cvrgCmpnnt": {
+                        "assssmntRslt": {
+                            "plcAssssmnt": {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": "",
+                                "stndrdsClssfctn": ""
+                            }
+                        },
+                        "enmTyp": "",
+                        "expsrAmnt": "1",
+                        "extrnlRfrnc": "",
+                        "gnrcMnyPrvsn": {
+                            "mnyPrvsnDtrmnr": [
+                                {
+                                    "amnt": "",
+                                    "enmTyp": "",
+                                    "extrnlRfrnc": ""
+                                }
+                            ]
+                        },
+                        "nm": "",
+                        "physclObjct": {
+                            "strctr": {
+                                "cnstrctnTyp": "",
+                                "dsgnStyl": "",
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": "",
+                                "occpncyTyp": "",
+                                "prdStrtDt": "",
+                                "prtctnClss": ""
+                            }
+                        },
+                        "plc": {
+                            "ggrphcArea": {
+                                "abbrvtn": "TODO:Lookup",
+                                "enmTyp": "State Code",
+                                "extrnlRfrnc": "09",
+                                "postalCode": "TODO:parse address",
+                                "rgn": "TODO:Lookup",
+                                "sbRgn": ""
+                            }
+                        },
+                        "prtclrMnyPrvsn": {
+                            "mnyPrvsnCshFlw": {
+                                "mnyPrvsnPrt": {
+                                    "accntSttmnt": {
+                                        "prdStrtDt": "1011"
+                                    },
+                                    "amnt": "TODO:?",
+                                    "enmTyp": "",
+                                    "extrnlRfrnc": "",
+                                    "fnnclTrnsctn": {
+                                        "enmTyp": "Premium statistical transaction type",
+                                        "extrnlRfrnc": "9",
+                                        "nm": "Premium or Cancellation"
+                                    },
+                                    "nm": ""
+                                }
+                            }
+                        },
+                        "rskExpsr": {
+                            "enmTyp": "Class Code",
+                            "extrnlRfrnc": "99918",
+                            "nm": "Does not apply",
+                            "sttlmntMthd": ""
+                        },
+                        "stndrdTxtSpcfctn": {
+                            "cmpstTxtBlck": {
+                                "enmTyp": "Policy Form",
+                                "extrnlRfrnc": "52",
+                                "nm": "All other property endorsements"
+                            }
+                        }
+                    },
+                    "hrrcnExclsnEndrsmntSttsTyp": "",
+                    "physclObjct": {
+                        "strctr": {
+                            "cnstrctnDt": "",
+                            "cnstrctnYrBnd": "",
+                            "inspctnFlg": "",
+                            "ldLbltyIntrmCntrlLttr": "",
+                            "ldLbltyUntCnt": "",
+                            "ldPsnngLbltyStts": "",
+                            "rfCvrngCttgry": "",
+                            "rfDckAttchmntTyp": "",
+                            "rfDckIntrnlPrssrDsgnTyp": "",
+                            "rfDckMtrl": "",
+                            "rfDckMxmmWndSpd": "",
+                            "rfShpTyp": "",
+                            "rfToWllAttchmntTyp": "",
+                            "rnvtnDt": "",
+                            "scndryLssMtgtnBldngFtrTyp": "",
+                            "scndryWtrRsstncRfIndctr": "",
+                            "strmShttrsPrsnt": "",
+                            "wndBrnDbrsIndctr": "",
+                            "wndLssMtgtnFtrTyp": "",
+                            "wndRsstncOpnngPrtctn": "",
+                            "wndstrmPrtctvDvc": ""
+                        }
+                    },
+                    "wrpArndEndrsmntSttsIndctr": ""
+                }
+            },
+            "clm": {
+                "clmFldr": [
+                    {
+                        "elmntryClm": [
+                            {
+                                "clmOffr": [
+                                    {
+                                        "enmTyp": "",
+                                        "extrnlRfrnc": "",
+                                        "nm": "",
+                                        "sttlmntMthd": ""
+                                    }
+                                ],
+                                "enmType": "",
+                                "evnt": [
+                                    {
+                                        "csoflss": "",
+                                        "ctgryEnmTyp": [],
+                                        "extrnlRfrnc": "",
+                                        "nm": ""
+                                    }
+                                ],
+                                "nm": "",
+                                "prtclrMnyPrvsn": [
+                                    {
+                                        "mnyPrvsnCshFlw": [
+                                            {
+                                                "mnyPrvsnPrt": [
+                                                    {
+                                                        "accntSttmnt": {
+                                                            "prdStrtDt": ""
+                                                        },
+                                                        "amnt": "",
+                                                        "clmsCnt": "",
+                                                        "enmTyp": "",
+                                                        "fnnclTrnsctn": {
+                                                            "enmTyp": "",
+                                                            "extrnlRfrnc": "",
+                                                            "nm": ""
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "enmTyp": "",
+                        "evnt": [
+                            {
+                                "strtDt": ""
+                            }
+                        ],
+                        "nm": ""
+                    }
+                ]
+            },
+            "errrFlg": false,
+            "errrLst": [],
+            "extrnlRfrnc": "",
+            "uuid": "TODO:generate UUID",
+            "carrierId": "9999",
+            "docID": "TODO:doc ID?",
+            "SequenceNum": 1,
+            "policyNo": ""
+        },
+        {
+            "agrmnt": {
+                "bsnssActvty": {
+                    "enmTyp": "SIC Code",
+                    "indstryCd": "1234",
+                    "nm": "TODO:Lookup"
+                },
+                "fnclSrvcsAgrmntGrp": {
+                    "enmTyp": "",
+                    "extrnlRfrnc": "",
+                    "nm": ""
+                },
+                "gnrcMnyPrvsn": {
+                    "mnyPrvsnDtrmnr": [
+                        {
+                            "addrss": "85 Main Street                                                                                                                                        ",
+                            "amnt": "      4321",
+                            "enmTyp": "Address",
+                            "extrnlRfrnc": "",
+                            "nm": ""
+                        }
+                    ]
+                },
+                "indvdlAgrmnt": {
+                    "cnsntToRt": "",
+                    "enmTyp": "",
+                    "nm": "BP123456789126",
+                    "sttExcptns": ""
+                },
+                "othrCtgry": {
+                    "enmTyp": "",
+                    "extrnlRfrnc": "",
+                    "mxmmSz": "45    ",
+                    "nm": ""
+                },
+                "othrRgstrtn": [
+                    {
+                        "enmTyp": "Tax ID",
+                        "extrnlRfrnc": "123456789"
+                    },
+                    {
+                        "enmTyp": "Company Code",
+                        "extrnlRfrnc": "9999",
+                        "nm": "TODO:Lookup"
+                    }
+                ],
+                "prdctGrp": {
+                    "enmTyp": "Line of Insurance",
+                    "extrnlRfrnc": "49",
+                    "nm": "TODO:Lookup"
+                },
+                "prlCtgry": {
+                    "awyFrmPrmssThftPrtctnTyp": "",
+                    "enmTyp": "Covered Perils",
+                    "extrnlRfrnc": "TODO:?",
+                    "gnrcMnyPrvsn": {
+                        "mnyPrvsnDtrmnr": [
+                            {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": ""
+                            }
+                        ]
+                    },
+                    "nm": "Test Covered Perils Code",
+                    "wndHlCvrgSttsTyp": ""
+                },
+                "prtclrMnyPrvsn": {
+                    "mnyPrvsnCshFlw": {
+                        "mnyPrvsnPrt": {
+                            "accntSttmnt": {
+                                "prdStrtDt": ""
+                            },
+                            "amnt": "",
+                            "enmTyp": "",
+                            "fnnclTrnsctn": {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": ""
+                            }
+                        }
+                    }
+                },
+                "stndrdTxtSpcfctn": {
+                    "cmpstTxtBlck": {
+                        "enmTyp": "",
+                        "extrnlRfrnc": "",
+                        "nm": ""
+                    }
+                },
+                "strctrlCmpnnt": {
+                    "LdLbltyExclsnSttsTyp": "",
+                    "cvrgCmpnnt": {
+                        "assssmntRslt": {
+                            "plcAssssmnt": {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": "",
+                                "stndrdsClssfctn": ""
+                            }
+                        },
+                        "enmTyp": "",
+                        "expsrAmnt": "1",
+                        "extrnlRfrnc": "",
+                        "gnrcMnyPrvsn": {
+                            "mnyPrvsnDtrmnr": [
+                                {
+                                    "amnt": "",
+                                    "enmTyp": "",
+                                    "extrnlRfrnc": ""
+                                }
+                            ]
+                        },
+                        "nm": "",
+                        "physclObjct": {
+                            "strctr": {
+                                "cnstrctnTyp": "",
+                                "dsgnStyl": "",
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": "",
+                                "occpncyTyp": "",
+                                "prdStrtDt": "",
+                                "prtctnClss": ""
+                            }
+                        },
+                        "plc": {
+                            "ggrphcArea": {
+                                "abbrvtn": "TODO:Lookup",
+                                "enmTyp": "State Code",
+                                "extrnlRfrnc": "08",
+                                "postalCode": "TODO:parse address",
+                                "rgn": "TODO:Lookup",
+                                "sbRgn": ""
+                            }
+                        },
+                        "prtclrMnyPrvsn": {
+                            "mnyPrvsnCshFlw": {
+                                "mnyPrvsnPrt": {
+                                    "accntSttmnt": {
+                                        "prdStrtDt": "1213"
+                                    },
+                                    "amnt": "TODO:?",
+                                    "enmTyp": "",
+                                    "extrnlRfrnc": "",
+                                    "fnnclTrnsctn": {
+                                        "enmTyp": "Premium statistical transaction type",
+                                        "extrnlRfrnc": "1",
+                                        "nm": "Premium or Cancellation"
+                                    },
+                                    "nm": ""
+                                }
+                            }
+                        },
+                        "rskExpsr": {
+                            "enmTyp": "Class Code",
+                            "extrnlRfrnc": "99950",
+                            "nm": "Does not apply",
+                            "sttlmntMthd": ""
+                        },
+                        "stndrdTxtSpcfctn": {
+                            "cmpstTxtBlck": {
+                                "enmTyp": "Policy Form",
+                                "extrnlRfrnc": "69",
+                                "nm": "All other property endorsements"
+                            }
+                        }
+                    },
+                    "hrrcnExclsnEndrsmntSttsTyp": "",
+                    "physclObjct": {
+                        "strctr": {
+                            "cnstrctnDt": "",
+                            "cnstrctnYrBnd": "",
+                            "inspctnFlg": "",
+                            "ldLbltyIntrmCntrlLttr": "",
+                            "ldLbltyUntCnt": "",
+                            "ldPsnngLbltyStts": "",
+                            "rfCvrngCttgry": "",
+                            "rfDckAttchmntTyp": "",
+                            "rfDckIntrnlPrssrDsgnTyp": "",
+                            "rfDckMtrl": "",
+                            "rfDckMxmmWndSpd": "",
+                            "rfShpTyp": "",
+                            "rfToWllAttchmntTyp": "",
+                            "rnvtnDt": "",
+                            "scndryLssMtgtnBldngFtrTyp": "",
+                            "scndryWtrRsstncRfIndctr": "",
+                            "strmShttrsPrsnt": "",
+                            "wndBrnDbrsIndctr": "",
+                            "wndLssMtgtnFtrTyp": "",
+                            "wndRsstncOpnngPrtctn": "",
+                            "wndstrmPrtctvDvc": ""
+                        }
+                    },
+                    "wrpArndEndrsmntSttsIndctr": ""
+                }
+            },
+            "clm": {
+                "clmFldr": [
+                    {
+                        "elmntryClm": [
+                            {
+                                "clmOffr": [
+                                    {
+                                        "enmTyp": "",
+                                        "extrnlRfrnc": "",
+                                        "nm": "",
+                                        "sttlmntMthd": ""
+                                    }
+                                ],
+                                "enmType": "",
+                                "evnt": [
+                                    {
+                                        "csoflss": "",
+                                        "ctgryEnmTyp": [],
+                                        "extrnlRfrnc": "",
+                                        "nm": ""
+                                    }
+                                ],
+                                "nm": "",
+                                "prtclrMnyPrvsn": [
+                                    {
+                                        "mnyPrvsnCshFlw": [
+                                            {
+                                                "mnyPrvsnPrt": [
+                                                    {
+                                                        "accntSttmnt": {
+                                                            "prdStrtDt": ""
+                                                        },
+                                                        "amnt": "",
+                                                        "clmsCnt": "",
+                                                        "enmTyp": "",
+                                                        "fnnclTrnsctn": {
+                                                            "enmTyp": "",
+                                                            "extrnlRfrnc": "",
+                                                            "nm": ""
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "enmTyp": "",
+                        "evnt": [
+                            {
+                                "strtDt": ""
+                            }
+                        ],
+                        "nm": ""
+                    }
+                ]
+            },
+            "errrFlg": false,
+            "errrLst": [],
+            "extrnlRfrnc": "",
+            "uuid": "TODO:generate UUID",
+            "carrierId": "9999",
+            "docID": "TODO:doc ID?",
+            "SequenceNum": 1,
+            "policyNo": ""
+        },
+        {
+            "agrmnt": {
+                "bsnssActvty": {
+                    "enmTyp": "SIC Code",
+                    "indstryCd": "1234",
+                    "nm": "TODO:Lookup"
+                },
+                "fnclSrvcsAgrmntGrp": {
+                    "enmTyp": "",
+                    "extrnlRfrnc": "",
+                    "nm": ""
+                },
+                "gnrcMnyPrvsn": {
+                    "mnyPrvsnDtrmnr": [
+                        {
+                            "addrss": "896 East Street                                                                                                                                       ",
+                            "amnt": "      7843",
+                            "enmTyp": "Address",
+                            "extrnlRfrnc": "",
+                            "nm": ""
+                        }
+                    ]
+                },
+                "indvdlAgrmnt": {
+                    "cnsntToRt": "",
+                    "enmTyp": "",
+                    "nm": "BP123456789127",
+                    "sttExcptns": ""
+                },
+                "othrCtgry": {
+                    "enmTyp": "",
+                    "extrnlRfrnc": "",
+                    "mxmmSz": "234   ",
+                    "nm": ""
+                },
+                "othrRgstrtn": [
+                    {
+                        "enmTyp": "Tax ID",
+                        "extrnlRfrnc": "123456789"
+                    },
+                    {
+                        "enmTyp": "Company Code",
+                        "extrnlRfrnc": "9999",
+                        "nm": "TODO:Lookup"
+                    }
+                ],
+                "prdctGrp": {
+                    "enmTyp": "Line of Insurance",
+                    "extrnlRfrnc": "49",
+                    "nm": "TODO:Lookup"
+                },
+                "prlCtgry": {
+                    "awyFrmPrmssThftPrtctnTyp": "",
+                    "enmTyp": "Covered Perils",
+                    "extrnlRfrnc": "TODO:?",
+                    "gnrcMnyPrvsn": {
+                        "mnyPrvsnDtrmnr": [
+                            {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": ""
+                            }
+                        ]
+                    },
+                    "nm": "Test Covered Perils Code",
+                    "wndHlCvrgSttsTyp": ""
+                },
+                "prtclrMnyPrvsn": {
+                    "mnyPrvsnCshFlw": {
+                        "mnyPrvsnPrt": {
+                            "accntSttmnt": {
+                                "prdStrtDt": ""
+                            },
+                            "amnt": "",
+                            "enmTyp": "",
+                            "fnnclTrnsctn": {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": ""
+                            }
+                        }
+                    }
+                },
+                "stndrdTxtSpcfctn": {
+                    "cmpstTxtBlck": {
+                        "enmTyp": "",
+                        "extrnlRfrnc": "",
+                        "nm": ""
+                    }
+                },
+                "strctrlCmpnnt": {
+                    "LdLbltyExclsnSttsTyp": "",
+                    "cvrgCmpnnt": {
+                        "assssmntRslt": {
+                            "plcAssssmnt": {
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": "",
+                                "stndrdsClssfctn": ""
+                            }
+                        },
+                        "enmTyp": "",
+                        "expsrAmnt": "1",
+                        "extrnlRfrnc": "",
+                        "gnrcMnyPrvsn": {
+                            "mnyPrvsnDtrmnr": [
+                                {
+                                    "amnt": "",
+                                    "enmTyp": "",
+                                    "extrnlRfrnc": ""
+                                }
+                            ]
+                        },
+                        "nm": "",
+                        "physclObjct": {
+                            "strctr": {
+                                "cnstrctnTyp": "",
+                                "dsgnStyl": "",
+                                "enmTyp": "",
+                                "extrnlRfrnc": "",
+                                "nm": "",
+                                "occpncyTyp": "",
+                                "prdStrtDt": "",
+                                "prtctnClss": ""
+                            }
+                        },
+                        "plc": {
+                            "ggrphcArea": {
+                                "abbrvtn": "TODO:Lookup",
+                                "enmTyp": "State Code",
+                                "extrnlRfrnc": "06",
+                                "postalCode": "TODO:parse address",
+                                "rgn": "TODO:Lookup",
+                                "sbRgn": ""
+                            }
+                        },
+                        "prtclrMnyPrvsn": {
+                            "mnyPrvsnCshFlw": {
+                                "mnyPrvsnPrt": {
+                                    "accntSttmnt": {
+                                        "prdStrtDt": "0108"
+                                    },
+                                    "amnt": "TODO:?",
+                                    "enmTyp": "",
+                                    "extrnlRfrnc": "",
+                                    "fnnclTrnsctn": {
+                                        "enmTyp": "Premium statistical transaction type",
+                                        "extrnlRfrnc": "8",
+                                        "nm": "Premium or Cancellation"
+                                    },
+                                    "nm": ""
+                                }
+                            }
+                        },
+                        "rskExpsr": {
+                            "enmTyp": "Class Code",
+                            "extrnlRfrnc": "99912",
+                            "nm": "Does not apply",
+                            "sttlmntMthd": ""
+                        },
+                        "stndrdTxtSpcfctn": {
+                            "cmpstTxtBlck": {
+                                "enmTyp": "Policy Form",
+                                "extrnlRfrnc": "18",
+                                "nm": "All other property endorsements"
+                            }
+                        }
+                    },
+                    "hrrcnExclsnEndrsmntSttsTyp": "",
+                    "physclObjct": {
+                        "strctr": {
+                            "cnstrctnDt": "",
+                            "cnstrctnYrBnd": "",
+                            "inspctnFlg": "",
+                            "ldLbltyIntrmCntrlLttr": "",
+                            "ldLbltyUntCnt": "",
+                            "ldPsnngLbltyStts": "",
+                            "rfCvrngCttgry": "",
+                            "rfDckAttchmntTyp": "",
+                            "rfDckIntrnlPrssrDsgnTyp": "",
+                            "rfDckMtrl": "",
+                            "rfDckMxmmWndSpd": "",
+                            "rfShpTyp": "",
+                            "rfToWllAttchmntTyp": "",
+                            "rnvtnDt": "",
+                            "scndryLssMtgtnBldngFtrTyp": "",
+                            "scndryWtrRsstncRfIndctr": "",
+                            "strmShttrsPrsnt": "",
+                            "wndBrnDbrsIndctr": "",
+                            "wndLssMtgtnFtrTyp": "",
+                            "wndRsstncOpnngPrtctn": "",
+                            "wndstrmPrtctvDvc": ""
+                        }
+                    },
+                    "wrpArndEndrsmntSttsIndctr": ""
+                }
+            },
+            "clm": {
+                "clmFldr": [
+                    {
+                        "elmntryClm": [
+                            {
+                                "clmOffr": [
+                                    {
+                                        "enmTyp": "",
+                                        "extrnlRfrnc": "",
+                                        "nm": "",
+                                        "sttlmntMthd": ""
+                                    }
+                                ],
+                                "enmType": "",
+                                "evnt": [
+                                    {
+                                        "csoflss": "",
+                                        "ctgryEnmTyp": [],
+                                        "extrnlRfrnc": "",
+                                        "nm": ""
+                                    }
+                                ],
+                                "nm": "",
+                                "prtclrMnyPrvsn": [
+                                    {
+                                        "mnyPrvsnCshFlw": [
+                                            {
+                                                "mnyPrvsnPrt": [
+                                                    {
+                                                        "accntSttmnt": {
+                                                            "prdStrtDt": ""
+                                                        },
+                                                        "amnt": "",
+                                                        "clmsCnt": "",
+                                                        "enmTyp": "",
+                                                        "fnnclTrnsctn": {
+                                                            "enmTyp": "",
+                                                            "extrnlRfrnc": "",
+                                                            "nm": ""
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "enmTyp": "",
+                        "evnt": [
+                            {
+                                "strtDt": ""
+                            }
+                        ],
+                        "nm": ""
+                    }
+                ]
+            },
+            "errrFlg": false,
+            "errrLst": [],
+            "extrnlRfrnc": "",
+            "uuid": "TODO:generate UUID",
+            "carrierId": "9999",
+            "docID": "TODO:doc ID?",
+            "SequenceNum": 1,
+            "policyNo": ""
+        },
+        null
+    ]
+}
