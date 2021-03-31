@@ -1,0 +1,5 @@
+{
+    "url":"https://us-east.certificate-manager.cloud.ibm.com/api/v3",
+    "getcertbaseurl": "https://us-east.certificate-manager.cloud.ibm.com/api/v2/certificate/",
+    "contenttype":"application/json"
+}

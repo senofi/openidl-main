@@ -1,0 +1,38 @@
+{
+    "lob":[
+        {
+            "code":"Auto: Commercial",
+            "value":"Auto: Commercial"
+        },
+        {
+            "code":"Auto: Personal",
+            "value":"Auto: Personal"
+        },  
+        {
+            "code":"Crime",
+            "value":"Crime"
+        },  
+        {
+            "code":"Farmowners",
+            "value":"Farmowners"
+        },  
+        {
+            "code":"Homeowners",
+            "value":"Homeowners"
+        },  {
+            "code":"Inland Marine",
+            "value":"Inland Marine"
+        },  {
+            "code":"Liability",
+            "value":"Liability"
+        },  
+        {
+            "code":"Property",
+            "value":"Property"
+        },  
+        {
+            "code":"Property + Liability",
+            "value":"Property + Liability"
+        }
+    ]
+}
