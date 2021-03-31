@@ -1,0 +1,8 @@
+node_modules/**
+
+# IDE
+.vscode/**
+
+#credentials
+server/config/local-cloudant-config.json
+
