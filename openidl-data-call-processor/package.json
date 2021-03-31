@@ -19,7 +19,7 @@
         "ibm-cloud-env": "^0.2.6",
         "log4js": "4.3.2",
         "object-sizeof": "^1.4.0",
-        "openidl-common-lib": "git+https://x-oauth-basic:4QkuZuP4oHNx32Nvzu3K@git.ng.bluemix.net/openIDL/openidl-common-lib.git#develop",
+        "openidl-common-lib": "git+https://x-oauth-basic:${GITHUB_TOKEN}@git.ng.bluemix.net/openIDL/openidl-common-lib.git#develop",
         "sleep": "^6.1.0",
         "uuid": "^3.3.2",
          "moment": "^2.29.1",
