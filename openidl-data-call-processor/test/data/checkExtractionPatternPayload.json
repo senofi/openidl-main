@@ -1,0 +1,18 @@
+{
+    "isSet": true,
+    "extractionPattern": {
+        "id": "Pattern_01",
+        "name": "ExtractionPattern1",
+        "description": "This is the test description for ExtractionPattern1",
+        "Agreement": ["documentType",
+            "document.Type",
+            "document.propertyBOs",
+            "document.Components"
+        ],
+        "Claim": ["documentType",
+            "document.Type",
+            "document.propertyBOs",
+            "document.Components"
+        ]
+    }
+}

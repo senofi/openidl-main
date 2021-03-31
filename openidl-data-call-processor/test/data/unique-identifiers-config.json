@@ -1,0 +1,15 @@
+{
+    "identifiers": [{
+            "carrierName": "The Hartford",
+            "uniqueIdentifier": "12345"
+        },
+        {
+            "carrierName": "Lazarus Insurance Company",
+            "uniqueIdentifier": "76543"
+        }, {
+            "carrierName": "The FairCover",
+            "uniqueIdentifier": "54321"
+        }
+
+    ]
+}

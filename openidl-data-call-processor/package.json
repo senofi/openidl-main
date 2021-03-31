@@ -1,0 +1,41 @@
+{
+    "name": "openidl-data-call-processor",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server/index.js",
+    "author": "Mantosh",
+    "license": "ISC",
+    "scripts": {
+        "start": "NODE_CONFIG_DIR=./server/config node server/index.js",
+        "dev": "cross-env NODE_CONFIG_DIR=./server/config nodemon server/index.js",
+        "test": "NODE_CONFIG_DIR=./server/config nyc mocha --timeout 600000 --exit",
+        "dev-test": "cross-env NODE_CONFIG_DIR=./server/config nyc mocha --timeout 600000 --exit"
+    },
+    "dependencies": {
+        "@cloudant/cloudant": "^3.0.1",
+        "config": "^2.0.1",
+        "aws-sdk": "2.474.0",
+        "express": "~4.16.0",
+        "ibm-cloud-env": "^0.2.6",
+        "log4js": "4.3.2",
+        "object-sizeof": "^1.4.0",
+        "openidl-common-lib": "git+https://x-oauth-basic:4QkuZuP4oHNx32Nvzu3K@git.ng.bluemix.net/openIDL/openidl-common-lib.git#develop",
+        "sleep": "^6.1.0",
+        "uuid": "^3.3.2",
+         "moment": "^2.29.1",
+        "@sendgrid/mail": "^7.2.1",
+         "cron": "^1.8.2"
+    },
+    "engines": {
+        "node": "8.9.x",
+        "npm": "5.5.x"
+    },
+    "devDependencies": {
+        "chai": "^4.1.2",
+        "cross-env": "^5.2.0",
+        "mocha": "^5.2.0",
+        "nodemon": "^1.18.3",
+        "nyc": "^15.0.0-beta.0",
+        "sinon": "7.2.7"
+    }
+}

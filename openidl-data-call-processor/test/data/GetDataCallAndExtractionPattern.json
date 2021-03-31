@@ -1,0 +1,20 @@
+{
+    "dataCallId": "b3e17d40-3f00-11e9-a935-8dfa2d3c2e78",
+    "dataCallVersion": "1",
+    "extractionPattern": {
+        "id": "Pattern_01",
+        "name": "ExtractionPattern1",
+        "description": "This is the test description for ExtractionPattern1",
+        "Agreement": ["documentType",
+            "document.Type",
+            "document.propertyBOs",
+            "document.Components"
+        ],
+        "Claim": ["documentType",
+            "document.Type",
+            "document.propertyBOs",
+            "document.Components"
+        ]
+    },
+    "extPatternTs": "0001-01-01T00:00:00Z"
+}

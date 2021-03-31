@@ -1,0 +1,14 @@
+{
+    "persistentStore": "mongo",
+    "databaseService": [
+        {
+            "name": "mongo",
+            "mongodb": "openidl-offchain-db",
+            "servicecredentials": "off-chain-db-credentials-mongo"
+        },
+        {
+            "name": "cloudant",
+            "servicecredentials": "off-chain-db-credentials"
+        }
+    ]
+}

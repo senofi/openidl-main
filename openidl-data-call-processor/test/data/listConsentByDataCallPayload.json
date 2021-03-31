@@ -1,0 +1,12 @@
+[{
+        "consent": {
+            "datacallID": "752e5910_463a_11e9_a6f0_634ed37283ac",
+            "dataCallVersion": "4",
+            "carrierID": "12345",
+            "createdTs": "2019-03-14T09:48:55.706Z",
+            "createdBy": "mary@thehartford.com"
+        },
+        "carrierName": "The Hartford"
+    }
+
+]
