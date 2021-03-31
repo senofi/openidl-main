@@ -1,0 +1,14 @@
+{{- if .Values.global.mongoexpress.install }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.global.mongoexpress.servicename }}
+spec:
+  selector:
+    app: mongo-express
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+{{- end }}
