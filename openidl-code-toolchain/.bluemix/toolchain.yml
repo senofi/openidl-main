@@ -1,0 +1,389 @@
+version: 2
+template:
+  name: Deploy OpenIDL Apps
+  description: This toolchain allows to set initial parameters for all OpenIDL apps and build pipelines accordingly
+  required:
+    - hostedgit09
+    - hostedgitutilities
+    - hostedgitdatacallapp
+    - hostedgitdatacallpro
+    - hostedgitetl
+    - hostedgitidm
+    - ui
+toolchain:
+  name: openidl-apps-toolchain
+services:
+  hostedgitutilities:
+    parameters:
+      extra_capabilities:
+        - capability_id: git.issues
+          display_name: Issues
+          dashboard_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-utilities/issues
+          label: openidl-utilities
+          tags:
+            - think
+            - code
+          enabled: false
+          readme: false
+      label: openidl-utilities
+      type: link
+      git_id: hostedgit
+      owner_id: openIDL
+      repo_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-utilities.git
+      private_repo: true
+      has_issues: false
+      enable_traceability: false
+      authorized: hostedgit
+      integration_owner: IBMid-06000238QN
+      repo_name: openidl-utilities
+      api_root_url: https://us-south.git.cloud.ibm.com/api
+      token_url: https://otc-github-consolidated-broker.us-south.devops.cloud.ibm.com/github/token?git_id=hostedgit
+      custom_host: ""
+      namespace_table: ""
+    service_id: hostedgit
+
+  ui:
+    parameters:
+      extra_capabilities:
+        - capability_id: git.issues
+          display_name: Issues
+          dashboard_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-ui/issues
+          label: openidl-ui
+          tags:
+            - think
+            - code
+          enabled: false
+          readme: false
+      label: openidl-ui
+      type: link
+      repo_name: openidl-ui
+      repo_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-ui.git
+      source_repo_url: https://github.com/open-toolchain/hello-containers
+      has_issues: false
+      enable_traceability: false
+      git_id: hostedgit
+      custom_host: ""
+      namespace_table: ""
+      owner_id: openIDL
+      private_repo: true
+      authorized: hostedgit
+      integration_owner: IBMid-06000238QN
+      api_root_url: https://us-south.git.cloud.ibm.com/api
+      token_url: https://otc-github-consolidated-broker.us-south.devops.cloud.ibm.com/github/token?git_id=hostedgit
+    service_id: hostedgit
+  hostedgit09:
+    parameters:
+      extra_capabilities:
+        - capability_id: git.issues
+          display_name: Issues
+          dashboard_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-chaincode/issues
+          label: openidl-chaincode
+          tags:
+            - think
+            - code
+          enabled: false
+          readme: false
+      label: openidl-chaincode
+      type: link
+      git_id: hostedgit
+      owner_id: openIDL
+      repo_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-chaincode.git
+      private_repo: true
+      has_issues: false
+      enable_traceability: false
+      authorized: hostedgit
+      integration_owner: IBMid-06000238QN
+      repo_name: openidl-chaincode
+      api_root_url: https://us-south.git.cloud.ibm.com/api
+      token_url: https://otc-github-consolidated-broker.us-south.devops.cloud.ibm.com/github/token?git_id=hostedgit
+      custom_host: ""
+      namespace_table: ""
+    service_id: hostedgit
+  pipelineetl:
+    parameters:
+      label: etl
+      type: classic
+      name: etl
+      ui_pipeline: true
+      api_url: http://pipeline-service/pipeline/pipelines/234c44f5-d1a7-42e0-96d2-f5e211833f6a
+      external_api_url: https://pipeline-service.us-south.devops.cloud.ibm.com/pipeline/pipelines/234c44f5-d1a7-42e0-96d2-f5e211833f6a
+      configuration:
+        content:
+          $text: pipeline_pipelineetl.yml
+        env:
+          NIFI_CLUSTER_NAME: '{{form.pipeline.parameters.nifi_cluster_name}}'
+          API_KEY: '{{form.pipeline.parameters.api-key}}'
+          REGISTRY_REGION_ID: '{{form.pipeline.parameters.registry-region}}'
+          REGISTRY_NAMESPACE: '{{form.pipeline.parameters.registry-namespace}}'
+          PROD_REGION_ID: '{{form.pipeline.parameters.prod-region}}'
+          PROD_RESOURCE_GROUP: '{{form.pipeline.parameters.prod-resource-group}}'
+          PROD_NIFI_CLUSTER_NAME: '{{form.pipeline.parameters.prod-nifi-cluster-name}}'
+        execute: false                    
+      services:
+        - hostedgitetl
+    service_id: pipeline
+  pipelinedatacallidm:
+    parameters:
+      label: insurance-data-manager
+      type: classic
+      name: insurance-data-manager
+      ui_pipeline: true
+      api_url: http://pipeline-service/pipeline/pipelines/08de7b47-0262-42ac-90ec-db088812a57d
+      external_api_url: https://pipeline-service.us-south.devops.cloud.ibm.com/pipeline/pipelines/08de7b47-0262-42ac-90ec-db088812a57d
+      configuration:
+        content:
+          $text: pipeline_pipelinedatacallidm.yml
+        env:
+          GITHUB_TOKEN: '{{form.pipeline.parameters.github_token}}'
+          HOST: '{{form.pipeline.parameters.host}}'
+          CLUSTER_NAME: '{{form.pipeline.parameters.cluster_name}}'
+          API_KEY: '{{form.pipeline.parameters.api-key}}'
+          REGISTRY_REGION_ID: '{{form.pipeline.parameters.registry-region}}'
+          REGISTRY_NAMESPACE: '{{form.pipeline.parameters.registry-namespace}}'
+          PROD_REGION_ID: '{{form.pipeline.parameters.prod-region}}'
+          PROD_RESOURCE_GROUP: '{{form.pipeline.parameters.prod-resource-group}}'
+          PROD_CLUSTER_NAME: '{{form.pipeline.parameters.prod-cluster-name}}'
+        execute: false          
+      services:
+        - hostedgitidm
+    service_id: pipeline
+  hostedgitidm:
+    parameters:
+      extra_capabilities:
+        - capability_id: git.issues
+          display_name: Issues
+          dashboard_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-insurance-data-manager/issues
+          label: openidl-insurance-data-manager
+          tags:
+            - think
+            - code
+          enabled: false
+          readme: false
+      label: openidl-insurance-data-manager
+      type: link
+      git_id: hostedgit
+      owner_id: openIDL
+      repo_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-insurance-data-manager.git
+      private_repo: true
+      has_issues: false
+      enable_traceability: false
+      authorized: hostedgit
+      integration_owner: IBMid-06000238QN
+      repo_name: openidl-insurance-data-manager
+      api_root_url: https://us-south.git.cloud.ibm.com/api
+      token_url: https://otc-github-consolidated-broker.us-south.devops.cloud.ibm.com/github/token?git_id=hostedgit
+      custom_host: ""
+      namespace_table: ""
+    service_id: hostedgit
+  pipelinedatacallapp:
+    parameters:
+      label: data-call-app
+      type: classic
+      name: data-call-app
+      ui_pipeline: true
+      api_url: http://pipeline-service/pipeline/pipelines/5b015343-6db6-480d-aaee-cad48a42d2f5
+      external_api_url: https://pipeline-service.us-south.devops.cloud.ibm.com/pipeline/pipelines/5b015343-6db6-480d-aaee-cad48a42d2f5
+      configuration:
+        content:
+          $text: pipeline_pipelinedatacallapp.yml
+        env:
+          GITHUB_TOKEN: '{{form.pipeline.parameters.github_token}}'
+          CLUSTER_NAME: '{{form.pipeline.parameters.cluster_name}}'
+          HOST: '{{form.pipeline.parameters.host}}'
+          CROSS_CHANNELS: '{{form.pipeline.parameters.cross_channels}}'
+          API_KEY: '{{form.pipeline.parameters.api-key}}'
+          REGISTRY_REGION_ID: '{{form.pipeline.parameters.registry-region}}'
+          REGISTRY_NAMESPACE: '{{form.pipeline.parameters.registry-namespace}}'
+          PROD_REGION_ID: '{{form.pipeline.parameters.prod-region}}'
+          PROD_RESOURCE_GROUP: '{{form.pipeline.parameters.prod-resource-group}}'
+          PROD_CLUSTER_NAME: '{{form.pipeline.parameters.prod-cluster-name}}'
+        execute: false
+      services:
+        - hostedgitdatacallapp
+    service_id: pipeline
+  pipelinechaincode:
+    parameters:
+      label: chaincode
+      type: classic
+      name: chaincode
+      ui_pipeline: true
+      api_url: http://pipeline-service/pipeline/pipelines/5b015343-6db6-480d-aaee-cad48a42d2f5
+      external_api_url: https://pipeline-service.us-south.devops.cloud.ibm.com/pipeline/pipelines/5b015343-6db6-480d-aaee-cad48a42d2f5
+      configuration:
+        content:
+          $text: pipeline_pipelinechaincode.yml
+        env:
+          ADMIN_IDENTITY: '{{form.pipeline.parameters.admin_identity}}'
+          CONNECTION_PROFILE: '{{form.pipeline.parameters.connection_profile}}'
+          API_KEY: '{{form.pipeline.parameters.api-key}}'
+          CC_VERSION: '{{form.pipeline.parameters.cc_version}}'
+          HOST: '{{form.pipeline.parameters.host}}'
+        execute: false          
+      services:
+        - hostedgit09
+    service_id: pipeline
+  pipelinedatacallpro:
+    parameters:
+      label: data-call-processor
+      type: classic
+      name: data-call-processor
+      ui_pipeline: true
+      api_url: http://pipeline-service/pipeline/pipelines/72a2a26e-cefa-437d-b7ef-ba06b7a9c2a7
+      external_api_url: https://pipeline-service.us-south.devops.cloud.ibm.com/pipeline/pipelines/72a2a26e-cefa-437d-b7ef-ba06b7a9c2a7
+      configuration:
+        content:
+          $text: pipeline_pipelinedatacallpro.yml
+        env:
+          GITHUB_TOKEN: '{{form.pipeline.parameters.github_token}}'
+          HOST: '{{form.pipeline.parameters.host}}'
+          UNIQUE_IDENTIFIERS: '{{form.pipeline.parameters.unique_identifiers}}'
+          API_KEY: '{{form.pipeline.parameters.api-key}}'
+          REGISTRY_REGION_ID: '{{form.pipeline.parameters.registry-region}}'
+          REGISTRY_NAMESPACE: '{{form.pipeline.parameters.registry-namespace}}'
+          PROD_REGION_ID: '{{form.pipeline.parameters.prod-region}}'
+          PROD_RESOURCE_GROUP: '{{form.pipeline.parameters.prod-resource-group}}'
+          PROD_CLUSTER_NAME: '{{form.pipeline.parameters.prod-cluster-name}}'
+        execute: false          
+      services:
+        - hostedgitdatacallpro
+    service_id: pipeline
+  hostedgitdatacallapp:
+    parameters:
+      extra_capabilities:
+        - capability_id: git.issues
+          display_name: Issues
+          dashboard_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-data-call-app/issues
+          label: openidl-data-call-app
+          tags:
+            - think
+            - code
+          enabled: false
+          readme: false
+      label: openidl-data-call-app
+      type: link
+      git_id: hostedgit
+      owner_id: openIDL
+      repo_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-data-call-app.git
+      private_repo: true
+      has_issues: false
+      enable_traceability: false
+      authorized: hostedgit
+      integration_owner: IBMid-06000238QN
+      repo_name: openidl-data-call-app
+      api_root_url: https://us-south.git.cloud.ibm.com/api
+      token_url: https://otc-github-consolidated-broker.us-south.devops.cloud.ibm.com/github/token?git_id=hostedgit
+      custom_host: ""
+      namespace_table: ""
+    service_id: hostedgit
+  hostedgitetl:
+    parameters:
+      extra_capabilities:
+        - capability_id: git.issues
+          display_name: Issues
+          dashboard_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-data-etl/issues
+          label: openidl-data-etl
+          tags:
+            - think
+            - code
+          enabled: false
+          readme: false
+      label: openidl-data-etl
+      type: link
+      git_id: hostedgit
+      owner_id: openIDL
+      repo_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-data-etl.git
+      private_repo: true
+      has_issues: false
+      enable_traceability: false
+      authorized: hostedgit
+      integration_owner: IBMid-06000238QN
+      repo_name: openidl-data-etl
+      api_root_url: https://us-south.git.cloud.ibm.com/api
+      token_url: https://otc-github-consolidated-broker.us-south.devops.cloud.ibm.com/github/token?git_id=hostedgit
+      custom_host: ""
+      namespace_table: ""
+    service_id: hostedgit
+  hostedgitdatacallpro:
+    parameters:
+      extra_capabilities:
+        - capability_id: git.issues
+          display_name: Issues
+          dashboard_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-data-call-processor/issues
+          label: openidl-data-call-processor
+          tags:
+            - think
+            - code
+          enabled: false
+          readme: false
+      label: openidl-data-call-processor
+      type: link
+      git_id: hostedgit
+      owner_id: openIDL
+      repo_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-data-call-processor.git
+      private_repo: true
+      has_issues: false
+      enable_traceability: false
+      authorized: hostedgit
+      integration_owner: IBMid-06000238QN
+      repo_name: openidl-data-call-processor
+      api_root_url: https://us-south.git.cloud.ibm.com/api
+      token_url: https://otc-github-consolidated-broker.us-south.devops.cloud.ibm.com/github/token?git_id=hostedgit
+      custom_host: ""
+      namespace_table: ""
+    service_id: hostedgit
+  build:
+    parameters:
+      label: openidl-ui
+      type: classic
+      name: openidl-ui
+      ui-pipeline: true
+      configuration:
+        content:
+          $text: pipeline_build.yml
+        env:
+          GITHUB_TOKEN: '{{form.pipeline.parameters.github_token}}'
+          CLUSTER_NAME: '{{form.pipeline.parameters.cluster_name}}'
+          API_KEY: '{{form.pipeline.parameters.api-key}}'
+          REGISTRY_REGION_ID: '{{form.pipeline.parameters.registry-region}}'
+          REGISTRY_NAMESPACE: '{{form.pipeline.parameters.registry-namespace}}'
+          PROD_REGION_ID: '{{form.pipeline.parameters.prod-region}}'
+          PROD_RESOURCE_GROUP: '{{form.pipeline.parameters.prod-resource-group}}'
+          PROD_CLUSTER_NAME: '{{form.pipeline.parameters.prod-cluster-name}}'
+          DATA_CALL_APP_URL: https://openidl-data-call-app.{{form.pipeline.parameters.cluster_name}}.us-east.containers.appdomain.cloud/openidl/api
+        execute: false
+      ui_pipeline: true
+      api_url: http://pipeline-service/pipeline/pipelines/acbdeeae-2605-4fa3-9149-5ce3283fe8b1
+      external_api_url: https://pipeline-service.us-south.devops.cloud.ibm.com/pipeline/pipelines/acbdeeae-2605-4fa3-9149-5ce3283fe8b1
+      services:
+        - ui
+    service_id: pipeline
+  pipeline17:
+    parameters:
+      label: openidl-utilities
+      type: classic
+      name: openidl-utilities
+      ui_pipeline: true
+      api_url: http://pipeline-service/pipeline/pipelines/b4e691cf-5dba-411b-94b7-03467e0d8f66
+      external_api_url: https://pipeline-service.us-south.devops.cloud.ibm.com/pipeline/pipelines/b4e691cf-5dba-411b-94b7-03467e0d8f66
+      configuration:
+        content:
+          $text: pipeline_pipeline17.yml
+        env:
+          GITHUB_TOKEN: '{{form.pipeline.parameters.github_token}}'
+          HOST: '{{form.pipeline.parameters.host}}'
+          CLUSTER_NAME: '{{form.pipeline.parameters.cluster_name}}'
+          API_KEY: '{{form.pipeline.parameters.api-key}}'
+          REGISTRY_REGION_ID: '{{form.pipeline.parameters.registry-region}}'
+          REGISTRY_NAMESPACE: '{{form.pipeline.parameters.registry-namespace}}'
+          PROD_REGION_ID: '{{form.pipeline.parameters.prod-region}}'
+          PROD_RESOURCE_GROUP: '{{form.pipeline.parameters.prod-resource-group}}'
+          PROD_CLUSTER_NAME: '{{form.pipeline.parameters.prod-cluster-name}}'
+        execute: false          
+      services:
+        - hostedgitutilities
+    service_id: pipeline
+    
+form:
+  pipeline:
+    schema:
+      $ref: deploy.json

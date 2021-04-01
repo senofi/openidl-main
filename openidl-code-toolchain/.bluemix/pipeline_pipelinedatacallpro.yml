@@ -1,0 +1,270 @@
+stages:
+  - name: BUILD
+    inputs:
+      - type: git
+        branch: develop
+        dir_name: null
+        service: hostedgitdatacallpro
+    permission:
+      execute: TOOLCHAIN_ADMINS
+    properties:
+      - name: IMAGE_NAME
+        value: openidl-data-call-pro
+        type: text
+    jobs:
+      - name: Fetch code
+        type: builder
+        artifact_dir: ""
+        build_type: shell
+        script: |
+          #!/bin/bash
+          # set -x
+
+          # Git repo cloned at $WORKING_DIR, copy into $ARCHIVE_DIR
+          mkdir -p $ARCHIVE_DIR
+          cp -R -n ./ $ARCHIVE_DIR/ || true
+
+          # Record git info
+          echo "GIT_URL=${GIT_URL}" >> $ARCHIVE_DIR/build.properties
+          echo "GIT_BRANCH=${GIT_BRANCH}" >> $ARCHIVE_DIR/build.properties
+          echo "GIT_COMMIT=${GIT_COMMIT}" >> $ARCHIVE_DIR/build.properties
+          echo "SOURCE_BUILD_NUMBER=${BUILD_NUMBER}" >> $ARCHIVE_DIR/build.properties
+          cat $ARCHIVE_DIR/build.properties
+
+          # check if doi is integrated in this toolchain
+          if jq -e '.services[] | select(.service_id=="draservicebroker")' _toolchain.json; then
+            # Record build information
+            ibmcloud login --apikey ${IBM_CLOUD_API_KEY} --no-region
+            ibmcloud doi publishbuildrecord --branch ${GIT_BRANCH} --repositoryurl ${GIT_URL} --commitid ${GIT_COMMIT} \
+              --buildnumber ${BUILD_NUMBER} --logicalappname ${IMAGE_NAME} --status pass
+          fi
+      - name: Unit Tests
+        type: tester
+        script: |-
+          #!/bin/bash
+          # set -x
+          if [ -f ./tests/run-tests.sh ]; then
+            source ./tests/run-tests.sh
+            RESULT=$?
+            if [ ! -z "${FILE_LOCATION}"]; then
+              if [ ${RESULT} -ne 0 ]; then STATUS=fail; else STATUS=pass; fi
+                if jq -e '.services[] | select(.service_id=="draservicebroker")' _toolchain.json; then
+                  ibmcloud login --apikey ${IBM_CLOUD_API_KEY} --no-region
+                  ibmcloud doi publishtestrecord --type unittest --buildnumber ${BUILD_NUMBER} --filelocation ${FILE_LOCATION} \
+                    --buildnumber ${BUILD_NUMBER} --logicalappname ${IMAGE_NAME} --status ${STATUS}
+                fi
+              exit $RESULT
+            fi
+          else
+            echo "Test runner script not found: ./tests/run-tests.sh"
+          fi
+        test_type: simple
+  - name: CONTAINERIZE
+    inputs:
+      - type: job
+        stage: BUILD
+        job: Fetch code
+        dir_name: null
+    triggers:
+      - type: stage
+    permission:
+      execute: TOOLCHAIN_ADMINS
+    properties:
+      - name: buildprops
+        value: build.properties
+        type: file
+      - name: DOCKER_ROOT
+        value: .
+        type: text
+      - name: DOCKER_FILE
+        value: Dockerfile
+        type: text
+      - name: PIPELINE_IMAGE_URL
+        value: undefined
+        type: text
+      - name: GITHUB_TOKEN
+        value: ${GITHUB_TOKEN}
+        type: text
+      - name: HOST
+        value: ${HOST}
+        type: text
+      - name: TARGET_DB
+        value: mongo
+        type: text
+      - name: HOST_NAME
+        value: data-call-processor
+        type: text
+      - name: APP_PREFIX
+        value: data-call-processor-
+        type: text
+      - name: PAGE_SIZE
+        value: "2000"
+        type: text
+      - name: UNIQUE_IDENTIFIERS
+        value: '${UNIQUE_IDENTIFIERS}'
+        type: text
+    jobs:
+      - name: Check dockerfile
+        type: tester
+        script: |-
+          #!/bin/bash
+          # uncomment to debug the script
+          # set -x
+          # copy the script below into your app code repo (e.g. ./scripts/check_dockerfile.sh) and 'source' it from your pipeline job
+          #    source ./scripts/check_prebuild.sh
+          # alternatively, you can source it from online script:
+          #    source <(curl -sSL "https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_dockerfile.sh")
+          # ------------------
+          # source: https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_dockerfile.sh
+
+          # This script lints Dockerfile.
+          source <(curl -sSL "https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_dockerfile.sh")
+        test_type: simple
+      - name: Check registry
+        type: builder
+        artifact_dir: ""
+        build_type: cr
+        script: |-
+          #!/bin/bash
+          # uncomment to debug the script
+          # set -x
+          # copy the script below into your app code repo (e.g. ./scripts/check_registry.sh) and 'source' it from your pipeline job
+          #    source ./scripts/check_registry.sh
+          # alternatively, you can source it from online script:
+          #    source <(curl -sSL "https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_registry.sh")
+          # ------------------
+          # source: https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_registry.sh
+
+          # This script checks presence of registry namespace.
+          source <(curl -sSL "https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_registry.sh")
+        namespace: dev-openidl-aais-registry
+        image_name: openidl-data-call-pro
+        target:
+          region_id: ${REGISTRY_REGION_ID}
+          api_key: ${API_KEY}
+          account_guid: 361c80aeecd44412b23a7f1bc4ae580f
+      - name: Build container image
+        type: builder
+        artifact_dir: output
+        build_type: cr
+        script: |
+          #!/bin/bash
+          # uncomment to debug the script
+          # set -x
+          # copy the script below into your app code repo (e.g. ./scripts/build_image.sh) and 'source' it from your pipeline job
+          #    source ./scripts/build_image.sh
+          # alternatively, you can source it from online script:
+          #    source <(curl -sSL "https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/build_image.sh")
+          # ------------------
+          # source: https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/build_image.sh
+
+          # call custom defined script application specific <<
+          echo ${DOCKER_ROOT}/kube-build.sh
+          chmod 755 ${DOCKER_ROOT}/kube-build.sh
+          . ${DOCKER_ROOT}/kube-build.sh
+          # end of custom script  >>
+
+          # This script does build a Docker image into IBM Container Service private image registry.
+          # Minting image tag using format: BUILD_NUMBER-BRANCH-COMMIT_ID-TIMESTAMP
+          # Also copies information into a build.properties file, so they can be reused later on by other scripts (e.g. image url, chart name, ...)
+          source <(curl -sSL "https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/build_image.sh")
+        namespace: dev-openidl-aais-registry
+        image_name: openidl-data-call-pro
+        target:
+          region_id: ${REGISTRY_REGION_ID}
+          api_key: ${API_KEY}
+          account_guid: 361c80aeecd44412b23a7f1bc4ae580f
+      - name: Check vulnerabilities
+        type: tester
+        fail_stage: false
+        script: |
+          #!/bin/bash
+          # uncomment to debug the script
+          # set -x
+          # copy the script below into your app code repo (e.g. ./scripts/check_vulnerabilities.sh) and 'source' it from your pipeline job
+          #    source ./scripts/check_vulnerabilities.sh
+          # alternatively, you can source it from online script:
+          #    source <(curl -sSL "https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_vulnerabilities.sh")
+          # ------------------
+          # source: https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_vulnerabilities.sh
+          # Check for vulnerabilities of built image using Vulnerability Advisor
+          source <(curl -sSL "https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_vulnerabilities.sh")
+        namespace: default
+        image_name: pipelineBuiltImage
+        image_tag: latest
+        target:
+          region_id: ${REGISTRY_REGION_ID}
+          api_key: ${API_KEY}
+          account_guid: 361c80aeecd44412b23a7f1bc4ae580f
+        test_type: vulnerabilityadvisor
+  - name: DEPLOY
+    inputs:
+      - type: job
+        stage: CONTAINERIZE
+        job: Build container image
+        dir_name: null
+    triggers:
+      - type: stage
+    permission:
+      execute: TOOLCHAIN_ADMINS
+    properties:
+      - name: buildprops
+        value: build.properties
+        type: file
+      - name: CLUSTER_NAMESPACE
+        value: openidl-aais-apps
+        type: text
+      - name: DEPLOYMENT_FILE
+        value: deployment.yml
+        type: text
+      - name: APP_URL
+        value: undefined
+        type: text
+    jobs:
+      - name: Deploy to Kubernetes
+        type: deployer
+        deploy_type: kubernetes
+        target:
+          region_id: ${REGISTRY_REGION_ID}
+          api_key: ${API_KEY}
+          account_guid: 361c80aeecd44412b23a7f1bc4ae580f
+          resource_group: ${PROD_RESOURCE_GROUP}
+          kubernetes_cluster: ${PROD_CLUSTER_NAME}
+        script: |
+          #!/bin/bash
+          # uncomment to debug the script
+          # set -x
+          # copy the script below into your app code repo (e.g. ./scripts/check_and_deploy_kubectl.sh) and 'source' it from your pipeline job
+          #    source ./scripts/check_and_deploy_kubectl.sh
+          # alternatively, you can source it from online script:
+          #    source <(curl -sSL "https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_and_deploy_kubectl.sh")
+          # ------------------
+          # source: https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_and_deploy_kubectl.sh
+
+          # This script checks the IBM Container Service cluster is ready, has a namespace configured with access to the private
+          # image registry (using an IBM Cloud API Key), perform a kubectl deploy of container image and check on outcome.
+          source <(curl -sSL "https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_and_deploy_kubectl.sh")
+      - name: Check health
+        type: deployer
+        deploy_type: kubernetes
+        target:
+          region_id: ${REGISTRY_REGION_ID}
+          api_key: ${API_KEY}
+          account_guid: 361c80aeecd44412b23a7f1bc4ae580f
+          resource_group: ${PROD_RESOURCE_GROUP}
+          kubernetes_cluster: ${PROD_CLUSTER_NAME}
+        script: |-
+          #!/bin/bash
+          # uncomment to debug the script
+          # set -x
+          # copy the script below into your app code repo (e.g. ./scripts/check_health.sh) and 'source' it from your pipeline job
+          #    source ./scripts/check_health.sh
+          # alternatively, you can source it from online script:
+          #    source <(curl -sSL "https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_health.sh")
+          # ------------------
+          # source: https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_health.sh
+          # Check liveness and readiness probes to confirm application is healthy
+          source <(curl -sSL "https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_health.sh")
+properties:
+  - name: IBM_CLOUD_API_KEY
+    type: secure

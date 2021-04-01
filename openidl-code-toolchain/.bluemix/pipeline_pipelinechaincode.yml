@@ -1,0 +1,158 @@
+stages:
+  - name: PREPARE
+    inputs:
+      - type: git
+        branch: develop
+        dir_name: null
+        service: hostedgit09
+    permission:
+      execute: TOOLCHAIN_ADMINS
+    properties:
+      - name: SCRIPT_DIR
+        value: ./scripts/
+        type: text
+      - name: BUILD_LIB_URL
+        value: https://github.com/IBM-Blockchain-Starter-Kit/build-lib/archive/v0.5.5.tar.gz
+        type: text
+      - name: CC_REPO_DIR
+        value: ./chaincode-repo/
+        type: text
+      - name: FABRIC_CLI_DIR
+        value: ./fabric-cli/
+        type: text
+      - name: FABRIC_CLI_URL
+        value: https://github.com/IBM-Blockchain-Starter-Kit/fabric-cli/archive/v1.4.2.tar.gz
+        type: text
+    jobs:
+      - name: Prepare
+        type: builder
+        artifact_dir: ""
+        build_type: shell
+        script: |-
+          #!/bin/bash
+          set -ex
+
+          # move chaincode git repo to separate directory
+          if [ -n "$CC_REPO_DIR" ]; then
+            chaincode_files=`ls`
+            mkdir $CC_REPO_DIR
+            mv -f $chaincode_files "$CC_REPO_DIR"
+          fi
+
+          if [ -n "$BUILD_LIB_URL" ]; then
+            echo "=> Downloading Blockchain Build Libraries..."
+            # download blockchain-build-lib
+            build_lib_dir=$(mktemp -d)
+            mkdir -p "$SCRIPT_DIR"
+
+            (curl -fsSL "$BUILD_LIB_URL") > "$build_lib_dir/build-lib.tgz"
+            tar --keep-old-files -xvzf "$build_lib_dir/build-lib.tgz" -C "$SCRIPT_DIR" --strip-components 2 > /dev/null 2>&1 || true
+
+            # git clone "$BUILD_LIB_URL" "$SCRIPT_DIR" > /dev/null 2>&1 || true
+          fi
+
+          if [ -n "$FABRIC_CLI_URL" ]; then
+            echo "=> Downloading Fabric-CLI..."
+            # download fabric-cli
+            fabric_cli_dir=$(mktemp -d)
+            mkdir -p "$FABRIC_CLI_DIR"
+
+            (curl -fsSL "$FABRIC_CLI_URL") > "$fabric_cli_dir/fabric-cli.tgz"
+            tar --keep-old-files -xvzf "$fabric_cli_dir/fabric-cli.tgz" -C "$FABRIC_CLI_DIR" --strip-components 1 > /dev/null 2>&1 || true
+
+            # git clone "$FABRIC_CLI_URL" "$FABRIC_CLI_DIR" > /dev/null 2>&1 || true
+          fi
+  - name: BUILD
+    inputs:
+      - type: job
+        stage: PREPARE
+        job: Prepare
+        dir_name: null
+    triggers:
+      - type: stage
+    permission:
+      execute: TOOLCHAIN_ADMINS
+    properties:
+      - name: PLATFORM
+        value: go
+        type: text
+      - name: SCRIPT_DIR
+        value: ./scripts/
+        type: text
+      - name: FABRIC_CLI_DIR
+        value: ./fabric-cli/
+        type: text
+      - name: VERSION
+        value: ${CC_VERSION}
+        type: text
+      - name: HOST
+        value: ${HOST}
+        type: text
+
+    jobs:
+      - name: Build Chaincode
+        type: builder
+        artifact_dir: ""
+        build_type: shell
+        script: |-
+          #!/bin/bash -x
+          PIPELINE_DIR=$PWD
+          ls
+          # call custom defined script application specific <<
+          cd chaincode-repo
+          echo kube-build.sh
+
+          chmod 755 kube-build.sh
+          . kube-build.sh
+          cat deploy_config.json
+          cat chaincode/openidl/collection-config.json
+
+          cd $PIPELINE_DIR
+          # end of custom script  >>
+
+
+          # script defined in chaincode project
+          source "${SCRIPT_DIR}router.sh" build "${PLATFORM}"
+        
+  - name: DEPLOY
+    inputs:
+      - type: job
+        stage: BUILD
+        job: Build Chaincode
+        dir_name: null
+    triggers:
+      - type: stage
+    permission:
+      execute: TOOLCHAIN_ADMINS
+    properties:
+      - name: PLATFORM
+        value: go
+        type: text
+      - name: SCRIPT_DIR
+        value: ./scripts/
+        type: text
+      - name: FABRIC_CLI_DIR
+        value: ./fabric-cli/
+        type: text
+      - name: BLOCKCHAIN_SERVICE_INSTANCE
+        value: ${BLOCKCHAIN_SERVICE_INSTANCE}
+        type: text
+      - name: CLOUDANT_SERVICE_INSTANCE
+        value: ${CLOUDANT_SERVICE_INSTANCE}
+        type: text
+      - name: REGION_ID
+        value: ${REGION_ID}
+        type: text
+      - name: ADMIN_IDENTITY_STRING
+        value: '${ADMIN_IDENTITY}'
+        type: text
+      - name: CONNECTION_PROFILE_STRING
+        value: '${CONNECTION_PROFILE}'
+        type: text
+    jobs:
+      - name: Deploy Chaincode
+        type: builder
+        artifact_dir: ""
+        build_type: shell
+        script: "#!/bin/bash -x\n#source \"${SCRIPT_DIR}/router.sh\" deploy \"${PLATFORM}\"\n#Custom code start\n#!/usr/bin/env bash\n# Common deploy script for chaincode\n# shellcheck source=src/common/env.sh\nsource \"${SCRIPT_DIR}/common/env.sh\"\n# shellcheck source=src/common/utils.sh\nsource \"${SCRIPT_DIR}/common/utils.sh\"\n# shellcheck source=src/common/blockchain.sh\nsource \"${SCRIPT_DIR}/common/blockchain.sh\"\nfunction deploy_cc() {\n  local platform=$1\n  local chaincode_dir_prefix=$2\n  if [[ ! -f $CONFIGPATH ]]; then\n    echo \"No deploy configuration at specified path: ${CONFIGPATH}\"\n    exit 1\n  fi\n  echo \"======== Validating dependencies ========\"\n  nvm_install_node \"${NODE_VERSION}\"\n  echo \"-------- Building Fabric-Cli --------\"\n  build_fabric_cli \"${FABRIC_CLI_DIR}\"\n  echo \"-------- Installing jq --------\"\n  install_jq\n  # Load profiles from toolchain ENV variables (from creation)\n  echo \"======== Loading identity profiles and certificates ========\"\n  PROFILES_PATH=$(mktemp -d)\n  mkdir -p \"${PROFILES_PATH}\"\n  # Handle single identity/certificate or an array of information\n  if [[ ${ADMIN_IDENTITY_STRING::1} != \"[\" ]]; then\n    ADMIN_IDENTITY_STRING=[\"$ADMIN_IDENTITY_STRING\"]\n  fi\n  for IDENTITYINDEX in $(jq -n \"${ADMIN_IDENTITY_STRING}\" | jq -r \"keys | .[]\"); do\n    jq -n \"${ADMIN_IDENTITY_STRING}\" | jq -r \".[$IDENTITYINDEX]\" | tee \"${PROFILES_PATH}/ADMINIDENTITY_${IDENTITYINDEX}.json\"\n    echo \"-> ${PROFILES_PATH}/ADMINIDENTITY_${IDENTITYINDEX}.json\"\n  done\n  if [[ ${CONNECTION_PROFILE_STRING::1} != \"[\" ]]; then\n    CONNECTION_PROFILE_STRING=[\"$CONNECTION_PROFILE_STRING\"]\n  fi\n  for PROFILEINDEX in $(jq -n \"${CONNECTION_PROFILE_STRING}\" | jq -r \"keys | .[]\"); do\n    jq -n \"${CONNECTION_PROFILE_STRING}\" | jq -r \".[$PROFILEINDEX]\" | tee \"${PROFILES_PATH}/CONNPROFILE_${PROFILEINDEX}.json\"\n    echo \"-> ${PROFILES_PATH}/CONNPROFILE_${PROFILEINDEX}.json\"\n  done\n  # Deploying based on configuration options\n  echo \"======== Reading 'deploy_config.json' ========\"\n  ORGINDEX=0\n  ECODE=1\n  CC_VERSION=\"$(date '+%Y%m%d.%H%M%S')\"\n  for ORG in $(jq -r \"keys | .[]\" \"${CONFIGPATH}\"); do\n    for CCINDEX in $(jq -r \".[\\\"${ORG}\\\"].chaincode | keys | .[]\" \"${CONFIGPATH}\"); do\n      CC=$(jq -r \".[\\\"${ORG}\\\"].chaincode | .[${CCINDEX}]\" \"${CONFIGPATH}\")\n      # Collect chaincode metadata\n      CC_NAME=$(jq -n \"${CC}\" | jq -r '.name')\n      json_version=$(jq -n \"${CC}\" | jq -r '.version?')\n      if [[ $json_version != null && $json_version != \"\" ]]; then\n        CC_VERSION=$json_version\n      fi\n      CC_SRC=$(jq -n \"${CC}\" | jq -r '.path')\n      ADMIN_IDENTITY_FILE=\"${PROFILES_PATH}/ADMINIDENTITY_${ORGINDEX}.json\"\n      CONN_PROFILE_FILE=\"${PROFILES_PATH}/CONNPROFILE_${ORGINDEX}.json\"\n      # Should install\n      if [[ \"true\" == $(jq -r \".[\\\"${ORG}\\\"].chaincode | .[${CCINDEX}] | .install\" \"${CONFIGPATH}\") ]]; then\n        if [ -z \"${chaincode_dir_prefix}\" ]; then\n          local cc_dir=\"${CC_SRC}\"\n        else\n          local cc_dir=\"${chaincode_dir_prefix}/${CC_SRC}\"\n        fi\n        install_fabric_chaincode \"${ORG}\" \"${ADMIN_IDENTITY_FILE}\" \"${CONN_PROFILE_FILE}\" \\\n          \"${CC_NAME}\" \"${CC_VERSION}\" \"${platform}\" \"${CC_SRC}\"\n      fi\n      ECODE=0\n      for CHANNEL in $(jq -n \"${CC}\" | jq -r '.channels | .[]'); do\n        # should instantiate\n        if [[ \"true\" == $(jq -r \".[\\\"${ORG}\\\"].chaincode | .[${CCINDEX}] | .instantiate\" \"${CONFIGPATH}\") ]]; then\n          init_fn=$(jq -r \".[\\\"${ORG}\\\"].chaincode | .[${CCINDEX}] | .init_fn?\" \"${CONFIGPATH}\")\n          if [[ $init_fn == null ]]; then unset init_fn; fi\n          init_args=$(jq -r \".[\\\"${ORG}\\\"].chaincode | .[${CCINDEX}] | .init_args?\" \"${CONFIGPATH}\")\n          if [[ $init_args == null ]]; then unset init_args; fi\n          collections_config=$(jq -r \".[\\\"${ORG}\\\"].chaincode | .[${CCINDEX}] | .collections_config?\" \"${CONFIGPATH}\")\n          if [[ $collections_config == null ]]; then unset collections_config; fi\n          if [[ -n \"${collections_config}\" ]]; then\n            #collections config must be in the same directory as the chaincode plus any additional path specified by user\n            collections_config=\"${cc_dir}/${collections_config}\"\n          fi\n          endorsement_policy=$(jq -r \".[\\\"${ORG}\\\"].chaincode | .[${CCINDEX}] | .endorsement_policy?\" \"${CONFIGPATH}\")\n          if [[ $endorsement_policy == null ]]; then unset endorsement_policy; fi\n          instantiate_fabric_chaincode \"${ORG}\" \"${ADMIN_IDENTITY_FILE}\" \"${CONN_PROFILE_FILE}\" \\\n            \"${CC_NAME}\" \"${CC_VERSION}\" \"${CHANNEL}\" \"${platform}\" \"${init_fn}\" \"${init_args}\" \"${collections_config}\" \"${endorsement_policy}\"\n        fi\n      done\n    done\n    ORGINDEX=$((ORGINDEX + 1))\n  done\n  rm -rf \"${PROFILES_PATH}\"\n  if [[ ! $ECODE ]]; then error_exit \"ERROR: please check the deploy_config.json to set deploy jobs\"; fi\n}\n\n###Vendor start\n\n$DEBUG && set -ex\n\n# Install govendor\ngo get -u github.com/kardianos/govendor\n\n#######################################\n# Parses deployment configuration -> for each organization and chaincode component,\n# it invokes the fetch_dependencies_cc function.\n# Arguments:\n#   DEPLOY_CONFIG: path to deployment JSON config file\n# Returns:\n#   None\n#######################################\nfunction fetch_dependencies() {\n    local DEPLOY_CONFIG=$1\n\n    # Iterate over every organization and chaincode component defined in deploy config file    \n    for org in $(jq -r \"to_entries[] | .key\" \"$DEPLOY_CONFIG\")\n    do\n        echo \"Processing org '$org'...\"\n        jq -r \".${org}.chaincode[].path\" \"$DEPLOY_CONFIG\" | while read -r CC_PATH\n        do\n            echo \"About to fetch dependencies for '$CC_PATH'\"\n            _fetch_dependencies_cc \"$CC_PATH\"\n        done\n    done\n}\n\n#######################################\n# Fetch dependencies for the specified chaincode component.\n# Arguments:\n#   CC_PATH: relative path to chaincode component (as defined in the deployment JSON config file)\n# Returns:\n#   None\n#######################################\nfunction _fetch_dependencies_cc() {\n    local CC_PATH=$1\n    local TARGET_CC_PATH=\"${GOPATH}/src/$CC_PATH\"\n    \n    pushd \"$TARGET_CC_PATH\"\n\n    if [ -f \".govendor_packages\" ]; then\n        echo \"Found .govendor_packages file.\"\n        # Initialize govendor\n        govendor init\n        # Get list of packages to vendor in\n        declare -a packages\n        while IFS= read -r package || [ \"$package\" ]; do\n            packages+=(\"$package\")\n        done < .govendor_packages\n        local index=0\n\n        shopt -s extglob\n        while (( ${#packages[@]} > index )); do\n            package=${packages[index]}\n            ## Remove newlines, carriage returns\n            package=\"${package//[$'\\r\\n']}\"\n            ### Trim leading whitespaces\n            package=\"${package##*( )}\"\n            ### Trim trailing whitespaces\n            package=\"${package%%*( )}\"\n            # echo \"=${package}=\"\n            if [[ -n \"$package\" ]]; then\n                echo \"Fetching ${package}\"\n                govendor fetch \"${package}\"\n            fi\n            (( index += 1 ))\n        done\n        shopt -u extglob\n\n        echo \"Copying fetched dependencies to chaincode folder...\"\n        cp -r vendor \"$GOPATH/src/$CC_PATH\"\n    else\n        echo \"No .govendor_packages file found; no dependencies to vendor in.\"\n    fi\n\n    popd\n    \n    echo \"Finished looking up dependencies for chaincode component.\"\n}\n\n###Vendor ends\n\necho \"Config path is ${CONFIGPATH}\"\n#fetch_dependencies \"${CONFIGPATH}\"\ndeploy_cc \"golang\" \"${CC_REPO_DIR}\"\n#Custom code end\n\n\n"
+properties: []
