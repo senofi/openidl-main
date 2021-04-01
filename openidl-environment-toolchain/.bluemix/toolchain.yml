@@ -1,0 +1,49 @@
+version: 2
+template:
+  name: OpenIDL Infrastructure Toolchain
+  description: infra-setup-toolchain
+  required:
+    - hostedgit00
+toolchain:
+  name: infra-setup-toolchain
+services:
+  hostedgit00:
+    parameters:
+      extra_capabilities:
+        - capability_id: git.issues
+          display_name: Issues
+          dashboard_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-deployment-scripts/issues
+          label: openidl-deployment-scripts
+          tags:
+            - think
+            - code
+          enabled: false
+          readme: false
+      label: openidl-deployment-scripts
+      type: link
+      git_id: hostedgit
+      owner_id: openIDL
+      repo_url: https://us-south.git.cloud.ibm.com/openIDL/openidl-deployment-scripts.git
+      private_repo: true
+      has_issues: false
+      enable_traceability: false
+      authorized: hostedgit
+      integration_owner: IBMid-06000238QN
+      repo_name: openidl-deployment-scripts
+      api_root_url: https://us-south.git.cloud.ibm.com/api
+      token_url: https://otc-github-consolidated-broker.us-south.devops.cloud.ibm.com/github/token?git_id=hostedgit
+    service_id: hostedgit
+  pipeline01:
+    parameters:
+      label: Infra_Pipeline
+      type: classic
+      name: Infra_Pipeline
+      ui_pipeline: true
+      api_url: http://pipeline-service/pipeline/pipelines/f25c6de2-16f8-449e-baf2-b06a753b0519
+      external_api_url: https://pipeline-service.us-south.devops.cloud.ibm.com/pipeline/pipelines/f25c6de2-16f8-449e-baf2-b06a753b0519
+      configuration:
+        content:
+          $text: pipeline_pipeline01.yml
+      services:
+        - hostedgit00
+    service_id: pipeline

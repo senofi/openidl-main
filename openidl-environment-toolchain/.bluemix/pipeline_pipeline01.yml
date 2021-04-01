@@ -1,0 +1,139 @@
+stages:
+  - name: Fetch Code
+    inputs:
+      - type: git
+        branch: master
+        dir_name: null
+        service: hostedgit00
+    permission:
+      execute: TOOLCHAIN_ADMINS
+    jobs:
+      - name: Build
+        type: builder
+        curatedDockerImage: default
+        artifact_dir: ""
+        build_type: shell
+        script: |-
+          #!/bin/bash
+          # set -x
+
+          # Git repo cloned at $WORKING_DIR, copy into $ARCHIVE_DIR
+          mkdir -p $ARCHIVE_DIR
+          cp -R -n ./ $ARCHIVE_DIR/ || true
+
+          # Record git info
+          echo "GIT_URL=${GIT_URL}" >> $ARCHIVE_DIR/build.properties
+          echo "GIT_BRANCH=${GIT_BRANCH}" >> $ARCHIVE_DIR/build.properties
+          echo "GIT_COMMIT=${GIT_COMMIT}" >> $ARCHIVE_DIR/build.properties
+          echo "SOURCE_BUILD_NUMBER=${BUILD_NUMBER}" >> $ARCHIVE_DIR/build.properties
+          cat $ARCHIVE_DIR/build.properties
+
+          # check if doi is integrated in this toolchain
+          if jq -e '.services[] | select(.service_id=="draservicebroker")' _toolchain.json; then
+            # Record build information
+            ibmcloud login --apikey ${IBM_CLOUD_API_KEY} --no-region
+            ibmcloud doi publishbuildrecord --branch ${GIT_BRANCH} --repositoryurl ${GIT_URL} --commitid ${GIT_COMMIT} \
+              --buildnumber ${BUILD_NUMBER} --logicalappname ${IMAGE_NAME} --status pass
+          fi
+          ls -ltr
+  - name: IBP Pre Setup
+    inputs:
+      - type: job
+        stage: Fetch Code
+        job: Build
+        dir_name: null
+    permission:
+      execute: TOOLCHAIN_ADMINS
+    jobs:
+      - name: Build
+        type: builder
+        curatedDockerImage: default
+        artifact_dir: ""
+        build_type: shell
+        script: |-
+          #!/bin/bash
+          # your script here
+          chmod 777 ibp_pre-setup.sh
+          ./ibp_pre-setup.sh
+          cd ansible
+          ls -ltr
+  - name: IBP set up
+    inputs:
+      - type: job
+        stage: IBP Pre Setup
+        job: Build
+        dir_name: null
+    triggers:
+      - type: stage
+    permission:
+      execute: TOOLCHAIN_ADMINS
+    jobs:
+      - name: Build
+        type: builder
+        curatedDockerImage: default
+        artifact_dir: ""
+        build_type: customimage
+        script: |
+          #!/usr/bin/env bash
+          pwd
+          la -ltr
+          chmod 777 ibp_setup.sh
+          ./ibp_setup.sh || exit 1
+
+          #cd ansible
+          ls -ltr
+        docker_image: ibmcom/ibp-ansible
+  - name: Software setup
+    inputs:
+      - type: job
+        stage: IBP set up
+        job: Build
+        dir_name: null
+    triggers:
+      - type: stage
+    permission:
+      execute: TOOLCHAIN_ADMINS
+    jobs:
+      - name: Build
+        type: builder
+        curatedDockerImage: default
+        artifact_dir: ""
+        build_type: shell
+        script: |
+          #!/bin/bash
+          chmod 777 build_config.sh
+          ./build_config.sh
+  - name: Fabric user Creation
+    inputs:
+      - type: job
+        stage: Software setup
+        job: Build
+        dir_name: null
+    permission:
+      execute: TOOLCHAIN_ADMINS
+    jobs:
+      - name: Build
+        type: builder
+        curatedDockerImage: default
+        artifact_dir: ""
+        build_type: shell
+        script: |-
+          #!/bin/bash
+          chmod 777 cert_setup.sh
+          ./cert_setup.sh $TF_VAR_node
+
+          ls -ltr
+      
+properties:
+  - name: TF_VAR_ibmcloud_api_key
+    value: "API Key"
+    type: text
+  - name: TF_VAR_environment
+    value: "Environment"
+    type: text
+  - name: TF_VAR_node
+    value: "Node"
+    type: text
+  - name: TF_VAR_region
+    value: us-east
+    type: text
