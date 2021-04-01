@@ -1,0 +1,19 @@
+{
+    "options": "register",
+    "users": [
+     {
+      "org": "aaismsp",
+      "user": "openidl-aais-data-call-processor-ibp-2.0",
+      "pw": "password",
+      "affiliation": "",
+      "role": "client",
+      "attrs": [
+       {
+        "name": "orgType",
+        "value": "advisory",
+        "ecert": true
+       }
+      ]
+     }
+    ]
+   }

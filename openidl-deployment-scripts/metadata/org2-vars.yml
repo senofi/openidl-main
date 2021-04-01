@@ -1,0 +1,21 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+api_endpoint: https://${ORG2_IBP_API_ENDPOINT}
+api_authtype: ibmcloud
+api_key: ${ORG2_IBP_API_KEY}
+api_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ca_admin_enrollment_id: admin
+ca_admin_enrollment_secret: adminpw
+organization_admin_enrollment_id: ${ORG2_NAME}admin
+organization_admin_enrollment_secret: ${ORG2_NAME}adminpw
+peer_enrollment_id: ${ORG2_NAME}peer
+peer_enrollment_secret: ${ORG2_NAME}peerpw
+application_enrollment_id: ${ORG2_NAME}app
+application_enrollment_secret: ${ORG2_NAME}apppw
+application_enrollment_type: client
+application_max_enrollments: 10
+org2_ca_name: "${ORG2_NAME}CA"
+org2_peer_name: "${ORG2_NAME}Peer"
+wait_timeout: 600

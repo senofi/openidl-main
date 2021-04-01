@@ -1,0 +1,17 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Create components for an endorsing organization
+  hosts: localhost
+  vars:
+    state: present
+    organization_name: "{{ org3_name }}"
+    organization_msp_id: "{{ org3_msp_id }}"
+    ca_name: "{{ org3_ca_name }}"
+    peer_name: "{{ org3_peer_name }}"
+  vars_files:
+    - common-vars.yml
+    - org3-vars.yml
+  roles:
+    - ibm.blockchain_platform.endorsing_organization

@@ -1,0 +1,109 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+  - name: Add the organization to the channel
+    hosts: localhost
+    vars_files:
+      - common-vars.yml
+      - org2-vars.yml
+    tasks:
+      - name: Get the ordering service information
+        ibm.blockchain_platform.ordering_service_info:
+          api_endpoint: "{{ api_endpoint }}"
+          api_authtype: "{{ api_authtype }}"
+          api_key: "{{ api_key }}"
+          api_secret: "{{ api_secret | default(omit) }}"
+          api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+          name: "{{ ordering_service_name }}"
+        register: ordering_service
+  
+      - name: Fail if the ordering service does not exist
+        fail:
+          msg: "{{ ordering_service_name }} does not exist"
+        when: not ordering_service.exists
+  
+      - name: Fetch the channel configuration
+        ibm.blockchain_platform.channel_config:
+          api_endpoint: "{{ api_endpoint }}"
+          api_authtype: "{{ api_authtype }}"
+          api_key: "{{ api_key }}"
+          api_secret: "{{ api_secret | default(omit) }}"
+          api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+          ordering_service: "{{ ordering_service_name }}"
+          identity: "{{ org2_name }} Admin.json"
+          msp_id: "{{ org2_msp_id }}"
+          operation: fetch
+          name: "{{ channel_name_nc }}"
+          path: original_config.bin
+      
+      - name: Create a copy of the channel configuration
+        copy:
+          src: original_config.bin
+          dest: updated_config.bin
+  
+      - name: Add the organization to the channel
+        ibm.blockchain_platform.channel_member:
+          state: present
+          api_endpoint: "{{ api_endpoint }}"
+          api_authtype: "{{ api_authtype }}"
+          api_key: "{{ api_key }}"
+          api_secret: "{{ api_secret | default(omit) }}"
+          api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+          organization: "{{ org3_name }}"
+          path: updated_config.bin
+  
+      - name: Update the channel admins policy
+        ibm.blockchain_platform.channel_policy:
+          state: present
+          path: updated_config.bin
+          name: Admins
+          policy: "{{ lookup('template', '14b-admins-policy.json.j2') }}"
+  
+      - name: Update the channel readers policy
+        ibm.blockchain_platform.channel_policy:
+          state: present
+          path: updated_config.bin
+          name: Readers
+          policy: "{{ lookup('template', '14b-readers-policy.json.j2') }}"
+  
+      - name: Update the channel writers policy
+        ibm.blockchain_platform.channel_policy:
+          state: present
+          path: updated_config.bin
+          name: Writers
+          policy: "{{ lookup('template', '14b-writers-policy.json.j2') }}"
+  
+      - name: Compute the channel configuration update
+        ibm.blockchain_platform.channel_config:
+          operation: compute_update
+          name: "{{ channel_name_nc }}"
+          original: original_config.bin
+          updated: updated_config.bin
+          path: config_update.bin
+        register: compute_update
+  
+      - name: Sign the channel configuration update
+        ibm.blockchain_platform.channel_config:
+          operation: sign_update
+          identity: "{{ org2_name }} Admin.json"
+          msp_id: "{{ org2_msp_id }}"
+          name: "{{ channel_name_nc }}"
+          path: config_update.bin
+        when: compute_update.path
+  
+      - name: Apply the channel configuration update
+        ibm.blockchain_platform.channel_config:
+          api_endpoint: "{{ api_endpoint }}"
+          api_authtype: "{{ api_authtype }}"
+          api_key: "{{ api_key }}"
+          api_secret: "{{ api_secret | default(omit) }}"
+          api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+          operation: apply_update
+          ordering_service: "{{ ordering_service_name }}"
+          identity: "{{ org2_name }} Admin.json"
+          msp_id: "{{ org2_msp_id }}"
+          name: "{{ channel_name_nc }}"
+          path: config_update.bin
+        when: compute_update.path
+  

@@ -1,0 +1,23 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+- name: Create Connection profile
+  hosts: localhost
+  vars_files:
+    - common-vars.yml
+    - org2-vars.yml
+  tasks:
+    - name: Create a connection profile
+      ibm.blockchain_platform.connection_profile:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+        name: "{{ org2_name }} Gateway"
+        path: "connection-profile.json"
+        organization: "{{ org2_name }}"
+        certificate_authority: "{{ org2_ca_name }}"
+        peers:
+          - "{{ org2_peer_name }}"

@@ -1,0 +1,45 @@
+{
+    "name": "aaisMSP Gateway",
+    "version": "1.0",
+    "client": {
+        "organization": "aaisMSP",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": 300
+                },
+                "orderer": 300
+            }
+        }
+    },
+    "organizations": {
+        "aaisMSP": {
+            "mspid": "aaismsp",
+            "peers": [
+                "aaisPeer"
+            ],
+            "certificateAuthorities": [
+                "aaisCA"
+            ]
+        }
+    },
+    "certificateAuthorities": {
+        "aaisCA": {
+            "url": "https://naec0f6-aaisca.env10-aais-ibp-clstr-93fbc942734a2ff6b0991658d589b54e-0000.us-south.containers.appdomain.cloud:7054",
+            "caName": "ca",
+            "tlsCACerts": {
+                "pem": [
+                    "-----BEGIN CERTIFICATE-----\nMIIDlTCCAzugAwIBAgIRAMc501ZUaOXUUW4zmTCwoQUwCgYIKoZIzj0EAwIwgdIx\nCzAJBgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEPMA0GA1UEBxMG\nRHVyaGFtMQwwCgYDVQQKEwNJQk0xEzARBgNVBAsTCkJsb2NrY2hhaW4xdjB0BgNV\nBAMTbW5hZWMwZjYtYWFpc2NhLmVudjEwLWFhaXMtaWJwLWNsc3RyLTkzZmJjOTQy\nNzM0YTJmZjZiMDk5MTY1OGQ1ODliNTRlLTAwMDAudXMtc291dGguY29udGFpbmVy\ncy5hcHBkb21haW4uY2xvdWQwHhcNMjAxMTE2MTExMDI1WhcNMzAxMTE0MTExMDI1\nWjCB0jELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMQ8wDQYD\nVQQHEwZEdXJoYW0xDDAKBgNVBAoTA0lCTTETMBEGA1UECxMKQmxvY2tjaGFpbjF2\nMHQGA1UEAxNtbmFlYzBmNi1hYWlzY2EuZW52MTAtYWFpcy1pYnAtY2xzdHItOTNm\nYmM5NDI3MzRhMmZmNmIwOTkxNjU4ZDU4OWI1NGUtMDAwMC51cy1zb3V0aC5jb250\nYWluZXJzLmFwcGRvbWFpbi5jbG91ZDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IA\nBC67/kSbBSsWwlN8I2j/AVQ6RR6z5uEKVScxy4occR5Y/BjL5W1E14hpmu3KWKWu\nML1R8NaNJVabwMVl07/rNICjge8wgewwgekGA1UdEQSB4TCB3oJtbmFlYzBmNi1h\nYWlzY2EuZW52MTAtYWFpcy1pYnAtY2xzdHItOTNmYmM5NDI3MzRhMmZmNmIwOTkx\nNjU4ZDU4OWI1NGUtMDAwMC51cy1zb3V0aC5jb250YWluZXJzLmFwcGRvbWFpbi5j\nbG91ZIJtbmFlYzBmNi1hYWlzY2EuZW52MTAtYWFpcy1pYnAtY2xzdHItOTNmYmM5\nNDI3MzRhMmZmNmIwOTkxNjU4ZDU4OWI1NGUtMDAwMC51cy1zb3V0aC5jb250YWlu\nZXJzLmFwcGRvbWFpbi5jbG91ZDAKBggqhkjOPQQDAgNIADBFAiEAty9Jb2H/Lu4B\nlTm2paFBDBMd6knSxRLyDW2jwmMUjQwCIARKPvq8YM6YOn5zXjWiaCRgiyb6/rLA\n2yvwEBLyc2rX\n-----END CERTIFICATE-----\n"
+                ]
+            }
+        }
+    },
+    "peers": {
+        "aaisPeer": {
+            "url": "grpcs://naec0f6-aaispeer.env10-aais-ibp-clstr-93fbc942734a2ff6b0991658d589b54e-0000.us-south.containers.appdomain.cloud:7051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICDDCCAbKgAwIBAgIUR2eMiE6mRWXNfFBuvJZnQJLJI4AwCgYIKoZIzj0EAwIw\nZDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRUwEwYDVQQDEwxhYWlzY2Et\ndGxzY2EwHhcNMjAxMTE2MTEwNTAwWhcNMzUxMTEzMTEwNTAwWjBkMQswCQYDVQQG\nEwJVUzEXMBUGA1UECBMOTm9ydGggQ2Fyb2xpbmExFDASBgNVBAoTC0h5cGVybGVk\nZ2VyMQ8wDQYDVQQLEwZGYWJyaWMxFTATBgNVBAMTDGFhaXNjYS10bHNjYTBZMBMG\nByqGSM49AgEGCCqGSM49AwEHA0IABEmWZ+rWCHH3ZyiAs+MtIDfPndGCCjH7Yytp\nMPjFmFNDtNbeCsJ4M7XFx069+n6iC1bvjBJn4VSRqrF7qrhCFWCjQjBAMA4GA1Ud\nDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSoE3BA6EfMFLnl\ntMhdXmFtenNYWjAKBggqhkjOPQQDAgNIADBFAiEAm1mYigViRQrpfiWwrVXeXGjg\nPKcMCtqQZReAZbHQnT8CIB4g2WfugWLnAbrXwqWVRbYRJF2re9GwPkcBvSU8SB/I\n-----END CERTIFICATE-----\n"
+            }
+        }
+    }
+}

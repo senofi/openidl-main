@@ -1,0 +1,19 @@
+{
+    "options": "${OPERATION_MODE}",
+    "users": [
+     {
+      "org": "${ORG}msp",
+      "user": "${USER}",
+      "pw": "password",
+      "affiliation": "",
+      "role": "client",
+      "attrs": [
+       {
+        "name": "orgType",
+        "value": "${ROLE}",
+        "ecert": true
+       }
+      ]
+     }
+    ]
+   }

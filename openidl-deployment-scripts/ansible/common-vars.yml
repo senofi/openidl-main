@@ -1,0 +1,22 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+# These vars are used in more than one file,
+# i.e. needed by multiple orgs so can't just live in a per org file
+ordering_org_name: "OrderingOrg"
+ordering_service_name: "OrderingService"
+org1_name: "aaisMSP"
+org1_msp_id: aaismsp
+org2_name: "${ORG2_NAME}MSP"
+org2_msp_id: ${ORG2_NAME}msp
+org3_name: "analyticsMSP"
+org3_msp_id: analyticsmsp
+channel_name: "defaultchannel"
+smart_contract_name: "fabcar"
+smart_contract_version: "1.0.0"
+smart_contract_package: "fabcar@1.0.0.cds"
+channel_name_nc: "analytics-aais"
+# smart_contract_constructor: "initLedger"
+# smart_contract_endorsement_policy: ""
+# smart_contract_collections_file: ""
