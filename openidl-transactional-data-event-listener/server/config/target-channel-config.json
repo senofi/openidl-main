@@ -1,0 +1,8 @@
+{
+    "targetChannels": ${TARGET_CHANNELS},
+    "users": [{
+        "org": "analyticsmsp",
+        "user": "openidl-transactional-data-event-listener-ibp-2.0",
+        "mspId": "analyticsmsp"
+    }]
+}

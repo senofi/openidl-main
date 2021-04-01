@@ -1,0 +1,1336 @@
+{
+    "records": [{
+        "pageNumber": 1,
+        "carrierId": "12345",
+        "dataCallId": "Data_Call_123",
+        "dataCallVersion": "1",
+        "records": [{
+                "documentType": "Agreement",
+                "document": {
+                    "Type": "BOP",
+                    "propertyBOs": [{
+                            "propertyType": "TransactionID",
+                            "keyValue": "Hart1-1"
+                        },
+                        {
+                            "propertyType": "CarrierID",
+                            "keyValue": "TheHartford"
+                        },
+                        {
+                            "propertyType": "COMTransaction",
+                            "keyValue": "NewLine"
+                        },
+                        {
+                            "propertyType": "CommissionPercentage",
+                            "doubleValue": null
+                        },
+                        {
+                            "propertyType": "EffectiveDate",
+                            "dateValue": "2018-09-12"
+                        },
+                        {
+                            "propertyType": "ModelVersion",
+                            "keyValue": "mv0009"
+                        },
+                        {
+                            "propertyType": "COMLossCostMultiplier",
+                            "doubleValue": 1.5
+                        },
+                        {
+                            "propertyType": "ProductVersion",
+                            "keyValue": "pv0400"
+                        }
+                    ],
+                    "Components": [{
+                            "Type": "BOPLocation",
+                            "selected": true,
+                            "propertyBOs": [{
+                                    "propertyType": "BOPActualCashValue",
+                                    "keyValue": "Yes"
+                                },
+                                {
+                                    "propertyType": "BOPOccupancy",
+                                    "keyValue": "Lessor"
+                                },
+                                {
+                                    "propertyType": "BOPTypeOfBusinessCategory",
+                                    "stringValue": "Dispensaries"
+                                },
+                                {
+                                    "propertyType": "BOPGrossSales",
+                                    "integerValue": 10000
+                                },
+                                {
+                                    "propertyType": "BOPTypeOfBusiness",
+                                    "stringValue": "Dispensary - NOC"
+                                }
+                            ],
+                            "childProductComponentBOs": [{
+                                    "Type": "BOPPropertyCoverage",
+                                    "selected": true
+                                },
+                                {
+                                    "Type": "BOPSewerDrainIncome",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                        "propertyType": "BOPLimit",
+                                        "integerValue": null
+                                    }]
+                                },
+                                {
+                                    "Type": "BOPBuildersRisk",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                        "propertyType": "BOPLimit",
+                                        "integerValue": null
+                                    }]
+                                },
+                                {
+                                    "Type": "COMAddress",
+                                    "selected": true,
+                                    "propertyBOs": [{
+                                            "propertyType": "COMCounty",
+                                            "stringValue": null
+                                        },
+                                        {
+                                            "propertyType": "COMZipCode",
+                                            "stringValue": "92231"
+                                        },
+                                        {
+                                            "propertyType": "COMCity",
+                                            "stringValue": "Calexico"
+                                        },
+                                        {
+                                            "propertyType": "COMState",
+                                            "keyValue": "CA"
+                                        },
+                                        {
+                                            "propertyType": "COMStreetAddress",
+                                            "stringValue": "1 Weed Rd"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "BOPIRPM",
+                                    "selected": true,
+                                    "childProductComponentBOs": [{
+                                            "Type": "BOPIRPMProtectiveDevices",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMCooperationOfOwners",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMStructuralFeatures",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMCareAndCondition",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 10
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMMiscellaneousProtective",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMClassificationVariations",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": -5
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMDispersionOrConcentration",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMDamageAndSusceptibility",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMLocation",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMBlockchain",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMStoragePractices",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMPastLosses",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMEmployees",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMCannabisExperience",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMNumberOfCannabisLicenses",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "BOPCrimeCoverage",
+                                    "selected": false,
+                                    "childProductComponentBOs": [{
+                                        "Type": "BOPTheftExclusion",
+                                        "selected": false
+                                    }]
+                                },
+                                {
+                                    "Type": "BOPLiabilityCoverage",
+                                    "selected": true,
+                                    "childProductComponentBOs": [{
+                                            "Type": "BOPHigherMedicalPayments",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPLimit",
+                                                "integerValue": 5000
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPHigherFireLegalLimit",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPLimit",
+                                                "integerValue": 50000
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPHigherGeneralAggreLimit",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPLimit",
+                                                "integerValue": 50000
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPCannabisInhalationOrExposureException",
+                                            "selected": true
+                                        },
+                                        {
+                                            "Type": "BOPPersonalAndAdvertisingInjuryLiability",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                    "propertyType": "BOPOptionalPremium",
+                                                    "integerValue": 0
+                                                },
+                                                {
+                                                    "propertyType": "BOPDeleteCoverage",
+                                                    "keyValue": "Yes"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "propertyBOs": [{
+                                            "propertyType": "BOPInternalCoverageCode",
+                                            "stringValue": "Liability"
+                                        },
+                                        {
+                                            "propertyType": "BOPLimit",
+                                            "integerValue": 2000000
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "BOPAccountsReceivable",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                            "propertyType": "BOPOnPremisesLimit",
+                                            "integerValue": 10000
+                                        },
+                                        {
+                                            "propertyType": "BOPOffPremisesLimit",
+                                            "integerValue": 5000
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "BOPRoofingDamage",
+                                    "selected": false
+                                },
+                                {
+                                    "Type": "BOPAutomaticIncreaseBldg",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                            "propertyType": "BOPAutomaticIncreaseHigherValue",
+                                            "integerValue": null
+                                        },
+                                        {
+                                            "propertyType": "BOPAutomaticIncrease",
+                                            "keyValue": null
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "BOPSewerDrainDirect",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                        "propertyType": "BOPLimit",
+                                        "integerValue": null
+                                    }]
+                                },
+                                {
+                                    "Type": "BOPLossOfIncomeCoverage",
+                                    "selected": true
+                                },
+                                {
+                                    "Type": "BOPAddlDebrRemvlLimits",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                        "propertyType": "BOPLimit",
+                                        "integerValue": null
+                                    }]
+                                },
+                                {
+                                    "Type": "BOPAutomaticIncreaseBPP",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                            "propertyType": "BOPAutomaticIncrease",
+                                            "keyValue": null
+                                        },
+                                        {
+                                            "propertyType": "BOPAutomaticIncreaseHigherValue",
+                                            "integerValue": null
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "BOPBuilding",
+                                    "selected": true,
+                                    "childProductComponentBOs": [{
+                                            "Type": "BOPBPPCoverage",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                    "propertyType": "BOPLimit",
+                                                    "integerValue": 10000
+                                                },
+                                                {
+                                                    "propertyType": "BOPAutomaticIncrease",
+                                                    "keyValue": "4%"
+                                                },
+                                                {
+                                                    "propertyType": "BOPInternalCoverageCode",
+                                                    "stringValue": "BPP"
+                                                },
+                                                {
+                                                    "propertyType": "BOPDeductible",
+                                                    "integerValue": 500
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "Type": "BOPBuildingCoverage",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                    "propertyType": "BOPAutomaticIncrease",
+                                                    "keyValue": "4%"
+                                                },
+                                                {
+                                                    "propertyType": "BOPDeductible",
+                                                    "integerValue": 250
+                                                },
+                                                {
+                                                    "propertyType": "BOPInternalCoverageCode",
+                                                    "stringValue": "Bldg"
+                                                },
+                                                {
+                                                    "propertyType": "BOPLimit",
+                                                    "integerValue": 100000
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "propertyBOs": [{
+                                            "propertyType": "BOPBuildingProtection",
+                                            "stringValue": "Protected"
+                                        },
+                                        {
+                                            "propertyType": "BOPBuildingSquareFeet",
+                                            "integerValue": 10000
+                                        },
+                                        {
+                                            "propertyType": "BOPBuildingConstruction",
+                                            "stringValue": "Frame"
+                                        },
+                                        {
+                                            "propertyType": "BOPBuildingSquareFeetOccupied",
+                                            "integerValue": 7500
+                                        },
+                                        {
+                                            "propertyType": "BOPBuildingSprinklered",
+                                            "keyValue": "Yes"
+                                        },
+                                        {
+                                            "propertyType": "BOPBurglaryProtection",
+                                            "stringValue": "Watchman and Burglar Alarm System with Signals to Central Station"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "BOPValuablePapers",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                        "propertyType": "BOPLimit",
+                                        "integerValue": null
+                                    }]
+                                },
+                                {
+                                    "Type": "BOPWindstormOrHail",
+                                    "selected": false
+                                }
+                            ]
+                        },
+                        {
+                            "Type": "CommercialParty",
+                            "kind": "Risk",
+                            "selected": true,
+                            "childProductComponentBOs": [{
+                                    "Type": "CommercialName",
+                                    "kind": "RiskDetail",
+                                    "selected": true,
+                                    "propertyBOs": [{
+                                        "propertyType": "Name",
+                                        "stringValue": null
+                                    }]
+                                },
+                                {
+                                    "Type": "USAddress",
+                                    "kind": "RiskDetail",
+                                    "selected": true,
+                                    "propertyBOs": [{
+                                            "propertyType": "State",
+                                            "keyValue": "CA"
+                                        },
+                                        {
+                                            "propertyType": "City",
+                                            "stringValue": null
+                                        },
+                                        {
+                                            "propertyType": "Address",
+                                            "stringValue": null
+                                        },
+                                        {
+                                            "propertyType": "ZipCode",
+                                            "stringValue": null
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "USPhoneNumber",
+                                    "kind": "RiskDetail",
+                                    "selected": true,
+                                    "propertyBOs": [{
+                                            "propertyType": "PhoneNumber",
+                                            "stringValue": null
+                                        },
+                                        {
+                                            "propertyType": "Extension",
+                                            "stringValue": null
+                                        }
+                                    ]
+                                }
+                            ],
+                            "propertyBOs": [{
+                                    "propertyType": "Code",
+                                    "stringValue": null
+                                },
+                                {
+                                    "propertyType": "AccountNumber",
+                                    "stringValue": null
+                                },
+                                {
+                                    "propertyType": "TypeOfEntity",
+                                    "keyValue": null
+                                },
+                                {
+                                    "propertyType": "Name",
+                                    "stringValue": null
+                                }
+                            ]
+                        },
+                        {
+                            "Type": "BOPCoverageFormCB0204",
+                            "selected": true
+                        }
+                    ]
+                }
+            },
+            {
+                "documentType": "Claim",
+                "document": {
+                    "Type": "BOP",
+                    "propertyBOs": [{
+                            "propertyType": "TransactionID",
+                            "keyValue": "Hart1-2"
+                        },
+                        {
+                            "propertyType": "CarrierID",
+                            "keyValue": "TheHartford"
+                        },
+                        {
+                            "propertyType": "ClaimTransactionDate",
+                            "keyValue": "2019-02-23"
+                        }
+                    ],
+                    "Components": [{
+                        "Type": "Elementary Claim",
+                        "propertyBOs": [{
+                                "propertyType": "Opening Date",
+                                "keyValue": "2019-02-24"
+                            },
+                            {
+                                "propertyType": "Status Date",
+                                "keyValue": "2019-03-01"
+                            },
+                            {
+                                "propertyType": "Description",
+                                "stringValue": "Elementary Auto Loss Claim"
+                            },
+                            {
+                                "propertyType": "Coverage Percentage",
+                                "keyValue": 85
+                            }
+                        ]
+                    }],
+                    "RelatedClaims": [{
+                        "Type": "Subrogation",
+                        "propertyBOs": [{
+                            "propertyType": "Claim Reference",
+                            "keyValue": "AB34789228"
+                        }]
+                    }],
+                    "PartyRoles": [{
+                        "Type": "Opponent Third Party",
+                        "propertyBOs": [{
+                                "propertyType": "Policy Number",
+                                "keyValue": "AB34789228"
+                            },
+                            {
+                                "propertyTpe": "Insurer",
+                                "keyValue": "ABC Insurer"
+                            }
+                        ]
+                    }],
+                    "ClaimOffers": [{
+                        "propertyBOs": [{
+                                "propertyType": "Initiator",
+                                "keyValue": "Andy Ramos"
+                            },
+                            {
+                                "propertyTpe": "Claim Reference",
+                                "keyValue": "AB 983J65"
+                            },
+                            {
+                                "propertyTpe": "ValidFromDate",
+                                "keyValue": "2019-01-12"
+                            },
+                            {
+                                "propertyTpe": "ValidToDate",
+                                "keyValue": "2019-01-24"
+                            }
+                        ],
+                        "reserve": {
+                            "propertyBOs": [{
+                                    "propertyType": "Start Date",
+                                    "keyValue": "2019-01-02"
+                                },
+                                {
+                                    "propertyTpe": "End Date",
+                                    "keyValue": "2019-02-01"
+                                },
+                                {
+                                    "propertyTpe": "Description",
+                                    "keyValue": "This is being held in reserve to pay for the window damage"
+                                },
+                                {
+                                    "propertyTpe": "Estimate",
+                                    "keyValue": "2050.45"
+                                },
+                                {
+                                    "propertyTpe": "Caldulation Method",
+                                    "keyValue": "Replacement Value"
+                                }
+                            ]
+                        },
+                        "Agreements": [{
+                            "Type": "Damage Coverage",
+                            "propertyBOs": [{
+                                    "propertyType": "CoveragePriority",
+                                    "keyValue": "Normal"
+                                },
+                                {
+                                    "propertyTpe": "Exposure amount",
+                                    "keyValue": "1800.00"
+                                },
+                                {
+                                    "propertyTpe": "Reference",
+                                    "keyValue": "Pr 9033451"
+                                }
+                            ]
+                        }]
+                    }],
+                    "Events": [{
+                            "Type": "CausalEvent",
+                            "propertyBOs": [{
+                                    "propertyType": "EventType",
+                                    "keyValue": "FreezeEvent"
+                                },
+                                {
+                                    "propertyTpe": "Temperature",
+                                    "keyValue": "18"
+                                }
+                            ]
+                        },
+                        {
+                            "Type": "BusinessEvent",
+                            "propertyBOs": [{
+                                    "propertyType": "EventType",
+                                    "keyValue": "Change In Loss Reserve"
+                                },
+                                {
+                                    "propertyTpe": "Amount",
+                                    "keyValue": "-18000"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ],
+        "createdTs": "0001-01-01T00:00:00Z"
+    }, {
+        "pageNumber": 2,
+        "carrierId": "12345",
+        "dataCallId": "Data_Call_123",
+        "dataCallVersion": "1",
+        "records": [{
+                "documentType": "Agreement",
+                "document": {
+                    "Type": "BOP",
+                    "propertyBOs": [{
+                            "propertyType": "TransactionID",
+                            "keyValue": "Hart1-1"
+                        },
+                        {
+                            "propertyType": "CarrierID",
+                            "keyValue": "TheHartford"
+                        },
+                        {
+                            "propertyType": "COMTransaction",
+                            "keyValue": "NewLine"
+                        },
+                        {
+                            "propertyType": "CommissionPercentage",
+                            "doubleValue": null
+                        },
+                        {
+                            "propertyType": "EffectiveDate",
+                            "dateValue": "2018-09-12"
+                        },
+                        {
+                            "propertyType": "ModelVersion",
+                            "keyValue": "mv0009"
+                        },
+                        {
+                            "propertyType": "COMLossCostMultiplier",
+                            "doubleValue": 1.5
+                        },
+                        {
+                            "propertyType": "ProductVersion",
+                            "keyValue": "pv0400"
+                        }
+                    ],
+                    "Components": [{
+                            "Type": "BOPLocation",
+                            "selected": true,
+                            "propertyBOs": [{
+                                    "propertyType": "BOPActualCashValue",
+                                    "keyValue": "Yes"
+                                },
+                                {
+                                    "propertyType": "BOPOccupancy",
+                                    "keyValue": "Lessor"
+                                },
+                                {
+                                    "propertyType": "BOPTypeOfBusinessCategory",
+                                    "stringValue": "Dispensaries"
+                                },
+                                {
+                                    "propertyType": "BOPGrossSales",
+                                    "integerValue": 10000
+                                },
+                                {
+                                    "propertyType": "BOPTypeOfBusiness",
+                                    "stringValue": "Dispensary - NOC"
+                                }
+                            ],
+                            "childProductComponentBOs": [{
+                                    "Type": "BOPPropertyCoverage",
+                                    "selected": true
+                                },
+                                {
+                                    "Type": "BOPSewerDrainIncome",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                        "propertyType": "BOPLimit",
+                                        "integerValue": null
+                                    }]
+                                },
+                                {
+                                    "Type": "BOPBuildersRisk",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                        "propertyType": "BOPLimit",
+                                        "integerValue": null
+                                    }]
+                                },
+                                {
+                                    "Type": "COMAddress",
+                                    "selected": true,
+                                    "propertyBOs": [{
+                                            "propertyType": "COMCounty",
+                                            "stringValue": null
+                                        },
+                                        {
+                                            "propertyType": "COMZipCode",
+                                            "stringValue": "92231"
+                                        },
+                                        {
+                                            "propertyType": "COMCity",
+                                            "stringValue": "Calexico"
+                                        },
+                                        {
+                                            "propertyType": "COMState",
+                                            "keyValue": "CA"
+                                        },
+                                        {
+                                            "propertyType": "COMStreetAddress",
+                                            "stringValue": "1 Weed Rd"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "BOPIRPM",
+                                    "selected": true,
+                                    "childProductComponentBOs": [{
+                                            "Type": "BOPIRPMProtectiveDevices",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMCooperationOfOwners",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMStructuralFeatures",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMCareAndCondition",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 10
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMMiscellaneousProtective",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMClassificationVariations",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": -5
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMDispersionOrConcentration",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMDamageAndSusceptibility",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMLocation",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMBlockchain",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMStoragePractices",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMPastLosses",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMEmployees",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMCannabisExperience",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPIRPMNumberOfCannabisLicenses",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPModificationPercentage",
+                                                "integerValue": 0
+                                            }]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "BOPCrimeCoverage",
+                                    "selected": false,
+                                    "childProductComponentBOs": [{
+                                        "Type": "BOPTheftExclusion",
+                                        "selected": false
+                                    }]
+                                },
+                                {
+                                    "Type": "BOPLiabilityCoverage",
+                                    "selected": true,
+                                    "childProductComponentBOs": [{
+                                            "Type": "BOPHigherMedicalPayments",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPLimit",
+                                                "integerValue": 5000
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPHigherFireLegalLimit",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPLimit",
+                                                "integerValue": 50000
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPHigherGeneralAggreLimit",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                "propertyType": "BOPLimit",
+                                                "integerValue": 50000
+                                            }]
+                                        },
+                                        {
+                                            "Type": "BOPCannabisInhalationOrExposureException",
+                                            "selected": true
+                                        },
+                                        {
+                                            "Type": "BOPPersonalAndAdvertisingInjuryLiability",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                    "propertyType": "BOPOptionalPremium",
+                                                    "integerValue": 0
+                                                },
+                                                {
+                                                    "propertyType": "BOPDeleteCoverage",
+                                                    "keyValue": "Yes"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "propertyBOs": [{
+                                            "propertyType": "BOPInternalCoverageCode",
+                                            "stringValue": "Liability"
+                                        },
+                                        {
+                                            "propertyType": "BOPLimit",
+                                            "integerValue": 2000000
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "BOPAccountsReceivable",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                            "propertyType": "BOPOnPremisesLimit",
+                                            "integerValue": 10000
+                                        },
+                                        {
+                                            "propertyType": "BOPOffPremisesLimit",
+                                            "integerValue": 5000
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "BOPRoofingDamage",
+                                    "selected": false
+                                },
+                                {
+                                    "Type": "BOPAutomaticIncreaseBldg",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                            "propertyType": "BOPAutomaticIncreaseHigherValue",
+                                            "integerValue": null
+                                        },
+                                        {
+                                            "propertyType": "BOPAutomaticIncrease",
+                                            "keyValue": null
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "BOPSewerDrainDirect",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                        "propertyType": "BOPLimit",
+                                        "integerValue": null
+                                    }]
+                                },
+                                {
+                                    "Type": "BOPLossOfIncomeCoverage",
+                                    "selected": true
+                                },
+                                {
+                                    "Type": "BOPAddlDebrRemvlLimits",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                        "propertyType": "BOPLimit",
+                                        "integerValue": null
+                                    }]
+                                },
+                                {
+                                    "Type": "BOPAutomaticIncreaseBPP",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                            "propertyType": "BOPAutomaticIncrease",
+                                            "keyValue": null
+                                        },
+                                        {
+                                            "propertyType": "BOPAutomaticIncreaseHigherValue",
+                                            "integerValue": null
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "BOPBuilding",
+                                    "selected": true,
+                                    "childProductComponentBOs": [{
+                                            "Type": "BOPBPPCoverage",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                    "propertyType": "BOPLimit",
+                                                    "integerValue": 10000
+                                                },
+                                                {
+                                                    "propertyType": "BOPAutomaticIncrease",
+                                                    "keyValue": "4%"
+                                                },
+                                                {
+                                                    "propertyType": "BOPInternalCoverageCode",
+                                                    "stringValue": "BPP"
+                                                },
+                                                {
+                                                    "propertyType": "BOPDeductible",
+                                                    "integerValue": 500
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "Type": "BOPBuildingCoverage",
+                                            "selected": true,
+                                            "propertyBOs": [{
+                                                    "propertyType": "BOPAutomaticIncrease",
+                                                    "keyValue": "4%"
+                                                },
+                                                {
+                                                    "propertyType": "BOPDeductible",
+                                                    "integerValue": 250
+                                                },
+                                                {
+                                                    "propertyType": "BOPInternalCoverageCode",
+                                                    "stringValue": "Bldg"
+                                                },
+                                                {
+                                                    "propertyType": "BOPLimit",
+                                                    "integerValue": 100000
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "propertyBOs": [{
+                                            "propertyType": "BOPBuildingProtection",
+                                            "stringValue": "Protected"
+                                        },
+                                        {
+                                            "propertyType": "BOPBuildingSquareFeet",
+                                            "integerValue": 10000
+                                        },
+                                        {
+                                            "propertyType": "BOPBuildingConstruction",
+                                            "stringValue": "Frame"
+                                        },
+                                        {
+                                            "propertyType": "BOPBuildingSquareFeetOccupied",
+                                            "integerValue": 7500
+                                        },
+                                        {
+                                            "propertyType": "BOPBuildingSprinklered",
+                                            "keyValue": "Yes"
+                                        },
+                                        {
+                                            "propertyType": "BOPBurglaryProtection",
+                                            "stringValue": "Watchman and Burglar Alarm System with Signals to Central Station"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "BOPValuablePapers",
+                                    "selected": false,
+                                    "propertyBOs": [{
+                                        "propertyType": "BOPLimit",
+                                        "integerValue": null
+                                    }]
+                                },
+                                {
+                                    "Type": "BOPWindstormOrHail",
+                                    "selected": false
+                                }
+                            ]
+                        },
+                        {
+                            "Type": "CommercialParty",
+                            "kind": "Risk",
+                            "selected": true,
+                            "childProductComponentBOs": [{
+                                    "Type": "CommercialName",
+                                    "kind": "RiskDetail",
+                                    "selected": true,
+                                    "propertyBOs": [{
+                                        "propertyType": "Name",
+                                        "stringValue": null
+                                    }]
+                                },
+                                {
+                                    "Type": "USAddress",
+                                    "kind": "RiskDetail",
+                                    "selected": true,
+                                    "propertyBOs": [{
+                                            "propertyType": "State",
+                                            "keyValue": "CA"
+                                        },
+                                        {
+                                            "propertyType": "City",
+                                            "stringValue": null
+                                        },
+                                        {
+                                            "propertyType": "Address",
+                                            "stringValue": null
+                                        },
+                                        {
+                                            "propertyType": "ZipCode",
+                                            "stringValue": null
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Type": "USPhoneNumber",
+                                    "kind": "RiskDetail",
+                                    "selected": true,
+                                    "propertyBOs": [{
+                                            "propertyType": "PhoneNumber",
+                                            "stringValue": null
+                                        },
+                                        {
+                                            "propertyType": "Extension",
+                                            "stringValue": null
+                                        }
+                                    ]
+                                }
+                            ],
+                            "propertyBOs": [{
+                                    "propertyType": "Code",
+                                    "stringValue": null
+                                },
+                                {
+                                    "propertyType": "AccountNumber",
+                                    "stringValue": null
+                                },
+                                {
+                                    "propertyType": "TypeOfEntity",
+                                    "keyValue": null
+                                },
+                                {
+                                    "propertyType": "Name",
+                                    "stringValue": null
+                                }
+                            ]
+                        },
+                        {
+                            "Type": "BOPCoverageFormCB0204",
+                            "selected": true
+                        }
+                    ]
+                }
+            },
+            {
+                "documentType": "Claim",
+                "document": {
+                    "Type": "BOP",
+                    "propertyBOs": [{
+                            "propertyType": "TransactionID",
+                            "keyValue": "Hart1-2"
+                        },
+                        {
+                            "propertyType": "CarrierID",
+                            "keyValue": "TheHartford"
+                        },
+                        {
+                            "propertyType": "ClaimTransactionDate",
+                            "keyValue": "2019-02-23"
+                        }
+                    ],
+                    "Components": [{
+                        "Type": "Elementary Claim",
+                        "propertyBOs": [{
+                                "propertyType": "Opening Date",
+                                "keyValue": "2019-02-24"
+                            },
+                            {
+                                "propertyType": "Status Date",
+                                "keyValue": "2019-03-01"
+                            },
+                            {
+                                "propertyType": "Description",
+                                "stringValue": "Elementary Auto Loss Claim"
+                            },
+                            {
+                                "propertyType": "Coverage Percentage",
+                                "keyValue": 85
+                            }
+                        ]
+                    }],
+                    "RelatedClaims": [{
+                        "Type": "Subrogation",
+                        "propertyBOs": [{
+                            "propertyType": "Claim Reference",
+                            "keyValue": "AB34789228"
+                        }]
+                    }],
+                    "PartyRoles": [{
+                        "Type": "Opponent Third Party",
+                        "propertyBOs": [{
+                                "propertyType": "Policy Number",
+                                "keyValue": "AB34789228"
+                            },
+                            {
+                                "propertyTpe": "Insurer",
+                                "keyValue": "ABC Insurer"
+                            }
+                        ]
+                    }],
+                    "ClaimOffers": [{
+                        "propertyBOs": [{
+                                "propertyType": "Initiator",
+                                "keyValue": "Andy Ramos"
+                            },
+                            {
+                                "propertyTpe": "Claim Reference",
+                                "keyValue": "AB 983J65"
+                            },
+                            {
+                                "propertyTpe": "ValidFromDate",
+                                "keyValue": "2019-01-12"
+                            },
+                            {
+                                "propertyTpe": "ValidToDate",
+                                "keyValue": "2019-01-24"
+                            }
+                        ],
+                        "reserve": {
+                            "propertyBOs": [{
+                                    "propertyType": "Start Date",
+                                    "keyValue": "2019-01-02"
+                                },
+                                {
+                                    "propertyTpe": "End Date",
+                                    "keyValue": "2019-02-01"
+                                },
+                                {
+                                    "propertyTpe": "Description",
+                                    "keyValue": "This is being held in reserve to pay for the window damage"
+                                },
+                                {
+                                    "propertyTpe": "Estimate",
+                                    "keyValue": "2050.45"
+                                },
+                                {
+                                    "propertyTpe": "Caldulation Method",
+                                    "keyValue": "Replacement Value"
+                                }
+                            ]
+                        },
+                        "Agreements": [{
+                            "Type": "Damage Coverage",
+                            "propertyBOs": [{
+                                    "propertyType": "CoveragePriority",
+                                    "keyValue": "Normal"
+                                },
+                                {
+                                    "propertyTpe": "Exposure amount",
+                                    "keyValue": "1800.00"
+                                },
+                                {
+                                    "propertyTpe": "Reference",
+                                    "keyValue": "Pr 9033451"
+                                }
+                            ]
+                        }]
+                    }],
+                    "Events": [{
+                            "Type": "CausalEvent",
+                            "propertyBOs": [{
+                                    "propertyType": "EventType",
+                                    "keyValue": "FreezeEvent"
+                                },
+                                {
+                                    "propertyTpe": "Temperature",
+                                    "keyValue": "18"
+                                }
+                            ]
+                        },
+                        {
+                            "Type": "BusinessEvent",
+                            "propertyBOs": [{
+                                    "propertyType": "EventType",
+                                    "keyValue": "Change In Loss Reserve"
+                                },
+                                {
+                                    "propertyTpe": "Amount",
+                                    "keyValue": "-18000"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ],
+        "createdTs": "0001-01-01T00:00:00Z"
+    }],
+    "noOfRecords": 2
+}

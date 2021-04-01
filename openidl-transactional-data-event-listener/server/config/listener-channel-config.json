@@ -1,0 +1,8 @@
+{
+    "listenerChannels": ${LISTENER_CHANNELS_EVENTS},
+    "identity": {
+        "user": "openidl-transactional-data-event-listener-ibp-2.0",
+        "wallet": "&wallet"
+    },
+    "applicationName": "transaction-data-manager"
+}
