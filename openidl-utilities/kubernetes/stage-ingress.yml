@@ -1,0 +1,98 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: openidl-apps-ingress
+  #annotations:
+    #kubernetes.io/ingress.class: nginx
+    #nginx.ingress.kubernetes.io/rewrite-target: /
+    #ingress.kubernetes.io/rewrite-target: /
+    #nginx.ingress.kubernetes.io/configuration-snippet: |
+     # rewrite /app1/(.*) $1 break;
+     # rewrite /app2/(.*) /$1 break;
+spec:
+  tls:
+  - hosts:
+    - stage-v2-openidl-ui.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - stage-v2-openidl-data-call-app.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - stage-v2-openidl-aais-data-call-processor.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - stage-v2-aais-openidl-insurance-data-manager.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - stage-v2-openidl-data-call-mood-listener.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - stage-v2-openidl-transactional-data-event-listener.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - stage-v2-openidl-carrier-ui.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - stage-v2-openidl-data-call-carrier-app.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - stage-v2-carrier-openidl-data-call-processor.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - stage-v2-carrier-openidl-insurance-data-manager.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    secretName:  stage-openidl-apps-cluster
+  rules:
+  - host: stage-v2-openidl-data-call-app.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: staging-v2-openidl-data-call-app
+          servicePort: 3000
+  - host: stage-v2-openidl-ui.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: staging-v2-openidl-ui
+          servicePort: 4200
+  - host: stage-v2-openidl-aais-data-call-processor.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: staging-v2-openidl-aais-data-call-processor
+          servicePort: 4000
+  - host: stage-v2-aais-openidl-insurance-data-manager.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: staging-v2-aais-openidl-insurance-data-manager
+          servicePort: 3000
+  - host: stage-v2-openidl-data-call-mood-listener.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: staging-v2-openidl-data-call-mood-listener
+          servicePort: 3000
+  - host: stage-v2-openidl-transactional-data-event-listener.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: staging-v2-openidl-transactional-data-event-listener
+          servicePort: 3000
+  - host: stage-v2-openidl-data-call-carrier-app.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: stage-v2-openidl-data-call-carrier-app
+          servicePort: 3000
+  - host: stage-v2-openidl-carrier-ui.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: stage-v2-openidl-carrier-ui
+          servicePort: 4200
+  - host: stage-v2-carrier-openidl-data-call-processor.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: stage-v2-carrier-openidl-data-call-processor
+          servicePort: 4000
+  - host: stage-v2-carrier-openidl-insurance-data-manager.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: stage-v2-carrier-openidl-insurance-data-manager
+          servicePort: 3000
+  
+  

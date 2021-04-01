@@ -1,0 +1,14 @@
+{
+  "name": "s3bucket-utility",
+  "version": "1.0.0",
+  "description": "Utility to list all files uploaded in s3 Bucket",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "bkumar44@in.ibm.com",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "2.478.0"
+  }
+}

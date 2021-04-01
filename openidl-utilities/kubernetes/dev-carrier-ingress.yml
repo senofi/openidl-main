@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: openidl-carrier-apps-ingress
+  annotations:
+    ingress.bluemix.net/sticky-cookie-services: "serviceName=dev-v2-openidl-carrier-ui name=route expires=1h path=/ hash=sha1"
+spec:
+  tls:
+  - hosts:
+    - dev-v2-openidl-carrier-ui.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - dev-v2-openidl-data-call-carrier-app.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - dev-v2-carrier-openidl-data-call-processor.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - dev-v2-carrier-openidl-insurance-data-manager.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    secretName:  dev-openidl-apps-cluster
+  rules:
+  - host: dev-v2-openidl-data-call-carrier-app.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: dev-v2-openidl-data-call-carrier-app
+          servicePort: 8080
+  - host: dev-v2-openidl-carrier-ui.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: dev-v2-openidl-carrier-ui
+          servicePort: 8080
+  - host: dev-v2-carrier-openidl-data-call-processor.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: dev-v2-carrier-openidl-data-call-processor
+          servicePort: 8080
+  - host: dev-v2-carrier-openidl-insurance-data-manager.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: dev-v2-carrier-openidl-insurance-data-manager
+          servicePort: 8080
+  

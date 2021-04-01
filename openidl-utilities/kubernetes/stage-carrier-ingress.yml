@@ -1,0 +1,50 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: openidl-carrier-apps-ingress
+  #annotations:
+    #kubernetes.io/ingress.class: nginx
+    #nginx.ingress.kubernetes.io/rewrite-target: /
+    #ingress.kubernetes.io/rewrite-target: /
+    #nginx.ingress.kubernetes.io/configuration-snippet: |
+     # rewrite /app1/(.*) $1 break;
+     # rewrite /app2/(.*) /$1 break;
+spec:
+  tls:
+  - hosts:
+    - stage-v2-openidl-carrier-ui.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - stage-v2-openidl-data-call-carrier-app.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - stage-v2-carrier-openidl-data-call-processor.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - stage-v2-carrier-openidl-insurance-data-manager.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    secretName:  stage-openidl-apps-cluster
+  rules:
+  - host: stage-v2-openidl-data-call-carrier-app.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: stage-v2-openidl-data-call-carrier-app
+          servicePort: 8080
+  - host: stage-v2-openidl-carrier-ui.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: stage-v2-openidl-carrier-ui
+          servicePort: 8080
+  - host: stage-v2-carrier-openidl-data-call-processor.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: stage-v2-carrier-openidl-data-call-processor
+          servicePort: 8080
+  - host: stage-v2-carrier-openidl-insurance-data-manager.stage-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: stage-v2-carrier-openidl-insurance-data-manager
+          servicePort: 8080
+  
+  

@@ -1,0 +1,175 @@
+openapi: '3.0.0'
+info:
+ title: 'HIG User Enrollment API(s) '
+ version: '1.0.0'
+ description: >-
+   > This interface enables the testers to quickly test the API(s) developed by the Dev Team. If you dont have your token  then first generate the token.
+   for testing the API(S).
+paths:
+  "/openidl/api/app-user-enrollment":
+    post:
+      tags:
+        - app-user-creation
+      description: Registers app user into cloud directory.
+      summary: Registers app user into cloud directory.
+      responses:
+        '200':
+          description: 'Registers app user into cloud directory'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/postResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userData'
+        required: true
+      security:
+        - bearerAuth: []
+
+
+  "/openidl/api/fabric-user-enrollment":
+    post:
+      tags:
+        - fabric-user-creation
+      description: Enrolls fabric user into IBP.
+      summary: Enrolls fabric user into IBP.
+      responses:
+        '200':
+          description: 'Enrolls fabric user into IBP'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/postResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/fabricUserData'
+        required: true
+      security:
+      - bearerAuth: []
+
+components:
+  schemas:
+    "userData":
+      type: object
+      properties:
+        directory:
+          type: string
+          example: "cloud_directory"
+        authKey:
+          type: string
+          example: "wiueewruwq-eueuuwiueiw"
+        users:
+          type: array
+          items:
+            $ref: '#definitions/appUser'
+    "fabricUserData":
+      type: object
+      properties:
+        options:
+          type: string
+          example: "register"
+        users:
+          type: array
+          items:
+            $ref: '#/definitions/fabricUser'
+    "postResponse":
+      type: object
+      description: This represents transaction submission response format
+      properties:
+        success:
+          type: string
+          example: "true"
+        message:
+          type: string
+          example: "OK"
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+definitions:
+  fabricUser:
+    type: object
+    properties:
+      org:
+        type: string
+        example: "higmsp"
+      user:
+        type: string
+        example: "openidl-aais_config_Htest2"
+      pw:
+        type: string
+        example: "password"
+      affiliation:
+        type: string
+        example: "org1"
+      role:
+        type: string
+        example: "client"
+      attrs:
+        type: array
+        items:
+          $ref: '#/definition/attr'  
+  appUser:
+    type: object
+    properties:
+      name:
+        type: object
+        properties:
+          givenName:
+            type: string
+            example: "john"
+          familyName:
+            type: string
+            example: "blockchain"
+      emails:
+        type: array
+        items:
+          $ref: '#/definition/email'
+      userName:
+        type: string
+        example: "john@email.com"
+      password:
+        type: string
+        example: "john@blockchain"
+      status:
+        type: string
+        example: "CONFIRMED"
+      profile:
+        type: object
+        properties:
+          attributes:
+            type: object
+            properties:
+              role:
+                type: string
+                example: "carrier"
+              organizationId:
+                type: string
+                example: "67856"
+definition:
+  attr:
+    type: object
+    properties:
+      name: 
+        type: string
+        example: "orgType"
+      value:
+        type: string
+        example: "carrier"
+      ecert:
+        type: boolean
+        example: true
+  email:
+    type: object
+    properties:
+      value:
+        type: string
+        example: "john@email.com"
+      primary:
+        type: boolean
+        example: true

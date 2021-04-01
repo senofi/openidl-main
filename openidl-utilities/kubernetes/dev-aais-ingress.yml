@@ -1,0 +1,65 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: openidl-aais-apps-ingress
+  #annotations:
+    #kubernetes.io/ingress.class: nginx
+    #nginx.ingress.kubernetes.io/rewrite-target: /
+    #ingress.kubernetes.io/rewrite-target: /
+    #nginx.ingress.kubernetes.io/configuration-snippet: |
+     # rewrite /app1/(.*) $1 break;
+     # rewrite /app2/(.*) /$1 break;
+spec:
+  tls:
+  - hosts:
+    - dev-v2-openidl-ui.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - dev-v2-openidl-data-call-app.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - dev-v2-openidl-aais-data-call-processor.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - dev-v2-aais-openidl-insurance-data-manager.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - dev-v2-openidl-data-call-mood-listener.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    - dev-v2-openidl-transactional-data-event-listener.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    secretName:  dev-openidl-apps-cluster
+  rules:
+  - host: dev-v2-openidl-data-call-app.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: dev-v2-openidl-data-call-app
+          servicePort: 8080
+  - host: dev-v2-openidl-ui.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: dev-v2-openidl-ui
+          servicePort: 8080
+  - host: dev-v2-openidl-aais-data-call-processor.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: dev-v2-openidl-aais-data-call-processor
+          servicePort: 8080
+  - host: dev-v2-aais-openidl-insurance-data-manager.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: dev-v2-aais-openidl-insurance-data-manager
+          servicePort: 8080
+  - host: dev-v2-openidl-data-call-mood-listener.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: dev-v2-openidl-data-call-mood-listener
+          servicePort: 8080
+  - host: dev-v2-openidl-transactional-data-event-listener.dev-openidl-apps-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: dev-v2-openidl-transactional-data-event-listener
+          servicePort: 8080
+  

@@ -1,0 +1,20 @@
+s3Bucket/node_modules/**
+node_modules/**
+**/.DS_Store 
+
+# Tests
+.nyc_output/**
+
+# IDE
+.vscode/**
+
+# Credentials
+server/config-multicarrier.json
+server/config.json
+server/fabric/config/network-config.json
+server/fabric/config/local-cloudant-config.json
+server/fabric/config/users.json
+server/token/token.json
+server/token/local-appid-config.json
+
+**/config/**
