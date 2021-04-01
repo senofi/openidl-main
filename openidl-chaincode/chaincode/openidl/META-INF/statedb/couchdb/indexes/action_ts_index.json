@@ -1,0 +1,8 @@
+{
+	"index": {
+		"fields": ["actionTs"]
+	},
+	"ddoc": "actionTs",
+	"name": "actionTsIndex",
+	"type": "json"
+}

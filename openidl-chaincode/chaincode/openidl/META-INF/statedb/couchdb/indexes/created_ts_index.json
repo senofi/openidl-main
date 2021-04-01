@@ -1,0 +1,8 @@
+{
+	"index": {
+		"fields": ["createdTs"]
+	},
+	"ddoc": "createdTs",
+	"name": "createdTsIndex",
+	"type": "json"
+}

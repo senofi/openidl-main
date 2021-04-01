@@ -1,0 +1,8 @@
+{
+	"index": {
+		"fields": ["datacallID"]
+	},
+	"ddoc": "dataCallId",
+	"name": "datacallID",
+	"type": "json"
+}

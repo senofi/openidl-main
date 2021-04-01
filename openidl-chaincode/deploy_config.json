@@ -1,0 +1,24 @@
+{
+	"${ORG}msp": {
+		"chaincode": [{
+			"name": "openidl-cc-default",
+			"version": "${VERSION}",
+			"path": "chaincode/openidl",
+			"channels": ["defaultchannel"],
+			"instantiate": ${DEFAULT_CC_INSTANTIATE_FLAG},
+			"install": ${DEFAULT_CC_INSTALL_FLAG},
+			"endorsement_policy": "{\"identities\":[{\"role\":{\"name\":\"member\",\"mspId\":\"aaismsp\"}},{\"role\":{\"name\":\"member\",\"mspId\":\"aaismsp\"}}],\"policy\":{\"1-of\":[{\"signed-by\":0},{\"signed-by\":1}]}}"				
+        },
+        {
+			"name": "openidl-cc-aais-carriers",
+			"version": "${VERSION}",
+			"path": "chaincode/openidl",
+			"channels": ["analytics-${CHANNEL_ORG}"],
+			"instantiate": ${CARRIER_CC_INSTANTIATE_FLAG},
+			"install": ${CARRIER_CC_INSTALL_FLAG},
+            "endorsement_policy": "{\"identities\":[{\"role\":{\"name\":\"member\",\"mspId\":\"${ORG}msp\"}},{\"role\":{\"name\":\"member\",\"mspId\":\"${ORG}msp\"}}],\"policy\":{\"1-of\":[{\"signed-by\":0},{\"signed-by\":1}]}}",
+            "collections_config": "collection-config.json"					
+		}]
+	} 
+}
+

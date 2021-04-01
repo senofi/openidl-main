@@ -1,0 +1,8 @@
+{
+	"index": {
+		"fields": ["version"]
+	},
+	"ddoc": "versionDoc",
+	"name": "versionIndex",
+	"type": "json"
+}
