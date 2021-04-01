@@ -1,0 +1,369 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "messages": {
+        "$i18n": "locales.yml"
+    },
+    "title": {
+        "$ref": "#/messages/deploy.title"
+    },
+    "description": {
+        "$ref": "#/messages/deploy.description"
+    },
+    "longDescription": {
+        "$ref": "#/messages/deploy.longDescription"
+    },
+    "type": "object",
+    "properties": {
+        "github_token": {
+            "description": {
+                "$ref": "#/messages/deploy.github_tokenDescription"
+            },
+            "type": "string",
+            "pattern": "\\S",
+            "maxLength": 63
+        },
+        "host": {
+            "description": {
+                "$ref": "#/messages/deploy.hostDescription"
+            },
+            "type": "string",
+            "pattern": "\\S",
+            "maxLength": 63
+        },
+        "cluster_name": {
+            "description": {
+                "$ref": "#/messages/deploy.clusterNameDescription"
+            },
+            "type": "string",
+            "pattern": "\\S",
+            "maxLength": 63
+        },
+        "cross_channels": {
+            "description": {
+                "$ref": "#/messages/deploy.crossChannelsDescription"
+            },
+            "type": "string",
+            "pattern": "\\S",
+            "maxLength": 63
+        },
+        "admin_identity": {
+            "description": {
+                "$ref": "#/messages/deploy.adminIdentityDescription"
+            },
+            "type": "string",
+            "pattern": "\\S",
+            "maxLength": 63
+        },
+        "connection_profile": {
+            "description": {
+                "$ref": "#/messages/deploy.connectionProfileDescription"
+            },
+            "type": "string",
+            "pattern": "\\S",
+            "maxLength": 63
+        },
+        "cc_version": {
+            "description": {
+                "$ref": "#/messages/deploy.ccVersionDescription"
+            },
+            "type": "string",
+            "pattern": "\\S",
+            "maxLength": 63
+        },
+        "mood_listener_channels_events": {
+            "description": {
+                "$ref": "#/messages/deploy.moodListenerChannelsEventsDescription"
+            },
+            "type": "string",
+            "pattern": "\\S",
+            "maxLength": 63
+        },
+        "data_listener_channels_events": {
+            "description": {
+                "$ref": "#/messages/deploy.dataListenerChannelsEventsDescription"
+            },
+            "type": "string",
+            "pattern": "\\S",
+            "maxLength": 63
+        },
+        "target_channels": {
+            "description": {
+                "$ref": "#/messages/deploy.targetChannelsDescription"
+            },
+            "type": "string",
+            "pattern": "\\S",
+            "maxLength": 63
+        },
+        "api-key": {
+            "description": {
+                "$ref": "#/messages/deploy.apikeyDescription"
+            },
+            "type": "string",
+            "pattern": "\\S",
+            "validator": {
+                "v-type": "api-key"
+            }
+        },
+        "registry-region": {
+            "description": {
+                "$ref": "#/messages/deploy.registryRegionDescription"
+            },
+            "type": "string",
+            "disabled": false,
+            "validator": {
+                "v-type": "k8s-region",
+                "params": ["api-key"]
+            }
+        },
+        "registry-namespace": {
+            "description": {
+                "$ref": "#/messages/deploy.registrynsDescription"
+            },
+            "type": "string",
+            "pattern": "^[a-z0-9][-_a-z0-9]{2,28}[a-z0-9]$",
+            "validator": {
+                "v-type": "k8s-registry-namespace",
+                "params": ["registry-region"],
+                "validate": false
+            }
+        },
+        "prod-region": {
+            "description": {
+                "$ref": "#/messages/region"
+            },
+            "type": "string",
+            "disabled": false,
+            "validator": {
+                "v-type": "k8s-region",
+                "params": ["api-key"]
+            }
+        },
+        "prod-resource-group": {
+            "description": {
+                "$ref": "#/messages/deploy.rg"
+            },
+            "type": "string",
+            "validator": {
+                "v-type": "resource-group",
+                "params": ["api-key"]
+            }
+        },
+        "prod-cluster-name": {
+            "description": {
+                "$ref": "#/messages/deploy.cluster"
+            },
+            "type": "string",
+            "pattern": "\\S",
+            "validator": {
+                "v-type": "k8s-cluster-name",
+                "params": ["prod-resource-group", "prod-region"]
+            }
+        }
+
+
+    },
+    "required": [
+        "github_token",
+        "host",
+        "cluster_name",
+        "cross_channels",
+        "admin_identity",
+        "connection_profile",
+        "cc_version",
+        "mood_listener_channels_events",
+        "data_listener_channels_events",
+        "target_channels",
+        "api-key",
+        "registry-region", 
+        "registry-namespace", 
+        "prod-region", 
+        "prod-resource-group", 
+        "prod-cluster-name", 
+    ],
+    "form": [
+        {
+            "type": "validator",
+            "url": "/devops/validator/validator-v1.html"
+        },
+        {
+	        "type": "password",
+	        "readonly": false,
+	        "title": "IBM Cloud API Key",
+	        "key": "api-key"
+        },
+        {
+            "type": "table",
+            "columnCount": 3,
+            "widths": ["50%", "3%", "47%"],
+            "items": [{
+                "type": "label",
+                "title": {
+                    "$ref": "#/messages/deploy.containerregRegion"
+                }
+            }, {
+                "type": "label",
+                "title": ""
+            }, {
+                "type": "label",
+                "title": {
+                    "$ref": "#/messages/deploy.containerregns"
+                }
+            }, {
+                "type": "select",
+                "title": {
+                    "$ref": "#/messages/deploy.containerregRegion"
+                },
+                "key": "registry-region"
+            }, {
+                "type": "label",
+                "title": ""
+            }, {
+                "type": "select",
+                "readonly": false,
+                "title": {
+                    "$ref": "#/messages/deploy.containerregns"
+                },
+                "key": "registry-namespace"
+            }]
+        }, {
+            "type": "table",
+            "columnCount": 5,
+            "widths": ["24%", "2%", "33%", "3%", "43%"],
+            "items": [{
+                    "type": "label",
+                    "title": {
+                        "$ref": "#/messages/region"
+                    }
+                }, {
+                    "type": "label",
+                    "title": ""
+                },
+                {
+                    "type": "label",
+                    "title": {
+                        "$ref": "#/messages/deploy.rg"
+                    }
+                }, {
+                    "type": "label",
+                    "title": ""
+                },
+                {
+                    "type": "label",
+                    "title": {
+                        "$ref": "#/messages/deploy.cluster"
+                    }
+                },
+                 {
+                    "type": "select",
+                    "key": "prod-region"
+                }, {
+                    "type": "label",
+                    "title": ""
+                },
+                {
+                    "type": "select",
+                    "key": "prod-resource-group",
+                    "readonly": false
+                }, {
+                    "type": "label",
+                    "title": ""
+                },
+                {
+                    "type": "select",
+                    "key": "prod-cluster-name",
+                    "readonly": false
+                }
+            ]
+        }, {
+            "type": "table",
+            "columnCount": 1,
+            "widths": ["100%"],
+            "items": [{
+                "type": "label",
+                "title": {
+                    "$ref": "#/messages/deploy.clusterDescription"
+                }
+            }]
+        },
+        {
+            "type": "text",
+            "readonly": false,
+            "title": {
+                "$ref": "#/messages/deploy.github_token"
+            },
+            "key": "github_token"
+        },
+        {
+            "type": "text",
+            "readonly": false,
+            "title": {
+                "$ref": "#/messages/deploy.host"
+            },
+            "key": "host"
+        },
+        {
+            "type": "text",
+            "readonly": false,
+            "title": {
+                "$ref": "#/messages/deploy.clusterName"
+            },
+            "key": "cluster_name"
+        },
+        {
+            "type": "text",
+            "readonly": false,
+            "title": {
+                "$ref": "#/messages/deploy.crossChannels"
+            },
+            "key": "cross_channels"
+        },
+        {
+            "type": "text",
+            "readonly": false,
+            "title": {
+                "$ref": "#/messages/deploy.adminIdentity"
+            },
+            "key": "admin_identity"
+        },
+        {
+            "type": "text",
+            "readonly": false,
+            "title": {
+                "$ref": "#/messages/deploy.connectionProfile"
+            },
+            "key": "connection_profile"
+        },
+        {
+            "type": "text",
+            "readonly": false,
+            "title": {
+                "$ref": "#/messages/deploy.ccVersion"
+            },
+            "key": "cc_version"
+        },
+        {
+            "type": "text",
+            "readonly": false,
+            "title": {
+                "$ref": "#/messages/deploy.moodListenerChannelsEvents"
+            },
+            "key": "mood_listener_channels_events"
+        },
+        {
+            "type": "text",
+            "readonly": false,
+            "title": {
+                "$ref": "#/messages/deploy.dataListenerChannelsEvents"
+            },
+            "key": "data_listener_channels_events"
+        },
+        {
+            "type": "text",
+            "readonly": false,
+            "title": {
+                "$ref": "#/messages/deploy.targetChannels"
+            },
+            "key": "target_channels"
+        }
+    ]
+}
