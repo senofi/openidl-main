@@ -1,2 +1,5 @@
 node_modules
-
+output.csv
+output.json
+testCovidData.json
+testCovidDataSDMA.json
