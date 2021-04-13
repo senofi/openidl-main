@@ -1,0 +1,5 @@
+test/data/fromSDMA/**.*
+output.json
+outputOfCompare.json
+testCovidDataSDMA.json
+BatchDataExpected.json

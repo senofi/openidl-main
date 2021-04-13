@@ -14,7 +14,8 @@ module.exports.convertFlatJsonToHdsJson = (flatJson, batchId, batchHash) => {
 }
 
 addCPMapping = (flatJson, batchId, batchHash, mapping) => {
-  mapping.mapPremiumLevel = () => { return ["20", "21", "22","23","25","26","32","33","31","80","81","82","83","87","28","29","30","34","35","36","37","38"].includes(flatJson.majorPeril) }
+  mapping.mapPremiumLevel = () => { return ["20", "21", "22","23","25","26","32","33","31","80","81","82","83","87","28","29","30","34","35","36","37","38"].includes(flatJson.majorPeril) ? 'Policy' : 'Coverage' }
+  mapping.mapMajorPeril = () => { return flatJson.majorPeril }
 }
 
 convertCPToHDSJson = (flatJson, batchId, batchHash, mapping, alreadyMapped) => {
@@ -84,3 +85,43 @@ const schemas = {
     ]
   }
 }
+
+usableKeys = [
+  "lineOfInsurance",
+  "accountingDate",
+  "companyCode",
+  "stateCode",
+  // //"countyCode",
+  // //"areaIndicator",
+  // //"territoryCode",
+  "transactionCode",
+  "premiumLossAmount",
+  "exposureClaimCount",
+  "annualStatementLineOfBusiness",
+  "programCode",
+  "majorPeril",
+  // //"coverageCode",
+  // //"terrorismIndicator",
+  // //"propertyAmountOfInsurance",
+  // //"deductibleType",
+  // "deductibleAmount",
+  // "windHailDeductibleAmount",
+  "classCode",
+  // "constructionCode",
+  // "fireProtectionCode",
+  // "sprinklerSystemCode",
+  // "poolCoverage",
+  "monthsCoveredCauseOfLoss",
+  "claimStatus",
+  "accidentDate",
+  "zipCode",
+  "zipCodeSuffix",
+  // "stateExceptionCode",
+  "policyNumberClaimNumberIdentifier",
+  "companyUse",
+  "sicCode",
+  "taxID",
+  "numberOfEmployees",
+  "policyFormEdition",
+  "address"
+]

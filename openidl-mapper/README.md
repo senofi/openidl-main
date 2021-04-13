@@ -4,6 +4,16 @@
 - this project should be includable by any project that needs to map into thee harmonized data store
 - the actual logic that understands the input format and the mapping may be in a separate project
 
+# generate test data
+- there is a test script called `generate-hds-test-data.js` which converts the text files in the data diretory into an `output.json` file which is an array of all the records.  
+- use this as a good sample data for testing extraction patterns.
+- to run it:
+````bash
+make generate_test_data
+````
+# the mapping
+- mapping is available in [MAPPING.MD](MAPPING.md)
+
 # implementing a processor
 - use BPProcessor as an example
 - common mappings go into HDSProcessor
@@ -112,6 +122,11 @@ make test_processors
 - I don't see financial services product in the schema (looking at IM)
 - can we just have typeOfPolicy as a named field that is an object? Instead of a Financial services product?
 - cp doesn't have policy form?
+
+## 2021-04-06
+- added coverage level at the top level - is either 'Policy' or 'Coverage'
+- added loss type to claim records
+- TODO - split out the causes of loss by line of business
 
 ## TODO
 - what transaction types are premium and which are loss?

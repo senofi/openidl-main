@@ -20,6 +20,7 @@ module.exports.convertRecordToFlatJson = (record, schemas) => {
 
 module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
     var transactionCode = mapping.mapTransactionCode()
+    var transactionType = referenceData.TransactionCode[transactionCode]
     var isAPremiumTransaction = isPremiumTransaction(transactionCode)
     var lineOfInsurance = mapping.mapLineOfInsurance()
     var lineOfInsuranceName = referenceData.LineOfInsurance[lineOfInsurance].Name
@@ -57,7 +58,10 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
     var viralExclusion = (viralExclusionString ? viralExclusionString === 'Y' : false)
     var annualStatementLineOfBusinessCode = mapping.mapAnnualStatementLineOfBusinessCode()
     var annualStatementLineOfBusinessDescription = referenceData.AnnualStatementLineOfBusiness[annualStatementLineOfBusinessCode]
+    var majorPerilCode = mapping.mapMajorPeril()
+    var majorPerilName = majorPerilCode ? referenceData.MajorPeril[majorPerilCode] : ''
     var structure = {
+        "coverageLevel": premiumLevel,
         "policy": {
             "lineOfInsurance": {
                 "legacyCode": lineOfInsurance,
@@ -91,7 +95,7 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
                         {
                             "currencyPayment": [
                                 {
-                                    "transactionType": "Premium Statistical Transaction",
+                                    "transactionType": transactionType,
                                     "transactionCode": transactionCode,
                                 }
                             ],
@@ -112,24 +116,18 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
             ]
         }
     }
+    if (majorPerilCode) {
+        structure.policy.perilCategory = [
+            {
+                "majorPeril":majorPerilName
+            }
+        ]
+    }
     if (isAPremiumTransaction) {
         structure.policy.taxID = taxID
-        structure.policy.currencyPayment = [
-            {
-                "accountStatement": {
-                },
-                "transactionType": "Premium Statistical Transaction",
-                "amount": premiumAmount
-            }
-        ]
-        structure.policy.currencyPayment = [
-            {
-                "accountStatement": {
-                },
-                "transactionType": "Premium Statistical Transaction",
-                "amount": premiumAmount
-            }
-        ]
+        structure.policy.currencyPayment[0].transactionType = transactionType
+        structure.policy.currencyPayment[0].transactionCode = transactionCode
+        structure.policy.currencyPayment[0].currencyPaymentAmount = premiumAmount
         structure.policy.policyForm = {
             "legacyCode": policyFormCode,
             "description": policyFormDescription,
@@ -164,15 +162,18 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
         structure.policy.numberOfEmployees = numberOfEmployees
         structure.policy.policyStructure[0].Type = "TODO: Need type"
         structure.policy.policyStructure[0].coverages[0].Type = "TODO: Need a way to identify which coverage"
-        structure.policy.policyStructure[0].coverages[0].currencyPayment[0].amount = premiumAmount
+        structure.policy.policyStructure[0].coverages[0].currencyPayment[0].currencyPaymentAmount = premiumAmount
         structure.policy.policyStructure[0].coverages[0].exposureAmount = exposureAmount
         if (premiumLevel === 'Policy') {
+            if (!structure.policy.currencyPayment[0].accountStatement) {
+                structure.policy.currencyPayment[0].accountStatement = {}
+            }
             structure.policy.currencyPayment[0].accountStatement.periodStartDate = premiumAccountingDate
-            structure.policy.currencyPayment[0].transactionType = "Premium Statistical Transaction"
+            structure.policy.currencyPayment[0].transactionType = transactionType
             structure.policy.currencyPayment[0].transactionCode = transactionCode
         } else {
             structure.policy.policyStructure[0].coverages[0].currencyPayment[0].periodStartDate = premiumAccountingDate
-            structure.policy.policyStructure[0].coverages[0].currencyPayment[0].transactionType = "Premium Statistical Transaction"
+            structure.policy.policyStructure[0].coverages[0].currencyPayment[0].transactionType = transactionType
             structure.policy.policyStructure[0].coverages[0].currencyPayment[0].transactionCode = transactionCode
         }
 
@@ -188,7 +189,7 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
         var lossAmount = mapping.mapLossAmount()
         structure.claim = {
             "claimFolder": {
-                "accidentDate": accidentDate,
+                "eventStartDate": accidentDate,
                 "claimNumber": claimNumber,
                 "claimStatus": claimStatus,
                 "claimComponent": [
@@ -197,7 +198,7 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
                         "currencyPayment": [
                             {
                                 "type": "TODO: need a type",
-                                "transactionType": "Loss Statistical Transaction",
+                                "transactionType": transactionType,
                                 "transactionCode": transactionCode,
                                 "accountStatement": {
                                     "type": "TODO: need a type",
@@ -223,12 +224,13 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
             }
         }
         var lossType = referenceData.TransactionType[transactionCode].SubType
+        structure.claim.lossType = lossType
         if (lossType === 'Paid Loss') {
             structure.claim.claimFolder.claimComponent[0].claimOffer[0].payment[0].type = 'Loss amount'
             structure.claim.claimFolder.claimComponent[0].claimOffer[0].payment[0].amount = lossAmount
         } else {
             structure.claim.claimFolder.claimComponent[0].currencyPayment[0].type = 'Reserve for Claim'
-            structure.claim.claimFolder.claimComponent[0].currencyPayment[0].amount = lossAmount
+            structure.claim.claimFolder.claimComponent[0].currencyPayment[0].currencyPaymentAmount = lossAmount
         }
 
     }
@@ -308,7 +310,8 @@ module.exports.baseMapping = (flatJson, batchId, batchHash) => {
         mapAccidentDate: () => { return flatJson.accidentDate ? convert6DigitDate(flatJson.accidentDate.trim()) : null },
         mapClaimNumber: () => { return flatJson.policyNumberClaimNumberIdentifier },
         mapClaimStatus: () => { return flatJson.claimStatus },
-        mapLossAmount: () => { return flatJson.premiumLossAmount ? parseInt(flatJson.premiumLossAmount.trim()) : null }
+        mapLossAmount: () => { return flatJson.premiumLossAmount ? parseInt(flatJson.premiumLossAmount.trim()) : null },
+        mapMajorPeril: () => { return ''}
     }
     return mapping
 }

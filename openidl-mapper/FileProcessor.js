@@ -8,9 +8,13 @@ const csv = require('csvtojson')
  * @param {*} records 
  * @returns 
  */
-module.exports.processTextRecords = function processRecords(records) {
+module.exports.processTextRecords = function processRecords(records, max = -1) {
 
-    var lines = records.split("\n");
+    var linesIn = records.split("\n");
+
+    let lines = (max > -1 ? linesIn.slice(0,max) : linesIn)
+
+    console.log(`Processing ${lines.length} records`)
 
     return processIntoChunks(100,'1111','9999',lines,convertFlatToHDS)
 

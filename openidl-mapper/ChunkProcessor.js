@@ -19,7 +19,10 @@ module.exports.processIntoChunks = function (chunkSize, batchId, carrierId, reco
     };
     for (let record of records) {
         if (record) {
-            result.records.push(transform(record));
+            let transformedRecord = transform(record)
+            if (transformedRecord) {
+                result.records.push(transform(record));
+            }
         }
         if (i % chunkSize == 0 && i > 0) {
             results.push(result)

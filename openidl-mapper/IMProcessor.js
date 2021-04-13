@@ -15,7 +15,7 @@ module.exports.convertFlatJsonToHdsJson = (flatJson, batchId, batchHash) => {
 
 addIMMapping = (flatJson, batchId, batchHash, mapping) => {
   mapping.mapTypeOfPolicy = () => { return flatJson.typeOfPolicy  }
-  mapping.mapPremiumLevel = () => { return flatJson.packageID === '0' || flatJson.packageID === '7' ? 'Coverage' : 'Premium'}
+  mapping.mapPremiumLevel = () => { return flatJson.packageID === '0' || flatJson.packageID === '7' ? 'Policy' : 'Coverage'}
 }
 
 convertIMToHDSJson = (flatJson, batchId, batchHash, mapping, alreadyMapped) => {
@@ -98,3 +98,59 @@ const schemas = {
     ]
   }
 }
+
+usableKeys = [
+  "lineOfInsurance",
+  "accountingDate",
+  "companyCode",
+  "stateCode",
+  // //"countyCode",
+  // //"areaIndicator",
+  // //"territoryCode",
+  "transactionCode",
+  "premiumLossAmount",
+  "exposureClaimCount",
+  "annualStatementLineOfBusiness",
+  // //"programCode",
+  "programClassCode",
+  "policyForm",
+  // //"coverageCode",
+  // //"lossSettlementIndicator",
+  // //"terrorismIndicator",
+  // //"propertyAmountOfInsurance",
+  // //"deductibleType",
+  // "deductibleAmount",
+  // "windHailDeductibleAmount",
+  "classCode",
+  // "constructionCode",
+  // "fireProtectionCode",
+  // "entryYearClaimsMade",
+  // "liabilityLimit",
+  // "medicalPaymentLimit",
+  // "annualAggregateLimit",
+  // "occupancyCode",
+  // "liabilityExposureIndicator",
+  // "typeOfCoverage",
+  // "typeOfPolicy",
+  // "packageID",
+  // "sprinklerSystemCode",
+  // "policyTermEffectiveDate",
+  // "moldDamageCoverage",
+  // "poolCoverage",
+  "monthsCoveredCauseOfLoss",
+  "claimStatus",
+  "accidentDate",
+  "zipCode",
+  // "zipCodeSuffix",
+  // "buildingCodeEffectivenessGrade",
+  // "windLossMitigation",
+  // "stateExceptionCode",
+  "policyNumberClaimNumberIdentifier",
+  // "companyUse",
+  "sicCode",
+  "taxID",
+  "numberOfEmployees",
+  "policyFormEdition",
+  "address"
+]
+

@@ -1,20 +1,20 @@
 module.exports.referenceData = {
     "TransactionType": {
-        "1": {"Type":"Premium", "SubType": "N/A"},
-        "2": {"Type":"Loss", "SubType":"Paid Loss"},
-        "3": {"Type":"Loss", "SubType":"Reserve"},
-        "4": {"Type":"Loss", "SubType":"Dunno"},
-        "5": {"Type":"Loss", "SubType":"Dunno"},
-        "6": {"Type":"Loss", "SubType":"Paid Loss"},
-        "7": {"Type":"Loss", "SubType":"Reserve"},
-        "8": {"Type":"Premium", "SubType": "N/A"},
-        "9": {"Type":"Premium", "SubType": "N/A"}
+        "1": { "Type": "Premium", "SubType": "N/A" },
+        "2": { "Type": "Loss", "SubType": "Paid Loss" },
+        "3": { "Type": "Loss", "SubType": "Reserve" },
+        "4": { "Type": "Loss", "SubType": "Dunno" },
+        "5": { "Type": "Loss", "SubType": "Dunno" },
+        "6": { "Type": "Loss", "SubType": "Paid Loss" },
+        "7": { "Type": "Loss", "SubType": "Reserve" },
+        "8": { "Type": "Premium", "SubType": "N/A" },
+        "9": { "Type": "Premium", "SubType": "N/A" }
     },
     "LineOfInsurance": {
-        "31": {"Name":"Inland Marine","Abbreviation":"IM"},
-        "32": {"Name":"Homeowners", "Abbreviation":"HO"},
-        "47": {"Name":"Commercial Property", "Abbreviation":"CP"},
-        "49": {"Name":"Businessowners","Abbreviation":"BP"}
+        "31": { "Name": "Inland Marine", "Abbreviation": "IM" },
+        "32": { "Name": "Homeowners", "Abbreviation": "HO" },
+        "47": { "Name": "Commercial Property", "Abbreviation": "CP" },
+        "49": { "Name": "Businessowners", "Abbreviation": "BP" }
     },
     "CompanyCode": {
         "4809": "Horace Mann Insurance Company",
@@ -243,35 +243,35 @@ module.exports.referenceData = {
         }
     },
     "PolicyForm": {
-        "00": {"PremiumLevel": "Coverage", "Description": "Does not apply"},
-        "90": {"PremiumLevel": "Coverage", "Description": "Certified acts of terrorism covered (coverage not excluded)"},
-        "91": {"PremiumLevel": "Coverage", "Description": "Certified acts of terrorism excluded subject to Standard Fire Policy statutes when applicable, producing only \"fire following\" coverage for certified acts of terrorism"},
-        "92": {"PremiumLevel": "Coverage", "Description": "Non-certified acts of terrorism covered (coverage not excluded)"},
-        "93": {"PremiumLevel": "Coverage", "Description": "Non-certified acts of terrorism covered , except acts of terrorism arising out of nuclear, biological or chemical events"},
-        "99": {"PremiumLevel": "Coverage", "Description": "Minimum Premium record subject to SECTION 1, PART C, Rule 3.b"},
-        "14": {"PremiumLevel": "Policy", "Description": "Standard form"},
-        "15": {"PremiumLevel": "Policy", "Description": "Special form with theft"},
-        "16": {"PremiumLevel": "Policy", "Description": "Special form without theft"},
-        "40": {"PremiumLevel": "Coverage", "Description": "All other liability endorsements"},
-        "47": {"PremiumLevel": "Coverage", "Description": "Lead poisoning coverage"},
-        "49": {"PremiumLevel": "Coverage", "Description": "Non-owned auto liability"},
-        "50": {"PremiumLevel": "Coverage", "Description": "Hired auto liability"},
-        "51": {"PremiumLevel": "Coverage", "Description": "Non-owned / Hired auto liability"},
-        "55": {"PremiumLevel": "Coverage", "Description": "Professional Liability"},
-        "58": {"PremiumLevel": "Coverage", "Description": "Employment practices liability"},
-        "59": {"PremiumLevel": "Coverage", "Description": "Employee benefits liability"},
-        "60": {"PremiumLevel": "Coverage", "Description": "All other property endorsements"},
-        "61": {"PremiumLevel": "Coverage", "Description": "Earthquake"},
-        "62": {"PremiumLevel": "Coverage", "Description": "Water damage - sewer backup"},
-        "63": {"PremiumLevel": "Coverage", "Description": "Burglary and robbery"},
-        "64": {"PremiumLevel": "Coverage", "Description": "Money and securities"},
-        "65": {"PremiumLevel": "Coverage", "Description": "Employee dishonesty"},
-        "66": {"PremiumLevel": "Coverage", "Description": "Theft coverage for standard form"},
-        "67": {"PremiumLevel": "Coverage", "Description": "Accounts receivable"},
-        "68": {"PremiumLevel": "Coverage", "Description": "Outdoor sign"},
-        "69": {"PremiumLevel": "Coverage", "Description": "Valuable papers and records"},
-        "72": {"PremiumLevel": "Coverage", "Description": "Spoilage coverage"},
-        "75": {"PremiumLevel": "Coverage", "Description": "Equipment breakdown"}
+        "00": { "PremiumLevel": "Coverage", "Description": "Does not apply" },
+        "90": { "PremiumLevel": "Coverage", "Description": "Certified acts of terrorism covered (coverage not excluded)" },
+        "91": { "PremiumLevel": "Coverage", "Description": "Certified acts of terrorism excluded subject to Standard Fire Policy statutes when applicable, producing only \"fire following\" coverage for certified acts of terrorism" },
+        "92": { "PremiumLevel": "Coverage", "Description": "Non-certified acts of terrorism covered (coverage not excluded)" },
+        "93": { "PremiumLevel": "Coverage", "Description": "Non-certified acts of terrorism covered , except acts of terrorism arising out of nuclear, biological or chemical events" },
+        "99": { "PremiumLevel": "Coverage", "Description": "Minimum Premium record subject to SECTION 1, PART C, Rule 3.b" },
+        "14": { "PremiumLevel": "Policy", "Description": "Standard form" },
+        "15": { "PremiumLevel": "Policy", "Description": "Special form with theft" },
+        "16": { "PremiumLevel": "Policy", "Description": "Special form without theft" },
+        "40": { "PremiumLevel": "Coverage", "Description": "All other liability endorsements" },
+        "47": { "PremiumLevel": "Coverage", "Description": "Lead poisoning coverage" },
+        "49": { "PremiumLevel": "Coverage", "Description": "Non-owned auto liability" },
+        "50": { "PremiumLevel": "Coverage", "Description": "Hired auto liability" },
+        "51": { "PremiumLevel": "Coverage", "Description": "Non-owned / Hired auto liability" },
+        "55": { "PremiumLevel": "Coverage", "Description": "Professional Liability" },
+        "58": { "PremiumLevel": "Coverage", "Description": "Employment practices liability" },
+        "59": { "PremiumLevel": "Coverage", "Description": "Employee benefits liability" },
+        "60": { "PremiumLevel": "Coverage", "Description": "All other property endorsements" },
+        "61": { "PremiumLevel": "Coverage", "Description": "Earthquake" },
+        "62": { "PremiumLevel": "Coverage", "Description": "Water damage - sewer backup" },
+        "63": { "PremiumLevel": "Coverage", "Description": "Burglary and robbery" },
+        "64": { "PremiumLevel": "Coverage", "Description": "Money and securities" },
+        "65": { "PremiumLevel": "Coverage", "Description": "Employee dishonesty" },
+        "66": { "PremiumLevel": "Coverage", "Description": "Theft coverage for standard form" },
+        "67": { "PremiumLevel": "Coverage", "Description": "Accounts receivable" },
+        "68": { "PremiumLevel": "Coverage", "Description": "Outdoor sign" },
+        "69": { "PremiumLevel": "Coverage", "Description": "Valuable papers and records" },
+        "72": { "PremiumLevel": "Coverage", "Description": "Spoilage coverage" },
+        "75": { "PremiumLevel": "Coverage", "Description": "Equipment breakdown" }
     },
     "SICCode": {
         "0111": "Wheat",
@@ -1301,6 +1301,40 @@ module.exports.referenceData = {
         "260": "Burglary and Theft",
         "270": "Boiler and Machinery"
     },
+    "MajorPeril": {
+        "20": "Fire perils excluding vandalism and sprinkler leakage",
+        "21": "Fire perils including vandalism",
+        "22": "Fire perils including sprinkler leakage",
+        "23": "Fire perils including vandalism and sprinkler leakage",
+        "25": "Extended coverage excluding vandalism",
+        "26": "Extended coverage including vandalism",
+        "32": "Special form perils with theft",
+        "33": "Special form perils without theft",
+        "31": "Broad form perils",
+        "61": "Earthquake coverage",
+        "62": "Water damage -- Back up of sewers, drains, or sumps",
+        "72": "Spoilage coverage",
+        "75": "Equipment breakdown",
+        "99": "All other allied lines",
+        "80": "Manufacturer's Output policy",
+        "81": "Commercial Output program / Capital Assets Program",
+        "82": "Contractor's and Developer's Output program",
+        "83": "Agricultural Output program / Agricultural Capital Assets Program",
+        "87": "Market segments business",
+        "90": "Certified acts of terrorism covered (coverage not excluded)",
+        "91": "Certified acts of terrorism excluded subject to Standard Fire Policy statutes when applicable, producing 'fire only' coverage for certified acts of terrorism",
+        "92": "Non-certified acts of terrorism covered (coverage not excluded)",
+        "93": "Non-certified acts of terrorism covered, except acts of terrorism arising out of nuclear, biological or chemical events",
+        "28": "Extended coverage, vandalism, and broad form perils",
+        "29": "Extended coverage, vandalism, and special form perils with theft",
+        "30": "Extended coverage, vandalism, and special form perils without theft",
+        "34": "Fire and extended coverage excluding vandalism",
+        "35": "Fire and extended coverage including vandalism",
+        "36": "Fire, extended coverage, vandalism, and broad form perils",
+        "37": "Fire, extended coverage, vandalism, and special form perils with theft",
+        "38": "Fire, extended coverage, vandalism, and special form perils without theft"
+
+    },
     "CauseOfLoss": {
         "01": {
             "category": "Property Coverage",
@@ -1398,6 +1432,17 @@ module.exports.referenceData = {
             "category": "Property Coverage",
             "name": "All other physical damage"
         },
+        "26": {
+            "name": "Bodily injury - all other,Cause of Loss",
+            "category": "Liability Coverage"
+        },
+        "27": { "name": "Property damage - all other,Cause of Loss", "category": "Liability Coverage" },
+        "28": {
+            "name": "Fire legal liability,Cause of Loss",
+            "category": "Liability Coverage"
+        },
+        "29": { "name": "All other liability,Cause of Loss", "category": "Liability Coverage" },
+        "30": { "name": "Medical payments,Cause of Loss", "category": "Liability Coverage" },
         "32": {
             "category": "Property Coverage",
             "name": "Collapse, other than sinkhole"
@@ -1430,6 +1475,15 @@ module.exports.referenceData = {
             "category": "Property Coverage",
             "name": "Mold (property related)"
         },
+        "50": { "name": "Products liability,Cause of Loss", "category": "Liability Coverage" },
+        "51": { "name": "Personal injury,Cause of Loss", "category": "Liability Coverage" },
+        "52": { "name": "Advertising injury,Cause of Loss", "category": "Liability Coverage" },
+        "53": { "name": "Liability (BI, PD, and Med-Pay) for: dog bite", "category": "Liability Coverage" },
+        "54": { "name": "Liability (BI, PD, and Med-Pay) for: mold", "category": "Liability Coverage" },
+        "57": { "name": "Liability (BI, PD, and Med-Pay) for: escaped liquid fuel", "category": "Liability Coverage" },
+        "58": {
+            "name": "Liability (BI, PD, and Med-Pay) for: lead poisoning", "category": "Liability Coverage"
+        },
         "70": {
             "category": "Property Coverage",
             "name": "Burglary or robbery - on premises"
@@ -1457,7 +1511,8 @@ module.exports.referenceData = {
         "76": {
             "category": "Property Coverage",
             "name": "Sprinkler leakage"
-        }
+        },
+
     },
     "BusinessInterruptionFlag": {
         "IM 1234 0116": "Y",

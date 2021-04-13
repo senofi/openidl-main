@@ -14,6 +14,7 @@ module.exports.convertFlatJsonToHdsJson = (flatJson, batchId, batchHash) => {
 }
 
 addHOMapping = (flatJson, batchId, batchHash, mapping) => {
+  mapping.mapPremiumLevel = () => { return 'Policy' }
 }
 
 convertHOToHDSJson = (flatJson, batchId, batchHash, mapping, alreadyMapped) => {

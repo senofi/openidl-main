@@ -14,7 +14,8 @@ module.exports.convertFlatToHDS = function convertFlatToHDS(textRecord, batchId,
         var flatJson = processor.convertRecordToFlatJson(textRecord)
         return processor.convertFlatJsonToHdsJson(flatJson, batchId, batchHash)
     }
-    throw 'No processor found for LOB: ' + lob
+    console.error('No processor found for LOB: ' + lob)
+    return null
 }
 
 module.exports.convertCSVToHDS = function convertFlatToHDS(csvRow, batchId, batchHash) {
@@ -23,7 +24,8 @@ module.exports.convertCSVToHDS = function convertFlatToHDS(csvRow, batchId, batc
     if (processor) {
         return processor.convertFlatJsonToHdsJson(csvRow, batchId, batchHash)
     }
-    throw 'No processor found for LOB: ' + lob
+    console.error('No processor found for LOB: ' + lob)
+    return null
 }
 
 module.exports.getTransactionType = (record) => {

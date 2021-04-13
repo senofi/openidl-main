@@ -71,12 +71,12 @@ module.exports.loadSecretsFromCloud = function loadSecretsFromCloud(dir, cloud, 
     });
 }
 
-var args = process.argv.slice(2)
-if (args.length !== 3) {
-    console.log('Error.  Must provide 3 parguments: cloud, environment, node.')
-    console.log("Usage: node index.js <cloud> <environment> <node>")
-    exit(1)
-} else {
-    this.loadSecretsFromCloud('./config', args[0], args[1], args[2])
-}
+// var args = process.argv.slice(2)
+// if (args.length !== 3) {
+//     console.log('Error.  Must provide 3 parguments: cloud, environment, node.')
+//     console.log("Usage: node index.js <cloud> <environment> <node>")
+//     exit(1)
+// } else {
+//     this.loadSecretsFromCloud('./config', args[0], args[1], args[2])
+// }
 
