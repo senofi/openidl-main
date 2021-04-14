@@ -4,7 +4,7 @@ const deepEquals = require('deep-equals')
 const covidData = require('./data/testCovidDataSDMA.json')
 const covidPattern = require('./extractionPatterns/Covid19BI_DataCall_ExtractionPattern')
 const fs = require('fs')
-const Parseer = require('json2csv')
+const Parser = require('json2csv')
 let emitted = []
 
 describe('Testing Map Reduce Helper', () => {
@@ -75,7 +75,7 @@ function convertToCSV(json) {
 
     let csv = null
     try {
-        const parser = new Parseer.Parser(opts)
+        const parser = new Parser.Parser(opts)
         csv = parser.parse(rows)
     } catch (err) {
         console.error(err);

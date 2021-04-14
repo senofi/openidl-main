@@ -45,9 +45,10 @@ class MongoDBManager {
     }
 
     async loadData(data, dbName, collectionName) {
-        logger.debug("Getting Data from: " + dbName + "." + collectionName)
-        await this.useDatabase(dbName)
+        logger.debug("Putting Data into: " + dbName + "." + collectionName)
+        // await this.useDatabase(dbName)
         await this.db.collection(collectionName).insertMany(data)
+        logger.debug("Done Putting Data into: " + dbName + "." + collectionName)
     }
 
     async loadDataFromInsuranceDataManagerPayload(data, dbName, collectionName) {
