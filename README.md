@@ -5,6 +5,9 @@ All projects are contained in subdirectories
 
 This is a single monorepository
 
+## contributing
+Here is a course on how to contribute to open source: https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github
+
 ## Current Backlog
 - there is a backlog of work necessary to get everything running from github as open source.
 - please refer to [backlog](./BACKLOG.md) for more information
