@@ -60,7 +60,14 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
     var annualStatementLineOfBusinessDescription = referenceData.AnnualStatementLineOfBusiness[annualStatementLineOfBusinessCode]
     var majorPerilCode = mapping.mapMajorPeril()
     var majorPerilName = majorPerilCode ? referenceData.MajorPeril[majorPerilCode] : ''
+    var lossAmount = mapping.mapLossAmount()
     var structure = {
+        "metaData": {
+            "lineOfBusiness":lineOfInsurance,
+            "transactionCode":transactionCode,
+            "state":stateAbbreviation,
+            "amount": isAPremiumTransaction ? premiumAmount : lossAmount
+        },
         "coverageLevel": premiumLevel,
         "policy": {
             "lineOfInsurance": {
@@ -186,7 +193,6 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
         var accidentDate = mapping.mapAccidentDate()
         var claimNumber = mapping.mapClaimNumber()
         var claimStatus = mapping.mapClaimStatus()
-        var lossAmount = mapping.mapLossAmount()
         structure.claim = {
             "claimFolder": {
                 "eventStartDate": accidentDate,
@@ -310,7 +316,7 @@ module.exports.baseMapping = (flatJson, batchId, batchHash) => {
         mapAccidentDate: () => { return flatJson.accidentDate ? convert6DigitDate(flatJson.accidentDate.trim()) : null },
         mapClaimNumber: () => { return flatJson.policyNumberClaimNumberIdentifier },
         mapClaimStatus: () => { return flatJson.claimStatus },
-        mapLossAmount: () => { return flatJson.premiumLossAmount ? parseInt(flatJson.premiumLossAmount.trim()) : null },
+        mapLossAmount: () => { return flatJson.premiumLossAmount ? convertStringToFloat(flatJson.premiumLossAmount.trim()) : null },
         mapMajorPeril: () => { return ''}
     }
     return mapping

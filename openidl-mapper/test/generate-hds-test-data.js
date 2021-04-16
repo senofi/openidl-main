@@ -11,22 +11,22 @@ let dataFileNames = fs.readdirSync(dataFolder)
 
 // Load all the data from the test files
 for (let dataFileName of dataFileNames) {
-    console.log(`Processing ${dataFileName}`)
-    let contents = fs.readFileSync(dataFolder + dataFileName, 'utf8');
-    let results = fileProcessor.processTextRecords(contents, 1000)
-    for (let result of results) {
-        for (let record of result.records) {
-            record.batchId = "1111"
-            record.chunkId = "1111111"
-            record.carrierId = "9999"
-            record.policyNo = "1111111"
-            record.errFlg = false
-            record.errrLst = []
-            record.SquenceNum = "0"
+    // console.log(`Processing ${dataFileName}`)
+    // let contents = fs.readFileSync(dataFolder + dataFileName, 'utf8');
+    // let results = fileProcessor.processTextRecords(contents, 1000)
+    // for (let result of results) {
+    //     for (let record of result.records) {
+    //         record.batchId = "1111"
+    //         record.chunkId = "1111111"
+    //         record.carrierId = "9999"
+    //         record.policyNo = "1111111"
+    //         record.errFlg = false
+    //         record.errrLst = []
+    //         record.SquenceNum = "0"
 
-            allResults.push(record)
-        }
-    }
+    //         allResults.push(record)
+    //     }
+    // }
 }
 
 

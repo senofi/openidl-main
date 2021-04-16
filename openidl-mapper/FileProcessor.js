@@ -8,15 +8,13 @@ const csv = require('csvtojson')
  * @param {*} records 
  * @returns 
  */
-module.exports.processTextRecords = function processRecords(records, max = -1) {
+module.exports.processTextRecords = function processRecords(records, min = 0, max = -1) {
 
     var linesIn = records.split("\n");
 
-    let lines = (max > -1 ? linesIn.slice(0,max) : linesIn)
+    let lines = (max > -1 ? linesIn.slice(min,max) : linesIn)
 
-    console.log(`Processing ${lines.length} records`)
-
-    return processIntoChunks(100,'1111','9999',lines,convertFlatToHDS)
+    return processIntoChunks(100, min.toString(),'9999',lines,convertFlatToHDS)
 
 }
 
@@ -31,5 +29,10 @@ module.exports.processCSVRecords = async function processCSVRecords(records) {
     
     return results
  
+}
+
+module.exports.countTextRecords = function countTextRecords(records) {
+    var lines = records.split("\n")
+    return lines.length
 }
 

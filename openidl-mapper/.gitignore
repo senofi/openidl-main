@@ -3,3 +3,4 @@ output.json
 outputOfCompare.json
 testCovidDataSDMA.json
 BatchDataExpected.json
+totals.*
