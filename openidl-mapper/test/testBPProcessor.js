@@ -12,9 +12,9 @@ describe('Testing BP Processor', () => {
         expect(hdsResult.policy.company.code, 'Premium company code').to.equal('9999')
         expect(hdsResult.policy.lineOfInsurance.legacyCode, 'Premium Line of Insurance code').to.equal('49')
         expect(hdsResult.policy.lineOfInsurance.name, 'Premium LOB Name').to.equal('Businessowners')
-        expect(hdsResult.policy.policyStructure[0].coverages[0].currencyPayment[0].transactionType, 'Premium Transaction type').to.equal('Premium Statistical Transaction')
+        expect(hdsResult.policy.policyStructure[0].coverages[0].currencyPayment[0].transactionType, 'Premium Transaction type').to.equal('Limited Coding')
         expect(hdsResult.policy.policyStructure[0].coverages[0].currencyPayment[0].transactionCode, 'Premium Transaction code').to.equal('8')
-        expect(hdsResult.policy.policyStructure[0].coverages[0].currencyPayment[0].amount, 'Premium amount').to.equal(1345)
+        expect(hdsResult.policy.currencyPayment[0].currencyPaymentAmount, 'Premium amount').to.equal(13.45)
         expect(hdsResult.policy.policyStructure[0].coverages[0].exposureAmount, 'Premium Exposure amount').to.equal(2)
         expect(hdsResult.policy.policyStructure[0].coverages[0].currencyPayment[0].periodStartDate, 'Premium Accounting Date').to.equal('2010-07-01')
         expect(hdsResult.policy.policyStructure[0].location[0].geographicLocation.stateLegacyCode, 'Premium State code').to.equal('54')
@@ -47,7 +47,7 @@ describe('Testing BP Processor', () => {
     it ('should map BP Policy Premiums correctly', () => {
         var hdsResult = lobProcessor.convertFlatToHDS(premiumRecords[0], batchId, batchHash)
         expect(hdsResult.policy.currencyPayment[0].accountStatement.periodStartDate, 'Premium Accounting Date').to.equal('2009-01-01')
-        expect(hdsResult.policy.currencyPayment[0].transactionType, 'Premium Transaction type').to.equal('Premium Statistical Transaction')
+        expect(hdsResult.policy.currencyPayment[0].transactionType, 'Premium Transaction type').to.equal('Premium or Cancellation')
         expect(hdsResult.policy.currencyPayment[0].transactionCode, 'Premium Transaction code').to.equal('1')
     });
 
@@ -62,12 +62,12 @@ describe('Testing BP Processor', () => {
         expect(hdsResult.policy.policyStructure[0].location[0].geographicLocation.countryLegacyCode, 'Loss Country code').to.equal(undefined)
         expect(hdsResult.policy.policyStructure[0].location[0].geographicLocation.countryName, 'Loss Country Name').to.equal('TODO: need reference data')
         expect(hdsResult.claim.claimFolder.claimComponent[0].currencyPayment[0].accountStatement.periodStartDate, 'Loss Accounting Date').to.equal('2009-01-01')
-        expect(hdsResult.policy.policyStructure[0].coverages[0].currencyPayment[0].transactionType, 'Loss Transaction type').to.equal('Premium Statistical Transaction')
+        expect(hdsResult.policy.policyStructure[0].coverages[0].currencyPayment[0].transactionType, 'Loss Transaction type').to.equal('Paid loss')
         expect(hdsResult.policy.policyStructure[0].coverages[0].currencyPayment[0].transactionCode, 'Loss Transaction code').to.equal('2')
         expect(hdsResult.claim.claimFolder.claimComponent[0].causeOfLoss.legacyCode, 'Loss Cause of loss code').to.equal('50')
-        expect(hdsResult.claim.claimFolder.claimComponent[0].causeOfLoss.category, 'Loss Cause of loss category').to.equal(null)
-        expect(hdsResult.claim.claimFolder.claimComponent[0].causeOfLoss.name, 'Loss Cause of loss name').to.equal(null)
-        expect(hdsResult.claim.claimFolder.accidentDate, 'Loss Accident Date').to.equal('2009-02-03')
+        expect(hdsResult.claim.claimFolder.claimComponent[0].causeOfLoss.category, 'Loss Cause of loss category').to.equal('Liability Coverage')
+        expect(hdsResult.claim.claimFolder.claimComponent[0].causeOfLoss.name, 'Loss Cause of loss name').to.equal('Products liability,Cause of Loss')
+        expect(hdsResult.claim.claimFolder.eventStartDate, 'Loss Accident Date').to.equal('2009-02-03')
         expect(hdsResult.claim.claimFolder.claimNumber, 'Loss Claim Number').to.equal('BP1234567891  ')
         expect(hdsResult.policy.policyStructure[0].coverages[0].policyForm.legacyCode, 'Loss Policy Form code').to.equal('14')
         expect(hdsResult.policy.policyStructure[0].coverages[0].policyForm.description, 'Loss Policy Form description').to.equal('Standard form')
@@ -75,11 +75,11 @@ describe('Testing BP Processor', () => {
         expect(hdsResult.policy.policyStructure[0].riskClassification.legacyCode, 'Loss Risk Classification code').to.equal('99903')
         expect(hdsResult.policy.policyStructure[0].riskClassification.description, 'Loss Risk Classification description').to.equal("Cosmetologists' Liability")
         expect(hdsResult.policy.policyStructure[0].location[0].geographicLocation.postalCode, 'Loss Postal code').to.equal('06040')
-        expect(hdsResult.claim.claimFolder.claimComponent[0].currencyPayment[0].transactionType, 'Loss Transaction type').to.equal('Loss Statistical Transaction')
+        expect(hdsResult.claim.claimFolder.claimComponent[0].currencyPayment[0].transactionType, 'Loss Transaction type').to.equal('Paid loss')
         expect(hdsResult.claim.claimFolder.claimComponent[0].currencyPayment[0].transactionCode, 'Loss Transaction code').to.equal('2')
         expect(hdsResult.claim.claimFolder.claimStatus, 'Loss Claim Status').to.equal(' ')
         expect(hdsResult.claim.claimFolder.claimComponent[0].claimOffer[0].payment[0].type, 'Loss amount type').to.equal('Loss amount')
-        expect(hdsResult.claim.claimFolder.claimComponent[0].claimOffer[0].payment[0].amount, 'Loss amount').to.equal(9567)
+        expect(hdsResult.claim.claimFolder.claimComponent[0].claimOffer[0].payment[0].amount, 'Loss amount').to.equal(95.67)
         expect(hdsResult.policy.annualStatementLineOfBusiness.code, "Loss Annual statement line of business code").to.equal('010')
         expect(hdsResult.policy.annualStatementLineOfBusiness.description, 'Loss Annual statement line of business').to.equal('Fire')
     });
@@ -87,7 +87,7 @@ describe('Testing BP Processor', () => {
     it ('should map BP Reserved Losses correctly', () => {
         var hdsResult = lobProcessor.convertFlatToHDS(lossRecords[1], batchId, batchHash)
         expect(hdsResult.claim.claimFolder.claimComponent[0].currencyPayment[0].type, 'Reserved Loss amount type').to.equal('Reserve for Claim')
-        expect(hdsResult.claim.claimFolder.claimComponent[0].currencyPayment[0].amount, 'Reserved Loss amount').to.equal(1345)
+        expect(hdsResult.claim.claimFolder.claimComponent[0].currencyPayment[0].currencyPaymentAmount, 'Reserved Loss amount').to.equal(13.45)
     });
 })
 

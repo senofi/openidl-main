@@ -10,7 +10,7 @@ var fs = require('fs');
 
 describe('Testing A Batch of Records', () => {
 
-    it('all records should deepe equal', () => {
+    it('all records should deep equal', () => {
 
         var contents = fs.readFileSync(dataFileName, 'utf8');
         var chunkdedResults = processTextRecords(contents)

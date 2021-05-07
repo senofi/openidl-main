@@ -14,7 +14,7 @@ module.exports.convertFlatJsonToHdsJson = (flatJson, batchId, batchHash) => {
 }
 
 addCPMapping = (flatJson, batchId, batchHash, mapping) => {
-  mapping.mapPremiumLevel = () => { return ["20", "21", "22","23","25","26","32","33","31","80","81","82","83","87","28","29","30","34","35","36","37","38"].includes(flatJson.majorPeril) ? 'Policy' : 'Coverage' }
+  mapping.mapPremiumLevel = () => { return ["20", "21", "22", "23", "25", "26", "32", "33", "31", "80", "81", "82", "83", "87", "28", "29", "30", "34", "35", "36", "37", "38"].includes(flatJson.majorPeril) ? 'Policy' : 'Coverage' }
   mapping.mapMajorPeril = () => { return flatJson.majorPeril }
 }
 
@@ -49,7 +49,9 @@ const schemas = {
       { "name": "taxID", "type": "string", "start": 154, "length": 9 },
       { "name": "numberOfEmployees", "type": "string", "start": 163, "length": 6 },
       { "name": "policyFormEdition", "type": "string", "start": 169, "length": 25 },
-      { "name": "address", "type": "string", "start": 194, "length": 150 }
+      { "name": "address", "type": "string", "start": 194, "length": 150 },
+      { "name": "pppIndicator", "type": "string", "start": 344, "length": 1 },
+      { "name": "naiscCode", "type": "string", "start": 345, "length": 6 }
     ]
   },
   "Loss": {
@@ -81,7 +83,9 @@ const schemas = {
       { "name": "taxID", "type": "string", "start": 154, "length": 9 },
       { "name": "numberOfEmployees", "type": "string", "start": 163, "length": 6 },
       { "name": "policyFormEdition", "type": "string", "start": 169, "length": 25 },
-      { "name": "address", "type": "string", "start": 194, "length": 150 }
+      { "name": "address", "type": "string", "start": 194, "length": 150 },
+      { "name": "pppIndicator", "type": "string", "start": 344, "length": 1 },
+      { "name": "naiscCode", "type": "string", "start": 345, "length": 6 }
     ]
   }
 }

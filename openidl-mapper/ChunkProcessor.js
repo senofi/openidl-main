@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require('uuid')
+
 /**
  * Process the records into chunks based on the desired chunk size
  */
@@ -5,7 +7,7 @@ module.exports.processIntoChunks = function (chunkSize, batchId, carrierId, reco
 
     let i = 1
     let sequenceNum = 0
-    let chunkId = '1111111'
+    let chunkId = uuidv4()
     let results = []
     result = {
         "batchId": batchId,
@@ -14,7 +16,7 @@ module.exports.processIntoChunks = function (chunkSize, batchId, carrierId, reco
         "policyNo": '1111111',
         "errFlg": false,
         "errrLst": [],
-        "SquenceNum": "" + sequenceNum++, 
+        "SquenceNum": "" + sequenceNum++,
         "records": []
     };
     for (let record of records) {
@@ -28,12 +30,12 @@ module.exports.processIntoChunks = function (chunkSize, batchId, carrierId, reco
             results.push(result)
             result = {
                 "batchId": batchId,
-                "chunkId": "" + chunkId++,
+                "chunkId": uuidv4(),
                 "carrierId": carrierId,
                 "policyNo": '1111111',
                 "errFlg": false,
                 "errrLst": [],
-                "SquenceNum": "" + sequenceNum++, 
+                "SquenceNum": "" + sequenceNum++,
                 "records": []
             };
         }

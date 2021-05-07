@@ -4,7 +4,7 @@
  */
 const fs = require('fs')
 // open the input file "inputMongoText.txt"
-fs.readFile('./process/inputMongoText.txt', 'utf8', (err, data) => {
+fs.readFile('./test/data/exported-from-mongodb/exported.txt', 'utf8', (err, data) => {
     if (err) {
         console.error(err)
         return

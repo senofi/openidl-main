@@ -5,17 +5,17 @@ module.exports.convertRecordToFlatJson = (record) => {
 }
 
 module.exports.convertFlatJsonToHdsJson = (flatJson, batchId, batchHash) => {
-  var mapping = hdsProcessor.baseMapping(flatJson, batchId, batchHash) 
+  var mapping = hdsProcessor.baseMapping(flatJson, batchId, batchHash)
   addIMMapping(flatJson, batchId, batchHash, mapping)
-  var baseMapped = hdsProcessor.convertToHDSJson(flatJson,batchId,batchHash,mapping)
+  var baseMapped = hdsProcessor.convertToHDSJson(flatJson, batchId, batchHash, mapping)
   mapped = convertIMToHDSJson(flatJson, batchId, batchHash, mapping, baseMapped)
   return mapped
 
 }
 
 addIMMapping = (flatJson, batchId, batchHash, mapping) => {
-  mapping.mapTypeOfPolicy = () => { return flatJson.typeOfPolicy  }
-  mapping.mapPremiumLevel = () => { return flatJson.packageID === '0' || flatJson.packageID === '7' ? 'Policy' : 'Coverage'}
+  mapping.mapTypeOfPolicy = () => { return flatJson.typeOfPolicy }
+  mapping.mapPremiumLevel = () => { return flatJson.packageID === '0' || flatJson.packageID === '7' ? 'Policy' : 'Coverage' }
 }
 
 convertIMToHDSJson = (flatJson, batchId, batchHash, mapping, alreadyMapped) => {
@@ -59,7 +59,9 @@ const schemas = {
       { "name": "taxID", "type": "string", "start": 154, "length": 9 },
       { "name": "numberOfEmployees", "type": "string", "start": 163, "length": 6 },
       { "name": "policyFormEdition", "type": "string", "start": 169, "length": 25 },
-      { "name": "address", "type": "string", "start": 194, "length": 150 }
+      { "name": "address", "type": "string", "start": 194, "length": 150 },
+      { "name": "pppIndicator", "type": "string", "start": 344, "length": 1 },
+      { "name": "naiscCode", "type": "string", "start": 345, "length": 6 }
     ]
   },
   "Loss": {
@@ -94,7 +96,9 @@ const schemas = {
       { "name": "taxID", "type": "string", "start": 154, "length": 9 },
       { "name": "numberOfEmployees", "type": "string", "start": 163, "length": 6 },
       { "name": "policyFormEdition", "type": "string", "start": 169, "length": 25 },
-      { "name": "address", "type": "string", "start": 194, "length": 150 }
+      { "name": "address", "type": "string", "start": 194, "length": 150 },
+      { "name": "pppIndicator", "type": "string", "start": 344, "length": 1 },
+      { "name": "naiscCode", "type": "string", "start": 345, "length": 6 }
     ]
   }
 }

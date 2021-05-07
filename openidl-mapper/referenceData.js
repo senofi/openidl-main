@@ -1520,7 +1520,10 @@ module.exports.referenceData = {
         "IM 9012 0620": "Y",
         "BP 1234 0116": "Y",
         "BP 5678 0319": "N",
-        "BP 9012 0620": "Y"
+        "BP 9012 0620": "Y",
+        "CP 1234 0116": "Y",
+        "CP 5678 0319": "N",
+        "CP 9012 0620": "Y",
     },
     "DuplicateClassCodes": {
         "10101": "Condominiums: Apartment",
@@ -1751,7 +1754,10 @@ module.exports.referenceData = {
         "IM 9012 0620": "N",
         "BP 1234 0116": "N",
         "BP 5678 0319": "Y",
-        "BP 9012 0620": "N"
+        "BP 9012 0620": "N",
+        "CP 1234 0116": "N",
+        "CP 5678 0319": "Y",
+        "CP 9012 0620": "N"
     },
     "ViralExclusion": {
         "IM 1234 0116": "N",
@@ -1759,7 +1765,10 @@ module.exports.referenceData = {
         "IM 9012 0620": "N",
         "BP 1234 0116": "N",
         "BP 5678 0319": "N",
-        "BP 9012 0620": "N"
+        "BP 9012 0620": "N",
+        "CP 1234 0116": "N",
+        "CP 5678 0319": "N",
+        "CP 9012 0620": "N"
     },
     "ClaimStatus": {
         "J": "Negative payment",

@@ -48,6 +48,7 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
     var sicCodeDescription = referenceData.SICCode[sicCode]
     var biLimitAmount = mapping.mapBusinessInterruptionLimit()
     var biLimitType = "Business Interruption Limit"
+    let coverageCode = mapping.mapCoverageCode()
     var numberOfEmployees = mapping.mapNumberOfEmployees()
     var policyFormEdition = mapping.mapPolicyFormEdition()
     var businessInterruptionFlagString = referenceData.BusinessInterruptionFlag[policyFormEdition]
@@ -61,14 +62,19 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
     var majorPerilCode = mapping.mapMajorPeril()
     var majorPerilName = majorPerilCode ? referenceData.MajorPeril[majorPerilCode] : ''
     var lossAmount = mapping.mapLossAmount()
+    var pppIndicatorText = mapping.mapPPPIndicator()
+    var pppIndicator = (pppIndicatorText ? pppIndicatorText === 'Y' : false)
+    var naiscCode = mapping.mapNAISCCode()
     var structure = {
         "metaData": {
-            "lineOfBusiness":lineOfInsurance,
-            "transactionCode":transactionCode,
-            "state":stateAbbreviation,
+            "lineOfBusiness": lineOfInsurance,
+            "transactionCode": transactionCode,
+            "state": stateAbbreviation,
             "amount": isAPremiumTransaction ? premiumAmount : lossAmount
         },
         "coverageLevel": premiumLevel,
+        "pppIndicator": pppIndicator,
+        "naiscCode": naiscCode,
         "policy": {
             "lineOfInsurance": {
                 "legacyCode": lineOfInsurance,
@@ -100,6 +106,7 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
                     ],
                     "coverages": [
                         {
+                            "legacyCode": coverageCode,
                             "currencyPayment": [
                                 {
                                     "transactionType": transactionType,
@@ -126,24 +133,24 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
     if (majorPerilCode) {
         structure.policy.perilCategory = [
             {
-                "majorPeril":majorPerilName
+                "majorPeril": majorPerilName
             }
         ]
+    }
+    structure.policy.policyForm = {
+        "legacyCode": policyFormCode,
+        "description": policyFormDescription,
+        "versionNumber": "??",
+        "policyFormEdition": policyFormEdition,
+        "businessInterruptionFlag": businessInterruptionFlag,
+        "physicalDamageRequirement": physicalDamageRequirement,
+        "viralExclusion": viralExclusion
     }
     if (isAPremiumTransaction) {
         structure.policy.taxID = taxID
         structure.policy.currencyPayment[0].transactionType = transactionType
         structure.policy.currencyPayment[0].transactionCode = transactionCode
         structure.policy.currencyPayment[0].currencyPaymentAmount = premiumAmount
-        structure.policy.policyForm = {
-            "legacyCode": policyFormCode,
-            "description": policyFormDescription,
-            "versionNumber": "??",
-            "policyFormEdition": policyFormEdition,
-            "businessInterruptionFlag": businessInterruptionFlag,
-            "physicalDamageRequirement": physicalDamageRequirement,
-            "viralExclusion": viralExclusion
-        }
         structure.policy.commercialPolicy = {
             "policyNumber": policyNumber,
         }
@@ -250,44 +257,44 @@ convertStringToFloat = (num) => {
         return parseFloat(num)
     }
     var code = num[num.length - 1]
-    var base = num.substring(0, num.length -1)
+    var base = num.substring(0, num.length - 1)
     newLastDigit = numberTypeCode[code].digit
     var multiplier = numberTypeCode[code].multiplier
     return multiplier * parseFloat(base + newLastDigit) / 100
 }
 
 const numberTypeCode = {
-        "}": {"digit":"0","multiplier":-1},
-        "J": {"digit":"1","multiplier":-1},
-        "K": {"digit":"2","multiplier":-1},
-        "L": {"digit":"3","multiplier":-1},
-        "M": {"digit":"4","multiplier":-1},
-        "N": {"digit":"5","multiplier":-1},
-        "O": {"digit":"6","multiplier":-1},
-        "P": {"digit":"7","multiplier":-1},
-        "Q": {"digit":"8","multiplier":-1},
-        "R": {"digit":"9","multiplier":-1},
-        "0": {"digit":"0","multiplier":1},
-        "1": {"digit":"1","multiplier":1},
-        "2": {"digit":"2","multiplier":1},
-        "3": {"digit":"3","multiplier":1},
-        "4": {"digit":"4","multiplier":1},
-        "5": {"digit":"5","multiplier":1},
-        "6": {"digit":"6","multiplier":1},
-        "7": {"digit":"7","multiplier":1},
-        "8": {"digit":"8","multiplier":1},
-        "9": {"digit":"9","multiplier":1},
-        "{": {"digit":"0","multiplier":1},
-        "A": {"digit":"1","multiplier":1},
-        "B": {"digit":"2","multiplier":1},
-        "C": {"digit":"3","multiplier":1},
-        "D": {"digit":"4","multiplier":1},
-        "E": {"digit":"5","multiplier":1},
-        "F": {"digit":"6","multiplier":1},
-        "G": {"digit":"7","multiplier":1},
-        "H": {"digit":"8","multiplier":1},
-        "I": {"digit":"9","multiplier":1}
-    }
+    "}": { "digit": "0", "multiplier": -1 },
+    "J": { "digit": "1", "multiplier": -1 },
+    "K": { "digit": "2", "multiplier": -1 },
+    "L": { "digit": "3", "multiplier": -1 },
+    "M": { "digit": "4", "multiplier": -1 },
+    "N": { "digit": "5", "multiplier": -1 },
+    "O": { "digit": "6", "multiplier": -1 },
+    "P": { "digit": "7", "multiplier": -1 },
+    "Q": { "digit": "8", "multiplier": -1 },
+    "R": { "digit": "9", "multiplier": -1 },
+    "0": { "digit": "0", "multiplier": 1 },
+    "1": { "digit": "1", "multiplier": 1 },
+    "2": { "digit": "2", "multiplier": 1 },
+    "3": { "digit": "3", "multiplier": 1 },
+    "4": { "digit": "4", "multiplier": 1 },
+    "5": { "digit": "5", "multiplier": 1 },
+    "6": { "digit": "6", "multiplier": 1 },
+    "7": { "digit": "7", "multiplier": 1 },
+    "8": { "digit": "8", "multiplier": 1 },
+    "9": { "digit": "9", "multiplier": 1 },
+    "{": { "digit": "0", "multiplier": 1 },
+    "A": { "digit": "1", "multiplier": 1 },
+    "B": { "digit": "2", "multiplier": 1 },
+    "C": { "digit": "3", "multiplier": 1 },
+    "D": { "digit": "4", "multiplier": 1 },
+    "E": { "digit": "5", "multiplier": 1 },
+    "F": { "digit": "6", "multiplier": 1 },
+    "G": { "digit": "7", "multiplier": 1 },
+    "H": { "digit": "8", "multiplier": 1 },
+    "I": { "digit": "9", "multiplier": 1 }
+}
 
 module.exports.baseMapping = (flatJson, batchId, batchHash) => {
     var mapping = {
@@ -313,11 +320,14 @@ module.exports.baseMapping = (flatJson, batchId, batchHash) => {
         mapPolicyFormEdition: () => { return flatJson.policyFormEdition.trim() },
         mapAnnualStatementLineOfBusinessCode: () => { return flatJson.annualStatementLineOfBusiness },
         mapCauseOfLossCode: () => { return flatJson.monthsCoveredCauseOfLoss },
+        mapCoverageCode: () => { return flatJson.coverageCode },
         mapAccidentDate: () => { return flatJson.accidentDate ? convert6DigitDate(flatJson.accidentDate.trim()) : null },
         mapClaimNumber: () => { return flatJson.policyNumberClaimNumberIdentifier },
         mapClaimStatus: () => { return flatJson.claimStatus },
         mapLossAmount: () => { return flatJson.premiumLossAmount ? convertStringToFloat(flatJson.premiumLossAmount.trim()) : null },
-        mapMajorPeril: () => { return ''}
+        mapMajorPeril: () => { return '' },
+        mapPPPIndicator: () => { return flatJson.pppIndicator },
+        mapNAISCCode: () => { return flatJson.naiscCode }
     }
     return mapping
 }

@@ -36,7 +36,8 @@ const schemas = {
       { "name": "annualStatementLineOfBusiness", "type": "string", "start": 35, "length": 3 },
       { "name": "reserved2", "type": "string", "start": 38, "length": 1 },
       { "name": "policyForm", "type": "string", "start": 39, "length": 2 },
-      { "name": "reserved3", "type": "string", "start": 41, "length": 13 },
+      { "name": "coverageCode", "type": "string", "start": 41, "length": 2 },
+      { "name": "reserved3", "type": "string", "start": 43, "length": 11 },
       { "name": "classCode", "type": "string", "start": 54, "length": 5 },
       { "name": "reserved4", "type": "string", "start": 59, "length": 42 },
       { "name": "zipCode", "type": "string", "start": 101, "length": 5 },
@@ -47,7 +48,9 @@ const schemas = {
       { "name": "taxID", "type": "string", "start": 154, "length": 9 },
       { "name": "numberOfEmployees", "type": "string", "start": 163, "length": 6 },
       { "name": "policyFormEdition", "type": "string", "start": 169, "length": 25 },
-      { "name": "address", "type": "string", "start": 194, "length": 150 }
+      { "name": "address", "type": "string", "start": 194, "length": 150 },
+      { "name": "pppIndicator", "type": "string", "start": 344, "length": 1 },
+      { "name": "naiscCode", "type": "string", "start": 345, "length": 6 }
     ]
   },
   "Loss": {
@@ -64,7 +67,8 @@ const schemas = {
       { "name": "annualStatementLineOfBusiness", "type": "string", "start": 35, "length": 3 },
       { "name": "reserved2", "type": "string", "start": 38, "length": 1 },
       { "name": "policyForm", "type": "string", "start": 39, "length": 2 },
-      { "name": "reserved3", "type": "string", "start": 41, "length": 13 },
+      { "name": "coverageCode", "type": "string", "start": 41, "length": 2 },
+      { "name": "reserved3", "type": "string", "start": 43, "length": 11 },
       { "name": "classCode", "type": "string", "start": 54, "length": 5 },
       { "name": "reserved4", "type": "string", "start": 59, "length": 33 },
       { "name": "monthsCoveredCauseOfLoss", "type": "string", "start": 92, "length": 2 },
@@ -78,7 +82,9 @@ const schemas = {
       { "name": "taxID", "type": "string", "start": 154, "length": 9 },
       { "name": "numberOfEmployees", "type": "string", "start": 163, "length": 6 },
       { "name": "policyFormEdition", "type": "string", "start": 169, "length": 25 },
-      { "name": "address", "type": "string", "start": 194, "length": 150 }
+      { "name": "address", "type": "string", "start": 194, "length": 150 },
+      { "name": "pppIndicator", "type": "string", "start": 344, "length": 1 },
+      { "name": "naiscCode", "type": "string", "start": 345, "length": 6 }
     ]
   }
 }

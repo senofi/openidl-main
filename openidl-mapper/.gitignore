@@ -1,6 +1,10 @@
-test/data/fromSDMA/**.*
+test/data/fromSDMA/**
 output.json
 outputOfCompare.json
 testCovidDataSDMA.json
 BatchDataExpected.json
 totals.*
+queries/**
+covid-files/**
+launch.json
+server/config/**
