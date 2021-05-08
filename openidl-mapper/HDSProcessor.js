@@ -64,7 +64,14 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
     var lossAmount = mapping.mapLossAmount()
     var pppIndicatorText = mapping.mapPPPIndicator()
     var pppIndicator = (pppIndicatorText ? pppIndicatorText === 'Y' : false)
-    var naiscCode = mapping.mapNAISCCode()
+    var naicsCode = mapping.mapNAICSCode()
+    var jobsReported = mapping.mapJobsReported()
+    var processingMethod = mapping.mapProcessingMethod()
+    var ruralUrbanIndicator = mapping.mapRuralUrbanIndicator()
+    var cd = mapping.mapCD()
+    var race = mapping.mapRace()
+    var initialApprovalAmount = mapping.mapInitialApprovalAmount()
+    var currentApprovalAmount = mapping.mapCurrentApprovalAmount()
     var structure = {
         "metaData": {
             "lineOfBusiness": lineOfInsurance,
@@ -73,8 +80,17 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
             "amount": isAPremiumTransaction ? premiumAmount : lossAmount
         },
         "coverageLevel": premiumLevel,
-        "pppIndicator": pppIndicator,
-        "naiscCode": naiscCode,
+        "ppp": {
+            "pppIndicator": pppIndicator,
+            "naicsCode": naicsCode,
+            "jobsReported": jobsReported,
+            "processingMethod": processingMethod,
+            "ruralUrbanIndicator": ruralUrbanIndicator,
+            "cd": cd,
+            "race": race,
+            "initialApprovalAmount": initialApprovalAmount,
+            "currentApprovalAmount": currentApprovalAmount,
+        },
         "policy": {
             "lineOfInsurance": {
                 "legacyCode": lineOfInsurance,
@@ -327,8 +343,16 @@ module.exports.baseMapping = (flatJson, batchId, batchHash) => {
         mapLossAmount: () => { return flatJson.premiumLossAmount ? convertStringToFloat(flatJson.premiumLossAmount.trim()) : null },
         mapMajorPeril: () => { return '' },
         mapPPPIndicator: () => { return flatJson.pppIndicator },
-        mapNAISCCode: () => { return flatJson.naiscCode }
+        mapNAICSCode: () => { return flatJson.naicsCode },
+        mapJobsReported: () => { return flatJson.jobsReported ? parseInt(flatJson.jobsReported.trim()) : null },
+        mapProcessingMethod: () => { return flatJson.processingMethod },
+        mapRuralUrbanIndicator: () => { return flatJson.ruralUrbanIndicator },
+        mapCD: () => { return flatJson.cd },
+        mapRace: () => { return flatJson.race },
+        mapInitialApprovalAmount: () => { return flatJson.initialApprovalAmount ? parseInt(flatJson.initialApprovalAmount.trim()) : null },
+        mapCurrentApprovalAmount: () => { return flatJson.currentApprovalAmount ? parseInt(flatJson.currentApprovalAmount.trim()) : null }
     }
+
     return mapping
 }
 

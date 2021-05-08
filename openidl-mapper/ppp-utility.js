@@ -28,7 +28,7 @@ module.exports.searchByAddress = async function searchByAddress(client, address)
         index: 'ppp-data',
         default_operator: 'AND',
         size: 1,
-        _source: ['BorrowerAddress', 'BorrowerState', 'BorrowerCity', 'BorrowerZip', 'NAICSCode', 'CurrentApprovalAmount', 'LoanNumber'],
+        _source: ['BorrowerAddress', 'BorrowerState', 'BorrowerCity', 'BorrowerZip', 'NAICSCode', 'CurrentApprovalAmount', 'LoanNumber', 'JobsReported', 'ProcessingMethod', 'RuralUrbanIndicator', 'CD', 'Race'],
         body: {
             query: {
                 match: {
@@ -55,7 +55,14 @@ module.exports.searchByAddress = async function searchByAddress(client, address)
                 "BorrowerZip",
                 "NAICSCode",
                 "LoanStatus",
-                "CurrentApprovalAmount"
+                "InitialApprovalAmount",
+                "CurrentApprovalAmount",
+                "LoanNumber",
+                "JobsReported",
+                "ProcessingMethod",
+                "RuralUrbanIndicator",
+                "CD",
+                "Race"
             ]
         }
     }

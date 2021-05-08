@@ -61,7 +61,14 @@ const schemas = {
       { "name": "policyFormEdition", "type": "string", "start": 169, "length": 25 },
       { "name": "address", "type": "string", "start": 194, "length": 150 },
       { "name": "pppIndicator", "type": "string", "start": 344, "length": 1 },
-      { "name": "naiscCode", "type": "string", "start": 345, "length": 6 }
+      { "name": "naicsCode", "type": "string", "start": 345, "length": 6 },
+      { "name": "jobsReported", "type": "string", "start": 351, "length": 5 },
+      { "name": "processingMethod", "type": "string", "start": 356, "length": 3 },
+      { "name": "ruralUrbanIndicator", "type": "string", "start": 359, "length": 1 },
+      { "name": "cd", "type": "string", "start": 360, "length": 10 },
+      { "name": "race", "type": "string", "start": 370, "length": 10 },
+      { "name": "initialApprovalAmount", "type": "string", "start": 380, "length": 10 },
+      { "name": "currentApprovalAmount", "type": "string", "start": 390, "length": 10 }
     ]
   },
   "Loss": {
@@ -98,7 +105,14 @@ const schemas = {
       { "name": "policyFormEdition", "type": "string", "start": 169, "length": 25 },
       { "name": "address", "type": "string", "start": 194, "length": 150 },
       { "name": "pppIndicator", "type": "string", "start": 344, "length": 1 },
-      { "name": "naiscCode", "type": "string", "start": 345, "length": 6 }
+      { "name": "naicsCode", "type": "string", "start": 345, "length": 6 },
+      { "name": "jobsReported", "type": "string", "start": 351, "length": 5 },
+      { "name": "processingMethod", "type": "string", "start": 356, "length": 3 },
+      { "name": "ruralUrbanIndicator", "type": "string", "start": 359, "length": 1 },
+      { "name": "cd", "type": "string", "start": 360, "length": 10 },
+      { "name": "race", "type": "string", "start": 370, "length": 10 },
+      { "name": "initialApprovalAmount", "type": "string", "start": 380, "length": 10 },
+      { "name": "currentApprovalAmount", "type": "string", "start": 390, "length": 10 }
     ]
   }
 }

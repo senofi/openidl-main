@@ -223,11 +223,11 @@ async function processThem(totalsFileName, dataFolder, carrierId, dbUrl, apiUrl,
 }
 let startTime, endTime;
 startTime = new Date();
-let totalsFileName = 'covid-files/totals/totals-hig-ppp'
-let inputPath = 'covid-files/input/hig/'
+let totalsFileName = 'covid-files/totals/totals-hig-ppp-2'
+let inputPath = 'covid-files/input/hig_test/'
 let carrierId = 'HIG'
 let dbUrl = 'mongodb://localhost:27017'
-let dbName = 'openidl-offchain-db-ppp'
+let dbName = 'openidl-offchain-db-ppp-2'
 let collectionName = 'insurance_trx_db_' + carrierId
 let useAPI = false
 let chunkSize = 1000
