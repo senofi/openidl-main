@@ -5,6 +5,11 @@
 -   this project should be includable by any project that needs to map into thee harmonized data store
 -   the actual logic that understands the input format and the mapping may be in a separate project
 
+# loading ppp
+
+-   execute the following
+    `for file in covid-files/input/ppp/split/*.csv; node load-ppp.js $file`
+
 # Processing the COVID files
 
 -   the hig and trv files are in the covid-files/input directory

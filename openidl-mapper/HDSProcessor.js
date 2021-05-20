@@ -52,11 +52,11 @@ module.exports.convertToHDSJson = (flatJson, batchId, batchHash, mapping) => {
     var numberOfEmployees = mapping.mapNumberOfEmployees()
     var policyFormEdition = mapping.mapPolicyFormEdition()
     var businessInterruptionFlagString = referenceData.BusinessInterruptionFlag[policyFormEdition]
-    var businessInterruptionFlag = (businessInterruptionFlagString ? businessInterruptionFlagString === 'Y' : false)
+    var businessInterruptionFlag = (businessInterruptionFlagString ? businessInterruptionFlagString === 'Y' : null)
     var physicalDamageRequirementString = referenceData.PhysicalDamageRequirement[policyFormEdition]
-    var physicalDamageRequirement = (physicalDamageRequirementString ? physicalDamageRequirementString === 'Y' : false)
+    var physicalDamageRequirement = (physicalDamageRequirementString ? physicalDamageRequirementString === 'Y' : null)
     var viralExclusionString = referenceData.ViralExclusion[policyFormEdition]
-    var viralExclusion = (viralExclusionString ? viralExclusionString === 'Y' : false)
+    var viralExclusion = (viralExclusionString ? viralExclusionString === 'Y' : null)
     var annualStatementLineOfBusinessCode = mapping.mapAnnualStatementLineOfBusinessCode()
     var annualStatementLineOfBusinessDescription = referenceData.AnnualStatementLineOfBusiness[annualStatementLineOfBusinessCode]
     var majorPerilCode = mapping.mapMajorPeril()
