@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
     # repository: openidl/data-call-app
-    repository: ghcr.org/openidl-org/openidl-data-call-app
+    repository: ghcr.io/openidl-org/openidl-data-call-app
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: latest
@@ -85,21 +85,21 @@ tolerations: []
 affinity: {}
 
 secrets:
-    - name: appid
+    - name: appid-config
       file: local-appid-config.json
-    - name: certmanager
+    - name: certmanager-config
       file: local-certmanager-config.json
-    - name: mongodb
+    - name: mongodb-config
       file: local-mongo-config.json
-    - name: cloudantdb
+    - name: cloudantdb-config
       file: local-cloudant-config.json
-    - name: connectionprofile
+    - name: connectionprofile-config
       file: connection-profile.json
     - name: channelconfigaais
       file: channel-config.json
     - name: db-config
       file: DBConfig.json
-    - name: default-config
-      file: default-config.json
-    - name: mappings-config
+    - name: data-call-app-default-config
+      file: default.json
+    - name: data-call-app-mappings-config
       file: mappings.json

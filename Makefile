@@ -31,11 +31,15 @@ use_minikube_as_registry:
 	echo This does not work for some reason, do it manually! Use only 1 dollar sign
 	eval $$(minikube -p minikube docker-env)
 
-load_images:
+load_images_full:
 	docker load -i ./openidl-iac-local/images/openidl-ui.tar
 	docker load -i ./openidl-iac-local/images/openidl-insurance-data-manager.tar
 	docker load -i ./openidl-iac-local/images/openidl-data-call-processor.tar
 	docker load -i ./openidl-iac-local/images/openidl-data-call-app.tar
+	docker load -i ./openidl-iac-local/images/openidl-upload.tar
+
+load_images:
+	docker load -i ./openidl-iac-local/images/openidl-insurance-data-manager.tar
 	docker load -i ./openidl-iac-local/images/openidl-upload.tar
 
 docker_load_ui:

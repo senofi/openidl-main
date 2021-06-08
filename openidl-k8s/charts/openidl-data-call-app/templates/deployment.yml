@@ -45,6 +45,6 @@ spec:
         - containerPort: {{ .Values.global.datacallapp.port }}
         volumeMounts:
         - name: apkey
-          mountPath: "/app/server/config"
+          mountPath: "/server/config"
           readOnly: true
 {{- end }}

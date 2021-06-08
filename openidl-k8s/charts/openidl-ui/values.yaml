@@ -85,11 +85,11 @@ tolerations: []
 affinity: {}
 
 secrets:
-    - name: appid
+    - name: appid-config
       file: local-appid-config.json
-    - name: config
+    - name: config-config
       file: config.js
-    - name: mappings
+    - name: ui-mappings-config
       file: mappings.json
-    - name: port-config
+    - name: ui-port-config
       file: port-config.json

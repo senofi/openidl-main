@@ -83,31 +83,43 @@ tolerations: []
 affinity: {}
 
 secrets:
-    - name: default-config
-      file: default-config.json
+    - name: data-call-app-default-config
+      file: config/data-call-app-default-config.json
       namespace: default
-    - name: config
+    - name: data-call-processor-default-config
+      file: config/data-call-processor-default-config.json
+      namespace: default
+    - name: data-call-processor-metadata-config
+      file: config/data-call-processor-metadata-config.json
+      namespace: default
+    - name: config-config
       file: config/config-config.js
       namespace: default
-    - name: mappings
-      file: config/mappings-config.json
+    - name: data-call-app-mappings-config
+      file: config/data-call-app-mappings-config.json
       namespace: default
-    - name: port-config
-      file: config/port-config.json
+    - name: data-call-processor-mappings-config
+      file: config/data-call-processor-mappings-config.json
       namespace: default
-    - name: appid
+    - name: ui-mappings-config
+      file: config/ui-mappings-config.json
+      namespace: default
+    - name: ui-port-config
+      file: config/ui-port-config.json
+      namespace: default
+    - name: appid-config
       file: config/local-appid-config.json
       namespace: default
-    - name: certmanager
+    - name: certmanager-config
       file: config/local-certmanager-config.json
       namespace: default
-    - name: mongodb
+    - name: mongodb-config
       file: config/local-mongo-config.json
       namespace: default
-    - name: cloudantdb
+    - name: cloudantdb-config
       file: config/local-cloudant-config.json
       namespace: default
-    - name: connectionprofile
+    - name: connectionprofile-config
       file: config/connection-profile.json
       namespace: default
     - name: channelconfigaais
@@ -119,18 +131,18 @@ secrets:
     - name: email-config
       file: config/email-config.json
       namespace: default
-    - name: listenerchannelaais
+    - name: listenerchannelaais-config
       file: config/listener-channel-config.json
       namespace: default
-    - name: s3bucket
+    - name: s3bucket-config
       file: config/s3-bucket-config.json
       namespace: default
-    - name: targetchannelaais
+    - name: targetchannelaais-config
       file: config/target-channel-config.json
       namespace: default
-    - name: uniqueidentifiersaais
+    - name: uniqueidentifiersaais-config
       file: config/unique-identifiers-config.json
       namespace: default
-    - name: nifi
+    - name: nifi-config
       file: config/nifi-flowconfig.json
       namespace: nifi

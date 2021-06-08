@@ -5,7 +5,8 @@
 replicaCount: 1
 
 image:
-    repository: openidl/data-call-processor
+    # repository: openidl/data-call-processor
+    repository: ghcr.io/openidl-org/openidl-data-call-processor
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: latest
@@ -84,23 +85,29 @@ tolerations: []
 affinity: {}
 
 secrets:
-    - name: certmanager
+    - name: data-call-processor-default-config
+      file: default.json
+    - name: data-call-processor-metadata-config
+      file: metadata.json
+    - name: data-call-processor-mappings-config
+      file: mappings.json
+    - name: certmanager-config
       file: local-certmanager-config.json
-    - name: mongodb
+    - name: mongodb-config
       file: local-mongo-config.json
-    - name: cloudantdb
+    - name: cloudantdb-config
       file: local-cloudant-config.json
-    - name: connectionprofile
+    - name: connectionprofile-config
       file: connection-profile.json
     - name: db-config
       file: DBConfig.json
     - name: email-config
       file: email.json
-    - name: listenerchannelaais
+    - name: listenerchannelaais-config
       file: listener-channel-config.json
-    - name: targetchannelaais
+    - name: targetchannelaais-config
       file: target-channel-config.json
-    - name: s3bucket
+    - name: s3bucket-config
       file: s3-bucket-config.json
-    - name: uniqueidentifiersaais
+    - name: uniqueidentifiersaais-config
       file: unique-identifiers-config.json
