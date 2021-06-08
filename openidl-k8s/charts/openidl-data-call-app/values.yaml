@@ -5,7 +5,8 @@
 replicaCount: 1
 
 image:
-    repository: openidl/data-call-app
+    # repository: openidl/data-call-app
+    repository: ghcr.org/openidl-org/openidl-data-call-app
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: latest
@@ -98,3 +99,7 @@ secrets:
       file: channel-config.json
     - name: db-config
       file: DBConfig.json
+    - name: default-config
+      file: default-config.json
+    - name: mappings-config
+      file: mappings.json

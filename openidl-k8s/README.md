@@ -195,10 +195,15 @@ docker push 531234332176.dkr.ecr.us-east-1.amazonaws.com/openidl-data-call-app-s
 
 -   the following is for openidl-ui, alter the names for different images
 -   get a personal access token capable of publishing to github registry see: https://nikiforovall.github.io/docker/2020/09/19/publish-package-to-ghcr.html
--   cd into the openidl-iac-local directory
+-   cd into the project directory and build the image
 
 ```
-docker load -i ./images/openidl-ui.tar
+docker build . -t openidl/ui
+```
+
+-   cd into the openidl-iac-local directory
+
+````
 docker tag openidl/ui:latest ghcr.io/openidl-org/openidl-ui:latest
 export CR_PAT=<token? ; echo $CR_PAT docker login ghcr.io -u <openidl-org username> --password-stdin
 docker push ghcr.io/openidl-org/openidl-ui:latest
@@ -245,3 +250,4 @@ minikube service data-call-app-service
 ```
 minikube service local-aais-openidl-ui
 ```
+````
