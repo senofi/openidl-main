@@ -5,7 +5,8 @@
 replicaCount: 1
 
 image:
-    repository: openidl/insurance-data-manager
+    # repository: openidl/insurance-data-manager
+    repository: ghcr.io/openidl-org/openidl-insurance-data-manager
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: latest
@@ -79,15 +80,15 @@ tolerations: []
 affinity: {}
 
 secrets:
-    - name: appid
+    - name: appid-config
       file: local-appid-config.json
-    - name: certmanager
+    - name: certmanager-config
       file: local-certmanager-config.json
-    - name: mongodb
+    - name: mongodb-config
       file: local-mongo-config.json
-    - name: cloudantdb
+    - name: cloudantdb-config
       file: local-cloudant-config.json
-    - name: connectionprofile
+    - name: connectionprofile-config
       file: connection-profile.json
     - name: channelconfigaais
       file: channel-config.json
@@ -95,3 +96,11 @@ secrets:
       file: DBConfig.json
     - name: email-config
       file: email.json
+    - name: insurance-data-manager-constant-config
+      file: constant.js
+    - name: insurance-data-manager-default-config
+      file: default.json
+    - name: insurance-data-manager-mappings-config
+      file: mappings.json
+    - name: insurance-data-manager-metadata-config
+      file: metadata.json

@@ -199,15 +199,12 @@ docker push 531234332176.dkr.ecr.us-east-1.amazonaws.com/openidl-data-call-app-s
 
 ```
 docker build . -t openidl/ui
-```
-
--   cd into the openidl-iac-local directory
-
-````
 docker tag openidl/ui:latest ghcr.io/openidl-org/openidl-ui:latest
-export CR_PAT=<token? ; echo $CR_PAT docker login ghcr.io -u <openidl-org username> --password-stdin
+export CR_PAT=<token> ; echo $CR_PAT docker | login ghcr.io -u <openidl-org username> --password-stdin
 docker push ghcr.io/openidl-org/openidl-ui:latest
 ```
+
+-   username for me is kens-aais
 
 -   you may need to associate the image with the repository and make it public
 
@@ -250,4 +247,7 @@ minikube service data-call-app-service
 ```
 minikube service local-aais-openidl-ui
 ```
-````
+
+```
+
+```
