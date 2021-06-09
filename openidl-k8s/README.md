@@ -2,7 +2,40 @@
 
 This project deploys the application to kubernetes.
 
-## Secrets
+## Quickstart
+
+To get started quickly, follow these steps. This assumes you don't need to update any code etc.
+
+### Get the Config files
+
+You will need configuration files so that your runtime can connect into the network successfully.
+Most of these configuration files are different for every node. There are some that don't change from node to node, but we are keeping separate copies for simplification.
+For the correct list of required configuration files, refer to the `openidl-k8s/charts/openidl-secrets/values.yaml` file.
+Place the files into the `openidl-k8s/charts/openidl-secrets/config` directory.
+
+### Make sure to remove any running minikube
+
+Run `./systemdown.sh` from the `openidl-main` directory.
+
+### Startup the system
+
+Run `./systemup.sh` from the `openidl-main` directory.
+
+### Monitor the Kubernetes cluster
+
+Run `make dashboard` from the `openidl-main` directory.
+
+### Test the application ui and apis
+
+From the `openidl-main` directory run any of the following:
+
+```
+make run_data_call_app
+make run_insurance_data_manager
+make run_ui
+```
+
+## Secrets / Config Files
 
 The secrets are kept in AWS Secrets Manager.
 
