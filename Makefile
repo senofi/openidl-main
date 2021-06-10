@@ -39,9 +39,8 @@ load_images_full:
 	docker load -i ./openidl-iac-local/images/openidl-upload.tar
 
 load_images:
-	docker load -i ./openidl-iac-local/images/openidl-insurance-data-manager.tar
-	docker load -i ./openidl-iac-local/images/openidl-upload.tar
-
+	echo No longer need to load images, they all come from github container registry
+	
 docker_load_ui:
 	docker load -i ./openidl-iac-local/images/openidl-ui.tar
 
