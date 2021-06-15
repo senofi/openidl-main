@@ -1,10 +1,10 @@
-@import '../../openidl-common-ui/src/styles.css';
+/* @import '../../openidl-common-ui/src/styles.css'; */
 
 /* @import "assets/styles/font.css";
 @import "assets/styles/reset.css"; */
 /* @import "assets/styles/helper.css"; */
 
-html {
+/* html {
   background-color:#f4f7fb;
 }
 h1 {
@@ -14,10 +14,10 @@ h1 {
   line-height:16.1px;
   text-align:left;
   margin:20px 0;
-}
+} */
 
 /* Overrides */
-.nav-tabs>li>a,
+/* .nav-tabs>li>a,
 .nav-tabs>li>a:hover {
   width:126px;
   padding:5px;
@@ -52,4 +52,17 @@ border: 1px solid #3d70b2;
     font-size: 14px !important;
     height: 40px !important;
     padding: 10px !important;
+} */
+
+html,
+body {
+	height: 100%;
+}
+body {
+	margin: 0;
+	font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.center {
+	text-align: center;
 }
