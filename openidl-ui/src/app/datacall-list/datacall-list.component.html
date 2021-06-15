@@ -1,19 +1,50 @@
 <div>
-  <app-header [selected]='selected'></app-header>
-  <div class="col-sm-offset-1 col-sm-10">
-    <h1 style='margin:20px 0 0;'>Data Call List</h1>
-    <app-search (searchValue)="search($event)"></app-search>
-    <tabset>
-        <tab heading="Drafts" id="tab1" (select)='setSelected(0)'>
-            <app-table *ngIf='selectedTab===0' [status]='statusObj.DRAFT' (viewDraftEvent)='viewDraft($event)' (viewIssuedEvent)='viewIssued($event)' (viewReportEvent)='viewReport($event)'></app-table><!--  [status]='statusObj.DRAFT' -->
-        </tab>
-        <tab heading="Issued" (select)='setSelected(1)'>
-            <app-table *ngIf='selectedTab===1' [status]='statusObj.ISSUED' (viewDraftEvent)='viewDraft($event)' (viewIssuedEvent)='viewIssued($event)' (viewReportEvent)='viewReport($event)'></app-table><!--  [status]='statusObj.ISSUED' -->
-        </tab>
-        <tab heading="Abandoned" (select)='setSelected(2)'>
-          <app-table *ngIf='selectedTab===2' [status]='statusObj.CANCELLED' (viewDraftEvent)='viewDraft($event)' (viewIssuedEvent)='viewIssued($event)' (viewReportEvent)='viewReport($event)' (viewAbandonedEvent)='viewAbandoned($event)'></app-table><!--  [status]='statusObj.ISSUED' -->
-      </tab>
-    </tabset><br><br>
-    <app-blocks-history></app-blocks-history>
-  </div>
+	<app-header [selected]="selected"></app-header>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-1"></div>
+
+			<div class="col-sm-10">
+				<h1 class="mt-4 pb-2">Data Call List</h1>
+				<app-search (searchValue)="search($event)"></app-search>
+				<div class="pb-4"></div>
+				<tabset #dataCallTabSet>
+					<tab
+						heading="Drafts"
+						id="tab1"
+						(selectTab)="setSelected(0)"
+					>
+						<app-table
+							*ngIf="selectedTab === 0"
+							[status]="statusObj.DRAFT"
+							(viewDraftEvent)="viewDraft($event)"
+							(viewIssuedEvent)="viewIssued($event)"
+							(viewReportEvent)="viewReport($event)"
+						></app-table>
+					</tab>
+					<tab heading="Issued" (selectTab)="setSelected(1)">
+						<app-table
+							*ngIf="selectedTab === 1"
+							[status]="statusObj.ISSUED"
+							(viewDraftEvent)="viewDraft($event)"
+							(viewIssuedEvent)="viewIssued($event)"
+							(viewReportEvent)="viewReport($event)"
+						></app-table>
+					</tab>
+					<tab heading="Abandoned" (selectTab)="setSelected(2)">
+						<app-table
+							*ngIf="selectedTab === 2"
+							[status]="statusObj.CANCELLED"
+							(viewDraftEvent)="viewDraft($event)"
+							(viewIssuedEvent)="viewIssued($event)"
+							(viewReportEvent)="viewReport($event)"
+							(viewAbandonedEvent)="viewAbandoned($event)"
+						></app-table>
+					</tab>
+				</tabset>
+				<app-blocks-history></app-blocks-history>
+			</div>
+			<div class="col-sm-1"></div>
+		</div>
+	</div>
 </div>

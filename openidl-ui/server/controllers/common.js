@@ -5,13 +5,14 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const config = require('../config/config');
 const log4js = require('log4js');
-const openidlCommonApp = require('../../lib/server/index');
+const openidlCommonApp = require('../../../openidl-common-ui/server/index');
 const util = openidlCommonApp.Util;
 
 const common = {};
 
 const logger = log4js.getLogger('Common controller');
-logger.setLevel(config.logLevel);
+// logger.setLevel(config.logLevel);
+logger.level = config.logLevel;
 
 app.use(bodyParser.json());
 

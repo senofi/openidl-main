@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { StorageService } from '../../../lib/src/app/services/storage.service';
-import { ModalComponent } from '../../../lib/src/app/components/modal/modal.component';
-import { MESSAGE } from 'lib/src/assets/messageBundle';
+import { StorageService } from '../../../../openidl-common-ui/src/app/services/storage.service';
+import { ModalComponent } from '../../../../openidl-common-ui/src/app/components/modal/modal.component';
+import { MESSAGE } from '../../../../openidl-common-ui/src/assets/messageBundle';
 
 
 @Component({

@@ -14,22 +14,23 @@
  *  limitations under the License.
  */
 
-const app = require('express');
+// const app = require('express');
 const log4js = require('log4js');
 const config = require('config');
-const path = require('path');
-const nconf = require("nconf");
+// const path = require('path');
+// const nconf = require("nconf");
 const appID = require("ibmcloud-appid");
 const cfEnv = require("cfenv");
 const passport = require('passport');
-const helmet = require("helmet");
+// const helmet = require("helmet");
 const express_enforces_ssl = require("express-enforces-ssl");
-const cookieParser = require("cookie-parser");
-const request = require("request-promise");
+// const cookieParser = require("cookie-parser");
+// const request = require("request-promise");
 
 const isLocal = cfEnv.getAppEnv().isLocal;
 const logger = log4js.getLogger('middleware - user-auth-handler');
-logger.setLevel(config.logLevel);
+// logger.setLevel(config.logLevel);
+logger.level = config.logLevel;
 
 
 /**

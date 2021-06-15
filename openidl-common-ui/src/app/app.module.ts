@@ -1,7 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	NgModule,
+	NO_ERRORS_SCHEMA
+} from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './components/login/login.component';
 import { LoginModule } from './components/login/login.module';
@@ -13,8 +16,7 @@ import { OpenidlCommonComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FormComponent } from './components/form/form.component';
 import { TableComponent } from './components/table/table.component';
-import { DataTableModule } from 'angular-6-datatable';
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+// import { OwlDateTimeModule, OwlNativeDateTimeModule } from "ng-pick-datetime";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -36,71 +38,70 @@ import { PaginationComponent } from './components/pagination/pagination.componen
 import { DownloadToCsvComponent } from './components/download-to-csv/download-to-csv.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ClipboardModule } from 'ngx-clipboard';
-
-
+import { DataTablesModule } from 'angular-datatables';
 
 @NgModule({
-  declarations: [
-    OpenidlCommonComponent,
-    LoginComponent,
-    HeaderComponent,
-    FormComponent,
-    TableComponent,
-    SpinnerComponent,
-    PaginationComponent,
-    DownloadToCsvComponent,
-    SearchComponent,
-    NotifyComponent,
-    SearchPipe,
-    UpdateFormComponent,
-    ModalComponent,
-    DatacallsIssuedComponent,
-    DatacallHistoryComponent,
-    BlocksHistoryComponent,
-    UpdateReportComponent,
-    ReportTableComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpModule,
-    HttpClientModule,
-    FormsModule,
-    PipesModule,
-    ComponentsModule,
-    ConfigModule,
-    ServicesModule,
-    LoginModule,
-    DataTableModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-    ReactiveFormsModule,
-    ModalModule.forRoot(),
-    AccordionModule.forRoot(),
-    TooltipModule.forRoot(),
-    ClipboardModule
-  ],
-  exports: [
-    OpenidlCommonComponent,
-    FormComponent,
-    TableComponent,
-    ServicesModule,
-    SearchComponent,
-    SpinnerComponent,
-    PaginationComponent,
-    DownloadToCsvComponent,
-    SearchComponent,
-    NotifyComponent,
-    SearchPipe,
-    UpdateFormComponent,
-    ModalComponent,
-    DatacallsIssuedComponent,
-    DatacallHistoryComponent,
-    BlocksHistoryComponent,
-    UpdateReportComponent,
-    ReportTableComponent
-  ],
-  providers: [CookieService, BsModalService],
-  bootstrap: [OpenidlCommonComponent]
+	declarations: [
+		OpenidlCommonComponent,
+		LoginComponent,
+		HeaderComponent,
+		FormComponent,
+		TableComponent,
+		SpinnerComponent,
+		PaginationComponent,
+		DownloadToCsvComponent,
+		SearchComponent,
+		NotifyComponent,
+		SearchPipe,
+		UpdateFormComponent,
+		ModalComponent,
+		DatacallsIssuedComponent,
+		DatacallHistoryComponent,
+		BlocksHistoryComponent,
+		UpdateReportComponent,
+		ReportTableComponent
+	],
+	imports: [
+		BrowserModule,
+		BrowserAnimationsModule,
+		HttpClientModule,
+		FormsModule,
+		PipesModule,
+		ComponentsModule,
+		ConfigModule,
+		ServicesModule,
+		LoginModule,
+		DataTablesModule,
+		// OwlDateTimeModule,
+		// OwlNativeDateTimeModule,
+		ReactiveFormsModule,
+		ModalModule.forRoot(),
+		AccordionModule.forRoot(),
+		TooltipModule.forRoot(),
+		ClipboardModule
+	],
+	exports: [
+		OpenidlCommonComponent,
+		FormComponent,
+		TableComponent,
+		ServicesModule,
+		SearchComponent,
+		SpinnerComponent,
+		PaginationComponent,
+		DownloadToCsvComponent,
+		SearchComponent,
+		NotifyComponent,
+		SearchPipe,
+		UpdateFormComponent,
+		ModalComponent,
+		DatacallsIssuedComponent,
+		DatacallHistoryComponent,
+		BlocksHistoryComponent,
+		UpdateReportComponent,
+		ReportTableComponent
+	],
+	providers: [CookieService, BsModalService],
+	bootstrap: [OpenidlCommonComponent],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
-export class OpenidlCommonModule { }
+export class OpenidlCommonModule {}

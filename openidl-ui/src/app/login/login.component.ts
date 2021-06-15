@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../../lib/src/app/services/auth.service';
-import { StorageService } from '../../../lib/src/app/services/storage.service';
-import { MESSAGE } from '../../../lib/src/assets/messageBundle';
+import { AuthService } from '../../../../openidl-common-ui/src/app/services/auth.service';
+import { StorageService } from '../../../../openidl-common-ui/src/app/services/storage.service';
+import { MESSAGE } from '../../../../openidl-common-ui/src/assets/messageBundle';
 
 @Component({
   selector: 'app-login',

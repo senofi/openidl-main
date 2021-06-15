@@ -1,28 +1,26 @@
-.search-container {
-  width:100%;
-  position: relative;
-  float: left;
-}
-.search-container input { 
-  width: 85%;
-  border: 1px solid #F2F2F2;
-  box-shadow: 0 0px 3px rgba(220, 220, 220, 0.5);
-  padding: 10px 30px;
-  margin: 2% 0 4%;
+/* .search-container {
+	width: 100%;
+	position: relative;
+	float: left;
+}*/
+.form-control {
+	/* width: 85%; */
+	border: 1px solid #f2f2f2;
+	box-shadow: 0 0px 3px rgba(220, 220, 220, 0.5);
+	/* padding: 10px 30px;
+	margin: 2% 0 4%; */
 }
 .search-icon {
-  width: 16px;
-  height: 16px;
-  color: #ccc;
-  position: absolute;
-  left: 10px;
-  top: 33%;
+	width: 16px;
+	height: 16px;
+	color: #ccc;
+	position: absolute;
+	left: 10px;
+	top: 33%;
 }
 .btn-clearsearch {
-  background-color: #4979B8;
-  border-radius: 0;
-  padding: 10px;
-  width: 150px;
-  font-family: 'IBM Plex Sans Medium';
- 
+	color: #fff;
+	background-color: #4979b8;
+	font-family: 'IBM Plex Sans Medium';
+	width: 10rem;
 }
