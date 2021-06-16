@@ -13,6 +13,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { LoginComponent } from './components/login/login.component';
 import { LoginModule } from './components/login/login.module';
@@ -89,7 +93,11 @@ import { DataTablesModule } from 'angular-datatables';
 		MatFormFieldModule,
 		MatIconModule,
 		MatInputModule,
-		MatButtonModule
+		MatButtonModule,
+		MatTableModule,
+		MatPaginatorModule,
+		MatSortModule,
+		MatProgressSpinnerModule
 	],
 	exports: [
 		OpenidlCommonComponent,

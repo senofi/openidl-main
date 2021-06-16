@@ -5,7 +5,8 @@ import {
 	Output,
 	EventEmitter,
 	ViewChild,
-	OnDestroy
+	OnDestroy,
+	AfterViewInit
 } from '@angular/core';
 import { DataService } from './../../services/data.service';
 import { StorageService } from './../../services/storage.service';
@@ -14,14 +15,20 @@ import { AuthService } from './../../services/auth.service';
 import { appConfig } from './../../config/app.config';
 import { MESSAGE } from './../../../assets/messageBundle';
 import { appConst } from '../../../../../openidl-ui/src/app/const/app.const';
-import { Subject } from 'rxjs';
 
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTable } from '@angular/material/table';
+import {
+	DataTableItem,
+	DataTableDataSource
+} from '../../services/data-table-datasource';
 @Component({
 	selector: 'app-table',
 	templateUrl: './table.component.html',
-	styleUrls: ['./table.component.css']
+	styleUrls: ['./table.component.scss']
 })
-export class TableComponent implements OnInit, OnDestroy {
+export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 	// Input props received by the component
 	@Input() status: any;
 	@Input() prop: any;
@@ -36,9 +43,13 @@ export class TableComponent implements OnInit, OnDestroy {
 	// Reference to access the child component
 	@ViewChild(ModalComponent) appModal: ModalComponent;
 
+	@ViewChild(MatTable) table!: MatTable<DataTableItem>;
+	@ViewChild(MatSort) sort!: MatSort;
+	@ViewChild(MatPaginator) paginator!: MatPaginator;
+
 	// Models to store data
 	searchValue;
-	data = [];
+	data: DataTableItem[] = [];
 	pageIndex = 1;
 	appConst;
 
@@ -74,21 +85,28 @@ export class TableComponent implements OnInit, OnDestroy {
 	private queryUri: String;
 
 	private navigationFlag: boolean = false;
-	dtTrigger: Subject<any> = new Subject<any>();
-	dtOptions: DataTables.Settings = {};
 
+	//table columns
+	draftColumns = [
+		'name',
+		'deadline',
+		'jurisdiction',
+		'lineOfBusiness',
+		'version',
+		'noOfLikes',
+		'updatedTs'
+	];
+	dataSource: DataTableDataSource;
 	constructor(
 		private dataService: DataService,
 		private storageService: StorageService,
 		private authService: AuthService
 	) {
 		this.statusObj = appConst.status;
+		this.dataSource = new DataTableDataSource();
 	}
 
 	ngOnInit() {
-		this.dtOptions = {
-			pagingType: 'full_numbers'
-		};
 		// Get the current role to handle the view accordingly
 		this.role = this.storageService.getItem('role');
 
@@ -139,10 +157,13 @@ export class TableComponent implements OnInit, OnDestroy {
 		this.getDatacallsByStatus();
 	}
 
-	ngOnDestroy(): void {
-		// Do not forget to unsubscribe the event
-		this.dtTrigger.unsubscribe();
+	ngAfterViewInit(): void {
+		this.dataSource.sort = this.sort;
+		this.dataSource.paginator = this.paginator;
+		this.table.dataSource = this.dataSource;
 	}
+
+	ngOnDestroy(): void {}
 
 	// Filter the data calls present in the DOM according to the search input
 	searchFilter(searchinputvalue) {
@@ -380,15 +401,17 @@ export class TableComponent implements OnInit, OnDestroy {
 							// TODO: following field might change to creationDate if added to data model
 							if (el.updatedTs || el.updatedTs !== '') {
 							}
-							el.fromdate = this.formatDate(el.fromdate);
-							el.toDate = this.formatDate(el.toDate);
+							//TODO: raj - below property is always undefined.
+							// el.fromdate = this.formatDate(el.fromdate);
+							// el.toDate = this.formatDate(el.toDate);
 						});
 					} else {
 						this.isRecord = false;
 						// TODO: Also show the error popup
 					}
 					this.isSpinner = false;
-					this.dtTrigger.next();
+					this.dataSource.data = this.data;
+					this.table.renderRows();
 				}
 			},
 			(error) => {

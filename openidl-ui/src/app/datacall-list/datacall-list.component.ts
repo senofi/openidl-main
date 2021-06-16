@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 @Component({
 	selector: 'app-datacall-list',
 	templateUrl: './datacall-list.component.html',
-	styleUrls: ['./datacall-list.component.css']
+	styleUrls: ['./datacall-list.component.scss']
 })
 export class DatacallListComponent implements OnInit, AfterViewInit {
 	@ViewChild('dataCallTabSet', { static: false })
@@ -42,7 +42,7 @@ export class DatacallListComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		this.dataCallTabSet.tabs[this.currentTab].active = true;
+		// this.dataCallTabSet.tabs[this.currentTab].active = true;
 	}
 
 	setSelected(selectedtab) {
