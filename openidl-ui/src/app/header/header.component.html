@@ -1,64 +1,50 @@
-<header>
-	<div class="row">
-		<div class="col-sm-7">
-			<img
-				src="../../assets/images/openidl-header-logo.png"
-				(click)="goHome()"
-				style="cursor: pointer"
-			/>
-			<span class="divider"></span>
-			<img [src]="orgLogo" />
-		</div>
-		<div class="col-sm-5">
-			<div class="nav-container">
-				<ul>
-					<li
-						[ngClass]="{ active: selected === 0 }"
-						(click)="setSelected(0)"
-					>
-						<a
-							href="javascript:void(0)"
-							(click)="navigateToRoute('/datacallList')"
-							>Data Calls</a
-						>
-					</li>
-					<!-- [routerLink]="['/datacallList']" -->
-					<li
-						[ngClass]="{ active: selected === 1 }"
-						(click)="setSelected(1)"
-						*ngIf="appConst.shouldCreateDatacall"
-						(click)="navigateToRoute('/createDatacall')"
-					>
-						<a href="javascript:void(0)">New Data Call</a>
-					</li>
-					<!--[routerLink]="['/createDatacall']"-->
-				</ul>
-				<a
-					class="logout-link"
-					href="javascript:void(0)"
-					(click)="checkLogout()"
-					>Log out</a
-				>
-				<div
-					*ngIf="isResetWorldState && role === 'statagent'"
-					class="glyphicon glyphicon-option-vertical reset-btn"
-					(click)="toggleResetBtn()"
-				>
-					<div *ngIf="isResetBtn" class="reset-container">
-						<button class="del-btn" (click)="conirmReset()">
-							Delete All Data
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</header>
-<app-spinner *ngIf="isSpinner"></app-spinner>
-<app-modal
-	[title]="title"
-	[message]="message"
-	[type]="type"
-	(deleteData)="resetData()"
-	(confirmation)="onConfirmation()"
-></app-modal>
+<mat-toolbar class="header">
+	<span
+		><img
+			src="../../assets/images/openidl-header-logo.png"
+			(click)="goHome()"
+			class="logo"
+			alt="Open IDL Logo" />
+		<span class="divider"></span>
+		<img [src]="orgLogo"
+	/></span>
+	<span class="spacer"></span>
+	<mat-nav-list class="list-horizontal">
+		<a
+			mat-list-item
+			[ngClass]="{ active: selected === 0 }"
+			href="javascript:void(0)"
+			(click)="navigateToRoute('/datacallList'); selected = 0"
+			>Data Calls</a
+		>
+		<a
+			mat-list-item
+			[ngClass]="{ active: selected === 1 }"
+			*ngIf="appConst.shouldCreateDatacall"
+			(click)="navigateToRoute('/createDatacall'); selected = 1"
+			>New Data Call</a
+		>
+		<div class="divider small"></div>
+	</mat-nav-list>
+	<a
+		mat-button
+		href="javascript:void(0)"
+		(click)="checkLogout()"
+		color="primary"
+	>
+		<mat-icon>logout</mat-icon>
+		Log Out</a
+	>
+	<button
+		mat-button
+		[matMenuTriggerFor]="menu"
+		*ngIf="isResetWorldState && role === 'statagent'"
+	>
+		<mat-icon>more_vert</mat-icon>
+	</button>
+	<mat-menu #menu="matMenu">
+		<button mat-menu-item *ngIf="isResetBtn" (click)="conirmReset()">
+			Delete All Data
+		</button>
+	</mat-menu>
+</mat-toolbar>

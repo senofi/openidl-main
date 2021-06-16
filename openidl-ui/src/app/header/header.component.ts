@@ -16,7 +16,7 @@ import { ModalComponent } from '../../../../openidl-common-ui/src/app/components
 @Component({
 	selector: 'app-header',
 	templateUrl: './header.component.html',
-	styleUrls: ['./header.component.css']
+	styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
 	@Input() selected;
