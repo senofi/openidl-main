@@ -1,20 +1,21 @@
-<div class="search-container">
-	<div class="input-group">
+<div class="search-component">
+	<mat-form-field appearance="fill" class="full-width">
+		<mat-label>Search for call data</mat-label>
+		<mat-icon matPrefix color="primary">search</mat-icon>
 		<input
-			class="form-control"
-			type="text"
+			matInput
+			name="searchInput"
 			[(ngModel)]="searchInput"
 			(keydown.enter)="search($event)"
-			placeholder="Search for data call"
 		/>
-		<span class="glyphicon glyphicon-search search-icon"></span>
 		<button
-			type="button"
-			class="btn btn-outline-primary btn-clearsearch"
+			mat-icon-button
+			matSuffix
+			color="accent"
 			(click)="search('clear')"
 			[disabled]="!searchButtonReadOnly"
 		>
-			Clear Search
+			<mat-icon>clear</mat-icon>
 		</button>
-	</div>
+	</mat-form-field>
 </div>

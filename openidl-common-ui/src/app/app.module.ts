@@ -6,6 +6,14 @@ import {
 	NO_ERRORS_SCHEMA
 } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
 import { LoginComponent } from './components/login/login.component';
 import { LoginModule } from './components/login/login.module';
 import { PipesModule } from './pipes/pipes.module';
@@ -17,8 +25,6 @@ import { HeaderComponent } from './components/header/header.component';
 import { FormComponent } from './components/form/form.component';
 import { TableComponent } from './components/table/table.component';
 // import { OwlDateTimeModule, OwlNativeDateTimeModule } from "ng-pick-datetime";
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { SpinnerComponent } from './components/spinner/spinner.component';
@@ -78,7 +84,12 @@ import { DataTablesModule } from 'angular-datatables';
 		ModalModule.forRoot(),
 		AccordionModule.forRoot(),
 		TooltipModule.forRoot(),
-		ClipboardModule
+		ClipboardModule,
+		MatCardModule,
+		MatFormFieldModule,
+		MatIconModule,
+		MatInputModule,
+		MatButtonModule
 	],
 	exports: [
 		OpenidlCommonComponent,
