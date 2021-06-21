@@ -2,20 +2,42 @@
 
 This project deploys the application to kubernetes.
 
-## Quickstart
+# Quickstart
 
 To get started quickly, follow these steps. This assumes you don't need to update any code etc.
 
-### Get the Config files
+## Create a VirtualBox VM
+
+-   make sure it has 4 cpus
+
+## Make sure git is available
+
+## Get Minikube working
+
+[Install Minikube](https://minikube.sigs.k8s.io/docs/start/)
+
+## Install helm
+
+[Installation Instructions](https://helm.sh/docs/intro/install/)
+
+## Clone the repository
+
+```
+git clone https://github.com/openidl-org/openidl-main.git
+```
+
+## Get the Config files
 
 You will need configuration files so that your runtime can connect into the network successfully.
 Most of these configuration files are different for every node. There are some that don't change from node to node, but we are keeping separate copies for simplification.
 For the correct list of required configuration files, refer to the `openidl-k8s/charts/openidl-secrets/values.yaml` file.
 Place the files into the `openidl-k8s/charts/openidl-secrets/config` directory.
+The location of these files is currently in the air. Please contact AAIS to get the files for the test nodes.
 
 ### Make sure to remove any running minikube
 
 Run `./systemdown.sh` from the `openidl-main` directory.
+If usinb bash then `bash systemdown.sh`
 
 ### Startup the system
 
@@ -37,7 +59,7 @@ make run_ui
 
 ## Secrets / Config Files
 
-The secrets are kept in AWS Secrets Manager.
+As of now, the secrets are kept in AWS Secrets Manager. This will migrate to TBD.
 
 Use the load-secrets.js node script or the load_secrets make command.
 
@@ -70,6 +92,13 @@ node is in (aais, analytics, carrier)
 | unique-identifiers-config.json         | unique-identifiers-config |
 
 Look to each project specific helm chart to see what configs are used.
+
+# Troubleshooting
+
+-   the system may show an error trying to access the ingress-controller. A restart will often fix this.
+-   the system up may hang. This can be fixed with a restart. Docker seems to be in a problem state.
+-   docker can sometimes crash silently. If things are hanging or not working, make sure docker is running.
+-   the ingress addin may not install or hang. We have seen that the vpn was the cause. Anyconnect froom cisco causes issue. Disable VPN or move to another VPN.
 
 ## NOTES
 
