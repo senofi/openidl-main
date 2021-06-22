@@ -16,7 +16,7 @@ import { appConfig } from './../../config/app.config';
 import { MESSAGE } from './../../../assets/messageBundle';
 import { appConst } from '../../../../../openidl-ui/src/app/const/app.const';
 
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import {
@@ -97,6 +97,7 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 		'updatedTs'
 	];
 	dataSource: DataTableDataSource;
+
 	constructor(
 		private dataService: DataService,
 		private storageService: StorageService,
@@ -153,17 +154,34 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 		} else {
 			this.sortField = 'deadline';
 		}
-		// Get the data as per the data call status
-		this.getDatacallsByStatus();
+
+		this.isSpinner = true;
 	}
 
 	ngAfterViewInit(): void {
+		// must call api after setting up paginator and sorter
 		this.dataSource.sort = this.sort;
 		this.dataSource.paginator = this.paginator;
 		this.table.dataSource = this.dataSource;
+		// Get the data as per the data call status
+		this.getDataCallsByStatus();
 	}
 
 	ngOnDestroy(): void {}
+
+	// material table page change event
+	onPageChange(page: PageEvent) {
+		// fetch data from service based on pageIndex and pageSize
+		console.log('pull data for table', page);
+		this.isSpinner = true;
+		if (page.previousPageIndex > page.pageIndex) {
+			console.log('previous page data');
+			this.getPrevDataCalls(page);
+		} else {
+			console.log('next page data');
+			this.getNextDataCalls(page);
+		}
+	}
 
 	// Filter the data calls present in the DOM according to the search input
 	searchFilter(searchinputvalue) {
@@ -232,14 +250,14 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	// Get data calls list according to the data call status
-	getDatacallsByStatus() {
+	getDataCallsByStatus() {
 		this.pageIndex =
 			this.currentIndex == 1 || this.currentIndex == 0
 				? this.storageService.getItem('searchMode') == 'NORMAL'
 					? (this.pageIndex = 0)
 					: (this.pageIndex = 1)
 				: this.recordsPerPage * (this.currentIndex - 1) + 1;
-		console.log('getDatacallsByStatus   ' + this.pageIndex);
+		console.log('getDataCallsByStatus   ' + this.pageIndex);
 		this.queryParameter =
 			this.storageService.getItem('searchMode') == 'NORMAL'
 				? 'status=' +
@@ -260,7 +278,7 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	// Get next set of data calls when clicked the next button of pagination
-	getNextDatacalls() {
+	getNextDataCalls(page: PageEvent) {
 		this.pageIndex = this.recordsPerPage * this.currentIndex + 1;
 		this.currentIndex = this.currentIndex + 1;
 		this.queryParameter =
@@ -268,22 +286,22 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 				? 'status=' +
 				  this.status +
 				  '&&version=latest&&startIndex=' +
-				  this.pageIndex +
+				  page.pageIndex +
 				  '&&pageSize=' +
-				  this.recordsPerPage
+				  page.pageSize
 				: 'status=' +
 				  this.status +
 				  '&&version=latest&&startIndex=' +
-				  this.pageIndex +
+				  page.pageIndex +
 				  '&&pageSize=' +
-				  this.recordsPerPage +
+				  page.pageSize +
 				  '&&searchKey=' +
 				  this.storageService.getItem('searchValue');
 		this.getDatacalls(this.queryParameter);
 	}
 
 	//// Get previous set of data calls when clicked the prev button of pagination
-	getPrevDatacalls() {
+	getPrevDataCalls(page: PageEvent) {
 		this.currentIndex = this.currentIndex - 1;
 		this.pageIndex = this.pageIndex - this.recordsPerPage;
 		this.pageIndex = this.pageIndex;
@@ -292,15 +310,15 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 				? 'status=' +
 				  this.status +
 				  '&&version=latest&&startIndex=' +
-				  this.pageIndex +
+				  page.pageIndex +
 				  '&&pageSize=' +
-				  this.recordsPerPage
+				  page.pageSize
 				: 'status=' +
 				  this.status +
 				  '&&version=latest&&startIndex=' +
-				  this.pageIndex +
+				  page.pageIndex +
 				  '&&pageSize=' +
-				  this.recordsPerPage +
+				  page.pageSize +
 				  '&&searchKey=' +
 				  this.storageService.getItem('searchValue');
 		this.getDatacalls(this.queryParameter);
@@ -313,7 +331,7 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 				? '/list-data-calls-by-criteria?' + queryParam
 				: '/search-data-calls?' + queryParam;
 
-		this.isSpinner = true;
+		// this.isSpinner = true;
 		this.data = [];
 		this.dataService.getData(this.queryUri).subscribe(
 			(response) => {

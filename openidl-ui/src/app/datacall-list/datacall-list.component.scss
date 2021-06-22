@@ -1,0 +1,20 @@
+@import '../../../../openidl-common-ui/src/variables';
+
+.data-call-list {
+	.status-group {
+		.button {
+			width: 9rem;
+			.text {
+				margin-left: 3px;
+			}
+			&.mat-button-toggle-checked {
+				background: $primary;
+				color: $white;
+			}
+		}
+	}
+
+	.data-table {
+		margin: 1rem 0;
+	}
+}

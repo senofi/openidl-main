@@ -4,6 +4,7 @@ import { appConst } from '../const/app.const';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { TableComponent } from '../../../../openidl-common-ui/src/app/components/table/table.component';
 import { Router } from '@angular/router';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 
 @Component({
 	selector: 'app-datacall-list',
@@ -18,8 +19,10 @@ export class DatacallListComponent implements OnInit, AfterViewInit {
 	appConst;
 	statusObj;
 	selected: Number = 0;
-	selectedTab;
+	selectedTab = 0;
 	currentTab = 0;
+	// currentStatus = appConst.status.DRAFT;
+
 	constructor(
 		private storageService: StorageService,
 		private router: Router
@@ -45,9 +48,26 @@ export class DatacallListComponent implements OnInit, AfterViewInit {
 		// this.dataCallTabSet.tabs[this.currentTab].active = true;
 	}
 
-	setSelected(selectedtab) {
-		this.selectedTab = selectedtab;
-		this.storageService.setItem('currentTab', selectedtab);
+	onStatusGroupChange($event: MatButtonToggleChange) {
+		console.log('onStatusGroupChange', $event.value);
+		this.storageService.setItem('currentTab', $event.value);
+		// based on value set string status
+		// switch ($event.value) {
+		// 	case 1:
+		// 		this.currentStatus = appConst.status.ISSUED;
+		// 		break;
+		// 	case 2:
+		// 		this.currentStatus = appConst.status.CANCELLED;
+		// 		break;
+		// 	default:
+		// 		this.currentStatus = appConst.status.DRAFT;
+		// 		break;
+		// }
+	}
+
+	setSelected(selectedTab) {
+		this.selectedTab = selectedTab;
+		this.storageService.setItem('currentTab', selectedTab);
 	}
 
 	search(event) {

@@ -66,3 +66,15 @@ body {
 .center {
 	text-align: center;
 }
+
+.header-with-icon {
+	.mat-icon {
+		font-size: 2rem;
+	}
+	span {
+		position: absolute;
+		// margin-top: 1px;
+		margin-left: 1rem;
+		font-weight: 500;
+	}
+}

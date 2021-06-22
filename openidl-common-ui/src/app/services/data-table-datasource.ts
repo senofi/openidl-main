@@ -126,15 +126,11 @@ export class DataTableDataSource extends DataSource<DataTableItem> {
 				case 'deadline':
 					return this.compare(+a.deadline, +b.deadline, isAsc);
 				case 'jurisdiction':
-					return this.compare(
-						+a.jurisdiction,
-						+b.jurisdiction,
-						isAsc
-					);
+					return this.compare(a.jurisdiction, b.jurisdiction, isAsc);
 				case 'lineOfBusiness':
 					return this.compare(
-						+a.lineOfBusiness,
-						+b.lineOfBusiness,
+						a.lineOfBusiness,
+						b.lineOfBusiness,
 						isAsc
 					);
 				case 'version':

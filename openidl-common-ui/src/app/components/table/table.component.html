@@ -112,7 +112,7 @@
 				mat-header-cell
 				*matHeaderCellDef
 				mat-sort-header
-				[ngClass]="{ cancelled: status === statusObj.CANCELLED }"
+				[ngClass]="{ cancelled1: status === statusObj.CANCELLED }"
 				class="col-updated-date"
 			>
 				Updated Date
@@ -135,8 +135,9 @@
 		#paginator
 		[length]="50"
 		[pageIndex]="0"
-		[pageSize]="10"
-		[pageSizeOptions]="[5, 10, 20]"
+		[pageSize]="recordsPerPage"
+		[pageSizeOptions]="[10, 15, 20]"
+		(page)="onPageChange($event)"
 	>
 	</mat-paginator>
 </div>

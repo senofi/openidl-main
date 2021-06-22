@@ -1,47 +1,75 @@
-<div>
+<div class="data-call-list">
 	<app-header [selected]="selected"></app-header>
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-sm-1"></div>
 
 			<div class="col-sm-10">
-				<h1 class="mt-4 pb-2">Data Call List</h1>
+				<h1 class="header-with-icon">
+					<mat-icon color="primary">table_chart</mat-icon>
+					<span>Data Call List</span>
+				</h1>
 				<app-search (searchValue)="search($event)"></app-search>
 				<div class="pb-4"></div>
-				<tabset #dataCallTabSet>
-					<tab
-						heading="Drafts"
-						id="tab1"
-						(selectTab)="setSelected(0)"
+				<mat-button-toggle-group
+					[value]="selectedTab"
+					[(ngModel)]="selectedTab"
+					(change)="onStatusGroupChange($event)"
+					#group="matButtonToggleGroup"
+					class="status-group"
+				>
+					<mat-button-toggle
+						class="button"
+						[value]="0"
+						aria-label="Drafts"
 					>
-						<app-table
-							*ngIf="selectedTab === 0"
-							[status]="statusObj.DRAFT"
-							(viewDraftEvent)="viewDraft($event)"
-							(viewIssuedEvent)="viewIssued($event)"
-							(viewReportEvent)="viewReport($event)"
-						></app-table>
-					</tab>
-					<tab heading="Issued" (selectTab)="setSelected(1)">
-						<app-table
-							*ngIf="selectedTab === 1"
-							[status]="statusObj.ISSUED"
-							(viewDraftEvent)="viewDraft($event)"
-							(viewIssuedEvent)="viewIssued($event)"
-							(viewReportEvent)="viewReport($event)"
-						></app-table>
-					</tab>
-					<tab heading="Abandoned" (selectTab)="setSelected(2)">
-						<app-table
-							*ngIf="selectedTab === 2"
-							[status]="statusObj.CANCELLED"
-							(viewDraftEvent)="viewDraft($event)"
-							(viewIssuedEvent)="viewIssued($event)"
-							(viewReportEvent)="viewReport($event)"
-							(viewAbandonedEvent)="viewAbandoned($event)"
-						></app-table>
-					</tab>
-				</tabset>
+						<mat-icon>mode_edit</mat-icon>
+						<span class="text">Drafts</span>
+					</mat-button-toggle>
+					<mat-button-toggle
+						class="button"
+						[value]="1"
+						aria-label="Issued"
+					>
+						<mat-icon>grading</mat-icon>
+						<span class="text">Issued</span>
+					</mat-button-toggle>
+					<mat-button-toggle
+						class="button"
+						[value]="2"
+						aria-label="Abandoned"
+					>
+						<mat-icon>cancel_presentation</mat-icon>
+						<span class="text">Abandoned</span>
+					</mat-button-toggle>
+				</mat-button-toggle-group>
+				{{ selectedTab }}
+
+				<div class="data-table">
+					<app-table
+						*ngIf="selectedTab === 0"
+						[status]="statusObj.DRAFT"
+						(viewDraftEvent)="viewDraft($event)"
+						(viewIssuedEvent)="viewIssued($event)"
+						(viewReportEvent)="viewReport($event)"
+					></app-table>
+					<!-- <app-table
+						*ngIf="selectedTab === 1"
+						[status]="statusObj.ISSUED"
+						(viewDraftEvent)="viewDraft($event)"
+						(viewIssuedEvent)="viewIssued($event)"
+						(viewReportEvent)="viewReport($event)"
+					></app-table>
+					<app-table
+						*ngIf="selectedTab === 2"
+						[status]="statusObj.CANCELLED"
+						(viewDraftEvent)="viewDraft($event)"
+						(viewIssuedEvent)="viewIssued($event)"
+						(viewReportEvent)="viewReport($event)"
+						(viewAbandonedEvent)="viewAbandoned($event)"
+					></app-table> -->
+				</div>
+
 				<app-blocks-history></app-blocks-history>
 			</div>
 			<div class="col-sm-1"></div>
