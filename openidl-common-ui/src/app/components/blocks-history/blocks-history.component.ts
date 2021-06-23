@@ -4,7 +4,7 @@ import { DataService } from './../../services/data.service';
 @Component({
 	selector: 'app-blocks-history',
 	templateUrl: './blocks-history.component.html',
-	styleUrls: ['./blocks-history.component.css']
+	styleUrls: ['./blocks-history.component.scss']
 })
 export class BlocksHistoryComponent implements OnInit {
 	blockList;

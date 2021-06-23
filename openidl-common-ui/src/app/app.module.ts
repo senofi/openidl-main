@@ -18,6 +18,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { LoginComponent } from './components/login/login.component';
 import { LoginModule } from './components/login/login.module';
@@ -97,7 +98,8 @@ import { DownloadToCsvComponent } from './components/download-to-csv/download-to
 		MatPaginatorModule,
 		MatSortModule,
 		MatProgressSpinnerModule,
-		MatSnackBarModule
+		MatSnackBarModule,
+		MatExpansionModule
 	],
 	exports: [
 		OpenidlCommonComponent,
