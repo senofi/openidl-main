@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+	FormBuilder,
+	FormGroup,
+	FormGroupDirective,
+	Validators
+} from '@angular/forms';
 import { AuthService } from '../../../../openidl-common-ui/src/app/services/auth.service';
+import { NotifierService } from '../../../../openidl-common-ui/src/app/services/notifier.service';
 import { StorageService } from '../../../../openidl-common-ui/src/app/services/storage.service';
 import { MESSAGE } from '../../../../openidl-common-ui/src/assets/messageBundle';
 
@@ -28,7 +34,8 @@ export class LoginComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private router: Router,
 		private storageService: StorageService,
-		private authService: AuthService
+		private authService: AuthService,
+		private notifierService: NotifierService
 	) {}
 
 	ngOnInit() {
@@ -39,14 +46,9 @@ export class LoginComponent implements OnInit {
 		this.clearStorage();
 	}
 
-	login(value) {
-		console.log('userform value ', value);
-		if (!this.userForm.valid) {
-			this.isError = true;
-			this.type = MESSAGE.LOGIN.USER_PASSWORD_MISSING.type;
-			this.message = MESSAGE.LOGIN.USER_PASSWORD_MISSING.message;
-			this.title = MESSAGE.LOGIN.USER_PASSWORD_MISSING.title;
-		} else {
+	login(value, formDirective: FormGroupDirective) {
+		// console.log('userform value ', value);
+		if (this.userForm.valid) {
 			this.model = value;
 			this.isSpinner = true;
 			this.authService.authenticate(this.model).subscribe(
@@ -116,10 +118,14 @@ export class LoginComponent implements OnInit {
 					this.message = MESSAGE.LOGIN.INVALID_CREDENTIALS.message;
 					this.title = MESSAGE.LOGIN.INVALID_CREDENTIALS.title;
 					this.isSpinner = false;
-					this.userForm = this.formBuilder.group({
-						username: ['', Validators.required],
-						password: ['', Validators.required]
-					});
+					formDirective.resetForm();
+					this.userForm.reset();
+
+					this.notifierService.openSnackbar(
+						MESSAGE.LOGIN.INVALID_CREDENTIALS.type,
+						MESSAGE.LOGIN.INVALID_CREDENTIALS.title,
+						MESSAGE.LOGIN.INVALID_CREDENTIALS.message
+					);
 				}
 			);
 		}

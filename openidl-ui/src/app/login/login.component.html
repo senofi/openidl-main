@@ -2,7 +2,12 @@
 	<mat-grid-list cols="2">
 		<mat-grid-tile></mat-grid-tile>
 		<mat-grid-tile>
-			<form [formGroup]="userForm" (ngSubmit)="login(userForm.value)">
+			<form
+				[formGroup]="userForm"
+				#formDirective="ngForm"
+				(ngSubmit)="login(userForm.value, formDirective)"
+				novalidate
+			>
 				<mat-card class="login-card">
 					<mat-card-header class="header">
 						<img
@@ -21,6 +26,9 @@
 									class="full-width"
 									appearance="outline"
 								>
+									<mat-icon matPrefix color="primary"
+										>person_filled</mat-icon
+									>
 									<mat-label>Username</mat-label>
 									<input
 										matInput
@@ -45,6 +53,9 @@
 									class="full-width"
 									appearance="outline"
 								>
+									<mat-icon matPrefix color="primary"
+										>password_filled</mat-icon
+									>
 									<mat-label>Password</mat-label>
 									<input
 										matInput
@@ -84,81 +95,4 @@
 			</form>
 		</mat-grid-tile>
 	</mat-grid-list>
-	<!-- <div class="row">
-		<div class="col-sm-6"></div>
-		<div class="col-sm-6">
-			<div class="card">
-				<div class="card-header">
-					<div class="img-div">
-						<img src="../../assets/images/OpenIDL_Login_Logo.png" />
-					</div>
-				</div>
-				<div class="card-content">
-					<span class="text-heading">Sign In</span><br />
-					<form name="loginForm" [formGroup]="userForm">
-						<div class="form-group">
-							<label for="usr" class="input-label-user"
-								>Username</label
-							>
-							<input
-								type="text"
-								name="username"
-								class="form-control"
-								id="usr"
-								formControlName="username"
-							/>
-						</div>
-						<div class="form-group">
-							<label for="pwd" class="input-label-pass"
-								>Password</label
-							>
-							<input
-								type="password"
-								name="password"
-								formControlName="password"
-								class="form-control pass"
-								id="pwd"
-							/>
-						</div>
-						<div class="col-sm-12 no-row-padding">
-							<app-notify
-								*ngIf="isError"
-								[type]="this.type"
-								[message]="this.message"
-								[title]="this.title"
-								(close)="closeNotify()"
-							></app-notify>
-						</div>
-						<div class="btn-center">
-							<button
-								type="submit"
-								class="btn btn-primary btn-login"
-								(click)="login(userForm.value)"
-								(keyup.enter)="login(userForm.value)"
-							>
-								Login
-								<div
-									*ngIf="isSpinner"
-									class="lds-css"
-									style="position: absolute"
-								>
-									<div
-										style="
-											width: 15px !important;
-											height: 15px !important;
-										"
-										class="lds-rolling"
-									>
-										<div
-											style="top: 10px; left: 20px"
-										></div>
-									</div>
-								</div>
-							</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div> -->
 </div>
