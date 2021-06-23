@@ -8,19 +8,14 @@ import { DataService } from './../../services/data.service';
 })
 export class BlocksHistoryComponent implements OnInit {
 	blockList;
-	isOpen: Boolean = false;
+
 	constructor(private dataService: DataService) {}
 
 	ngOnInit() {
 		const url = '/block-explorer';
 		this.dataService.getData(url).subscribe((res) => {
-			console.log('Blocks', res);
+			// console.log('Blocks', res);
 			this.blockList = res;
 		});
-	}
-
-	toggle() {
-		console.log('clicked heading');
-		this.isOpen = !this.isOpen;
 	}
 }
