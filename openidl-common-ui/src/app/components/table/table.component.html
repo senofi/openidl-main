@@ -1,4 +1,4 @@
-<div class="mat-elevation-z1 data-table">
+<div class="mat-elevation-z0 data-table">
 	<table mat-table class="width-table" matSort [dataSource]="data">
 		<!-- Name Column -->
 		<ng-container matColumnDef="name">
@@ -104,7 +104,21 @@
 			>
 				Report Status
 			</th>
-			<td mat-cell *matCellDef="let row">{{ row.reportStatus }}</td>
+			<td
+				mat-cell
+				*matCellDef="let row"
+				(click)="
+					viewReport($event, row, row.reportStatus, row.reportUrl)
+				"
+				class="row-status"
+				[ngClass]="{
+					active:
+						row.reportStatus &&
+						!(row.reportStatus.toLowerCase() === 'awaiting')
+				}"
+			>
+				{{ row.reportStatus }}
+			</td>
 		</ng-container>
 		<!-- Updated Date Column -->
 		<ng-container matColumnDef="updatedTs">
@@ -122,8 +136,8 @@
 			</td>
 		</ng-container>
 
-		<tr mat-header-row *matHeaderRowDef="draftColumns"></tr>
-		<tr mat-row *matRowDef="let row; columns: draftColumns"></tr>
+		<tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: tableColumns"></tr>
 		<tr class="mat-row" *matNoDataRow>
 			<td class="mat-cell" colspan="9999">
 				No {{ statusText }} data calls are available

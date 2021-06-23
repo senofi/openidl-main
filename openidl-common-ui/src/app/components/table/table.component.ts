@@ -43,6 +43,7 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 	// Reference to access the child component
 	@ViewChild(ModalComponent) appModal: ModalComponent;
 
+	// material table variables
 	@ViewChild(MatTable) table!: MatTable<DataTableItem>;
 	@ViewChild(MatSort) sort!: MatSort;
 	@ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -86,6 +87,7 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	private navigationFlag: boolean = false;
 
+	tableColumns: string[] = [];
 	//table columns
 	draftColumns = [
 		'name',
@@ -94,6 +96,24 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 		'lineOfBusiness',
 		'version',
 		'noOfLikes',
+		'updatedTs'
+	];
+	issuedColumns = [
+		'name',
+		'deadline',
+		'jurisdiction',
+		'lineOfBusiness',
+		'version',
+		'noOfConsents',
+		'reportStatus',
+		'updatedTs'
+	];
+	cancelledColumns = [
+		'name',
+		'deadline',
+		'jurisdiction',
+		'lineOfBusiness',
+		'version',
 		'updatedTs'
 	];
 	dataSource: DataTableDataSource;
@@ -113,10 +133,13 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 
 		// Conditional expressions to set the status text which is shown when there are no data calls of the current status
 		if (this.status === this.statusObj.DRAFT) {
+			this.tableColumns = this.draftColumns;
 			this.statusText = 'drafted';
 		} else if (this.status === this.statusObj.CANCELLED) {
+			this.tableColumns = this.cancelledColumns;
 			this.statusText = 'abandoned';
 		} else if (this.status === this.statusObj.ISSUED) {
+			this.tableColumns = this.issuedColumns;
 			this.statusText = 'issued';
 		}
 		if (!this.storageService.getItem('currentStatus')) {

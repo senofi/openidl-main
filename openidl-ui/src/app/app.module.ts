@@ -1,5 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	NgModule,
+	NO_ERRORS_SCHEMA
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -70,6 +74,7 @@ import { ViewReportComponent } from './view-report/view-report.component';
 		MatButtonToggleModule
 	],
 	providers: [AuthGaurdService, StorageService, DataService, AuthService],
-	bootstrap: [AppComponent]
+	bootstrap: [AppComponent],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
 export class AppModule {}
