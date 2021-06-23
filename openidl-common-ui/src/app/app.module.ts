@@ -30,15 +30,17 @@ import { FormComponent } from './components/form/form.component';
 import { TableComponent } from './components/table/table.component';
 // import { OwlDateTimeModule, OwlNativeDateTimeModule } from "ng-pick-datetime";
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { CookieService } from 'ngx-cookie-service';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ClipboardModule } from 'ngx-clipboard';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { SearchComponent } from './components/search/search.component';
-import { CookieService } from 'ngx-cookie-service';
 import { NotifyComponent } from './components/notify/notify.component';
 import { SearchPipe } from './pipes/search.pipe';
 import { UpdateFormComponent } from './components/update-form/update-form.component';
 import { ModalComponent } from './components/modal/modal.component';
-import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { DatacallsIssuedComponent } from './components/datacalls-issued/datacalls-issued.component';
 import { DatacallHistoryComponent } from './components/datacall-history/datacall-history.component';
 import { BlocksHistoryComponent } from './components/blocks-history/blocks-history.component';
@@ -46,9 +48,6 @@ import { ReportTableComponent } from './components/report-table/report-table.com
 import { UpdateReportComponent } from './components/update-report/update-report.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { DownloadToCsvComponent } from './components/download-to-csv/download-to-csv.component';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { ClipboardModule } from 'ngx-clipboard';
-import { DataTablesModule } from 'angular-datatables';
 
 @NgModule({
 	declarations: [
@@ -81,7 +80,6 @@ import { DataTablesModule } from 'angular-datatables';
 		ConfigModule,
 		ServicesModule,
 		LoginModule,
-		DataTablesModule,
 		// OwlDateTimeModule,
 		// OwlNativeDateTimeModule,
 		ReactiveFormsModule,

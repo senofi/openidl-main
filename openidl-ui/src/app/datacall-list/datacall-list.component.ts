@@ -1,19 +1,17 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { StorageService } from '../../../../openidl-common-ui/src/app/services/storage.service';
-import { appConst } from '../const/app.const';
-import { TabsetComponent } from 'ngx-bootstrap/tabs';
-import { TableComponent } from '../../../../openidl-common-ui/src/app/components/table/table.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
+
+import { appConst } from '../const/app.const';
+import { StorageService } from '../../../../openidl-common-ui/src/app/services/storage.service';
+import { TableComponent } from '../../../../openidl-common-ui/src/app/components/table/table.component';
 
 @Component({
 	selector: 'app-datacall-list',
 	templateUrl: './datacall-list.component.html',
 	styleUrls: ['./datacall-list.component.scss']
 })
-export class DatacallListComponent implements OnInit, AfterViewInit {
-	@ViewChild('dataCallTabSet', { static: false })
-	dataCallTabSet: TabsetComponent;
+export class DatacallListComponent implements OnInit {
 	@ViewChild(TableComponent) appTable: TableComponent;
 	role: any;
 	appConst;
@@ -42,10 +40,6 @@ export class DatacallListComponent implements OnInit, AfterViewInit {
 		}
 		this.selectedTab = this.currentTab;
 		this.setSelected(this.currentTab);
-	}
-
-	ngAfterViewInit() {
-		// this.dataCallTabSet.tabs[this.currentTab].active = true;
 	}
 
 	onStatusGroupChange($event: MatButtonToggleChange) {

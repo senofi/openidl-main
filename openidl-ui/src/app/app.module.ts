@@ -18,9 +18,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ClipboardModule } from 'ngx-clipboard';
-import { DataTablesModule } from 'angular-datatables';
 
 import { AuthGaurdService } from '../../../openidl-common-ui/src/app/services/authgaurd.service';
 import { StorageService } from '../../../openidl-common-ui/src/app/services/storage.service';
@@ -50,14 +48,11 @@ import { ViewReportComponent } from './view-report/view-report.component';
 	],
 	imports: [
 		BrowserModule,
+		BrowserAnimationsModule,
 		FormsModule,
 		ReactiveFormsModule,
 		AppRoutingModule,
 		OpenidlCommonModule,
-		TabsModule.forRoot(),
-		ClipboardModule,
-		DataTablesModule,
-		BrowserAnimationsModule,
 		LayoutModule,
 		MatToolbarModule,
 		MatButtonModule,
