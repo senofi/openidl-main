@@ -1,2 +1,13 @@
-<app-header [selected]='selected' [fieldChanged] = 'hasFieldChanged'></app-header>
-<app-form (create)='redirect()' (fieldChangeEvent)='fieldChange()' [isClone] = 'isClone'></app-form>
+<app-header [selected]="selected" [fieldChanged]="hasFieldChanged"></app-header>
+<div class="container">
+	<h1 class="header-with-icon">
+		<mat-icon color="primary">add_box</mat-icon>
+		<span *ngIf="!isClone">Create Data Call</span>
+		<span *ngIf="isClone">Clone Data Call</span>
+	</h1>
+	<app-form
+		(create)="redirect()"
+		(fieldChangeEvent)="fieldChange()"
+		[isClone]="isClone"
+	></app-form>
+</div>

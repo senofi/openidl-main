@@ -7,6 +7,16 @@ import {
 	ViewChild
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+// import {
+// 	MomentDateAdapter,
+// 	MAT_MOMENT_DATE_ADAPTER_OPTIONS
+//   } from '@angular/material-moment-adapter';
+//   import {
+// 	DateAdapter,
+// 	MAT_DATE_FORMATS,
+// 	MAT_DATE_LOCALE
+//   } from '@angular/material/core';
+
 import { DataService } from './../../services/data.service';
 import { StorageService } from './../../services/storage.service';
 import { ModalComponent } from '../modal/modal.component';
@@ -16,7 +26,7 @@ import { MESSAGE } from './../../../assets/messageBundle';
 @Component({
 	selector: 'app-form',
 	templateUrl: './form.component.html',
-	styleUrls: ['./form.component.css']
+	styleUrls: ['./form.component.scss']
 })
 export class FormComponent implements OnInit {
 	// Reference to the child component
@@ -120,7 +130,7 @@ export class FormComponent implements OnInit {
 				lossdateRange: [this.lossdateRange, [Validators.required]],
 				deadline: [deadline, [Validators.required]],
 				purpose: [datacall.purpose, [Validators.required]],
-				togglecheck: [isShowParticipants],
+				listOfParticipants: [isShowParticipants],
 				business: [datacall.lineOfBusiness, [Validators.required]],
 				criteria: [datacall.detailedCriteria, [Validators.required]],
 				intent: [datacall.intentToPublish],
@@ -137,17 +147,19 @@ export class FormComponent implements OnInit {
 			const startdate = new Date(startdateString);
 			const enddate = new Date(enddateString);
 			console.log(startdate, enddate);
-			const dateRangeArr = [startdate, enddate];
+			// const dateRangeArr = [startdate, enddate];
 			const lossdateRangeArr = [startdate, enddate];
 			this.dateRange = [startdate, enddate];
 			this.registerForm = this.formBuilder.group({
 				name: ['', Validators.required],
 				description: ['', Validators.required],
-				dateRange: [dateRangeArr, [Validators.required]],
-				lossdateRange: [lossdateRangeArr, [Validators.required]],
+				premiumStartDate: [startdate, [Validators.required]],
+				premiumEndDate: [enddate, [Validators.required]],
+				lossStartDate: [startdate, [Validators.required]],
+				lossEndDate: [enddate, [Validators.required]],
 				deadline: ['', [Validators.required]],
 				purpose: ['', [Validators.required]],
-				togglecheck: [true],
+				listOfParticipants: [true],
 				business: ['', [Validators.required]],
 				criteria: ['', [Validators.required]],
 				intent: ['Yes'],
@@ -192,52 +204,10 @@ export class FormComponent implements OnInit {
 		);
 	}
 
-	// Following getters are validators for reactive form fields
-	get namefield() {
-		return this.registerForm.get('name');
-	}
-	get descriptionfield() {
-		return this.registerForm.get('description');
-	}
-	get fromdatefield() {
-		return this.registerForm.get('dateRange');
-	}
-	get todatefield() {
-		return this.registerForm.get('dateRange');
-	}
-	get lossfromdatefield() {
-		return this.registerForm.get('lossdateRange');
-	}
-	get losstodatefield() {
-		return this.registerForm.get('lossdateRange');
-	}
-	get purposefield() {
-		return this.registerForm.get('purpose');
-	}
-	get togglecheckfield() {
-		return this.registerForm.get('togglecheck');
-	}
-	get businessfield() {
-		return this.registerForm.get('business');
-	}
-	get criteriafield() {
-		return this.registerForm.get('criteria');
-	}
-	get deadlinefield() {
-		return this.registerForm.get('deadline');
-	}
-	get intentfield() {
-		return this.registerForm.get('intent');
-	}
-	get eligibilityfield() {
-		return this.registerForm.get('eligibility');
-	}
-	get jurisdictionfield() {
-		return this.registerForm.get('jurisdiction');
-	}
-
 	// Set data call to be issued
 	issueDatacall(value) {
+		console.log('issueDatacall', value);
+		return;
 		if (!this.registerForm.valid) {
 			this.isError = true;
 			this.type = MESSAGE.MANDATORY_FIELDS_ERROR.type;
@@ -253,6 +223,9 @@ export class FormComponent implements OnInit {
 
 	// Set data call to be saved as a draft
 	saveDatacall(value) {
+		console.log('saveDatacall', value);
+		return;
+
 		if (!this.registerForm.valid) {
 			this.isError = true;
 			this.type = MESSAGE.MANDATORY_FIELDS_ERROR.type;
@@ -379,4 +352,11 @@ export class FormComponent implements OnInit {
 	fieldChange() {
 		this.fieldChangeEvent.emit();
 	}
+
+	disableOldDates = (d: Date | null): boolean => {
+		const selected = d || new Date();
+		const now = new Date();
+		// display today and future dates
+		return selected.setHours(0, 0, 0, 0) >= now.setHours(0, 0, 0, 0);
+	};
 }

@@ -19,6 +19,11 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { LoginComponent } from './components/login/login.component';
 import { LoginModule } from './components/login/login.module';
@@ -42,7 +47,10 @@ import { SearchComponent } from './components/search/search.component';
 import { NotifyComponent } from './components/notify/notify.component';
 import { SearchPipe } from './pipes/search.pipe';
 import { UpdateFormComponent } from './components/update-form/update-form.component';
-import { ModalComponent } from './components/modal/modal.component';
+import {
+	DialogSessionComponent,
+	ModalComponent
+} from './components/modal/modal.component';
 import { DatacallsIssuedComponent } from './components/datacalls-issued/datacalls-issued.component';
 import { DatacallHistoryComponent } from './components/datacall-history/datacall-history.component';
 import { BlocksHistoryComponent } from './components/blocks-history/blocks-history.component';
@@ -50,6 +58,7 @@ import { ReportTableComponent } from './components/report-table/report-table.com
 import { UpdateReportComponent } from './components/update-report/update-report.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { DownloadToCsvComponent } from './components/download-to-csv/download-to-csv.component';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
 	declarations: [
@@ -70,7 +79,8 @@ import { DownloadToCsvComponent } from './components/download-to-csv/download-to
 		DatacallHistoryComponent,
 		BlocksHistoryComponent,
 		UpdateReportComponent,
-		ReportTableComponent
+		ReportTableComponent,
+		DialogSessionComponent
 	],
 	imports: [
 		BrowserModule,
@@ -99,7 +109,13 @@ import { DownloadToCsvComponent } from './components/download-to-csv/download-to
 		MatSortModule,
 		MatProgressSpinnerModule,
 		MatSnackBarModule,
-		MatExpansionModule
+		MatExpansionModule,
+		MatDialogModule,
+		MatGridListModule,
+		MatSelectModule,
+		MatDatepickerModule,
+		MatNativeDateModule,
+		MatSlideToggleModule
 	],
 	exports: [
 		OpenidlCommonComponent,
@@ -119,9 +135,10 @@ import { DownloadToCsvComponent } from './components/download-to-csv/download-to
 		DatacallHistoryComponent,
 		BlocksHistoryComponent,
 		UpdateReportComponent,
-		ReportTableComponent
+		ReportTableComponent,
+		DialogSessionComponent
 	],
-	providers: [CookieService, BsModalService],
+	providers: [CookieService, BsModalService, MatDatepickerModule],
 	bootstrap: [OpenidlCommonComponent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

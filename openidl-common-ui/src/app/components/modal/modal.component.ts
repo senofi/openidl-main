@@ -6,8 +6,15 @@ import {
 	Output,
 	EventEmitter,
 	ViewChild,
-	ElementRef
+	ElementRef,
+	Inject
 } from '@angular/core';
+import {
+	MatDialog,
+	MatDialogRef,
+	MAT_DIALOG_DATA
+} from '@angular/material/dialog';
+
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { AuthService } from '../../services/auth.service';
@@ -16,7 +23,7 @@ import { MESSAGE } from './../../../../src/assets/messageBundle';
 @Component({
 	selector: 'app-modal',
 	templateUrl: './modal.component.html',
-	styleUrls: ['./modal.component.css']
+	styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent implements OnInit {
 	@Input() title;
@@ -55,7 +62,8 @@ export class ModalComponent implements OnInit {
 
 	constructor(
 		private modalService: BsModalService,
-		private authService: AuthService
+		private authService: AuthService,
+		private dialog: MatDialog
 	) {}
 
 	ngOnInit() {}
@@ -78,12 +86,15 @@ export class ModalComponent implements OnInit {
 		this.type = type;
 		// TODO: If one modal is open then do not show another modal
 		if (isModalOpen !== 'true') {
-			this.modalRef = this.modalService.show(
-				this.template.nativeElement,
-				this.config
-			);
+			this.dialog.open(DialogSessionComponent, {
+				data: {
+					type,
+					title,
+					message,
+					isSessionExpired: this.isSessionExpired
+				}
+			});
 			sessionStorage.setItem('isModalOpen', 'true');
-		} else {
 		}
 	}
 
@@ -277,5 +288,34 @@ export class ModalComponent implements OnInit {
 		if (totalSelected == 0) this.isDownloadBtnDisabled = true;
 
 		return true;
+	}
+}
+
+@Component({
+	selector: 'app-dialog-session',
+	templateUrl: 'dialog-session.component.html'
+})
+export class DialogSessionComponent {
+	constructor(
+		public dialogRef: MatDialogRef<DialogSessionComponent>,
+		@Inject(MAT_DIALOG_DATA) public data: any,
+		private authService: AuthService
+	) {}
+
+	onNoClick(): void {
+		this.dialogRef.close();
+	}
+
+	redirectToLogin() {
+		this.dialogRef.close();
+		this.authService.logout('login').subscribe(
+			(resp) => {
+				console.log(resp);
+			},
+			(err) => {
+				console.log(err);
+			}
+		);
+		// this.redirectLogin.emit();
 	}
 }
