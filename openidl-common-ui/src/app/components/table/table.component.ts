@@ -153,6 +153,10 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 		}
 
 		// Check if currentPageIndex exists in storage else initialize it to 1
+		this.initTable();
+	}
+
+	private initTable() {
 		if (this.navigationFlag) {
 			this.navigationFlag = false;
 			this.currentIndex = 1;
@@ -209,7 +213,9 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 	// Filter the data calls present in the DOM according to the search input
 	searchFilter(searchinputvalue) {
 		this.navigationFlag = true;
-		this.ngOnInit();
+		this.initTable();
+		// Get the data as per the data call status
+		this.getDataCallsByStatus();
 	}
 
 	// This will be used if the search filter is server side
