@@ -300,10 +300,10 @@ export class DialogSessionComponent {
 		public dialogRef: MatDialogRef<DialogSessionComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: any,
 		private authService: AuthService
-	) {}
-
-	onNoClick(): void {
-		this.dialogRef.close();
+	) {
+		dialogRef.afterClosed().subscribe((result) => {
+			sessionStorage.removeItem('isModalOpen');
+		});
 	}
 
 	redirectToLogin() {
