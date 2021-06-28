@@ -40,6 +40,7 @@ load_images_full:
 
 load_images:
 	echo No longer need to load images, they all come from github container registry
+	docker load -i ./openidl-iac-local/images/openidl-ui.tar
 	
 docker_load_ui:
 	docker load -i ./openidl-iac-local/images/openidl-ui.tar
