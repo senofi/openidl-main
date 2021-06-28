@@ -135,6 +135,18 @@ export class DataTableDataSource extends DataSource<DataTableItem> {
 					);
 				case 'version':
 					return this.compare(+a.version, +b.version, isAsc);
+				case 'noOfConsents':
+					return this.compare(
+						+a.noOfConsents,
+						+b.noOfConsents,
+						isAsc
+					);
+				case 'reportStatus':
+					return this.compare(
+						+a.reportStatus,
+						+b.reportStatus,
+						isAsc
+					);
 				case 'noOfLikes':
 					return this.compare(+a.noOfLikes, +b.noOfLikes, isAsc);
 				case 'updatedTs':

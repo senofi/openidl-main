@@ -87,7 +87,6 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	private navigationFlag: boolean = false;
 
-	tableColumns: string[] = [];
 	//table columns
 	draftColumns = [
 		'name',
@@ -116,6 +115,8 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 		'version',
 		'updatedTs'
 	];
+	tableColumns: string[] = this.draftColumns;
+
 	dataSource: DataTableDataSource;
 
 	constructor(
@@ -152,11 +153,11 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 			}
 		}
 
-		// Check if currentPageIndex exists in storage else initialize it to 1
 		this.initTable();
 	}
 
 	private initTable() {
+		// Check if currentPageIndex exists in storage else initialize it to 1
 		if (this.navigationFlag) {
 			this.navigationFlag = false;
 			this.currentIndex = 1;
