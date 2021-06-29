@@ -7,6 +7,14 @@ NAME ?= openidl-k8s
 #image default tag
 IMAGE_TAG ?= latest
 
+
+UNAME := $(shell uname)
+ifeq ($(UNAME), Darwin)
+	DRIVER=hyperkit
+else
+	DRIVER=docker
+endif
+
 delete_minikube:
 	minikube delete
 
@@ -16,7 +24,7 @@ stop_minikube:
 start_minikube:
 	minikube config set cpus 4
 	minikube config set memory 8192
-	minikube start --driver=hyperkit
+	minikube start --driver=$(DRIVER)
 
 enable_ingress:
 	minikube addons enable ingress
