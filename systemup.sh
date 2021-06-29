@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 echo "Here we setup the system from start to finish."
 make delete_minikube
 make start_minikube

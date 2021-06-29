@@ -19,9 +19,18 @@ Here is a course on how to contribute to open source: https://egghead.io/courses
 
 To get started quickly, follow these steps. This assumes you don't need to update any code etc.
 
-## Create a VirtualBox VM
+## Initial setup
+There are several different ways to run things:
 
--   make sure it has 4 cpus
+Install VirtualBox
+
+- make sure it has 4 cpus
+
+Running on a local system
+
+Running on a remote system
+
+- See instructions below for setting up a proxy
 
 ## Make sure git is available
 
@@ -106,6 +115,30 @@ node is in (aais, analytics, carrier)
 
 Look to each project specific helm chart to see what configs are used.
 
+# Proxy Setup
+If running on a remote system you must set up a kubernetes proxy on the remote system and tunnel to it in order to access any web UI and to use `kubectl` commands from your local desktop.
+
+- Setup proxy
+ `kubectl proxy --address='0.0.0.0' --port=8080 --accept-hosts='^*$'`
+ will setup a proxy on port 8080 and allow connections from anywhere
+ 
+- Setup tunnel to remote system
+
+`ssh -L 8080:localhst:8080 USER@REMOTE-SYSTEM` will set up a tunnel to port 8080
+
+- Access the dashboard
+ `http://localhost:8080/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/#/overview?namespace=default` will give you access to the dashboard.  (Change port in proxy, tunnel and URL as necessary)
+ 
+- Access to other services
+ 
+ - kubectl:  If you use 8080 as the port in the proxy then kubectl commands will work from the local host with nothing else needed.  It you use a port other than 8080 than you will need to add the switch `-s localhost:PORT` for other ports
+
+ - Other UI services:  When you set up another service in minikube  you will get a line similar to `🎉  Opening service default/ui-service in default browser...
+👉  http://192.168.49.2:31903`
+You will need to setup another tunnel appropriately.
+In the example from above `ssh -L 31903:192.168.42.2:31903 USER@REMOTESYSTEM` will do this. Then you can get access through `http://localhost:31903`
+
+
 # Troubleshooting
 
 -   the system may show an error trying to access the ingress-controller. A restart will often fix this.
@@ -113,13 +146,11 @@ Look to each project specific helm chart to see what configs are used.
 -   docker can sometimes crash silently. If things are hanging or not working, make sure docker is running.
 -   the ingress addin may not install or hang. We have seen that the vpn was the cause. Anyconnect froom cisco causes issue. Disable VPN or move to another VPN.
 
-## NOTE: vpn and ingress add on
 
-I think you need to be off the vpn for the enable ingress to work. You may be able to reconnect to the vpn after the ingress add on is enabled.
 
 ## NOTE: AnyConnect vpn and minikube
 
-There are issues with running minikube while connected to a VPN with the Cisco AnyConnect client. It may work if you connect _after_ minikube is running. This problem does not seem to occur with other VPN clients such as OpenVPN.
+There are issues with running minikube while connected to a VPN with the Cisco AnyConnect client. Initially the `minikube addons enable ingress` from `make enable_ingress` in the Makefile called by `systemup.sh` will hang. It may work if you connect _after_ minikube is running. This problem does not seem to occur with other VPN clients such as OpenVPN.
 
 # Full Process
 
@@ -215,4 +246,8 @@ sudo apt-get install build-essential
 ```bash
 sudo apt update
 sudo apt install qemu-kvm libvirt-daemon-system
+<<<<<<< HEAD
+````
+=======
 ```
+>>>>>>> 7b3e0bc69033852b8d96e7ef789eefbe4a02bb82
