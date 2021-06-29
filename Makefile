@@ -64,6 +64,10 @@ install_in_k8s:
 uninstall_from_k8s:
 	helm uninstall local-aais
 
+reinstall_in_k8s:
+	helm uninstall local-aais
+	helm install local-aais ./openidl-k8s -f ./openidl-k8s/global-values.yaml
+
 dashboard:
 	echo better to open a separate terminal for this
 	minikube dashboard
