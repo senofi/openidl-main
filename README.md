@@ -116,6 +116,13 @@ node is in (aais, analytics, carrier)
 
 Look to each project specific helm chart to see what configs are used.
 
+# Local Development
+
+-   there are two ways to develop locally
+    -   use the minikube reference implementation
+        -   to release code you'll need to load the images into the minikube so the deployments get them from there. See documentation elsehwere in this section and in the specific project subfolders.
+    -   run npm / node from the project subdirectory
+
 # Proxy Setup
 
 If running on a remote system you must set up a kubernetes proxy on the remote system and tunnel to it in order to access any web UI and to use `kubectl` commands from your local desktop.
@@ -144,9 +151,11 @@ If running on a remote system you must set up a kubernetes proxy on the remote s
 -   the system may show an error trying to access the ingress-controller. A restart will often fix this.
     -   another way to fix this is to run the `make reinstall_in_k8s` command
     -   this may run too fast and get an error that the namespace is not deleted, just try again
+    -   this documentation may help regarding enabling the ingress controller https://kubernetes.github.io/ingress-nginx/deploy/#minikube
 -   the system up may hang. This can be fixed with a restart. Docker seems to be in a problem state.
 -   docker can sometimes crash silently. If things are hanging or not working, make sure docker is running.
 -   the ingress addin may not install or hang. We have seen that the vpn was the cause. Anyconnect froom cisco causes issue. Disable VPN or move to another VPN.
+-   if you find that you have a memory error in docker, you can change the size of the request in the makefile in the start_minikube section
 
 ## NOTE: AnyConnect vpn and minikube
 
