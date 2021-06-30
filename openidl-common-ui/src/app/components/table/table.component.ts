@@ -18,11 +18,8 @@ import { appConst } from '../../../../../openidl-ui/src/app/const/app.const';
 
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTable } from '@angular/material/table';
-import {
-	DataTableItem,
-	DataTableDataSource
-} from '../../services/data-table-datasource';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
+
 @Component({
 	selector: 'app-table',
 	templateUrl: './table.component.html',
@@ -117,7 +114,7 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 	];
 	tableColumns: string[] = this.draftColumns;
 
-	dataSource: DataTableDataSource;
+	dataSource = new MatTableDataSource<DataTableItem>();
 
 	constructor(
 		private dataService: DataService,
@@ -125,7 +122,7 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 		private authService: AuthService
 	) {
 		this.statusObj = appConst.status;
-		this.dataSource = new DataTableDataSource();
+		// this.dataSource = new DataTableDataSource();
 	}
 
 	ngOnInit() {
@@ -190,7 +187,7 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 		// must call api after setting up paginator and sorter
 		this.dataSource.sort = this.sort;
 		this.dataSource.paginator = this.paginator;
-		this.table.dataSource = this.dataSource;
+		// this.table.dataSource = this.dataSource;
 		// Get the data as per the data call status
 		this.getDataCallsByStatus();
 	}
@@ -200,15 +197,15 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 	// material table page change event
 	onPageChange(page: PageEvent) {
 		// fetch data from service based on pageIndex and pageSize
-		console.log('pull data for table', page);
-		this.isSpinner = true;
-		if (page.previousPageIndex > page.pageIndex) {
-			console.log('previous page data');
-			this.getPrevDataCalls(page);
-		} else {
-			console.log('next page data');
-			this.getNextDataCalls(page);
-		}
+		// console.log('pull data for table', page);
+		// this.isSpinner = true;
+		// if (page.previousPageIndex > page.pageIndex) {
+		// 	console.log('previous page data');
+		// 	this.getPrevDataCalls(page);
+		// } else {
+		// 	console.log('next page data');
+		// 	this.getNextDataCalls(page);
+		// }
 	}
 
 	// Filter the data calls present in the DOM according to the search input
@@ -375,10 +372,10 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 				} else {
 					this.isRecord = true;
 					this.ispagination = true;
-					const datacallsList = JSON.parse(response).dataCallsList;
+					const dataCallsList = JSON.parse(response).dataCallsList;
 
-					if (datacallsList && datacallsList.length > 0) {
-						datacallsList.forEach((element, i) => {
+					if (dataCallsList && dataCallsList.length > 0) {
+						dataCallsList.forEach((element, i) => {
 							if (element.reportsList[0].status === '') {
 								element.reportsList = [
 									{
@@ -459,6 +456,7 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 					}
 					this.isSpinner = false;
 					this.dataSource.data = this.data;
+					// this.dataSource.data = this.data;
 					this.table.renderRows();
 				}
 			},
@@ -543,4 +541,39 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 			}
 		);
 	}
+}
+
+export interface DataTableItem {
+	name: string;
+	deadline: string;
+	jurisdiction: string;
+	lineOfBusiness: string;
+	version: string;
+	draftVersions: string;
+	noOfLikes: number;
+	noOfConsents: number;
+	reportStatus: string;
+	reportUrl: string;
+	updatedTs: string;
+	detailedCriteria: string;
+	comments: string;
+	description: string;
+	eligibilityRequirement: string;
+	forumURL: string;
+	id: string;
+	intentToPublish: boolean;
+	isLatest: boolean;
+	isLocked: boolean;
+	isShowParticipants: boolean;
+	lossFromDate: Date;
+	lossToDate: Date;
+	premiumFromDate: Date;
+	premiumToDate: Date;
+	proposedDeliveryDate: string;
+	purpose: string;
+	status: string;
+	type: string;
+	extractionPatternID: string;
+	extractionPatternTs: Date;
+	updatedBy: string;
 }
