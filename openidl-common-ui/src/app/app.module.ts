@@ -48,6 +48,8 @@ import { NotifyComponent } from './components/notify/notify.component';
 import { SearchPipe } from './pipes/search.pipe';
 import { UpdateFormComponent } from './components/update-form/update-form.component';
 import {
+	DialogConfirmationComponent,
+	DialogDeleteDataComponent,
 	DialogSessionComponent,
 	ModalComponent
 } from './components/modal/modal.component';
@@ -80,7 +82,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 		BlocksHistoryComponent,
 		UpdateReportComponent,
 		ReportTableComponent,
-		DialogSessionComponent
+		DialogSessionComponent,
+		DialogDeleteDataComponent,
+		DialogConfirmationComponent
 	],
 	imports: [
 		BrowserModule,
@@ -136,7 +140,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 		BlocksHistoryComponent,
 		UpdateReportComponent,
 		ReportTableComponent,
-		DialogSessionComponent
+		DialogSessionComponent,
+		DialogDeleteDataComponent,
+		DialogConfirmationComponent
 	],
 	providers: [CookieService, BsModalService, MatDatepickerModule],
 	bootstrap: [OpenidlCommonComponent],

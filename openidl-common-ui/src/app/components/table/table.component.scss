@@ -5,6 +5,11 @@
 		width: 100%;
 	}
 
+	.mat-row:hover {
+		background-color: $table-hover;
+		cursor: pointer;
+	}
+
 	// .col-name {
 	// 	width: 15%;
 	// }

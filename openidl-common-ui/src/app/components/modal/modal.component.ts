@@ -1,3 +1,4 @@
+import { OnDestroy } from '@angular/core';
 import {
 	Component,
 	OnInit,
@@ -17,6 +18,7 @@ import {
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { MESSAGE } from './../../../../src/assets/messageBundle';
 
@@ -295,15 +297,25 @@ export class ModalComponent implements OnInit {
 	selector: 'app-dialog-session',
 	templateUrl: 'dialog-session.component.html'
 })
-export class DialogSessionComponent {
+export class DialogSessionComponent implements OnDestroy {
+	private dialogSubscription: Subscription;
+
 	constructor(
 		public dialogRef: MatDialogRef<DialogSessionComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: any,
 		private authService: AuthService
 	) {
-		dialogRef.afterClosed().subscribe((result) => {
-			sessionStorage.removeItem('isModalOpen');
-		});
+		this.dialogSubscription = dialogRef
+			.afterClosed()
+			.subscribe((result) => {
+				sessionStorage.removeItem('isModalOpen');
+			});
+	}
+
+	ngOnDestroy() {
+		if (this.dialogSubscription) {
+			this.dialogSubscription.unsubscribe();
+		}
 	}
 
 	redirectToLogin() {
@@ -318,4 +330,51 @@ export class DialogSessionComponent {
 		);
 		// this.redirectLogin.emit();
 	}
+}
+@Component({
+	selector: 'app-dialog-delete-data',
+	templateUrl: 'dialog-delete-data.component.html'
+})
+export class DialogDeleteDataComponent implements OnDestroy {
+	private dialogSubscription: Subscription;
+	constructor(
+		public dialogRef: MatDialogRef<DialogDeleteDataComponent>,
+		@Inject(MAT_DIALOG_DATA) public data: any
+	) {
+		this.dialogSubscription = dialogRef.afterClosed().subscribe(() => {
+			sessionStorage.removeItem('isModalOpen');
+		});
+	}
+
+	ngOnDestroy() {
+		if (this.dialogSubscription) {
+			this.dialogSubscription.unsubscribe();
+		}
+	}
+
+	onClickYes() {}
+}
+
+@Component({
+	selector: 'app-dialog-confirmation',
+	templateUrl: 'dialog-confirmation.component.html'
+})
+export class DialogConfirmationComponent implements OnDestroy {
+	private dialogSubscription: Subscription;
+	constructor(
+		public dialogRef: MatDialogRef<DialogConfirmationComponent>,
+		@Inject(MAT_DIALOG_DATA) public data: any
+	) {
+		this.dialogSubscription = dialogRef.afterClosed().subscribe(() => {
+			sessionStorage.removeItem('isModalOpen');
+		});
+	}
+
+	ngOnDestroy() {
+		if (this.dialogSubscription) {
+			this.dialogSubscription.unsubscribe();
+		}
+	}
+
+	onClickYes() {}
 }

@@ -22,7 +22,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { ClipboardModule } from 'ngx-clipboard';
 
 import { AuthGaurdService } from '../../../openidl-common-ui/src/app/services/authgaurd.service';
 import { StorageService } from '../../../openidl-common-ui/src/app/services/storage.service';

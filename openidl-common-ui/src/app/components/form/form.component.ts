@@ -4,9 +4,10 @@ import {
 	Input,
 	Output,
 	EventEmitter,
-	ViewChild
+	OnDestroy
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 // import {
 // 	MomentDateAdapter,
 // 	MAT_MOMENT_DATE_ADAPTER_OPTIONS
@@ -19,29 +20,29 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { DataService } from './../../services/data.service';
 import { StorageService } from './../../services/storage.service';
-import { ModalComponent } from '../modal/modal.component';
-import { AuthService } from './../../services/auth.service';
 import { MESSAGE } from './../../../assets/messageBundle';
+import { DialogService } from '../../services/dialog.service';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
 	selector: 'app-form',
 	templateUrl: './form.component.html',
 	styleUrls: ['./form.component.scss']
 })
-export class FormComponent implements OnInit {
-	// Reference to the child component
-	@ViewChild(ModalComponent) appModal: ModalComponent;
+export class FormComponent implements OnInit, OnDestroy {
 	// Event emitted to the parent component
 	@Output() create = new EventEmitter();
 	@Output() fieldChangeEvent = new EventEmitter();
 	// Property passed to the component
 	@Input() isClone;
 
+	statusSubscription: Subscription;
+
 	// Models to store the data
 	public dateRange: Date[];
 	public lossdateRange: Date[];
 	public deadline: any;
-	public datacallObject = {};
+	public dataCallObject = {};
 	LOBs = [];
 
 	// Models for reactive form
@@ -69,16 +70,14 @@ export class FormComponent implements OnInit {
 
 	// Flags to conditionally handle expressions
 	isSpinner: Boolean = false;
-	isError: Boolean = false;
 	isSuccess: Boolean = false;
-	isopen: Boolean = false;
 	isSmallSpinner: boolean = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
 		private dataService: DataService,
 		private storageService: StorageService,
-		private authService: AuthService
+		private dialogService: DialogService
 	) {}
 
 	ngOnInit() {
@@ -91,79 +90,65 @@ export class FormComponent implements OnInit {
 		}
 		// Fetch the data and show in case of cloned data call
 		if (this.isClone) {
-			const datacall = this.storageService.getItem('datacalldraft');
-			const fromDate = new Date(datacall.premiumFromDate);
-			const todate = new Date(datacall.premiumToDate);
-			const lossFromDate = new Date(datacall.lossFromDate);
-			const lossToDate = new Date(datacall.lossToDate);
-			const dateRangeArr = [fromDate, todate];
-			const lossdateRangeArray = [lossFromDate, lossToDate];
-			const deadline = new Date(datacall.deadline);
-			this.deadline = deadline;
-			this.dateRange = dateRangeArr;
-			this.lossdateRange = lossdateRangeArray;
-			if (datacall.dateRange) {
-				this.dateRange = datacall.dateRange;
-			}
-			if (datacall.lossdateRange) {
-				this.lossdateRange = datacall.lossdateRange;
-			}
-
+			const dataCall = this.storageService.getItem('datacalldraft');
 			// If user jurisdiction does not match with the data call jurisdiction then assign user jurisdiction to datacall's jurisdiction
 			const userJurisdiction =
 				this.storageService.getItem('jurisdiction');
+
 			if (
 				userJurisdiction &&
 				userJurisdiction.toLowerCase() !=
-					datacall.jurisdiction.toLowerCase()
+					dataCall.jurisdiction.toLowerCase()
 			) {
-				datacall.jurisdiction = userJurisdiction;
+				dataCall.jurisdiction = userJurisdiction;
 			}
 
-			// console.log('dateRangeArr ::::: ', dateRangeArr);
-			const isShowParticipants =
-				datacall.isShowParticipants === 'true' ? true : false;
 			this.registerForm = this.formBuilder.group({
-				name: [datacall.name, Validators.required],
-				description: [datacall.description, Validators.required],
-				dateRange: [this.dateRange, [Validators.required]],
-				lossdateRange: [this.lossdateRange, [Validators.required]],
-				deadline: [deadline, [Validators.required]],
-				purpose: [datacall.purpose, [Validators.required]],
-				listOfParticipants: [isShowParticipants],
-				business: [datacall.lineOfBusiness, [Validators.required]],
-				criteria: [datacall.detailedCriteria, [Validators.required]],
-				intent: [datacall.intentToPublish],
-				eligibility: [
-					datacall.eligibilityRequirement,
+				name: [dataCall.name, Validators.required],
+				description: [dataCall.description, Validators.required],
+				premiumFromDate: [
+					dataCall.premiumFromDate,
 					[Validators.required]
 				],
-				jurisdiction: [datacall.jurisdiction]
+				premiumToDate: [dataCall.premiumToDate, [Validators.required]],
+				lossFromDate: [dataCall.lossFromDate, [Validators.required]],
+				lossToDate: [dataCall.lossToDate, [Validators.required]],
+				deadline: [dataCall.deadline, [Validators.required]],
+				purpose: [dataCall.purpose, [Validators.required]],
+				isShowParticipants: [dataCall.isShowParticipants],
+				lineOfBusiness: [
+					dataCall.lineOfBusiness,
+					[Validators.required]
+				],
+				criteria: [dataCall.detailedCriteria, [Validators.required]],
+				intentToPublish: [dataCall.intentToPublish],
+				eligibilityRequirement: [
+					dataCall.eligibilityRequirement,
+					[Validators.required]
+				],
+				jurisdiction: [dataCall.jurisdiction]
 			});
 			console.log('form :::::: ', this.registerForm);
 		} else {
-			const startdateString = '01/01/' + new Date().getFullYear();
-			const enddateString = '12/31/' + new Date().getFullYear();
-			const startdate = new Date(startdateString);
-			const enddate = new Date(enddateString);
-			console.log(startdate, enddate);
-			// const dateRangeArr = [startdate, enddate];
-			const lossdateRangeArr = [startdate, enddate];
-			this.dateRange = [startdate, enddate];
+			const currentYear = new Date().getFullYear();
+			const startDate = new Date(`01/01/${currentYear}`);
+			const endDate = new Date(`12/31/${currentYear}`);
+
+			this.dateRange = [startDate, endDate];
 			this.registerForm = this.formBuilder.group({
 				name: ['', Validators.required],
 				description: ['', Validators.required],
-				premiumStartDate: [startdate, [Validators.required]],
-				premiumEndDate: [enddate, [Validators.required]],
-				lossStartDate: [startdate, [Validators.required]],
-				lossEndDate: [enddate, [Validators.required]],
+				premiumFromDate: [startDate, [Validators.required]],
+				premiumToDate: [endDate, [Validators.required]],
+				lossFromDate: [startDate, [Validators.required]],
+				lossToDate: [endDate, [Validators.required]],
 				deadline: ['', [Validators.required]],
 				purpose: ['', [Validators.required]],
-				listOfParticipants: [true],
-				business: ['', [Validators.required]],
+				isShowParticipants: [true],
+				lineOfBusiness: ['', [Validators.required]],
 				criteria: ['', [Validators.required]],
-				intent: ['Yes'],
-				eligibility: ['', [Validators.required]],
+				intentToPublish: [true],
+				eligibilityRequirement: ['', [Validators.required]],
 				jurisdiction: [this.jurisdiction]
 			});
 		}
@@ -171,10 +156,19 @@ export class FormComponent implements OnInit {
 		const storedLOBs = JSON.parse(sessionStorage.getItem('LOBs'));
 		// Check for cached LOBs or get from REST API
 		if (storedLOBs) {
-			console.log('storedLOBs ', storedLOBs);
 			this.LOBs = storedLOBs;
 		} else {
 			this.getLOBs();
+		}
+
+		this.statusSubscription = this.registerForm.statusChanges.subscribe(
+			() => this.fieldChangeEvent.emit()
+		);
+	}
+
+	ngOnDestroy() {
+		if (this.statusSubscription) {
+			this.statusSubscription.unsubscribe();
 		}
 	}
 
@@ -182,12 +176,12 @@ export class FormComponent implements OnInit {
 	getLOBs() {
 		const uri = '/lob';
 		this.isSmallSpinner = true;
+		this.setFormControlDisabled('lineOfBusiness', true);
 		this.dataService.getData(uri).subscribe(
 			(response) => {
 				this.isSmallSpinner = false;
-				console.log('small spinner ', this.isSmallSpinner);
+				this.setFormControlDisabled('lineOfBusiness', false);
 				let lob = JSON.parse(response);
-				console.log(lob);
 				this.LOBs = lob.lob;
 				// Cache LOBs once received
 				sessionStorage.setItem('LOBs', JSON.stringify(this.LOBs));
@@ -196,20 +190,29 @@ export class FormComponent implements OnInit {
 				console.log(error);
 				this.isSpinner = false;
 				this.isSmallSpinner = false;
-				this.isError = true;
+				this.setFormControlDisabled('lineOfBusiness', false);
 				const messageBundle = MESSAGE.COMMON_ERROR;
-				const locale = 'en-US';
-				this.appModal.handleNotification(error, messageBundle, locale);
+				this.dialogService.handleNotification(error, messageBundle);
 			}
 		);
 	}
 
+	setFormControlDisabled(controlName: string, isDisabled: boolean) {
+		if (controlName) {
+			if (isDisabled) {
+				this.registerForm.controls[controlName].disable();
+			} else {
+				this.registerForm.controls[controlName].enable();
+			}
+		}
+	}
+
 	// Set data call to be issued
-	issueDatacall(value) {
-		console.log('issueDatacall', value);
-		return;
+	issueDataCall(value) {
+		console.log('issueDataCall', value);
+
 		if (!this.registerForm.valid) {
-			this.isError = true;
+			// this.isError = true;
 			this.type = MESSAGE.MANDATORY_FIELDS_ERROR.type;
 			this.message = MESSAGE.MANDATORY_FIELDS_ERROR.message;
 			this.title = MESSAGE.MANDATORY_FIELDS_ERROR.title;
@@ -217,17 +220,16 @@ export class FormComponent implements OnInit {
 			this.title = MESSAGE.DATACALL_ISSUE_SUCCESS.title;
 			this.message = MESSAGE.DATACALL_ISSUE_SUCCESS.message;
 			this.type = MESSAGE.DATACALL_ISSUE_SUCCESS.type;
-			this.createDatacall(value, 'ISSUED');
+			this.createDataCall(value, 'ISSUED');
 		}
 	}
 
 	// Set data call to be saved as a draft
-	saveDatacall(value) {
-		console.log('saveDatacall', value);
-		return;
+	saveDataCall(value) {
+		console.log('saveDataCall', value);
 
 		if (!this.registerForm.valid) {
-			this.isError = true;
+			// this.isError = true;
 			this.type = MESSAGE.MANDATORY_FIELDS_ERROR.type;
 			this.message = MESSAGE.MANDATORY_FIELDS_ERROR.message;
 			this.title = MESSAGE.MANDATORY_FIELDS_ERROR.title;
@@ -235,51 +237,36 @@ export class FormComponent implements OnInit {
 			this.title = MESSAGE.DATACALL_DRAFT_SUCCESS.title;
 			this.message = MESSAGE.DATACALL_DRAFT_SUCCESS.message;
 			this.type = MESSAGE.DATACALL_DRAFT_SUCCESS.type;
-			this.createDatacall(value, 'DRAFT');
+			this.createDataCall(value, 'DRAFT');
 		}
 	}
 
-	// Close the error notification
-	closeNotify() {
-		this.isError = false;
-	}
-
-	// Create the data call eithr in draft state or issued state
-	createDatacall(value, status) {
-		console.log('value intent ', value.intent);
-
+	// Create the data call either in draft state or issued state
+	createDataCall(value, status) {
 		// Create the data call object to be posted to the create data call api
-		this.datacallObject = {
+		this.dataCallObject = {
 			name: value.name.trim(),
-			intentToPublish: value.intent,
+			intentToPublish: value.intentToPublish,
 			description: value.description.trim(),
 			purpose: value.purpose.trim(),
-			lineOfBusiness: value.business.trim(),
-			premiumFromDate: value.dateRange[0],
-			premiumToDate: value.dateRange[1],
-			lossFromDate: value.lossdateRange[0],
-			lossToDate: value.lossdateRange[1],
+			lineOfBusiness: value.lineOfBusiness.trim(),
+			premiumFromDate: value.premiumFromDate,
+			premiumToDate: value.premiumToDate,
+			lossFromDate: value.lossFromDate,
+			lossToDate: value.lossToDate,
 			jurisdiction: value.jurisdiction.trim(),
 			detailedCriteria: value.criteria.trim(),
-			eligibilityRequirement: value.eligibility.trim(),
+			eligibilityRequirement: value.eligibilityRequirement.trim(),
 			status: status,
-			isShowParticipants: value.togglecheck,
+			isShowParticipants: value.isShowParticipants,
 			deadline: value.deadline
 		};
 
-		// Set the intent to publish boolean value as per its selected value
-		if (value.intent == 'Yes') {
-			value.intent = true;
-			this.datacallObject['intentToPublish'] = true;
-		} else {
-			value.intent = false;
-			this.datacallObject['intentToPublish'] = false;
-		}
+		console.log('Trimmed data', this.dataCallObject);
 
 		const uri = '/data-call';
 		this.isSpinner = true;
-		console.log('Trimmed data', this.datacallObject);
-		this.dataService.postData(uri, this.datacallObject).subscribe(
+		this.dataService.postData(uri, this.dataCallObject).subscribe(
 			(response) => {
 				this.isSpinner = false;
 				this.isSuccess = true;
@@ -292,65 +279,15 @@ export class FormComponent implements OnInit {
 			(error) => {
 				console.log(error);
 				this.isSpinner = false;
-				this.isError = true;
 				const messageBundle = MESSAGE.COMMON_ERROR;
-				const locale = 'en-US';
-				this.appModal.handleNotification(error, messageBundle, locale);
+				this.dialogService.handleNotification(error, messageBundle);
 			}
 		);
 	}
 
 	// Show the modal according to success, error or info using the child modal component's open modal method
 	showModal() {
-		this.appModal.openModal(this.title, this.message, this.type);
-	}
-	// Show the session expired modal along with the option to login using child modal component's method
-	showSessionModal() {
-		this.appModal.openSessionModal(
-			this.title,
-			this.message,
-			this.type,
-			true
-		);
-	}
-
-	// Reset required flags on closing the modal
-	modalClose() {
-		this.isSuccess = false;
-		this.isError = false;
-		this.isopen = false;
-	}
-
-	// Redirects to login using authService's logout method
-	redirectLogin() {
-		this.isSuccess = false;
-		this.isError = false;
-		this.isopen = false;
-		this.authService.logout('login').subscribe(
-			(resp) => {
-				console.log(resp);
-			},
-			(err) => {
-				console.log(err);
-			}
-		);
-	}
-
-	// Conditionally set the deadline min and max range
-	deadlineSet(type) {
-		if (type === 'enddate') {
-			this.minDeadline = this.dateRange[1];
-		} else if (type === 'deadline') {
-			this.maxEnddate = this.deadline;
-			this.maxStartdate = this.deadline;
-		}
-		if (type === 'startdate') {
-			this.minDeadline = this.dateRange[0];
-		}
-	}
-
-	fieldChange() {
-		this.fieldChangeEvent.emit();
+		this.dialogService.openModal(this.title, this.message, this.type);
 	}
 
 	disableOldDates = (d: Date | null): boolean => {

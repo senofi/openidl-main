@@ -137,7 +137,11 @@
 		</ng-container>
 
 		<tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
-		<tr mat-row *matRowDef="let row; columns: tableColumns"></tr>
+		<tr
+			mat-row
+			*matRowDef="let row; columns: tableColumns"
+			(click)="viewDraft(row)"
+		></tr>
 		<tr class="mat-row" *matNoDataRow>
 			<td class="mat-cell" colspan="9999">
 				No {{ statusText }} data calls are available

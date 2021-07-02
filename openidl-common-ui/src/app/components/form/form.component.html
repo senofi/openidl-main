@@ -19,7 +19,8 @@
 							<mat-label>Line of Business</mat-label>
 							<mat-select
 								placeholder="Select Line of Business"
-								formControlName="business"
+								formControlName="lineOfBusiness"
+								[class.spinner]="isSmallSpinner"
 							>
 								<mat-option
 									[value]="lob.value"
@@ -64,12 +65,12 @@
 							>
 								<input
 									matStartDate
-									formControlName="premiumStartDate"
+									formControlName="premiumFromDate"
 									placeholder="Start date"
 								/>
 								<input
 									matEndDate
-									formControlName="premiumEndDate"
+									formControlName="premiumToDate"
 									placeholder="End date"
 								/>
 							</mat-date-range-input>
@@ -83,7 +84,7 @@
 
 							<mat-error
 								*ngIf="
-									registerForm.controls.premiumStartDate.hasError(
+									registerForm.controls.premiumFromDate.hasError(
 										'matStartDateInvalid'
 									)
 								"
@@ -91,7 +92,7 @@
 							>
 							<mat-error
 								*ngIf="
-									registerForm.controls.premiumEndDate.hasError(
+									registerForm.controls.premiumToDate.hasError(
 										'matEndDateInvalid'
 									)
 								"
@@ -107,12 +108,12 @@
 							>
 								<input
 									matStartDate
-									formControlName="lossStartDate"
+									formControlName="lossFromDate"
 									placeholder="Start date"
 								/>
 								<input
 									matEndDate
-									formControlName="lossEndDate"
+									formControlName="lossToDate"
 									placeholder="End date"
 								/>
 							</mat-date-range-input>
@@ -126,7 +127,7 @@
 
 							<mat-error
 								*ngIf="
-									registerForm.controls.lossStartDate.hasError(
+									registerForm.controls.lossFromDate.hasError(
 										'matStartDateInvalid'
 									)
 								"
@@ -134,7 +135,7 @@
 							>
 							<mat-error
 								*ngIf="
-									registerForm.controls.lossEndDate.hasError(
+									registerForm.controls.lossToDate.hasError(
 										'matEndDateInvalid'
 									)
 								"
@@ -145,19 +146,27 @@
 				</div>
 
 				<div class="row">
-					<div class="col">
-						<mat-form-field appearance="outline" class="full-width">
+					<div class="col toggle">
+						<!-- <mat-form-field appearance="outline" class="full-width">
 							<mat-label>Expected Public Circulation?</mat-label>
 							<mat-select
 								placeholder="Select Expected Public Circulation?"
-								formControlName="intent"
+								formControlName="intentToPublish"
 							>
-								<mat-option value="Yes" selected
+								<mat-option value="true" selected
 									>Yes</mat-option
 								>
-								<mat-option value="No">No</mat-option>
+								<mat-option value="false">No</mat-option>
 							</mat-select>
-						</mat-form-field>
+						</mat-form-field> -->
+						<mat-slide-toggle
+							formControlName="intentToPublish"
+							color="primary"
+							[checked]="true"
+							labelPosition="before"
+						>
+							Expected Public Circulation?
+						</mat-slide-toggle>
 					</div>
 					<div class="col">
 						<mat-form-field appearance="outline" class="full-width">
@@ -213,7 +222,7 @@
 								rows="7"
 								matInput
 								placeholder="Enter Eligibility Requirement"
-								formControlName="eligibility"
+								formControlName="eligibilityRequirement"
 							></textarea>
 						</mat-form-field>
 					</div>
@@ -222,12 +231,13 @@
 				<div class="row">
 					<div class="col">
 						<mat-slide-toggle
-							class="example-margin"
-							formControlName="listOfParticipants"
+							class="full-width"
+							formControlName="isShowParticipants"
 							color="primary"
 							[checked]="true"
+							labelPosition="before"
 						>
-							Add list of participants to summary report
+							Add list of participants to summary report?
 						</mat-slide-toggle>
 					</div>
 				</div>
@@ -237,14 +247,14 @@
 					<button
 						mat-stroked-button
 						color="primary"
-						(click)="saveDatacall(registerForm.value)"
+						(click)="saveDataCall(registerForm.value)"
 					>
 						Save as Draft
 					</button>
 					<button
 						mat-flat-button
 						color="primary"
-						(click)="issueDatacall(registerForm.value)"
+						(click)="issueDataCall(registerForm.value)"
 					>
 						Issue
 					</button>

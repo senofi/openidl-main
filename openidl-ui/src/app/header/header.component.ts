@@ -1,18 +1,13 @@
-import {
-	Component,
-	OnInit,
-	Input,
-	ViewChild,
-	Output,
-	EventEmitter
-} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
+import { environment } from './../../environments/environment';
+
 import { appConst } from '../const/app.const';
+
 import { StorageService } from '../../../../openidl-common-ui/src/app/services/storage.service';
 import { AuthService } from '../../../../openidl-common-ui/src/app/services/auth.service';
-import { environment } from './../../environments/environment';
 import { DataService } from './../../../../openidl-common-ui/src/app/services/data.service';
-import { Router } from '@angular/router';
-import { ModalComponent } from '../../../../openidl-common-ui/src/app/components/modal/modal.component';
+import { DialogService } from '../../../../openidl-common-ui/src/app/services/dialog.service';
 @Component({
 	selector: 'app-header',
 	templateUrl: './header.component.html',
@@ -22,7 +17,6 @@ export class HeaderComponent implements OnInit {
 	@Input() selected;
 	@Input() fieldChanged;
 	@Output() navigate = new EventEmitter();
-	@ViewChild(ModalComponent) appModal: ModalComponent;
 	appConst;
 	role;
 	orgLogo;
@@ -42,7 +36,8 @@ export class HeaderComponent implements OnInit {
 		private storageService: StorageService,
 		private authService: AuthService,
 		private dataService: DataService,
-		private router: Router
+		private router: Router,
+		private dialogService: DialogService
 	) {}
 
 	ngOnInit() {
@@ -126,7 +121,11 @@ export class HeaderComponent implements OnInit {
 
 	// Show the modal of success, error or info type
 	showModal() {
-		this.appModal.openDeleteDataModal(this.title, this.message, this.type);
+		this.dialogService.openDeleteDataModal(
+			this.title,
+			this.message,
+			this.type
+		);
 	}
 
 	showConfirmationModal() {
@@ -134,7 +133,7 @@ export class HeaderComponent implements OnInit {
 		this.message =
 			'Are you sure you want to leave this page without submitting? Your information will be lost.';
 		this.type = 'info';
-		this.appModal.openConfirmationModal(
+		this.dialogService.openConfirmationModal(
 			this.title,
 			this.message,
 			this.type

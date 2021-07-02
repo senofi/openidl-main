@@ -1,10 +1,13 @@
+@import '../../../variables';
+
 .form {
 	padding-bottom: 3rem;
 
 	.data-form {
 		width: 80%;
 		margin: 0 auto;
-		padding-top: 3rem;
+		padding: 2rem 0;
+
 		.full-width {
 			width: 100%;
 		}
@@ -16,6 +19,10 @@
 		.col {
 			flex: 1;
 			margin-right: 10rem;
+
+			&.toggle {
+				padding-top: 1.2rem;
+			}
 		}
 
 		.col:last-child {
