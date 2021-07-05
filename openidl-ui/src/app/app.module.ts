@@ -37,6 +37,7 @@ import { AppRoutingModule } from './router/app.routes';
 import { ViewDatacallDraftComponent } from './view-datacall-draft/view-datacall-draft.component';
 import { ViewDatacallIssuedComponent } from './view-datacall-issued/view-datacall-issued.component';
 import { ViewReportComponent } from './view-report/view-report.component';
+import { MaterialModule } from '../../../openidl-common-ui/src/app/material.module';
 
 @NgModule({
 	declarations: [

@@ -11,6 +11,7 @@ import { StorageService } from './../../services/storage.service';
 import { ModalComponent } from '../modal/modal.component';
 import { AuthService } from './../../services/auth.service';
 import { MESSAGE } from './../../../assets/messageBundle';
+import { DialogService } from '../../services/dialog.service';
 
 @Component({
 	selector: 'app-update-form',
@@ -26,9 +27,6 @@ export class UpdateFormComponent implements OnInit {
 	@Output() abandonDatacallEvent = new EventEmitter();
 	@Output() fieldChangeEvent = new EventEmitter();
 	@Output() noFieldChangeEvent = new EventEmitter();
-
-	// Reference to access the child component
-	@ViewChild(ModalComponent) appModal: ModalComponent;
 
 	// Models to capture data
 	public dateRange = [];
@@ -99,7 +97,7 @@ export class UpdateFormComponent implements OnInit {
 	isCarr: Boolean = false;
 	isViewAbandoned: Boolean = false;
 	isLike: Boolean = true;
-	isData: Boolean = false;
+	isData: boolean = false;
 	isIdenticalDraft: Boolean = false;
 	isDraft: Boolean = false;
 	isRecorded: Boolean = false;
@@ -109,7 +107,8 @@ export class UpdateFormComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private dataService: DataService,
 		private storageService: StorageService,
-		private authService: AuthService
+		private authService: AuthService,
+		private dialogService: DialogService
 	) {}
 
 	ngOnInit() {
@@ -332,8 +331,7 @@ export class UpdateFormComponent implements OnInit {
 				this.isSpinner = false;
 				this.isError = true;
 				const messageBundle = MESSAGE.COMMON_ERROR;
-				const locale = 'en-US';
-				this.appModal.handleNotification(error, messageBundle, locale);
+				this.dialogService.handleNotification(error, messageBundle);
 			}
 		);
 	}
@@ -363,8 +361,7 @@ export class UpdateFormComponent implements OnInit {
 				this.isError = true;
 				this.isFailed = true;
 				const messageBundle = MESSAGE.DATACALL_VERSION_FETCH_ERROR;
-				const locale = 'en-US';
-				this.appModal.handleNotification(error, messageBundle, locale);
+				this.dialogService.handleNotification(error, messageBundle);
 			}
 		);
 		this.getLOBs();
@@ -531,8 +528,7 @@ export class UpdateFormComponent implements OnInit {
 				this.isError = true;
 				this.isSmallSpinner = false;
 				const messageBundle = MESSAGE.COMMON_ERROR;
-				const locale = 'en-US';
-				this.appModal.handleNotification(error, messageBundle, locale);
+				this.dialogService.handleNotification(error, messageBundle);
 			}
 		);
 	}
@@ -719,7 +715,7 @@ export class UpdateFormComponent implements OnInit {
 		this.title = MESSAGE.FORUMURL_UPDATE_INFO.title;
 		const data = this.forumurl;
 		const isData = true;
-		this.appModal.openForumModal(
+		this.dialogService.openForumModal(
 			this.title,
 			this.message,
 			this.type,
@@ -812,12 +808,7 @@ export class UpdateFormComponent implements OnInit {
 					this.isSpinner = false;
 					this.isError = true;
 					const messageBundle = MESSAGE.COMMON_ERROR;
-					const locale = 'en-US';
-					this.appModal.handleNotification(
-						error,
-						messageBundle,
-						locale
-					);
+					this.dialogService.handleNotification(error, messageBundle);
 				}
 			);
 		}
@@ -921,12 +912,7 @@ export class UpdateFormComponent implements OnInit {
 					this.isSpinner = false;
 					this.isError = true;
 					const messageBundle = MESSAGE.COMMON_ERROR;
-					const locale = 'en-US';
-					this.appModal.handleNotification(
-						error,
-						messageBundle,
-						locale
-					);
+					this.dialogService.handleNotification(error, messageBundle);
 				}
 			);
 		}
@@ -1094,17 +1080,12 @@ export class UpdateFormComponent implements OnInit {
 
 	// Open the modal to show alert
 	showModal() {
-		this.appModal.openModal(this.title, this.message, this.type);
+		this.dialogService.openModal(this.title, this.message, this.type);
 	}
 
 	// Opens modal when session is expired
 	showSessionModal() {
-		this.appModal.openSessionModal(
-			this.title,
-			this.message,
-			this.type,
-			true
-		);
+		this.dialogService.openModal(this.title, this.message, this.type, true);
 	}
 
 	// Close the modal and trigger the action as per the requirement
@@ -1220,8 +1201,7 @@ export class UpdateFormComponent implements OnInit {
 			(error) => {
 				this.isSmallSpinner = false;
 				const messageBundle = MESSAGE.COMMON_ERROR;
-				const locale = 'en-US';
-				this.appModal.handleNotification(error, messageBundle, locale);
+				this.dialogService.handleNotification(error, messageBundle);
 				console.log(error);
 			}
 		);
@@ -1274,7 +1254,7 @@ export class UpdateFormComponent implements OnInit {
 				this.title = '';
 				this.isData = true;
 				setTimeout(() => {
-					this.appModal.openInfoModal(
+					this.dialogService.openInfoModal(
 						this.title,
 						this.message,
 						this.type,

@@ -8,22 +8,8 @@ import {
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { CookieService } from 'ngx-cookie-service';
+import { ClipboardModule } from 'ngx-clipboard';
 
 import { LoginComponent } from './components/login/login.component';
 import { LoginModule } from './components/login/login.module';
@@ -35,24 +21,12 @@ import { OpenidlCommonComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FormComponent } from './components/form/form.component';
 import { TableComponent } from './components/table/table.component';
-// import { OwlDateTimeModule, OwlNativeDateTimeModule } from "ng-pick-datetime";
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { CookieService } from 'ngx-cookie-service';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { AccordionModule } from 'ngx-bootstrap/accordion';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { ClipboardModule } from 'ngx-clipboard';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { SearchComponent } from './components/search/search.component';
 import { NotifyComponent } from './components/notify/notify.component';
 import { SearchPipe } from './pipes/search.pipe';
 import { UpdateFormComponent } from './components/update-form/update-form.component';
-import {
-	DialogConfirmationComponent,
-	DialogDeleteDataComponent,
-	DialogSessionComponent,
-	ModalComponent
-} from './components/modal/modal.component';
+import { ModalComponent } from './components/modal/modal.component';
 import { DatacallsIssuedComponent } from './components/datacalls-issued/datacalls-issued.component';
 import { DatacallHistoryComponent } from './components/datacall-history/datacall-history.component';
 import { BlocksHistoryComponent } from './components/blocks-history/blocks-history.component';
@@ -60,7 +34,8 @@ import { ReportTableComponent } from './components/report-table/report-table.com
 import { UpdateReportComponent } from './components/update-report/update-report.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { DownloadToCsvComponent } from './components/download-to-csv/download-to-csv.component';
-import { MatNativeDateModule } from '@angular/material/core';
+import { DialogModule } from './components/modal/dialog.module';
+import { MaterialModule } from './material.module';
 
 @NgModule({
 	declarations: [
@@ -81,10 +56,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 		DatacallHistoryComponent,
 		BlocksHistoryComponent,
 		UpdateReportComponent,
-		ReportTableComponent,
-		DialogSessionComponent,
-		DialogDeleteDataComponent,
-		DialogConfirmationComponent
+		ReportTableComponent
 	],
 	imports: [
 		BrowserModule,
@@ -96,30 +68,10 @@ import { MatNativeDateModule } from '@angular/material/core';
 		ConfigModule,
 		ServicesModule,
 		LoginModule,
-		// OwlDateTimeModule,
-		// OwlNativeDateTimeModule,
 		ReactiveFormsModule,
-		ModalModule.forRoot(),
-		AccordionModule.forRoot(),
-		TooltipModule.forRoot(),
 		ClipboardModule,
-		MatCardModule,
-		MatFormFieldModule,
-		MatIconModule,
-		MatInputModule,
-		MatButtonModule,
-		MatTableModule,
-		MatPaginatorModule,
-		MatSortModule,
-		MatProgressSpinnerModule,
-		MatSnackBarModule,
-		MatExpansionModule,
-		MatDialogModule,
-		MatGridListModule,
-		MatSelectModule,
-		MatDatepickerModule,
-		MatNativeDateModule,
-		MatSlideToggleModule
+		MaterialModule,
+		DialogModule
 	],
 	exports: [
 		OpenidlCommonComponent,
@@ -140,11 +92,10 @@ import { MatNativeDateModule } from '@angular/material/core';
 		BlocksHistoryComponent,
 		UpdateReportComponent,
 		ReportTableComponent,
-		DialogSessionComponent,
-		DialogDeleteDataComponent,
-		DialogConfirmationComponent
+		MaterialModule,
+		DialogModule
 	],
-	providers: [CookieService, BsModalService, MatDatepickerModule],
+	providers: [CookieService],
 	bootstrap: [OpenidlCommonComponent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

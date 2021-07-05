@@ -155,16 +155,7 @@
 		[pageIndex]="0"
 		[pageSize]="recordsPerPage"
 		[pageSizeOptions]="[10, 15, 20]"
-		(page)="onPageChange($event)"
 	>
 	</mat-paginator>
 </div>
 <app-spinner *ngIf="isSpinner"></app-spinner>
-
-<app-modal
-	[title]="title"
-	[message]="message"
-	[type]="type"
-	(modalClose)="modalClose()"
-	(redirectLogin)="redirectLogin()"
-></app-modal>

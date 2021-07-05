@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content class="mat-typography">
+	<mat-form-field appearance="outline">
+		<mat-label>Delivery Date</mat-label>
+		<input
+			matInput
+			[matDatepicker]="deliveryDate"
+			[(ngModel)]="data.date"
+		/>
+		<mat-datepicker-toggle
+			matSuffix
+			[for]="deliveryDate"
+		></mat-datepicker-toggle>
+		<mat-datepicker #deliveryDate></mat-datepicker>
+	</mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button
+		mat-flat-button
+		(click)="onClickUpdate()"
+		cdkFocusInitial
+		color="primary"
+	>
+		Update Delivery Date
+	</button>
+	<button mat-flat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

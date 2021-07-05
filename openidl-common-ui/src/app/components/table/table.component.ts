@@ -8,17 +8,16 @@ import {
 	OnDestroy,
 	AfterViewInit
 } from '@angular/core';
-import { DataService } from './../../services/data.service';
-import { StorageService } from './../../services/storage.service';
-import { ModalComponent } from '../modal/modal.component';
-import { AuthService } from './../../services/auth.service';
-import { appConfig } from './../../config/app.config';
-import { MESSAGE } from './../../../assets/messageBundle';
-import { appConst } from '../../../../../openidl-ui/src/app/const/app.const';
-
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
+
+import { appConst } from '../../../../../openidl-ui/src/app/const/app.const';
+import { DataService } from './../../services/data.service';
+import { StorageService } from './../../services/storage.service';
+import { appConfig } from './../../config/app.config';
+import { MESSAGE } from './../../../assets/messageBundle';
+import { DialogService } from '../../services/dialog.service';
 
 @Component({
 	selector: 'app-table',
@@ -37,9 +36,6 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 	@Output() viewReportEvent: any = new EventEmitter();
 	@Output() viewAbandonedEvent: any = new EventEmitter();
 
-	// Reference to access the child component
-	@ViewChild(ModalComponent) appModal: ModalComponent;
-
 	// material table variables
 	@ViewChild(MatTable) table!: MatTable<DataTableItem>;
 	@ViewChild(MatSort) sort!: MatSort;
@@ -52,10 +48,10 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 	appConst;
 
 	// Params to be passed to modal
-	title: any;
-	message: any;
-	type: any;
-	role: any;
+	// title: any;
+	// message: any;
+	// type: any;
+	// role: any;
 
 	// variables related to pagination
 	pageCount: any;
@@ -119,7 +115,7 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 	constructor(
 		private dataService: DataService,
 		private storageService: StorageService,
-		private authService: AuthService
+		private dialogService: DialogService
 	) {
 		this.statusObj = appConst.status;
 		// this.dataSource = new DataTableDataSource();
@@ -127,7 +123,7 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	ngOnInit() {
 		// Get the current role to handle the view accordingly
-		this.role = this.storageService.getItem('role');
+		// this.role = this.storageService.getItem('role');
 
 		// Conditional expressions to set the status text which is shown when there are no data calls of the current status
 		if (this.status === this.statusObj.DRAFT) {
@@ -195,18 +191,18 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 	ngOnDestroy(): void {}
 
 	// material table page change event
-	onPageChange(page: PageEvent) {
-		// fetch data from service based on pageIndex and pageSize
-		// console.log('pull data for table', page);
-		// this.isSpinner = true;
-		// if (page.previousPageIndex > page.pageIndex) {
-		// 	console.log('previous page data');
-		// 	this.getPrevDataCalls(page);
-		// } else {
-		// 	console.log('next page data');
-		// 	this.getNextDataCalls(page);
-		// }
-	}
+	// onPageChange(page: PageEvent) {
+	// fetch data from service based on pageIndex and pageSize
+	// console.log('pull data for table', page);
+	// this.isSpinner = true;
+	// if (page.previousPageIndex > page.pageIndex) {
+	// 	console.log('previous page data');
+	// 	this.getPrevDataCalls(page);
+	// } else {
+	// 	console.log('next page data');
+	// 	this.getNextDataCalls(page);
+	// }
+	// }
 
 	// Filter the data calls present in the DOM according to the search input
 	searchFilter(searchinputvalue) {
@@ -465,8 +461,7 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 				this.isSpinner = false;
 				this.isError = true;
 				const messageBundle = MESSAGE.DATA_FETCH_ERROR;
-				const locale = 'en-US';
-				this.appModal.handleNotification(error, messageBundle, locale);
+				this.dialogService.handleNotification(error, messageBundle);
 			}
 		);
 	}
@@ -495,52 +490,47 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 		}
 	}
 
-	formatDate(d) {
-		const date = new Date(d);
-		let dd: any = date.getDate();
-		let mm: any = date.getMonth() + 1;
-		const yyyy = date.getFullYear();
-		if (dd < 10) {
-			dd = '0' + dd;
-		}
-		if (mm < 10) {
-			mm = '0' + mm;
-		}
-		return (d = mm + '/' + dd + '/' + yyyy);
-	}
+	// formatDate(d) {
+	// 	const date = new Date(d);
+	// 	let dd: any = date.getDate();
+	// 	let mm: any = date.getMonth() + 1;
+	// 	const yyyy = date.getFullYear();
+	// 	if (dd < 10) {
+	// 		dd = '0' + dd;
+	// 	}
+	// 	if (mm < 10) {
+	// 		mm = '0' + mm;
+	// 	}
+	// 	return (d = mm + '/' + dd + '/' + yyyy);
+	// }
 
-	showModal() {
-		this.appModal.openModal(this.title, this.message, this.type);
-	}
+	// showModal() {
+	// 	this.dialogService.openModal(this.title, this.message, this.type);
+	// }
 
-	showSessionModal() {
-		this.appModal.openSessionModal(
-			this.title,
-			this.message,
-			this.type,
-			true
-		);
-	}
+	// showSessionModal() {
+	// 	this.dialogService.openModal(this.title, this.message, this.type, true);
+	// }
 
-	modalClose() {
-		this.isSuccess = false;
-		this.isError = false;
-		this.isopen = false;
-	}
+	// modalClose() {
+	// 	this.isSuccess = false;
+	// 	this.isError = false;
+	// 	this.isopen = false;
+	// }
 
-	redirectLogin() {
-		this.isSuccess = false;
-		this.isError = false;
-		this.isopen = false;
-		this.authService.logout('login').subscribe(
-			(resp) => {
-				console.log(resp);
-			},
-			(err) => {
-				console.log(err);
-			}
-		);
-	}
+	// redirectLogin() {
+	// 	this.isSuccess = false;
+	// 	this.isError = false;
+	// 	this.isopen = false;
+	// 	this.authService.logout('login').subscribe(
+	// 		(resp) => {
+	// 			console.log(resp);
+	// 		},
+	// 		(err) => {
+	// 			console.log(err);
+	// 		}
+	// 	);
+	// }
 }
 
 export interface DataTableItem {

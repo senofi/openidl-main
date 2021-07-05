@@ -1,20 +1,15 @@
 <h2 mat-dialog-title>{{ data.title }}</h2>
 <mat-dialog-content class="mat-typography">
 	{{ data.message }}
-
-	<div *ngIf="data.isData">
-		{{ data.data | json }}
-	</div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-	<button mat-flat-button mat-dialog-close>Close</button>
 	<button
-		*ngIf="data.isSessionExpired"
 		mat-flat-button
-		(click)="redirectToLogin()"
+		(click)="onClickUpdate()"
 		cdkFocusInitial
 		color="primary"
 	>
-		Login
+		Update Forum URL
 	</button>
+	<button mat-flat-button mat-dialog-close>Cancel</button>
 </mat-dialog-actions>

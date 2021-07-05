@@ -732,9 +732,7 @@
 												pull-left
 											"
 											type="submit"
-											(click)="
-												updateForum()
-											"
+											(click)="updateForum()"
 										>
 											Set Forum URL
 										</button>
@@ -865,7 +863,7 @@
 								*ngIf="
 									(isStatAgent || isCarr) &&
 									datacall.status !== 'ISSUED' &&
-										!datacall.isLocked &&
+									!datacall.isLocked &&
 									!isViewAbandoned
 								"
 								class="row sub-col"
@@ -1000,11 +998,3 @@
 	</div>
 </div>
 <app-spinner *ngIf="isSpinner"></app-spinner>
-<app-modal
-	[title]="title"
-	[message]="message"
-	[type]="type"
-	(modalClose)="modalClose()"
-	(forumData)="updateForumByModal($event)"
-	(redirectLogin)="redirectLogin()"
-></app-modal>
