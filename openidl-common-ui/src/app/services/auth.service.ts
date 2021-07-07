@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, ObservableInput } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { StorageService } from './storage.service';
-import { CookieService } from 'ngx-cookie-service';
 
 import { map, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs/internal/Observable';
+import { ObservableInput } from 'rxjs/internal/types';
 import { throwError } from 'rxjs';
 
 @Injectable({
@@ -18,8 +18,7 @@ export class AuthService {
 	constructor(
 		private router: Router,
 		private http: HttpClient,
-		private storageService: StorageService,
-		private cookieService: CookieService
+		private storageService: StorageService
 	) {
 		// Following change to the end point is made as the end point is moved to UI server
 

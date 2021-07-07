@@ -308,7 +308,6 @@ export class DialogSessionComponent implements OnDestroy {
 	}
 
 	redirectToLogin() {
-		this.dialogRef.close();
 		this.authSubscription = this.authService.logout('login').subscribe(
 			(resp) => {
 				console.log(resp);
@@ -317,6 +316,7 @@ export class DialogSessionComponent implements OnDestroy {
 				console.log(err);
 			}
 		);
+		this.dialogRef.close();
 		// this.redirectLogin.emit();
 	}
 }

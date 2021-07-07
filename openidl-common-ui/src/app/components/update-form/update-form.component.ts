@@ -1,14 +1,7 @@
-import {
-	Component,
-	OnInit,
-	Output,
-	EventEmitter,
-	ViewChild
-} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataService } from './../../services/data.service';
 import { StorageService } from './../../services/storage.service';
-import { ModalComponent } from '../modal/modal.component';
 import { AuthService } from './../../services/auth.service';
 import { MESSAGE } from './../../../assets/messageBundle';
 import { DialogService } from '../../services/dialog.service';
@@ -16,7 +9,7 @@ import { DialogService } from '../../services/dialog.service';
 @Component({
 	selector: 'app-update-form',
 	templateUrl: './update-form.component.html',
-	styleUrls: ['./update-form.component.css']
+	styleUrls: ['./update-form.component.scss']
 })
 export class UpdateFormComponent implements OnInit {
 	// Events to be emitted to the parent component
@@ -49,12 +42,12 @@ export class UpdateFormComponent implements OnInit {
 		jurisdiction: '',
 		comments: '',
 		deadline: '',
-		fromdate: '',
-		toDate: '',
-		lossfromdate: '',
-		losstoDate: '',
+		premiumFromDate: '',
+		premiumToDate: '',
+		lossFromDate: '',
+		lossToDate: '',
 		proposedDeliveryDate: '',
-		forumurl: ''
+		forumURL: ''
 	};
 	currentDraft = {};
 	registerForm: FormGroup;
@@ -82,26 +75,28 @@ export class UpdateFormComponent implements OnInit {
 	maxEnddate: any;
 
 	// Flags to conditionally handle expressions
-	isSpinner: Boolean = false;
-	isSmallSpinner: Boolean = false;
-	isFailed: Boolean = false;
-	isAbandon: Boolean = false;
+	isSpinner: boolean = false;
+	isSmallSpinner: boolean = false;
+	isFailed: boolean = false;
+	isAbandon: boolean = false;
 	isReadonly: boolean = false;
-	isForumUrl: Boolean = false;
-	isSuccess: Boolean = false;
-	isError: Boolean = false;
-	isopen: Boolean = false;
-	isReg: Boolean = false;
-	isStatAgent: Boolean = false;
-	isLikeCountPositive: Boolean = false;
-	isCarr: Boolean = false;
-	isViewAbandoned: Boolean = false;
-	isLike: Boolean = true;
+	isForumUrl: boolean = false;
+	isSuccess: boolean = false;
+	isError: boolean = false;
+	isopen: boolean = false;
+	isReg: boolean = false;
+	isStatAgent: boolean = false;
+	isLikeCountPositive: boolean = false;
+	isCarr: boolean = false;
+	isViewAbandoned: boolean = false;
+	isLike: boolean = true;
 	isData: boolean = false;
-	isIdenticalDraft: Boolean = false;
-	isDraft: Boolean = false;
-	isRecorded: Boolean = false;
+	isIdenticalDraft: boolean = false;
+	isDraft: boolean = false;
+	isRecorded: boolean = false;
 	submitted = false;
+	toolbarLabel = '';
+	toolbarTS = '';
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -187,11 +182,19 @@ export class UpdateFormComponent implements OnInit {
 					{ value: '', disabled: true },
 					Validators.required
 				],
-				dateRange: [
+				premiumFromDate: [
 					{ value: '', disabled: true },
 					[Validators.required]
 				],
-				lossdateRange: [
+				premiumToDate: [
+					{ value: '', disabled: true },
+					[Validators.required]
+				],
+				lossFromDate: [
+					{ value: '', disabled: true },
+					[Validators.required]
+				],
+				lossToDate: [
 					{ value: '', disabled: true },
 					[Validators.required]
 				],
@@ -234,8 +237,10 @@ export class UpdateFormComponent implements OnInit {
 			this.registerForm = this.formBuilder.group({
 				name: ['', Validators.required],
 				description: ['', Validators.required],
-				dateRange: ['', [Validators.required]],
-				lossdateRange: ['', [Validators.required]],
+				premiumFromDate: ['', [Validators.required]],
+				premiumToDate: ['', [Validators.required]],
+				lossFromDate: ['', [Validators.required]],
+				lossToDate: ['', [Validators.required]],
 				deadline: ['', [Validators.required]],
 				purpose: ['', [Validators.required]],
 				isShowParticipants: [true],
@@ -272,11 +277,19 @@ export class UpdateFormComponent implements OnInit {
 					{ value: '', disabled: true },
 					Validators.required
 				],
-				dateRange: [
+				premiumFromDate: [
 					{ value: '', disabled: true },
 					[Validators.required]
 				],
-				lossdateRange: [
+				premiumToDate: [
+					{ value: '', disabled: true },
+					[Validators.required]
+				],
+				lossFromDate: [
+					{ value: '', disabled: true },
+					[Validators.required]
+				],
+				lossToDate: [
 					{ value: '', disabled: true },
 					[Validators.required]
 				],
@@ -318,9 +331,7 @@ export class UpdateFormComponent implements OnInit {
 		console.log('Trimmed data', this.datacallObject);
 		this.dataService.getData(uri).subscribe(
 			(response) => {
-				setTimeout(() => {
-					this.isSpinner = false;
-				}, 1000);
+				this.isSpinner = false;
 				console.log('LOBs response: ', response);
 				let lob = JSON.parse(response);
 				console.log(lob);
@@ -333,6 +344,16 @@ export class UpdateFormComponent implements OnInit {
 				const messageBundle = MESSAGE.COMMON_ERROR;
 				this.dialogService.handleNotification(error, messageBundle);
 			}
+		);
+	}
+
+	isCloneAvailable() {
+		const isSame =
+			this.userJurisdiction.toLowerCase() ===
+			this.datacall.jurisdiction.toLowerCase();
+		return (
+			(this.isViewAbandoned && this.isReg && isSame) ||
+			(this.isReadonly && this.isReg && !isSame)
 		);
 	}
 
@@ -364,7 +385,15 @@ export class UpdateFormComponent implements OnInit {
 				this.dialogService.handleNotification(error, messageBundle);
 			}
 		);
-		this.getLOBs();
+
+		const storedLOBs = JSON.parse(sessionStorage.getItem('LOBs'));
+		// Check for cached LOBs or get from REST API
+		if (storedLOBs) {
+			this.LOBs = storedLOBs;
+			this.isSpinner = false;
+		} else {
+			this.getLOBs();
+		}
 	}
 
 	// Format date in mm dd yyyy | hr:min:ss format
@@ -399,8 +428,18 @@ export class UpdateFormComponent implements OnInit {
 			mm + '/' + dd + '/' + yyyy + ' | ' + hr + ':' + min + ' ' + ss);
 	}
 
+	updateToolbarLabel(draft, index) {
+		this.toolbarTS = draft.updatedTs;
+		if (draft.status === 'ISSUED') this.toolbarLabel = 'Issued Data Call';
+		if (draft.status !== 'ISSUED' && index === 0)
+			this.toolbarLabel = 'Current Version';
+		if (draft.status !== 'ISSUED' && index !== 0)
+			this.toolbarLabel = `Draft Version ${draft.version}`;
+	}
+
 	// Show draft details of selected draft version
 	showDetails(draft, index) {
+		this.updateToolbarLabel(draft, index);
 		this.checked = index;
 		this.dateRange.length = 0;
 		// console.log('Draft: ', draft);
@@ -419,39 +458,43 @@ export class UpdateFormComponent implements OnInit {
 			this.formatDate(draft.premiumToDate)
 		];
 		// console.log('########## intent ', draft.intentToPublish);
-		if (draft.intentToPublish == true || draft.intentToPublish == 'Yes') {
-			this.model.intentToPublish = 'Yes';
-		} else if (
-			draft.intentToPublish == false ||
-			draft.intentToPublish == 'No'
-		) {
-			this.model.intentToPublish = 'No';
-		}
+		// if (draft.intentToPublish == true || draft.intentToPublish == 'Yes') {
+		// 	this.model.intentToPublish = 'Yes';
+		// } else if (
+		// 	draft.intentToPublish == false ||
+		// 	draft.intentToPublish == 'No'
+		// ) {
+		// 	this.model.intentToPublish = 'No';
+		// }
 
 		this.model.deadline = draft.deadline;
 
 		if (this.isReadonly === true) {
-			if (this.model.fromdate) {
-				this.model.fromdate = this.formatDate(this.model.fromdate);
-			} else {
-				this.model.fromdate = '';
-			}
-			if (this.model.toDate) {
-				this.model.toDate = this.formatDate(this.model.toDate);
-			} else {
-				this.model.toDate = '';
-			}
-			if (this.model.lossfromdate) {
-				this.model.lossfromdate = this.formatDate(
-					this.model.lossfromdate
+			if (this.model.premiumFromDate) {
+				this.model.premiumFromDate = this.formatDate(
+					this.model.premiumFromDate
 				);
 			} else {
-				this.model.lossfromdate = '';
+				this.model.premiumFromDate = '';
 			}
-			if (this.model.losstoDate) {
-				this.model.losstoDate = this.formatDate(this.model.losstoDate);
+			if (this.model.premiumToDate) {
+				this.model.premiumToDate = this.formatDate(
+					this.model.premiumToDate
+				);
 			} else {
-				this.model.losstoDate = '';
+				this.model.premiumToDate = '';
+			}
+			if (this.model.lossFromDate) {
+				this.model.lossFromDate = this.formatDate(
+					this.model.lossFromDate
+				);
+			} else {
+				this.model.lossFromDate = '';
+			}
+			if (this.model.lossToDate) {
+				this.model.lossToDate = this.formatDate(this.model.lossToDate);
+			} else {
+				this.model.lossToDate = '';
 			}
 			if (this.model.proposedDeliveryDate) {
 				if (
@@ -564,17 +607,17 @@ export class UpdateFormComponent implements OnInit {
 	}
 
 	// set min and max values for deadline
-	deadlineSet(type) {
-		if (type === 'enddate') {
-			this.minDeadline = this.dateRange[1];
-		} else if (type === 'deadline') {
-			this.maxEnddate = this.model.deadline;
-			this.maxStartdate = this.model.deadline;
-		}
-		if (type === 'startdate') {
-			this.minDeadline = this.dateRange[0];
-		}
-	}
+	// deadlineSet(type) {
+	// 	if (type === 'enddate') {
+	// 		this.minDeadline = this.dateRange[1];
+	// 	} else if (type === 'deadline') {
+	// 		this.maxEnddate = this.model.deadline;
+	// 		this.maxStartdate = this.model.deadline;
+	// 	}
+	// 	if (type === 'startdate') {
+	// 		this.minDeadline = this.dateRange[0];
+	// 	}
+	// }
 
 	// Handle show participants check according to the readonly flag
 	toggleIsShowParticipants(event) {
@@ -613,6 +656,7 @@ export class UpdateFormComponent implements OnInit {
 			this.type = MESSAGE.MANDATORY_FIELDS_ERROR.type;
 			this.message = MESSAGE.MANDATORY_FIELDS_ERROR.message;
 			this.title = MESSAGE.MANDATORY_FIELDS_ERROR.title;
+			this.showModal();
 		} else {
 			// create new version and then issue if changes are observed in the form else issue it as it is.
 			if (shouldCreateNewVersion) {
@@ -629,20 +673,20 @@ export class UpdateFormComponent implements OnInit {
 
 	// Save the changes made to the selected draft and create new draft version
 	saveDraft(value) {
-		console.log('################### inside save draft ###############');
+		// console.log('################### inside save draft ###############');
 		const commentField = this.registerForm.get('comments');
-		console.log('value ', value);
+		// console.log('value ', value);
 		if (this.checkDraft(value)) {
-			console.log(
-				'#################### new version will not be created and issued as it is'
-			);
+			// console.log(
+			// 	'#################### new version will not be created and issued as it is'
+			// );
 			commentField.clearValidators();
 			commentField.updateValueAndValidity();
 			this.isIdenticalDraft = true;
 		} else {
-			console.log(
-				'##################### create a new version and issue '
-			);
+			// console.log(
+			// 	'##################### create a new version and issue '
+			// );
 			commentField.setValidators([Validators.required]);
 			commentField.updateValueAndValidity();
 			this.isIdenticalDraft = false;
@@ -653,6 +697,7 @@ export class UpdateFormComponent implements OnInit {
 			this.type = MESSAGE.MANDATORY_FIELDS_ERROR.type;
 			this.message = MESSAGE.MANDATORY_FIELDS_ERROR.message;
 			this.title = MESSAGE.MANDATORY_FIELDS_ERROR.title;
+			this.showModal();
 		} else {
 			console.log('is draft identical ' + this.isIdenticalDraft);
 			this.createDatacall(value, 'DRAFT', '/save-new-draft');
@@ -663,7 +708,7 @@ export class UpdateFormComponent implements OnInit {
 	updateForumByModal(event) {
 		// console.log('forum url  ', event , '  ::');
 		if (!(event === '' || event === undefined)) {
-			this.model.forumurl = event;
+			this.model.forumURL = event;
 			this.updateForum();
 		}
 	}
@@ -693,17 +738,17 @@ export class UpdateFormComponent implements OnInit {
 			jurisdiction: this.model.jurisdiction,
 			comments: this.datacall.comments
 		};
-		console.log('this.model.forumurl ', this.model.forumurl);
+		console.log('this.model.forumurl ', this.model.forumURL);
 
 		if (
 			!(
-				this.model.forumurl === undefined ||
-				this.model.forumurl === '' ||
-				this.model.forumurl === 'undefined'
+				this.model.forumURL === undefined ||
+				this.model.forumURL === '' ||
+				this.model.forumURL === 'undefined'
 			)
 		) {
 			this.isForumUrl = true;
-			this.forumurl = this.model.forumurl;
+			this.forumurl = this.model.forumURL;
 			this.updateDatacall(value, 'DRAFT', '/update-data-call');
 		}
 	}
@@ -732,7 +777,7 @@ export class UpdateFormComponent implements OnInit {
 	// Trigger the clone event to the parent component so that it will clone the data call contents
 	clone(value) {
 		this.storageService.setItem('datacalldraft', value);
-		console.log(value);
+		// console.log(value);
 		this.cloneDatacallEvent.emit();
 	}
 
@@ -746,26 +791,19 @@ export class UpdateFormComponent implements OnInit {
 			description: value.description.trim(),
 			purpose: value.purpose.trim(),
 			lineOfBusiness: value.lineOfBusiness.trim(),
-			deadline: '' + value.deadline,
-			premiumFromDate: '' + value.dateRange[0],
-			premiumToDate: '' + value.dateRange[1],
-			lossFromDate: '' + value.lossdateRange[0],
-			lossToDate: '' + value.lossdateRange[1],
+			deadline: value.deadline,
+			premiumFromDate: value.premiumFromDate,
+			premiumToDate: value.premiumToDate,
+			lossFromDate: value.lossFromDate,
+			lossToDate: value.lossToDate,
 			jurisdiction: value.jurisdiction.trim(),
 			detailedCriteria: value.detailedCriteria.trim(),
 			eligibilityRequirement: value.eligibilityRequirement.trim(),
 			status: status,
 			isShowParticipants: value.isShowParticipants,
 			comments: '' + this.model.comments.trim(),
-			forumURL: '' + this.model.forumurl
+			forumURL: '' + this.model.forumURL
 		};
-		if (value.intentToPublish == 'Yes') {
-			value.intentToPublish = true;
-			this.datacallObject['intentToPublish'] = true;
-		} else if (value.intentToPublish == 'No') {
-			value.intentToPublish = false;
-			this.datacallObject['intentToPublish'] = false;
-		}
 
 		// Reset the isError flag to hide the error notification
 		this.isError = false;
@@ -781,7 +819,7 @@ export class UpdateFormComponent implements OnInit {
 		} else {
 			this.isSpinner = true;
 			this.dataService.postData(uri, this.datacallObject).subscribe(
-				(response) => {
+				() => {
 					this.isSpinner = false;
 					this.isSuccess = true;
 					if (status === 'ISSUED') {
@@ -840,7 +878,7 @@ export class UpdateFormComponent implements OnInit {
 			status: status,
 			isShowParticipants: value.isShowParticipants,
 			comments: '' + this.model.comments.trim(),
-			forumURL: '' + this.model.forumurl
+			forumURL: '' + this.model.forumURL
 		};
 		console.log(this.datacallObject);
 		// Reset the isError flag to hide the error notification
@@ -920,12 +958,12 @@ export class UpdateFormComponent implements OnInit {
 
 	// Check if current draft is changed
 	checkDraft(value) {
-		console.log('in draft check ', value);
-		if (value.intentToPublish == 'Yes') {
-			value.intentToPublish = true;
-		} else {
-			value.intentToPublish = false;
-		}
+		// console.log('in draft check ', value);
+		// if (value.intentToPublish == 'Yes') {
+		// 	value.intentToPublish = true;
+		// } else {
+		// 	value.intentToPublish = false;
+		// }
 		const keys = Object.keys(value);
 		let isIdenticalObject: Boolean;
 		isIdenticalObject = true;
@@ -1025,54 +1063,6 @@ export class UpdateFormComponent implements OnInit {
 		return isIdenticalObject;
 	}
 
-	// Following getters are validators for reactive form
-	get namefield() {
-		return this.registerForm.get('name');
-	}
-	get descriptionfield() {
-		return this.registerForm.get('description');
-	}
-	get deadlinefield() {
-		console.log('deadline: ', this.registerForm.get('deadline'));
-		return this.registerForm.get('deadline');
-	}
-	get fromdatefield() {
-		return this.registerForm.get('dateRange');
-	}
-	get todatefield() {
-		return this.registerForm.get('dateRange');
-	}
-	get lossfromdatefield() {
-		return this.registerForm.get('lossdateRange');
-	}
-	get losstodatefield() {
-		return this.registerForm.get('lossdateRange');
-	}
-	get purposefield() {
-		return this.registerForm.get('purpose');
-	}
-	get showParticipantsfield() {
-		return this.registerForm.get('isShowParticipants');
-	}
-	get businessfield() {
-		return this.registerForm.get('lineOfBusiness');
-	}
-	get criteriafield() {
-		return this.registerForm.get('detailedCriteria');
-	}
-	get intentfield() {
-		return this.registerForm.get('intentToPublish');
-	}
-	get eligibilityfield() {
-		return this.registerForm.get('eligibilityRequirement');
-	}
-	get jurisdictionfield() {
-		return this.registerForm.get('jurisdiction');
-	}
-	get commentfield() {
-		return this.registerForm.get('comments');
-	}
-
 	// Remove the error notification
 	closeNotify() {
 		this.isError = false;
@@ -1120,6 +1110,13 @@ export class UpdateFormComponent implements OnInit {
 			}
 		);
 	}
+
+	disableOldDates = (d: Date | null): boolean => {
+		const selected = d || new Date();
+		const now = new Date();
+		// display today and future dates
+		return selected.setHours(0, 0, 0, 0) >= now.setHours(0, 0, 0, 0);
+	};
 
 	createDraftCopy(src) {
 		let target = {};
@@ -1269,6 +1266,7 @@ export class UpdateFormComponent implements OnInit {
 			}
 		);
 	}
+
 	openURL(url) {
 		console.log('url  ', url);
 		let extURL = url;

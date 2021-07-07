@@ -8,7 +8,7 @@ import { DialogService } from '../../../../openidl-common-ui/src/app/services/di
 @Component({
 	selector: 'app-view-datacall-draft',
 	templateUrl: './view-datacall-draft.component.html',
-	styleUrls: ['./view-datacall-draft.component.css']
+	styleUrls: ['./view-datacall-draft.component.scss']
 })
 export class ViewDatacallDraftComponent implements OnInit {
 	isBack: Boolean = true;
@@ -16,6 +16,7 @@ export class ViewDatacallDraftComponent implements OnInit {
 	title: any;
 	message: any;
 	type: any;
+	currentStatus = '';
 
 	constructor(
 		private router: Router,
@@ -26,6 +27,7 @@ export class ViewDatacallDraftComponent implements OnInit {
 	selected: Number = 0;
 
 	ngOnInit() {
+		this.currentStatus = this.storageService.getItem('currentStatus');
 		if (
 			this.storageService.getItem('isShowIssuedDrafts') &&
 			this.storageService.getItem('isShowIssuedDrafts') === 'true'

@@ -20,7 +20,7 @@
 							<mat-select
 								placeholder="Select Line of Business"
 								formControlName="lineOfBusiness"
-								[class.spinner]="isSmallSpinner"
+								[class.spinner]="LOBs.length === 0"
 							>
 								<mat-option
 									[value]="lob.value"
