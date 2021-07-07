@@ -111,7 +111,7 @@ export class HeaderComponent implements OnInit {
 		}
 	}
 
-	conirmReset() {
+	confirmReset() {
 		this.title = '';
 		this.message = 'Are you sure you want to delete the data?';
 		this.type = 'info';

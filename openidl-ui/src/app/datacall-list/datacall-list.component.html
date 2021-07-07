@@ -2,14 +2,13 @@
 	<app-header [selected]="selected"></app-header>
 	<div class="container">
 		<h1 class="header-with-icon">
-			<mat-icon color="primary">table_chart</mat-icon>
+			<mat-icon color="primary">list_alt</mat-icon>
 			<span>Data Call List</span>
 		</h1>
 		<mat-card>
 			<app-search (searchValue)="search($event)"></app-search>
 			<div class="pb-4"></div>
 			<mat-button-toggle-group
-				appearance="legacy"
 				[value]="selectedTab"
 				[(ngModel)]="selectedTab"
 				(change)="onStatusGroupChange($event)"
@@ -21,7 +20,7 @@
 					[value]="0"
 					aria-label="Drafts"
 				>
-					<mat-icon>mode_edit</mat-icon>
+					<mat-icon>bookmarks</mat-icon>
 					<span class="text">Drafts</span>
 				</mat-button-toggle>
 				<mat-button-toggle
@@ -29,7 +28,7 @@
 					[value]="1"
 					aria-label="Issued"
 				>
-					<mat-icon>grading</mat-icon>
+					<mat-icon>note_add</mat-icon>
 					<span class="text">Issued</span>
 				</mat-button-toggle>
 				<mat-button-toggle
@@ -37,7 +36,7 @@
 					[value]="2"
 					aria-label="Abandoned"
 				>
-					<mat-icon>cancel_presentation</mat-icon>
+					<mat-icon>archive</mat-icon>
 					<span class="text">Abandoned</span>
 				</mat-button-toggle>
 			</mat-button-toggle-group>

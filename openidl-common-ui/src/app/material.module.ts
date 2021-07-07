@@ -21,7 +21,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatNativeDateModule } from '@angular/material/core';
-
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatBadgeModule } from '@angular/material/badge';
 @NgModule({
 	declarations: [],
 	imports: [
@@ -42,7 +45,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 		MatSelectModule,
 		MatDatepickerModule,
 		MatNativeDateModule,
-		MatSlideToggleModule
+		MatSlideToggleModule,
+		MatSidenavModule,
+		MatListModule,
+		MatToolbarModule,
+		MatBadgeModule
 	],
 	exports: [
 		MatCardModule,
@@ -61,7 +68,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 		MatSelectModule,
 		MatDatepickerModule,
 		MatNativeDateModule,
-		MatSlideToggleModule
+		MatSlideToggleModule,
+		MatSidenavModule,
+		MatListModule,
+		MatToolbarModule,
+		MatBadgeModule
 	],
 	providers: [MatDatepickerModule, MatPaginatorModule],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]

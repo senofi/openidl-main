@@ -208,7 +208,7 @@
 								rows="7"
 								matInput
 								placeholder="Enter Detailed Criteria"
-								formControlName="criteria"
+								formControlName="detailedCriteria"
 							></textarea>
 						</mat-form-field>
 					</div>
@@ -249,6 +249,7 @@
 						color="primary"
 						(click)="saveDataCall(registerForm.value)"
 					>
+						<mat-icon color="primary">bookmark</mat-icon>
 						Save as Draft
 					</button>
 					<button
@@ -256,6 +257,7 @@
 						color="primary"
 						(click)="issueDataCall(registerForm.value)"
 					>
+						<mat-icon>note_add</mat-icon>
 						Issue
 					</button>
 				</div>

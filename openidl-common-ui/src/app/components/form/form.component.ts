@@ -120,7 +120,10 @@ export class FormComponent implements OnInit, OnDestroy {
 					dataCall.lineOfBusiness,
 					[Validators.required]
 				],
-				criteria: [dataCall.detailedCriteria, [Validators.required]],
+				detailedCriteria: [
+					dataCall.detailedCriteria,
+					[Validators.required]
+				],
 				intentToPublish: [dataCall.intentToPublish],
 				eligibilityRequirement: [
 					dataCall.eligibilityRequirement,
@@ -146,7 +149,7 @@ export class FormComponent implements OnInit, OnDestroy {
 				purpose: ['', [Validators.required]],
 				isShowParticipants: [true],
 				lineOfBusiness: ['', [Validators.required]],
-				criteria: ['', [Validators.required]],
+				detailedCriteria: ['', [Validators.required]],
 				intentToPublish: [true],
 				eligibilityRequirement: ['', [Validators.required]],
 				jurisdiction: [this.jurisdiction]
@@ -255,7 +258,7 @@ export class FormComponent implements OnInit, OnDestroy {
 			lossFromDate: value.lossFromDate,
 			lossToDate: value.lossToDate,
 			jurisdiction: value.jurisdiction.trim(),
-			detailedCriteria: value.criteria.trim(),
+			detailedCriteria: value.detailedCriteria.trim(),
 			eligibilityRequirement: value.eligibilityRequirement.trim(),
 			status: status,
 			isShowParticipants: value.isShowParticipants,

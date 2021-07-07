@@ -9,41 +9,39 @@
 		<img [src]="orgLogo"
 	/></span>
 	<span class="spacer"></span>
-	<mat-nav-list class="list-horizontal">
-		<a
-			mat-list-item
-			[ngClass]="{ active: selected === 0 }"
-			href="javascript:void(0)"
-			(click)="navigateToRoute('/datacallList'); selected = 0"
-			>Data Calls</a
-		>
-		<a
-			mat-list-item
-			[ngClass]="{ active: selected === 1 }"
-			*ngIf="appConst.shouldCreateDatacall"
-			(click)="navigateToRoute('/createDatacall'); selected = 1"
-			>New Data Call</a
-		>
-		<div class="divider small"></div>
-	</mat-nav-list>
-	<a
-		mat-button
-		href="javascript:void(0)"
-		(click)="checkLogout()"
-		color="primary"
-	>
-		<mat-icon>logout</mat-icon>
-		Log Out</a
-	>
 	<button
 		mat-button
+		color="primary"
+		[ngClass]="{ active: selected === 0 }"
+		(click)="navigateToRoute('/datacallList'); selected = 0"
+	>
+		<mat-icon>list_alt</mat-icon>
+		Data Calls
+	</button>
+	<button
+		mat-button
+		color="primary"
+		[ngClass]="{ active: selected === 1 }"
+		*ngIf="appConst.shouldCreateDatacall"
+		(click)="navigateToRoute('/createDatacall'); selected = 1"
+	>
+		<mat-icon>add_box</mat-icon>
+		New Data Call
+	</button>
+	<button mat-button color="primary" (click)="checkLogout()">
+		<mat-icon>logout</mat-icon>
+		Log Out
+	</button>
+	<button
+		mat-icon-button
 		[matMenuTriggerFor]="menu"
+		title="more menu"
 		*ngIf="isResetWorldState && role === 'statagent'"
 	>
 		<mat-icon>more_vert</mat-icon>
 	</button>
 	<mat-menu #menu="matMenu">
-		<button mat-menu-item *ngIf="isResetBtn" (click)="conirmReset()">
+		<button mat-menu-item (click)="confirmReset()" *ngIf="isResetBtn">
 			Delete All Data
 		</button>
 	</mat-menu>
