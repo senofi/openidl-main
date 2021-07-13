@@ -8,7 +8,7 @@
 				>
 
 				<span class="spacer"></span>
-				<div>
+				<div *ngIf="currentStatus === 'DRAFT'">
 					<mat-spinner
 						matSuffix
 						[diameter]="20"
@@ -26,10 +26,7 @@
 			<div class="row">
 				<div class="sidebar">
 					<mat-selection-list [multiple]="false">
-						<div mat-subheader>
-							<!-- <mat-icon>format_list_numbered</mat-icon> -->
-							Draft Versions
-						</div>
+						<div mat-subheader>Available Versions</div>
 						<mat-list-option
 							(click)="showDetails(draft, i)"
 							[selected]="!(draft.status === 'ISSUED') && i == 0"
@@ -71,7 +68,6 @@
 									<mat-label>Name</mat-label>
 									<input
 										matInput
-										[(ngModel)]="model.name"
 										placeholder="Enter Name"
 										formControlName="name"
 									/>
@@ -86,7 +82,6 @@
 									<mat-label>Line of Business</mat-label>
 									<mat-select
 										placeholder="Select Line of Business"
-										[(ngModel)]="model.lineOfBusiness"
 										formControlName="lineOfBusiness"
 										[class.spinner]="LOBs.length === 0"
 									>
@@ -109,7 +104,6 @@
 									<mat-label>Description</mat-label>
 									<input
 										matInput
-										[(ngModel)]="model.description"
 										placeholder="Enter Description"
 										formControlName="description"
 									/>
@@ -143,13 +137,11 @@
 									>
 										<input
 											matStartDate
-											[(ngModel)]="model.premiumFromDate"
 											formControlName="premiumFromDate"
 											placeholder="Start date"
 										/>
 										<input
 											matEndDate
-											[(ngModel)]="model.premiumToDate"
 											formControlName="premiumToDate"
 											placeholder="End date"
 										/>
@@ -191,13 +183,11 @@
 									>
 										<input
 											matStartDate
-											[(ngModel)]="model.lossFromDate"
 											formControlName="lossFromDate"
 											placeholder="Start date"
 										/>
 										<input
 											matEndDate
-											[(ngModel)]="model.lossToDate"
 											formControlName="lossToDate"
 											placeholder="End date"
 										/>
@@ -236,7 +226,6 @@
 									formControlName="intentToPublish"
 									color="primary"
 									[checked]="true"
-									[(ngModel)]="model.intentToPublish"
 									labelPosition="before"
 								>
 									Expected Public Circulation?
@@ -250,7 +239,6 @@
 									<mat-label>Deadline</mat-label>
 									<input
 										matInput
-										[(ngModel)]="model.deadline"
 										[matDatepickerFilter]="disableOldDates"
 										[matDatepicker]="deadlinePicker"
 										formControlName="deadline"
@@ -276,7 +264,6 @@
 									<textarea
 										rows="7"
 										matInput
-										[(ngModel)]="model.purpose"
 										placeholder="Enter Purpose"
 										formControlName="purpose"
 									></textarea>
@@ -296,7 +283,6 @@
 										matInput
 										placeholder="Enter Detailed Criteria"
 										formControlName="detailedCriteria"
-										[(ngModel)]="model.detailedCriteria"
 									></textarea>
 								</mat-form-field>
 							</div>
@@ -316,9 +302,6 @@
 										matInput
 										placeholder="Enter Eligibility Requirement"
 										formControlName="eligibilityRequirement"
-										[(ngModel)]="
-											model.eligibilityRequirement
-										"
 									></textarea>
 								</mat-form-field>
 							</div>
@@ -331,7 +314,6 @@
 									formControlName="isShowParticipants"
 									color="primary"
 									[checked]="true"
-									[(ngModel)]="model.isShowParticipants"
 									labelPosition="before"
 								>
 									Add list of participants to summary report?
@@ -351,7 +333,6 @@
 									<textarea
 										rows="7"
 										matInput
-										[(ngModel)]="model.comments"
 										placeholder="Enter Comment"
 										formControlName="comments"
 									></textarea>
@@ -512,7 +493,7 @@
 									}}
 								</p>
 							</div>
-							<div class="col readonly" *ngIf="datacall.isLocked">
+							<!-- <div class="col readonly" *ngIf="datacall.isLocked">
 								<h4>Carrier Consents</h4>
 								<p>Number of Carriers : {{ consentCount }}</p>
 								<button
@@ -523,33 +504,50 @@
 								>
 									View Carriers
 								</button>
-							</div>
+							</div> -->
 							<div class="col readonly">
 								<h4>Organization Likes</h4>
 								<p>
-									<span class="likes"
+									<!-- <span class="likes"
 										>Likes : {{ likeCount }}</span
-									>
-									<span
+									> -->
+
+									<button
+										class="mr-1"
 										*ngIf="
-											isLikeCountPositive;
-											else elseViewOrg
+											(isStatAgent || isCarr) &&
+											datacall.status !== 'ISSUED' &&
+											!datacall.isLocked &&
+											!isViewAbandoned
 										"
+										matBadgeColor="warn"
+										mat-stroked-button
+										[attr.aria-label]="buttonText"
+										color="primary"
+										(click)="toggleAction()"
+										[class.spinner]="isSmallSpinner"
+										[disabled]="isSmallSpinner"
 									>
-										<a
-											mat-button
-											*ngIf="isStatAgent"
-											href="javascript:void(0)"
-											(click)="viewCarriers('Liked')"
-										>
-											View Organizations
-										</a>
-									</span>
-									<ng-template #elseViewOrg>
-										<span> View Organizations </span>
-									</ng-template>
+										<mat-icon *ngIf="isLike">
+											favorite
+										</mat-icon>
+										<mat-icon *ngIf="!isLike">
+											favorite_border
+										</mat-icon>
+										{{ buttonText }}
+									</button>
+
+									<button
+										mat-stroked-button
+										color="primary"
+										*ngIf="isStatAgent"
+										[disabled]="!isLikeCountPositive"
+										(click)="viewCarriers('Liked')"
+									>
+										View Organizations
+									</button>
 								</p>
-								<p
+								<!-- <p
 									*ngIf="
 										(isStatAgent || isCarr) &&
 										datacall.status !== 'ISSUED' &&
@@ -566,7 +564,7 @@
 										[class.spinner]="isSmallSpinner"
 										[disabled]="isSmallSpinner"
 									>
-										<mat-icon> thumb_up_round </mat-icon>
+										<mat-icon> favorite </mat-icon>
 										{{ buttonText }}
 									</button>
 									<button
@@ -578,11 +576,12 @@
 										[class.spinner]="isSmallSpinner"
 										[disabled]="isSmallSpinner"
 									>
-										<mat-icon> thumb_down_round </mat-icon>
+										<mat-icon> favorite_border </mat-icon>
 										{{ buttonText }}
 									</button>
-								</p>
+								</p> -->
 							</div>
+							<div class="col readonly"></div>
 						</div>
 						<div
 							*ngIf="
@@ -644,13 +643,59 @@
 								<button
 									mat-stroked-button
 									color="primary"
-									*ngIf="isCloneAvailable()"
+									*ngIf="
+										(isViewAbandoned &&
+											isReg &&
+											isSameJurisdiction()) ||
+										(isReadonly &&
+											isReg &&
+											!isSameJurisdiction())
+									"
 									(click)="clone(model)"
 								>
 									<mat-icon color="primary"
 										>content_copy</mat-icon
 									>
 									Clone
+								</button>
+								<button
+									mat-flat-button
+									disabled
+									color="primary"
+									*ngIf="
+										isViewAbandoned &&
+										isReg &&
+										isSameJurisdiction()
+									"
+								>
+									<mat-icon>archive</mat-icon>
+									Abandon
+								</button>
+								<button
+									mat-flat-button
+									color="primary"
+									disabled
+									*ngIf="
+										isViewAbandoned &&
+										isReg &&
+										isSameJurisdiction()
+									"
+								>
+									<mat-icon>bookmark</mat-icon>
+									Save New Draft
+								</button>
+								<button
+									mat-flat-button
+									color="primary"
+									disabled
+									*ngIf="
+										isViewAbandoned &&
+										isReg &&
+										isSameJurisdiction()
+									"
+								>
+									<mat-icon>note_add</mat-icon>
+									Issue
 								</button>
 							</div>
 						</div>

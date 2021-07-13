@@ -1,18 +1,17 @@
-import { OnDestroy } from '@angular/core';
 import {
 	Component,
 	OnInit,
 	Input,
-	HostListener,
 	Output,
 	EventEmitter,
 	ViewChild,
 	ElementRef,
-	Inject
+	Inject,
+	OnDestroy
 } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
 import { Subscription } from 'rxjs';
+
 import { AuthService } from '../../services/auth.service';
 import { MESSAGE } from './../../../../src/assets/messageBundle';
 
@@ -28,7 +27,7 @@ export class ModalComponent implements OnInit {
 	@Input() data;
 	@Input() isData;
 	@Input() isSessionExpired;
-	// @Input() isopen;
+
 	@Output() modalClose = new EventEmitter();
 	@Output() forumData: any = new EventEmitter();
 	@Output() redirectLogin = new EventEmitter();
@@ -59,123 +58,6 @@ export class ModalComponent implements OnInit {
 
 	ngOnInit() {}
 
-	@HostListener('document:keydown.escape', ['$event']) onKeydownHandler(
-		event: KeyboardEvent
-	) {
-		const isModalOpen = sessionStorage.getItem('isModalOpen');
-		if (isModalOpen) {
-			console.log('modal closed by esc key');
-			this.modalClose.emit();
-		}
-	}
-
-	// openModal(title, message, type) {
-	// 	// TODO: Check if any modal is already opened
-	// 	const isModalOpen = sessionStorage.getItem('isModalOpen');
-	// 	this.title = title;
-	// 	this.message = message;
-	// 	this.type = type;
-	// 	// TODO: If one modal is open then do not show another modal
-	// 	if (isModalOpen !== 'true') {
-	// 		this.dialog.open(DialogSessionComponent, {
-	// 			data: {
-	// 				type,
-	// 				title,
-	// 				message,
-	// 				isSessionExpired: this.isSessionExpired
-	// 			}
-	// 		});
-	// 		sessionStorage.setItem('isModalOpen', 'true');
-	// 	}
-	// }
-
-	// openPattern(pattern, type) {
-	// 	// TODO: Check if any modal is already opened
-	// 	const isModalOpen = sessionStorage.getItem('isModalOpen');
-	// 	// TODO: If one modal is open then do not show another modal
-	// 	if (isModalOpen !== 'true') {
-	// 		console.log('pattern is');
-	// 		console.log(pattern);
-	// 		this.type = type;
-	// 		this.pattern = [];
-	// 		this.pattern = pattern;
-	// 		this.modalRef = this.modalService.show(
-	// 			this.patternTemplate.nativeElement,
-	// 			this.config
-	// 		);
-	// 		sessionStorage.setItem('isModalOpen', 'true');
-	// 	} else {
-	// 	}
-	// }
-
-	// openPatternDetails(data, type) {
-	// 	// TODO: Check if any modal is already opened
-	// 	const isModalOpen = sessionStorage.getItem('isModalOpen');
-	// 	// TODO: If one modal is open then do not show another modal
-	// 	if (isModalOpen !== 'true') {
-	// 		// console.log('openPatternDetails response ', data);
-	// 		this.type = type;
-	// 		data[0].selected = true;
-	// 		this.patternDetails = data;
-	// 		// console.log("this.patternDetails :- ", this.patternDetails);
-	// 		this.modalRef = this.modalService.show(
-	// 			this.showPatternDetailsTemplate.nativeElement,
-	// 			this.config
-	// 		);
-	// 		sessionStorage.setItem('isModalOpen', 'true');
-	// 	} else {
-	// 	}
-	// }
-
-	// openInfoModal(title, message, type, data, isData) {
-	// 	this.data = data;
-	// 	this.isData = isData;
-	// 	console.log(data);
-	// 	this.openModal(title, message, type);
-	// }
-
-	// openForumModal(title, message, type, data, isData) {
-	// 	this.title = title;
-	// 	this.message = message;
-	// 	this.type = type;
-	// 	this.data = data;
-	// 	this.modalRef = this.modalService.show(
-	// 		this.forumtemplate.nativeElement,
-	// 		this.config
-	// 	);
-	// }
-
-	// openDeleteDataModal(title, message, type) {
-	// 	this.title = title;
-	// 	this.message = message;
-	// 	this.type = type;
-	// 	this.modalRef = this.modalService.show(
-	// 		this.deleteDataTemplate.nativeElement,
-	// 		this.config
-	// 	);
-	// }
-
-	// openConfirmationModal(title, message, type) {
-	// 	this.title = title;
-	// 	this.message = message;
-	// 	this.type = type;
-	// 	this.modalRef = this.modalService.show(
-	// 		this.confirmationTemplate.nativeElement,
-	// 		this.config
-	// 	);
-	// }
-
-	// openDeliveryModal(title, message, type, data) {
-	// 	this.title = title;
-	// 	this.message = message;
-	// 	this.type = type;
-	// 	this.data = data;
-	// 	this.modalRef = this.modalService.show(
-	// 		this.datetemplate.nativeElement,
-	// 		this.config
-	// 	);
-	// }
-
 	updateDelivery() {
 		// this.modalRef.hide();
 		this.deliveryDate.emit(this.data);
@@ -195,11 +77,6 @@ export class ModalComponent implements OnInit {
 		// this.modalRef.hide();
 		this.confirmation.emit();
 	}
-
-	// openSessionModal(title, message, type, isSessionExpired) {
-	// 	this.isSessionExpired = isSessionExpired;
-	// 	this.openModal(title, message, type);
-	// }
 
 	close() {
 		// TODO: Remove opened modal from session storage
@@ -223,31 +100,6 @@ export class ModalComponent implements OnInit {
 		);
 		// this.redirectLogin.emit();
 	}
-	// common code to handle error notification
-	// handleNotification(error, messageBundle, locale) {
-	// 	console.log('in handleNotification >> ' + messageBundle.message);
-
-	// 	if (error === 'Unauthorized') {
-	// 		this.type = MESSAGE.ACTIVITY_FAIL.Unauthorized.type;
-	// 		this.message = MESSAGE.ACTIVITY_FAIL.Unauthorized.message;
-	// 		this.title = MESSAGE.ACTIVITY_FAIL.Unauthorized.title;
-	// 		setTimeout(() => {
-	// 			this.openSessionModal(
-	// 				this.title,
-	// 				this.message,
-	// 				this.type,
-	// 				true
-	// 			);
-	// 		}, 100);
-	// 	} else {
-	// 		this.type = messageBundle.type;
-	// 		this.message = messageBundle.message;
-	// 		this.title = messageBundle.title;
-	// 		setTimeout(() => {
-	// 			this.openModal(this.title, this.message, this.type);
-	// 		}, 100);
-	// 	}
-	// }
 
 	selectAll() {
 		this.selectedAll = !this.selectedAll;
@@ -287,23 +139,16 @@ export class ModalComponent implements OnInit {
 	templateUrl: 'dialog-session.component.html'
 })
 export class DialogSessionComponent implements OnDestroy {
-	private dialogSubscription: Subscription;
 	private authSubscription: Subscription;
 
 	constructor(
 		public dialogRef: MatDialogRef<DialogSessionComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: any,
 		private authService: AuthService
-	) {
-		this.dialogSubscription = dialogRef
-			.afterClosed()
-			.subscribe((result) => {
-				sessionStorage.removeItem('isModalOpen');
-			});
-	}
+	) {}
 
 	ngOnDestroy() {
-		if (this.dialogSubscription) this.dialogSubscription.unsubscribe();
+		sessionStorage.removeItem('isModalOpen');
 		if (this.authSubscription) this.authSubscription.unsubscribe();
 	}
 
@@ -311,12 +156,13 @@ export class DialogSessionComponent implements OnDestroy {
 		this.authSubscription = this.authService.logout('login').subscribe(
 			(resp) => {
 				console.log(resp);
+				this.dialogRef.close();
 			},
 			(err) => {
 				console.log(err);
+				this.dialogRef.close();
 			}
 		);
-		this.dialogRef.close();
 		// this.redirectLogin.emit();
 	}
 }
@@ -325,20 +171,13 @@ export class DialogSessionComponent implements OnDestroy {
 	templateUrl: 'dialog-delete-data.component.html'
 })
 export class DialogDeleteDataComponent implements OnDestroy {
-	private dialogSubscription: Subscription;
 	constructor(
 		public dialogRef: MatDialogRef<DialogDeleteDataComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: any
-	) {
-		this.dialogSubscription = dialogRef.afterClosed().subscribe(() => {
-			sessionStorage.removeItem('isModalOpen');
-		});
-	}
+	) {}
 
 	ngOnDestroy() {
-		if (this.dialogSubscription) {
-			this.dialogSubscription.unsubscribe();
-		}
+		sessionStorage.removeItem('isModalOpen');
 	}
 
 	onClickYes() {}
@@ -349,20 +188,13 @@ export class DialogDeleteDataComponent implements OnDestroy {
 	templateUrl: 'dialog-confirmation.component.html'
 })
 export class DialogConfirmationComponent implements OnDestroy {
-	private dialogSubscription: Subscription;
 	constructor(
 		public dialogRef: MatDialogRef<DialogConfirmationComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: any
-	) {
-		this.dialogSubscription = dialogRef.afterClosed().subscribe(() => {
-			sessionStorage.removeItem('isModalOpen');
-		});
-	}
+	) {}
 
 	ngOnDestroy() {
-		if (this.dialogSubscription) {
-			this.dialogSubscription.unsubscribe();
-		}
+		sessionStorage.removeItem('isModalOpen');
 	}
 
 	onClickYes() {}
@@ -373,20 +205,13 @@ export class DialogConfirmationComponent implements OnDestroy {
 	templateUrl: 'dialog-forum.component.html'
 })
 export class DialogForumComponent implements OnDestroy {
-	private dialogSubscription: Subscription;
 	constructor(
 		public dialogRef: MatDialogRef<DialogForumComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: any
-	) {
-		this.dialogSubscription = dialogRef.afterClosed().subscribe(() => {
-			sessionStorage.removeItem('isModalOpen');
-		});
-	}
+	) {}
 
 	ngOnDestroy() {
-		if (this.dialogSubscription) {
-			this.dialogSubscription.unsubscribe();
-		}
+		sessionStorage.removeItem('isModalOpen');
 	}
 
 	onClickUpdate() {}
@@ -397,20 +222,13 @@ export class DialogForumComponent implements OnDestroy {
 	templateUrl: 'dialog-pattern.component.html'
 })
 export class DialogPatternComponent implements OnDestroy {
-	private dialogSubscription: Subscription;
 	constructor(
 		public dialogRef: MatDialogRef<DialogPatternComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: any
-	) {
-		this.dialogSubscription = dialogRef.afterClosed().subscribe(() => {
-			sessionStorage.removeItem('isModalOpen');
-		});
-	}
+	) {}
 
 	ngOnDestroy() {
-		if (this.dialogSubscription) {
-			this.dialogSubscription.unsubscribe();
-		}
+		sessionStorage.removeItem('isModalOpen');
 	}
 
 	onClickUpdate() {}
@@ -421,20 +239,13 @@ export class DialogPatternComponent implements OnDestroy {
 	templateUrl: 'dialog-date.component.html'
 })
 export class DialogDateComponent implements OnDestroy {
-	private dialogSubscription: Subscription;
 	constructor(
 		public dialogRef: MatDialogRef<DialogDateComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: any
-	) {
-		this.dialogSubscription = dialogRef.afterClosed().subscribe(() => {
-			sessionStorage.removeItem('isModalOpen');
-		});
-	}
+	) {}
 
 	ngOnDestroy() {
-		if (this.dialogSubscription) {
-			this.dialogSubscription.unsubscribe();
-		}
+		sessionStorage.removeItem('isModalOpen');
 	}
 
 	onClickUpdate() {}

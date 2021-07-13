@@ -12,6 +12,11 @@ import {
 	providedIn: 'root'
 })
 export class DialogService {
+	readonly dialogConfig = {
+		height: '', //'400px',
+		width: '' // '600px'
+	};
+
 	constructor(private dialog: MatDialog) {}
 
 	openModal(
@@ -25,7 +30,8 @@ export class DialogService {
 
 		// TODO: If one modal is open then do not show another modal
 		if (isModalOpen !== 'true') {
-			this.dialog.open(DialogSessionComponent, {
+			let d = this.dialog.open(DialogSessionComponent, {
+				...this.dialogConfig,
 				data: {
 					type,
 					title,
@@ -33,6 +39,7 @@ export class DialogService {
 					isSessionExpired
 				}
 			});
+
 			sessionStorage.setItem('isModalOpen', 'true');
 		}
 	}
@@ -62,6 +69,7 @@ export class DialogService {
 
 	openDeleteDataModal(title: string, message: string, type: string) {
 		this.dialog.open(DialogDeleteDataComponent, {
+			...this.dialogConfig,
 			data: {
 				type,
 				title,
@@ -72,6 +80,7 @@ export class DialogService {
 
 	openConfirmationModal(title: string, message: string, type: string) {
 		this.dialog.open(DialogConfirmationComponent, {
+			...this.dialogConfig,
 			data: {
 				type,
 				title,
@@ -93,6 +102,7 @@ export class DialogService {
 		// TODO: If one modal is open then do not show another modal
 		if (isModalOpen !== 'true') {
 			this.dialog.open(DialogSessionComponent, {
+				...this.dialogConfig,
 				data: {
 					type,
 					title,
@@ -113,6 +123,7 @@ export class DialogService {
 		isData: boolean
 	) {
 		this.dialog.open(DialogForumComponent, {
+			...this.dialogConfig,
 			data: {
 				type,
 				title,
@@ -130,6 +141,7 @@ export class DialogService {
 		date: Date
 	) {
 		this.dialog.open(DialogSessionComponent, {
+			...this.dialogConfig,
 			data: {
 				title,
 				message,
@@ -146,6 +158,7 @@ export class DialogService {
 		// TODO: If one modal is open then do not show another modal
 		if (isModalOpen !== 'true') {
 			this.dialog.open(DialogSessionComponent, {
+				...this.dialogConfig,
 				data: {
 					type,
 					pattern
@@ -162,6 +175,7 @@ export class DialogService {
 			data[0].selected = true;
 
 			this.dialog.open(DialogSessionComponent, {
+				...this.dialogConfig,
 				data: {
 					type,
 					data

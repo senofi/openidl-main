@@ -1,8 +1,9 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { DataService } from './../../services/data.service';
 import { StorageService } from './../../services/storage.service';
-import { AuthService } from './../../services/auth.service';
 import { MESSAGE } from './../../../assets/messageBundle';
 import { DialogService } from '../../services/dialog.service';
 
@@ -13,19 +14,10 @@ import { DialogService } from '../../services/dialog.service';
 })
 export class UpdateFormComponent implements OnInit {
 	// Events to be emitted to the parent component
-	@Output() create = new EventEmitter();
-	@Output() fail = new EventEmitter();
-	@Output() issued = new EventEmitter();
-	@Output() cloneDatacallEvent = new EventEmitter();
-	@Output() abandonDatacallEvent = new EventEmitter();
 	@Output() fieldChangeEvent = new EventEmitter();
 	@Output() noFieldChangeEvent = new EventEmitter();
 
 	// Models to capture data
-	public dateRange = [];
-	public dateRangeView = [];
-	public lossdateRange = [];
-	public lossdateRangeView = [];
 	public deadline: any;
 	public datacallObject = {};
 	model = {
@@ -97,19 +89,18 @@ export class UpdateFormComponent implements OnInit {
 	submitted = false;
 	toolbarLabel = '';
 	toolbarTS = '';
+	currentStatus = '';
 
 	constructor(
 		private formBuilder: FormBuilder,
 		private dataService: DataService,
 		private storageService: StorageService,
-		private authService: AuthService,
-		private dialogService: DialogService
+		private dialogService: DialogService,
+		private router: Router
 	) {}
 
 	ngOnInit() {
-		console.log('update form compo open');
-		// Setting minimum date for deadline
-		this.minDeadline = this.dateRange[1];
+		this.currentStatus = this.storageService.getItem('currentStatus');
 
 		// Getting view abandoned status to conditionally show the abandoned view
 		const viewAbandoned = this.storageService.getItem('viewAbandoned');
@@ -163,16 +154,13 @@ export class UpdateFormComponent implements OnInit {
 		// Setting flags and models if regulator is viewing an abandoned data call
 		if (this.role && this.role === 'regulator' && this.isViewAbandoned) {
 			this.isReadonly = true;
-			console.log('First if case');
 			if (
 				this.datacall.forumURL == '' ||
 				this.datacall.forumURL == 'undefined' ||
 				this.datacall.forumURL == undefined
 			) {
-				console.log('forum url is blank');
 				this.isForumUrl = false;
 			} else {
-				console.log('forum url is not blank');
 				this.forumurl = this.datacall.forumURL;
 				this.isForumUrl = true;
 			}
@@ -253,16 +241,13 @@ export class UpdateFormComponent implements OnInit {
 			});
 		} else {
 			this.isReadonly = true;
-			console.log(this.datacall.forumURL);
 			if (
 				this.datacall.forumURL == '' ||
 				this.datacall.forumURL == 'undefined' ||
 				this.datacall.forumURL == undefined
 			) {
-				console.log('forum url is blank');
 				this.isForumUrl = false;
 			} else {
-				console.log('forum url is not blank');
 				this.forumurl = this.datacall.forumURL;
 				this.isForumUrl = true;
 			}
@@ -327,18 +312,14 @@ export class UpdateFormComponent implements OnInit {
 	// Fetch LineOfBusiness list
 	getLOBs() {
 		const uri = '/lob';
-		// this.isSpinner = true;
-		console.log('Trimmed data', this.datacallObject);
 		this.dataService.getData(uri).subscribe(
 			(response) => {
 				this.isSpinner = false;
-				console.log('LOBs response: ', response);
 				let lob = JSON.parse(response);
-				console.log(lob);
 				this.LOBs = lob.lob;
 			},
 			(error) => {
-				console.log(error);
+				console.error(error);
 				this.isSpinner = false;
 				this.isError = true;
 				const messageBundle = MESSAGE.COMMON_ERROR;
@@ -347,14 +328,11 @@ export class UpdateFormComponent implements OnInit {
 		);
 	}
 
-	isCloneAvailable() {
+	isSameJurisdiction() {
 		const isSame =
 			this.userJurisdiction.toLowerCase() ===
 			this.datacall.jurisdiction.toLowerCase();
-		return (
-			(this.isViewAbandoned && this.isReg && isSame) ||
-			(this.isReadonly && this.isReg && !isSame)
-		);
+		return isSame;
 	}
 
 	// Fetch multiple draft versions for a data call
@@ -365,15 +343,14 @@ export class UpdateFormComponent implements OnInit {
 		this.isSpinner = true;
 		this.dataService.getData(uri).subscribe(
 			(response) => {
-				console.log('draft list', JSON.parse(response));
 				this.draftlist = JSON.parse(response);
-				console.log(this.draftlist);
 				this.draftlist.forEach((element) => {
 					element.updatedTs = this.formatDate2(element.updatedTs);
 				});
 
 				this.showDetails(this.draftlist[0], 0);
 
+				this.isSpinner = false;
 				// Emit no field change event to reset hasFieldChange flag in the parent component
 				this.noFieldChangeEvent.emit();
 			},
@@ -390,7 +367,6 @@ export class UpdateFormComponent implements OnInit {
 		// Check for cached LOBs or get from REST API
 		if (storedLOBs) {
 			this.LOBs = storedLOBs;
-			this.isSpinner = false;
 		} else {
 			this.getLOBs();
 		}
@@ -437,39 +413,34 @@ export class UpdateFormComponent implements OnInit {
 			this.toolbarLabel = `Draft Version ${draft.version}`;
 	}
 
+	populateFormData(data) {
+		this.registerForm.setValue({
+			name: data.name,
+			description: data.description,
+			lineOfBusiness: data.lineOfBusiness,
+			jurisdiction: data.jurisdiction,
+			premiumFromDate: data.premiumFromDate,
+			premiumToDate: data.premiumToDate,
+			lossFromDate: data.lossFromDate,
+			lossToDate: data.lossToDate,
+			intentToPublish: data.intentToPublish,
+			purpose: data.purpose,
+			detailedCriteria: data.detailedCriteria,
+			eligibilityRequirement: data.eligibilityRequirement,
+			isShowParticipants: data.isShowParticipants,
+			comments: data.comments,
+			deadline: data.deadline
+		});
+	}
+
 	// Show draft details of selected draft version
 	showDetails(draft, index) {
 		this.updateToolbarLabel(draft, index);
 		this.checked = index;
-		this.dateRange.length = 0;
-		// console.log('Draft: ', draft);
 		this.model = Object.assign({}, draft);
-		// console.log('Model::: ', this.model);
 		this.currentDraft = this.createDraftCopy(draft);
-		// console.log('is show participant in draft', draft.isShowParticipants);
-		this.dateRange = [draft.premiumFromDate, draft.premiumToDate];
-		this.lossdateRange = [draft.lossFromDate, draft.lossToDate];
-		this.lossdateRangeView = [
-			this.formatDate(draft.lossFromDate),
-			this.formatDate(draft.lossToDate)
-		];
-		this.dateRangeView = [
-			this.formatDate(draft.premiumFromDate),
-			this.formatDate(draft.premiumToDate)
-		];
-		// console.log('########## intent ', draft.intentToPublish);
-		// if (draft.intentToPublish == true || draft.intentToPublish == 'Yes') {
-		// 	this.model.intentToPublish = 'Yes';
-		// } else if (
-		// 	draft.intentToPublish == false ||
-		// 	draft.intentToPublish == 'No'
-		// ) {
-		// 	this.model.intentToPublish = 'No';
-		// }
 
-		this.model.deadline = draft.deadline;
-
-		if (this.isReadonly === true) {
+		if (this.isReadonly) {
 			if (this.model.premiumFromDate) {
 				this.model.premiumFromDate = this.formatDate(
 					this.model.premiumFromDate
@@ -514,18 +485,10 @@ export class UpdateFormComponent implements OnInit {
 			} else {
 				this.model.deadline = '';
 			}
+		} else {
+			this.populateFormData(draft);
 		}
-		if (this.dateRange !== undefined || this.dateRange.length !== 0) {
-			if (this.dateRange[0] && !this.dateRange[1]) {
-				this.minDeadline = this.dateRange[0];
-			} else {
-				this.minDeadline = this.dateRange[1];
-			}
-		}
-		if (this.model.deadline !== undefined || this.model.deadline !== '') {
-			this.maxStartdate = this.model.deadline;
-			this.maxEnddate = this.model.deadline;
-		}
+
 		this.getConsentCount();
 	}
 
@@ -542,7 +505,6 @@ export class UpdateFormComponent implements OnInit {
 		this.dataService.getData(likeUri).subscribe(
 			(response) => {
 				const res = JSON.parse(response);
-				// console.log('like status response :::: ', res);
 				if (res == 'null' || res == null) {
 					this.isLike = true;
 					this.buttonText = 'Like Data Call';
@@ -582,7 +544,6 @@ export class UpdateFormComponent implements OnInit {
 			'/consent-count/' + this.model.id + '/' + this.model.version;
 		this.isSmallSpinner = true;
 		this.dataService.getData(uri).subscribe((response) => {
-			// console.log('consent count ::: ', response);
 			this.consentCount = JSON.parse(response).delta;
 			this.getLikeCount();
 		});
@@ -592,10 +553,7 @@ export class UpdateFormComponent implements OnInit {
 	getLikeCount() {
 		const uri = '/like-count/' + this.model.id + '/' + this.model.version;
 		this.dataService.getData(uri).subscribe((response) => {
-			// console.log('like count ::: ', response);
 			this.likeCount = JSON.parse(response).delta;
-			console.log('isLikeCountPositive ', this.isLikeCountPositive);
-			console.log('this.likeCount ', this.likeCount);
 			if (this.likeCount > 0) {
 				this.isLikeCountPositive = true;
 			}
@@ -624,7 +582,6 @@ export class UpdateFormComponent implements OnInit {
 		if (this.isReadonly === true) {
 			return;
 		} else {
-			// console.log('event::: ', event);
 			if (event.target.checked === true) {
 				this.model.isShowParticipants = true;
 			} else {
@@ -673,20 +630,12 @@ export class UpdateFormComponent implements OnInit {
 
 	// Save the changes made to the selected draft and create new draft version
 	saveDraft(value) {
-		// console.log('################### inside save draft ###############');
 		const commentField = this.registerForm.get('comments');
-		// console.log('value ', value);
 		if (this.checkDraft(value)) {
-			// console.log(
-			// 	'#################### new version will not be created and issued as it is'
-			// );
 			commentField.clearValidators();
 			commentField.updateValueAndValidity();
 			this.isIdenticalDraft = true;
 		} else {
-			// console.log(
-			// 	'##################### create a new version and issue '
-			// );
 			commentField.setValidators([Validators.required]);
 			commentField.updateValueAndValidity();
 			this.isIdenticalDraft = false;
@@ -699,14 +648,12 @@ export class UpdateFormComponent implements OnInit {
 			this.title = MESSAGE.MANDATORY_FIELDS_ERROR.title;
 			this.showModal();
 		} else {
-			console.log('is draft identical ' + this.isIdenticalDraft);
 			this.createDatacall(value, 'DRAFT', '/save-new-draft');
 		}
 	}
 
 	// Handle event triggered by forum model
 	updateForumByModal(event) {
-		// console.log('forum url  ', event , '  ::');
 		if (!(event === '' || event === undefined)) {
 			this.model.forumURL = event;
 			this.updateForum();
@@ -715,8 +662,6 @@ export class UpdateFormComponent implements OnInit {
 
 	// Updates the forum URL
 	updateForum() {
-		console.log('in updateforum function');
-		// console.log(this.datacall);
 		let value = {
 			name: this.datacall.name,
 			description: this.datacall.description,
@@ -738,7 +683,6 @@ export class UpdateFormComponent implements OnInit {
 			jurisdiction: this.model.jurisdiction,
 			comments: this.datacall.comments
 		};
-		console.log('this.model.forumurl ', this.model.forumURL);
 
 		if (
 			!(
@@ -777,15 +721,80 @@ export class UpdateFormComponent implements OnInit {
 	// Trigger the clone event to the parent component so that it will clone the data call contents
 	clone(value) {
 		this.storageService.setItem('datacalldraft', value);
-		// console.log(value);
-		this.cloneDatacallEvent.emit();
+		this.storageService.setItem('isClone', 'true');
+		this.router.navigate(['/createDatacall']);
 	}
 
 	// Creates the data call. This is called while saving the draft.
 	createDatacall(value, status, api) {
-		console.log('INTENT TO PUBLISH ::: ', value.intentToPublish);
 		this.datacallObject = {
 			id: '' + this.model.id,
+			name: value.name.trim(),
+			intentToPublish: value.intentToPublish,
+			description: value.description.trim(),
+			purpose: value.purpose.trim(),
+			lineOfBusiness: value.lineOfBusiness.trim(),
+			deadline: value.deadline,
+			premiumFromDate: value.premiumFromDate,
+			premiumToDate: value.premiumToDate,
+			lossFromDate: value.lossFromDate,
+			lossToDate: value.lossToDate,
+			jurisdiction: value.jurisdiction.trim(),
+			detailedCriteria: value.detailedCriteria.trim(),
+			eligibilityRequirement: value.eligibilityRequirement.trim(),
+			status: status,
+			isShowParticipants: value.isShowParticipants,
+			comments: value.comments.trim(),
+			forumURL: '' + this.model.forumURL
+		};
+
+		// Reset the isError flag to hide the error notification
+		this.isError = false;
+		const uri = api;
+		if (this.isIdenticalDraft) {
+			this.isIdenticalDraft = false;
+			this.type = 'error';
+			this.message = 'No changes have been made to the data call fields.';
+			this.title = 'Cannot save a new draft';
+			this.showModal();
+		} else {
+			this.isSpinner = true;
+			this.dataService.postData(uri, this.datacallObject).subscribe(
+				() => {
+					this.isSpinner = false;
+					this.isSuccess = true;
+					if (status === 'ISSUED') {
+						this.router.navigate(['/datacallList']);
+						this.message = MESSAGE.DATACALL_ISSUE_SUCCESS.message;
+						this.title = MESSAGE.DATACALL_ISSUE_SUCCESS.title;
+					} else {
+						this.message =
+							MESSAGE.DATACALL_DRAFT_UPDATE_SUCCESS.message;
+						this.title =
+							MESSAGE.DATACALL_DRAFT_UPDATE_SUCCESS.title;
+						this.getDrafts();
+					}
+					this.type = MESSAGE.DATACALL_ISSUE_SUCCESS.type;
+					this.showModal();
+				},
+				(error) => {
+					console.error(error);
+					this.isForumUrl = false;
+					this.forumurl = '';
+					this.isSpinner = false;
+					this.isError = true;
+					const messageBundle = MESSAGE.COMMON_ERROR;
+					this.dialogService.handleNotification(error, messageBundle);
+				}
+			);
+		}
+	}
+
+	// Updates the data call
+	updateDatacall(value, status, api) {
+		this.datacallObject = {
+			id: '' + this.model.id,
+			version: '' + this.model.version,
 			name: value.name.trim(),
 			intentToPublish: value.intentToPublish,
 			description: value.description.trim(),
@@ -804,83 +813,6 @@ export class UpdateFormComponent implements OnInit {
 			comments: '' + this.model.comments.trim(),
 			forumURL: '' + this.model.forumURL
 		};
-
-		// Reset the isError flag to hide the error notification
-		this.isError = false;
-		const uri = api;
-		if (this.isIdenticalDraft) {
-			this.isIdenticalDraft = false;
-			this.type = 'error';
-			this.message = 'No changes have been made to the data call fields.';
-			this.title = 'Cannot save a new draft';
-			setTimeout(() => {
-				this.showModal();
-			}, 10);
-		} else {
-			this.isSpinner = true;
-			this.dataService.postData(uri, this.datacallObject).subscribe(
-				() => {
-					this.isSpinner = false;
-					this.isSuccess = true;
-					if (status === 'ISSUED') {
-						this.issued.emit();
-						this.message = MESSAGE.DATACALL_ISSUE_SUCCESS.message;
-						this.title = MESSAGE.DATACALL_ISSUE_SUCCESS.title;
-					} else {
-						this.message =
-							MESSAGE.DATACALL_DRAFT_UPDATE_SUCCESS.message;
-						this.title =
-							MESSAGE.DATACALL_DRAFT_UPDATE_SUCCESS.title;
-						this.getDrafts();
-					}
-					this.type = MESSAGE.DATACALL_ISSUE_SUCCESS.type;
-					setTimeout(() => {
-						this.showModal();
-					}, 10);
-				},
-				(error) => {
-					this.isForumUrl = false;
-					this.forumurl = '';
-					this.isSpinner = false;
-					console.log(error);
-					this.isSpinner = false;
-					this.isError = true;
-					const messageBundle = MESSAGE.COMMON_ERROR;
-					this.dialogService.handleNotification(error, messageBundle);
-				}
-			);
-		}
-	}
-
-	// Updates the data call
-	updateDatacall(value, status, api) {
-		if (value.intentToPublish == 'Yes') {
-			value.intentToPublish = true;
-		} else if (value.intentToPublish == 'No') {
-			value.intentToPublish = false;
-		}
-		this.datacallObject = {
-			id: '' + this.model.id,
-			version: '' + this.model.version,
-			name: value.name.trim(),
-			intentToPublish: value.intentToPublish,
-			description: value.description.trim(),
-			purpose: value.purpose.trim(),
-			lineOfBusiness: value.lineOfBusiness.trim(),
-			deadline: '' + value.deadline,
-			premiumFromDate: '' + value.dateRange[0],
-			premiumToDate: '' + value.dateRange[1],
-			lossFromDate: '' + value.lossdateRange[0],
-			lossToDate: '' + value.lossdateRange[1],
-			jurisdiction: value.jurisdiction.trim(),
-			detailedCriteria: value.detailedCriteria.trim(),
-			eligibilityRequirement: value.eligibilityRequirement.trim(),
-			status: status,
-			isShowParticipants: value.isShowParticipants,
-			comments: '' + this.model.comments.trim(),
-			forumURL: '' + this.model.forumURL
-		};
-		console.log(this.datacallObject);
 		// Reset the isError flag to hide the error notification
 		this.isError = false;
 		const uri = api;
@@ -894,7 +826,6 @@ export class UpdateFormComponent implements OnInit {
 			}, 10);
 		} else {
 			this.isSpinner = true;
-			console.log('status::: ', status);
 			this.dataService.putData(uri, this.datacallObject).subscribe(
 				(response) => {
 					if (status === 'CANCELLED') {
@@ -904,20 +835,19 @@ export class UpdateFormComponent implements OnInit {
 						this.type = MESSAGE.DATACALL_ABANDON_SUCCESS.type;
 						this.message = MESSAGE.DATACALL_ABANDON_SUCCESS.message;
 						this.title = MESSAGE.DATACALL_ABANDON_SUCCESS.title;
-						setTimeout(() => {
-							this.showModal();
-						}, 10);
+						this.showModal();
+						this.storageService.setItem('isAbandon', 'true');
+						this.router.navigate(['/datacallList']);
 					} else if (status === 'ISSUED') {
 						this.isSpinner = false;
 						this.isSuccess = true;
 						this.type = MESSAGE.DATACALL_ISSUE_SUCCESS.type;
 						this.message = MESSAGE.DATACALL_ISSUE_SUCCESS.message;
 						this.title = MESSAGE.DATACALL_ISSUE_SUCCESS.title;
-						setTimeout(() => {
-							this.showModal();
-						}, 10);
+						this.showModal();
+
 						if (status === 'ISSUED') {
-							this.issued.emit();
+							this.router.navigate(['/datacallList']);
 						} else {
 							this.getDrafts();
 						}
@@ -927,9 +857,7 @@ export class UpdateFormComponent implements OnInit {
 						this.type = MESSAGE.SET_FORUM_SUCCESS.type;
 						this.message = MESSAGE.SET_FORUM_SUCCESS.message;
 						this.title = MESSAGE.SET_FORUM_SUCCESS.title;
-						setTimeout(() => {
-							this.showModal();
-						}, 10);
+						this.showModal();
 					} else {
 						this.isSpinner = false;
 						this.isSuccess = true;
@@ -938,15 +866,14 @@ export class UpdateFormComponent implements OnInit {
 							MESSAGE.DATACALL_DRAFT_UPDATE_SUCCESS.message;
 						this.title =
 							MESSAGE.DATACALL_DRAFT_UPDATE_SUCCESS.title;
-						setTimeout(() => {
-							this.showModal();
-						}, 10);
+
+						this.showModal();
 						this.getDrafts();
 					}
 				},
 				(error) => {
 					this.isSpinner = false;
-					console.log(error);
+					console.error(error);
 					this.isSpinner = false;
 					this.isError = true;
 					const messageBundle = MESSAGE.COMMON_ERROR;
@@ -957,109 +884,39 @@ export class UpdateFormComponent implements OnInit {
 	}
 
 	// Check if current draft is changed
-	checkDraft(value) {
-		// console.log('in draft check ', value);
-		// if (value.intentToPublish == 'Yes') {
-		// 	value.intentToPublish = true;
-		// } else {
-		// 	value.intentToPublish = false;
-		// }
+	checkDraft(value: any) {
 		const keys = Object.keys(value);
-		let isIdenticalObject: Boolean;
-		isIdenticalObject = true;
+		let isIdenticalObject = true;
+		const dateProps = [
+			'deadline',
+			'lossFromDate',
+			'lossToDate',
+			'premiumFromDate',
+			'premiumToDate'
+		];
+
 		keys.forEach((element) => {
-			console.log(
-				'************************* START ******************************'
-			);
-			if (element === 'dateRange') {
-				console.log(
-					value[element][0],
-					' ',
-					this.currentDraft['premiumFromDate']
-				);
-				console.log(
-					value[element][1],
-					' ',
-					this.currentDraft['premiumToDate']
-				);
-				if (
-					!(
-						value[element][0] ===
-						this.currentDraft['premiumFromDate']
-					)
-				) {
-					isIdenticalObject = false;
-				}
-				if (
-					!(value[element][1] === this.currentDraft['premiumToDate'])
-				) {
-					isIdenticalObject = false;
-				}
-			} else if (element === 'lossdateRange') {
-				console.log(
-					value[element][0],
-					' ',
-					this.currentDraft['lossFromDate']
-				);
-				console.log(
-					value[element][1],
-					' ',
-					this.currentDraft['lossToDate']
-				);
-				if (
-					!(value[element][0] === this.currentDraft['lossFromDate'])
-				) {
-					isIdenticalObject = false;
-				}
-				if (!(value[element][1] === this.currentDraft['lossToDate'])) {
-					isIdenticalObject = false;
-				}
-			} else {
-				console.log(value[element], ' ', this.currentDraft[element]);
-				console.log('key: ', element);
-				console.log(typeof value[element]);
-				if (!(element === 'comments')) {
-					if (typeof value[element] === 'string') {
-						if (
-							value[element].trim() ==
-							this.currentDraft[element].trim()
-						) {
-							console.log(
-								'in string ::::: ',
-								value[element],
-								this.currentDraft[element]
-							);
-						} else {
-							console.log(
-								'inside else :::::: ',
-								value[element],
-								this.currentDraft[element]
-							);
-							isIdenticalObject = false;
-						}
-					} else if (typeof value[element] !== 'string') {
-						if (value[element] == this.currentDraft[element]) {
-							console.log(
-								'not in string :::: ',
-								value[element],
-								this.currentDraft[element]
-							);
-						} else {
-							console.log(
-								'inside else :::::: ',
-								value[element],
-								this.currentDraft[element]
-							);
-							isIdenticalObject = false;
-						}
+			if (!(element === 'comments')) {
+				// if it's date property the convert to date and compare diff
+				if (dateProps.includes(element)) {
+					const newDate = new Date(value[element]);
+					const oldDate = new Date(this.currentDraft[element]);
+					const isSame = newDate.getTime() === oldDate.getTime();
+					if (!isSame) isIdenticalObject = false;
+				} else if (typeof value[element] === 'string') {
+					if (
+						value[element].trim() !==
+						this.currentDraft[element].trim()
+					) {
+						isIdenticalObject = false;
+					}
+				} else if (typeof value[element] !== 'string') {
+					if (value[element] !== this.currentDraft[element]) {
+						isIdenticalObject = false;
 					}
 				}
 			}
-			console.log(
-				'************************* END ******************************'
-			);
 		});
-		console.log('Object Identical = ' + isIdenticalObject);
 		return isIdenticalObject;
 	}
 
@@ -1078,39 +935,7 @@ export class UpdateFormComponent implements OnInit {
 		this.dialogService.openModal(this.title, this.message, this.type, true);
 	}
 
-	// Close the modal and trigger the action as per the requirement
-	modalClose() {
-		if (this.isFailed) {
-			this.isFailed = false;
-			this.isError = false;
-			this.fail.emit();
-		} else if (this.isAbandon) {
-			this.isSuccess = false;
-			this.isAbandon = false;
-			this.abandonDatacallEvent.emit();
-		} else {
-			this.isSuccess = false;
-			this.isopen = false;
-			this.isError = false;
-			this.create.emit();
-		}
-	}
-
-	// Redirect to login if session is expired
-	redirectLogin() {
-		this.isSuccess = false;
-		this.isError = false;
-		this.isopen = false;
-		this.authService.logout('login').subscribe(
-			(resp) => {
-				console.log(resp);
-			},
-			(err) => {
-				console.log(err);
-			}
-		);
-	}
-
+	// enable today and future dates for deadline calender
 	disableOldDates = (d: Date | null): boolean => {
 		const selected = d || new Date();
 		const now = new Date();
@@ -1127,6 +952,7 @@ export class UpdateFormComponent implements OnInit {
 		}
 		return target;
 	}
+
 	// Format date in mm/dd/yyyy format
 	formatDate(d) {
 		const date = new Date(d);
@@ -1142,7 +968,7 @@ export class UpdateFormComponent implements OnInit {
 		return (d = mm + '/' + dd + '/' + yyyy);
 	}
 
-	// Toggle like and unlike data call when click the corrosponding button
+	// Toggle like and unlike data call when click the corresponding button
 	toggleAction() {
 		const uri = '/like';
 		const requestData = {
@@ -1153,7 +979,7 @@ export class UpdateFormComponent implements OnInit {
 			UpdatedBy: this.loginResult.username,
 			Liked: this.isLike
 		};
-		console.log(requestData);
+
 		if (this.isLike) {
 			this.likeDataCall(uri, requestData, 'Unlike Data Call', false);
 			this.isLikeCountPositive = true;
@@ -1169,7 +995,6 @@ export class UpdateFormComponent implements OnInit {
 		this.dataService.postData(uri, body).subscribe(
 			(response) => {
 				this.isSmallSpinner = false;
-				console.log('like response: ', response);
 				this.buttonText = buttonText;
 
 				if (this.buttonText === 'Unlike Data Call') {
@@ -1199,7 +1024,7 @@ export class UpdateFormComponent implements OnInit {
 				this.isSmallSpinner = false;
 				const messageBundle = MESSAGE.COMMON_ERROR;
 				this.dialogService.handleNotification(error, messageBundle);
-				console.log(error);
+				console.error(error);
 			}
 		);
 	}
@@ -1225,7 +1050,6 @@ export class UpdateFormComponent implements OnInit {
 		this.isSpinner = true;
 		this.dataService.getData(uri).subscribe(
 			(response) => {
-				console.log('list response #### ', JSON.parse(response));
 				res = JSON.parse(response);
 				if (res === null) {
 					res = [];
@@ -1268,7 +1092,6 @@ export class UpdateFormComponent implements OnInit {
 	}
 
 	openURL(url) {
-		console.log('url  ', url);
 		let extURL = url;
 		if (!/^(http:|https:)/i.test(extURL)) {
 			extURL = 'http://' + extURL;
