@@ -13,6 +13,8 @@ jobs:
         with:
           node-version: '12.x'
           registry-url: 'https://npm.pkg.github.com'
+      - name: increment version
+        run: npm version minor
       - name: install
         run: npm install
         working-directory: openidl-mapper
