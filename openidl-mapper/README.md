@@ -1,4 +1,4 @@
-test github actions ...
+test github actions ... with npm version
 
 # openidl-mapper
 
