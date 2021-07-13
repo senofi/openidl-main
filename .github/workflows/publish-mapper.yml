@@ -17,7 +17,7 @@ jobs:
         run: npm install
         working-directory: openidl-mapper
       - name: publish
-        run: npm publish
+        run: npm publish --access public
         working-directory: openidl-mapper
         env:
           NODE_AUTH_TOKEN: ${{ secrets.CONTAINER_TOKEN }}
