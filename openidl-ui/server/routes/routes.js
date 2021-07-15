@@ -4,6 +4,7 @@ const app = express();
 const openidlCommonApp = require('../../../openidl-common-ui/server/index');
 const userAuthHandler = openidlCommonApp.UserAuthHandler;
 const apiAuthHandler = openidlCommonApp.ApiAuthHandler;
+const cognitoAuthHandler = openidlCommonApp.CognitoAuthHandler;
 const commonController = require('../controllers/common');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const router = express.Router();
