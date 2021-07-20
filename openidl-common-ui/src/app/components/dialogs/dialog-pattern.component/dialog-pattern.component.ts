@@ -120,9 +120,7 @@ export class DialogPatternComponent implements OnDestroy {
 		const numSelected = this.selection.selected.length;
 		const numRows = this.dataSource.data.length;
 		const isAllSelected = numSelected === numRows;
-		this.isDownloadDisable = !(
-			this.selection.selected.length > 0 || isAllSelected
-		);
+		this.isDownloadDisable = !(this.selection.selected.length > 0);
 		return isAllSelected;
 	}
 

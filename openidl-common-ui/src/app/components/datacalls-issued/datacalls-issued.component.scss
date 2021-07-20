@@ -6,7 +6,7 @@
 
 	.data-content {
 		overflow-y: auto;
-		height: 48rem;
+		height: 47rem;
 	}
 
 	.row {
@@ -59,6 +59,18 @@
 
 	.btn-org {
 		margin-left: 2rem;
+	}
+
+	.btn-container {
+		position: relative;
+		height: 100%;
+		button {
+			top: 1rem;
+		}
+	}
+
+	.count-icon {
+		top: 6px;
 	}
 
 	.data-form {

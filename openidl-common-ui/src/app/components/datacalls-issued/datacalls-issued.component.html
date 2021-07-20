@@ -6,12 +6,13 @@
 		<mat-divider></mat-divider>
 		<mat-card-content class="data-form">
 			<form
+				*ngIf="isStatAgent"
 				class="pb-2"
 				[formGroup]="registerForm"
 				(submit)="updateFields(tempDate, tempURL, tempPattern)"
 			>
 				<div class="row">
-					<div class="col">
+					<div class="col" *ngIf="isDelivery">
 						<mat-form-field appearance="outline" class="full-width">
 							<mat-label>Delivery Date</mat-label>
 							<input
@@ -26,7 +27,20 @@
 							<mat-datepicker #deadlinePicker></mat-datepicker>
 						</mat-form-field>
 					</div>
-					<div class="col">
+					<div class="col flex2" *ngIf="!isForumUrl">
+						<mat-form-field class="full-width" appearance="outline">
+							<mat-label>Forum URL</mat-label>
+							<input
+								matInput
+								type="url"
+								placeholder="Enter Forum URL"
+								formControlName="forumUrl"
+							/>
+						</mat-form-field>
+					</div>
+				</div>
+				<div class="row pb-2">
+					<div class="col" *ngIf="!isPattern">
 						<mat-form-field appearance="outline" class="full-width">
 							<mat-label>Extraction Pattern</mat-label>
 							<mat-select
@@ -43,33 +57,23 @@
 							</mat-select>
 						</mat-form-field>
 					</div>
-					<div class="col flex2">
-						<mat-form-field class="full-width" appearance="outline">
-							<mat-label>Forum URL</mat-label>
-							<input
-								matInput
-								type="url"
-								placeholder="Enter Forum URL"
-								formControlName="forumUrl"
-							/>
-						</mat-form-field>
+					<div class="col" *ngIf="!isPattern">
+						<div class="btn-container">
+							<button
+								mat-button
+								color="primary"
+								(click)="showPattern()"
+							>
+								View & Download Patterns
+							</button>
+						</div>
 					</div>
-				</div>
-				<div class="row pb-2">
-					<div class="col"></div>
-					<div class="col right">
-						<button
-							mat-button
-							color="primary"
-							(click)="showPattern()"
-						>
-							View & Download Patterns
-						</button>
-					</div>
-					<div class="col flex2 right">
-						<button mat-flat-button color="primary">
-							Update Details
-						</button>
+					<div class="col right" *ngIf="!isForumUrl || isDelivery">
+						<div class="btn-container">
+							<button mat-flat-button color="primary">
+								Update Details
+							</button>
+						</div>
 					</div>
 				</div>
 				<mat-divider></mat-divider>
@@ -155,8 +159,54 @@
 			</div>
 
 			<div class="row">
+				<div class="col readonly">
+					<h4>Forum URL</h4>
+					<p>
+						<button
+							mat-icon-button
+							color="primary"
+							(click)="editForum()"
+							aria-label="Edit Forum URL"
+						>
+							<mat-icon>edit</mat-icon>
+						</button>
+						<button
+							mat-button
+							color="primary"
+							(click)="openURL(draft.forumURL)"
+						>
+							{{ draft.forumURL }}
+							https://google.com
+						</button>
+					</p>
+				</div>
+				<div class="col readonly">
+					<h4>Extraction Pattern</h4>
+					<p>
+						<button
+							mat-button
+							color="primary"
+							(click)="getExtractionPatternById()"
+						>
+							View & Download
+						</button>
+						<span>
+							{{ draft.extractionPatternName }}
+						</span>
+					</p>
+				</div>
+				<div class="col readonly"></div>
+			</div>
+
+			<div class="row">
 				<div class="col button-row">
-					<button mat-stroked-button color="primary">
+					<button
+						*ngIf="isCarr"
+						mat-stroked-button
+						color="primary"
+						[disabled]="isSmallSpinner"
+						[class.spinner]="isSmallSpinner"
+					>
 						<mat-icon color="primary">check_circle</mat-icon>
 						Consent to the Report
 					</button>
@@ -190,14 +240,19 @@
 					</button>
 				</div>
 			</div>
+			<div class="row" *ngIf="isRecorded">
+				<div class="col">
+					<p>{{ action }} recorded: {{ recordTime }}</p>
+				</div>
+			</div>
 		</mat-card-content>
 	</mat-card>
 
 	<div class="pt-2">
 		<div class="row">
 			<div class="col flex2">
-				<mat-card class="data-content">
-					<mat-card-content>
+				<mat-card>
+					<mat-card-content class="data-content">
 						<h2>Purpose</h2>
 						<p>
 							{{ draft.purpose }}
@@ -233,16 +288,27 @@
 						<h2>Carrier Consents</h2>
 						<p>
 							<mat-icon
+								class="count-icon"
 								color="primary"
 								aria-label="Number of Carriers"
 								[matBadge]="consentCount"
 								matBadgeColor="warn"
 								>business</mat-icon
 							>
+							<button
+								class="btn-org"
+								mat-button
+								color="primary"
+								*ngIf="isStatAgent"
+								(click)="viewCarriers('Consented')"
+							>
+								View Carriers
+							</button>
 						</p>
 						<h2>Organization Likes</h2>
 						<p>
 							<mat-icon
+								class="count-icon"
 								color="primary"
 								aria-label="Number of Carriers"
 								[matBadge]="likeCount"

@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>{{ data.title }}</h2>
+<app-base-dialog [title]="data.title" [type]="data.type"></app-base-dialog>
 <mat-dialog-content class="mat-typography">
 	{{ data.message }}
 
@@ -7,7 +7,6 @@
 	</div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-	<button mat-flat-button mat-dialog-close>Close</button>
 	<button
 		*ngIf="data.isSessionExpired"
 		mat-flat-button

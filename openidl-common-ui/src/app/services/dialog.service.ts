@@ -30,7 +30,7 @@ export class DialogService {
 
 		// TODO: If one modal is open then do not show another modal
 		if (isModalOpen !== 'true') {
-			let d = this.dialog.open(DialogSessionComponent, {
+			this.dialog.open(DialogSessionComponent, {
 				...this.dialogConfig,
 				data: {
 					type,

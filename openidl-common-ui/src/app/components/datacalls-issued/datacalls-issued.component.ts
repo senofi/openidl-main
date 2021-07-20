@@ -78,29 +78,29 @@ export class DatacallsIssuedComponent implements OnInit {
 	message: any;
 	type: any;
 	// Flags to conditionally handle expressions
-	isSpinner: Boolean = false;
-	isSmallSpinner: Boolean = false;
-	isSmallSpinner1: Boolean = false;
-	isSmallSpinner2: Boolean = false;
-	isSmallSpinner3: Boolean = false;
-	isError: Boolean = false;
-	isSuccess: Boolean = false;
+	isSpinner: boolean = false;
+	isSmallSpinner: boolean = false;
+	isSmallSpinner1: boolean = false;
+	isSmallSpinner2: boolean = false;
+	isSmallSpinner3: boolean = false;
+	isError: boolean = false;
+	isSuccess: boolean = false;
 	isData: boolean = false;
-	isReg: Boolean = false;
-	isStatAgent: Boolean = false;
-	isLikeCountPositive: Boolean = false;
-	isCarr: Boolean = false;
-	isForumUrl: Boolean = false;
-	isPattern: Boolean = false;
-	isConsent: Boolean = false;
-	isDelivery: Boolean = true;
-	isReportAvlbl: Boolean = false;
-	isPublished: Boolean = false;
-	isRecorded: Boolean = false;
-	hasAllFields: Boolean = false;
-	isUpdate: Boolean = false;
-	isPatternUpdate: Boolean = false;
-	isForumUpdate: Boolean = false;
+	isReg: boolean = false;
+	isStatAgent: boolean = false;
+	isLikeCountPositive: boolean = false;
+	isCarr: boolean = false;
+	isForumUrl: boolean = false;
+	isPattern: boolean = false;
+	isConsent: boolean = false;
+	isDelivery: boolean = true;
+	isReportAvlbl: boolean = false;
+	isPublished: boolean = false;
+	isRecorded: boolean = false;
+	hasAllFields: boolean = false;
+	isUpdate: boolean = false;
+	isPatternUpdate: boolean = false;
+	isForumUpdate: boolean = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -228,7 +228,7 @@ export class DatacallsIssuedComponent implements OnInit {
 			this.isPattern = true;
 			this.isPatternUpdate = true;
 		}
-		this.getExtrationPattern();
+		this.getExtractionPattern();
 		this.getReports();
 	} // init ends
 
@@ -262,7 +262,7 @@ export class DatacallsIssuedComponent implements OnInit {
 	}
 
 	// Opens forum url modal in edit mode
-	editforum() {
+	editForum() {
 		this.type = 'info';
 		this.message = 'Forum URL';
 		this.title = 'Update Forum URL';
@@ -1252,11 +1252,14 @@ export class DatacallsIssuedComponent implements OnInit {
 		);
 	}
 
-	getExtrationPattern() {
+	getExtractionPattern() {
 		const uri = '/list-extraction-patterns';
 		this.dataService.getData(uri).subscribe(
 			(response) => {
-				// console.log('list response #### ', JSON.parse(response));
+				console.log(
+					'list-extraction-patterns response #### ',
+					JSON.parse(response)
+				);
 				this.extractionPatternList = JSON.parse(response);
 				this.extractionPatternList.sort((a, b) =>
 					a.extractionPatternID.localeCompare(b.extractionPatternID)
@@ -1308,17 +1311,19 @@ export class DatacallsIssuedComponent implements OnInit {
 		);
 	}
 
-	getExtrationPatternById() {
-		let filterLIST = [];
+	getExtractionPatternById() {
+		let filterList = [];
 		this.extractionPatternList.forEach((element) => {
 			if (
 				this.draft.extractionPatternID === element.extractionPatternID
 			) {
-				filterLIST.push(element);
+				filterList.push(element);
 			}
 		});
-		// console.log("filterLIST :- ", filterLIST);
-		this.dialogService.openPatternDetails(filterLIST, 'info');
+
+		if (filterList.length > 0) {
+			this.dialogService.openPatternDetails(filterList, 'info');
+		}
 	}
 
 	// getExtrationPatternById(){

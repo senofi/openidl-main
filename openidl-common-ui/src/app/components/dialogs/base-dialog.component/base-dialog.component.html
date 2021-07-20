@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-	<mat-toolbar role="toolbar" class="task-header" color="primary">
+	<mat-toolbar role="toolbar" class="task-header" [class]="type">
 		<span>{{ title }}</span>
 		<span class="fx-spacer"></span>
 		<button mat-icon-button mat-dialog-close aria-label="Close">

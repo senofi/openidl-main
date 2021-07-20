@@ -1,4 +1,7 @@
-<app-base-dialog title="Extraction Pattern"></app-base-dialog>
+<app-base-dialog
+	title="Extraction Pattern"
+	[type]="data.type"
+></app-base-dialog>
 
 <mat-dialog-content class="mat-typography">
 	<table mat-table [dataSource]="dataSource" class="table-pattern">
@@ -48,7 +51,6 @@
 	</table>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-	<button mat-flat-button mat-dialog-close cdkFocusInitial>Close</button>
 	<button
 		mat-flat-button
 		(click)="onClickDownload()"
