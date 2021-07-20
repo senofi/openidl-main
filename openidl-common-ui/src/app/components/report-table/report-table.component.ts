@@ -8,7 +8,7 @@ import { DialogService } from '../../services/dialog.service';
 @Component({
 	selector: 'app-report-table',
 	templateUrl: './report-table.component.html',
-	styleUrls: ['./report-table.component.css']
+	styleUrls: ['./report-table.component.scss']
 })
 export class ReportTableComponent implements OnInit {
 	// Output event which is emmitted to the update report component which then disables the update button

@@ -16,7 +16,7 @@ import { DialogService } from '../../services/dialog.service';
 @Component({
 	selector: 'app-datacalls-issued',
 	templateUrl: './datacalls-issued.component.html',
-	styleUrls: ['./datacalls-issued.component.css']
+	styleUrls: ['./datacalls-issued.component.scss']
 })
 export class DatacallsIssuedComponent implements OnInit {
 	// Events to be emitted to the parent component
@@ -58,8 +58,7 @@ export class DatacallsIssuedComponent implements OnInit {
 		extractionPatternName: ''
 	};
 
-	extrationPatterList: any;
-	extrationPatterListDropDown: any;
+	extractionPatternList: any;
 	role: any;
 	data: any;
 	proposedDeliveryDate: any;
@@ -143,7 +142,17 @@ export class DatacallsIssuedComponent implements OnInit {
 
 		const data = this.storageService.getItem('datacall');
 		if (data) {
-			this.draft = data;
+			this.draft = Object.assign({}, data);
+
+			this.draft.premiumFromDate = this.formatDate(
+				this.draft.premiumFromDate
+			);
+			this.draft.premiumToDate = this.formatDate(
+				this.draft.premiumToDate
+			);
+			this.draft.lossFromDate = this.formatDate(this.draft.lossFromDate);
+			this.draft.lossToDate = this.formatDate(this.draft.lossToDate);
+
 			this.minDeadline = new Date(this.draft.premiumToDate);
 			if (this.draft.proposedDeliveryDate == '0001-01-01T00:00:00Z') {
 				console.log('delivery date not set');
@@ -283,7 +292,7 @@ export class DatacallsIssuedComponent implements OnInit {
 		this.dataService.getData(uri).subscribe(
 			(response) => {
 				const res = JSON.parse(response);
-				// console.log('consent response ::: ', response);
+				console.log('consent response ::: ', response);
 				if (res == null || res == 'null') {
 					this.isConsent = true;
 					this.isRecorded = false;
@@ -436,7 +445,7 @@ export class DatacallsIssuedComponent implements OnInit {
 					this.draft = JSON.parse(resp);
 					this.storageService.setItem('datacall', this.draft);
 					this.isSuccess = false;
-					this.extrationPatterList.forEach((element) => {
+					this.extractionPatternList.forEach((element) => {
 						if (this.draft.extractionPatternID === element.id) {
 							this.draft.extractionPatternName = element.name;
 						}
@@ -1248,21 +1257,21 @@ export class DatacallsIssuedComponent implements OnInit {
 		this.dataService.getData(uri).subscribe(
 			(response) => {
 				// console.log('list response #### ', JSON.parse(response));
-				this.extrationPatterList = JSON.parse(response);
-				this.extrationPatterList.sort((a, b) =>
+				this.extractionPatternList = JSON.parse(response);
+				this.extractionPatternList.sort((a, b) =>
 					a.extractionPatternID.localeCompare(b.extractionPatternID)
 				);
 				// console.log("this.extrationPatterList :- ", this.extrationPatterList);
 
 				let patterns = [];
-				this.extrationPatterList.forEach((el) => {
+				this.extractionPatternList.forEach((el) => {
 					if (!patterns.includes(el.extractionPatternID)) {
 						patterns.push(el.extractionPatternID);
 					}
 				});
 				let _formattedPatterns = [];
 				patterns.forEach((pattern) => {
-					let _arr = this.extrationPatterList.filter(
+					let _arr = this.extractionPatternList.filter(
 						(el) => el.extractionPatternID == pattern
 					);
 					let _pattern = _arr[0];
@@ -1273,9 +1282,9 @@ export class DatacallsIssuedComponent implements OnInit {
 					_formattedPatterns.push(_pattern);
 				});
 
-				this.extrationPatterList = _formattedPatterns;
+				this.extractionPatternList = _formattedPatterns;
 				// console.log("this.extrationPatterList _formattedPatterns :- ", this.extrationPatterList);
-				this.extrationPatterList.forEach((element) => {
+				this.extractionPatternList.forEach((element) => {
 					// console.log("getExtrationPattern element :- ", element);
 					if (
 						this.draft.extractionPatternID ===
@@ -1301,7 +1310,7 @@ export class DatacallsIssuedComponent implements OnInit {
 
 	getExtrationPatternById() {
 		let filterLIST = [];
-		this.extrationPatterList.forEach((element) => {
+		this.extractionPatternList.forEach((element) => {
 			if (
 				this.draft.extractionPatternID === element.extractionPatternID
 			) {
@@ -1331,6 +1340,6 @@ export class DatacallsIssuedComponent implements OnInit {
 	// }
 
 	showPattern() {
-		this.dialogService.openPattern(this.extrationPatterList, 'info');
+		this.dialogService.openPattern(this.extractionPatternList, 'info');
 	}
 }

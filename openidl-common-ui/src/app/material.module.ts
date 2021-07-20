@@ -25,6 +25,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 @NgModule({
 	declarations: [],
 	imports: [
@@ -49,7 +51,9 @@ import { MatBadgeModule } from '@angular/material/badge';
 		MatSidenavModule,
 		MatListModule,
 		MatToolbarModule,
-		MatBadgeModule
+		MatBadgeModule,
+		MatDividerModule,
+		MatCheckboxModule
 	],
 	exports: [
 		MatCardModule,
@@ -72,7 +76,9 @@ import { MatBadgeModule } from '@angular/material/badge';
 		MatSidenavModule,
 		MatListModule,
 		MatToolbarModule,
-		MatBadgeModule
+		MatBadgeModule,
+		MatDividerModule,
+		MatCheckboxModule
 	],
 	providers: [MatDatepickerModule, MatPaginatorModule],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]

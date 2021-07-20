@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+
 import { MESSAGE } from '../../assets/messageBundle';
-import {
-	DialogConfirmationComponent,
-	DialogDeleteDataComponent,
-	DialogForumComponent,
-	DialogSessionComponent
-} from '../components/modal/modal.component';
+import { DialogConfirmationComponent } from '../components/dialogs/dialog-confirmation.component/dialog-confirmation.component';
+import { DialogDeleteDataComponent } from '../components/dialogs/dialog-delete-data.component/dialog-delete-data.component';
+import { DialogForumComponent } from '../components/dialogs/dialog-forum.component/dialog-forum.component';
+import { DialogPatternComponent } from '../components/dialogs/dialog-pattern.component/dialog-pattern.component';
+import { DialogSessionComponent } from '../components/dialogs/dialog-session.component/dialog-session.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -45,8 +45,6 @@ export class DialogService {
 	}
 
 	handleNotification(error, messageBundle, locale = 'en-US') {
-		console.log('in handleNotification >> ' + messageBundle.message);
-
 		if (error === 'Unauthorized') {
 			setTimeout(() => {
 				this.openModal(
@@ -157,7 +155,7 @@ export class DialogService {
 
 		// TODO: If one modal is open then do not show another modal
 		if (isModalOpen !== 'true') {
-			this.dialog.open(DialogSessionComponent, {
+			this.dialog.open(DialogPatternComponent, {
 				...this.dialogConfig,
 				data: {
 					type,

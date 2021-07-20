@@ -8,13 +8,10 @@ import {
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CookieService } from 'ngx-cookie-service';
-import { ClipboardModule } from 'ngx-clipboard';
 
 import { LoginComponent } from './components/login/login.component';
 import { LoginModule } from './components/login/login.module';
 import { PipesModule } from './pipes/pipes.module';
-import { ComponentsModule } from './components/components.module';
 import { ConfigModule } from './config/config.module';
 import { ServicesModule } from './services/services.module';
 import { OpenidlCommonComponent } from './app.component';
@@ -26,15 +23,13 @@ import { SearchComponent } from './components/search/search.component';
 import { NotifyComponent } from './components/notify/notify.component';
 import { SearchPipe } from './pipes/search.pipe';
 import { UpdateFormComponent } from './components/update-form/update-form.component';
-import { ModalComponent } from './components/modal/modal.component';
 import { DatacallsIssuedComponent } from './components/datacalls-issued/datacalls-issued.component';
 import { DatacallHistoryComponent } from './components/datacall-history/datacall-history.component';
 import { BlocksHistoryComponent } from './components/blocks-history/blocks-history.component';
 import { ReportTableComponent } from './components/report-table/report-table.component';
 import { UpdateReportComponent } from './components/update-report/update-report.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
-import { DownloadToCsvComponent } from './components/download-to-csv/download-to-csv.component';
-import { DialogModule } from './components/modal/dialog.module';
+import { DialogModule } from './components/dialogs/dialog.module';
 import { MaterialModule } from './material.module';
 
 @NgModule({
@@ -46,12 +41,10 @@ import { MaterialModule } from './material.module';
 		TableComponent,
 		SpinnerComponent,
 		PaginationComponent,
-		DownloadToCsvComponent,
 		SearchComponent,
 		NotifyComponent,
 		SearchPipe,
 		UpdateFormComponent,
-		ModalComponent,
 		DatacallsIssuedComponent,
 		DatacallHistoryComponent,
 		BlocksHistoryComponent,
@@ -64,12 +57,10 @@ import { MaterialModule } from './material.module';
 		HttpClientModule,
 		FormsModule,
 		PipesModule,
-		ComponentsModule,
 		ConfigModule,
 		ServicesModule,
 		LoginModule,
 		ReactiveFormsModule,
-		ClipboardModule,
 		MaterialModule,
 		DialogModule
 	],
@@ -81,12 +72,10 @@ import { MaterialModule } from './material.module';
 		SearchComponent,
 		SpinnerComponent,
 		PaginationComponent,
-		DownloadToCsvComponent,
 		SearchComponent,
 		NotifyComponent,
 		SearchPipe,
 		UpdateFormComponent,
-		ModalComponent,
 		DatacallsIssuedComponent,
 		DatacallHistoryComponent,
 		BlocksHistoryComponent,
@@ -95,7 +84,7 @@ import { MaterialModule } from './material.module';
 		MaterialModule,
 		DialogModule
 	],
-	providers: [CookieService],
+	providers: [],
 	bootstrap: [OpenidlCommonComponent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

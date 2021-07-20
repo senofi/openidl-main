@@ -1,0 +1,47 @@
+.report-table {
+	.report-link {
+		color: #2d74da;
+		text-decoration: underline;
+		cursor: pointer;
+	}
+	.truncate-url {
+		width: 350px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: block;
+	}
+	.truncate-hash {
+		width: 250px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: block;
+	}
+
+	@media screen and (max-width: 1024px) {
+		.truncate-url {
+			width: 200px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: block;
+		}
+		.truncate-hash {
+			width: 170px;
+		}
+	}
+
+	@media screen and (max-width: 780px) {
+		.truncate-url {
+			width: 100px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: block;
+		}
+		.truncate-hash {
+			width: 90px;
+		}
+	}
+}
