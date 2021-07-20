@@ -11,6 +11,7 @@
         "dev-test": "cross-env NODE_CONFIG_DIR=./server/config nyc mocha --timeout 10000 --exit"
     },
     "dependencies": {
+        "aws-sdk": "^2.949.0",
         "body-parser": "^1.18.3",
         "cfenv": "^1.1.0",
         "config": "^2.0.1",

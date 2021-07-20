@@ -39,7 +39,7 @@ const openidlCommonLib = require('@openidl-org/openidl-common-lib');
 const apiAuthHandler = openidlCommonLib.ApiAuthHandler;
 apiAuthHandler.init(IBMCloudEnv.getDictionary('appid-credentials'));
 
-const cognitoAuthHandler = openidlCommonApp.CognitoAuthHandler;
+const cognitoAuthHandler = openidlCommonLib.CognitoAuthHandler;
 cognitoAuthHandler.init(IBMCloudEnv.getDictionary('cognito-credentials'));
 
 
@@ -65,11 +65,11 @@ cognitoPassport.use(cognitoStrategy);
 
 // Passport session persistance
 cognitoPassport.serializeUser(function (user, cb) {
-  cb(null, user);
+    cb(null, user);
 });
 
 cognitoPassport.deserializeUser(function (obj, cb) {
-  cb(null, obj);
+    cb(null, obj);
 });
 
 /**
@@ -131,9 +131,9 @@ const port = process.env.PORT || config.port;
 //const host = "localhost";
 //const port = "8080";
 
-    app.listen(port, () => {
-        logger.info(`app listening on http://${host}:${port}`);
-        logger.info(`Swagger UI is available at http://${host}:${port}/api-docs`);
-        app.emit("listened", null);
-    });
+app.listen(port, () => {
+    logger.info(`app listening on http://${host}:${port}`);
+    logger.info(`Swagger UI is available at http://${host}:${port}/api-docs`);
+    app.emit("listened", null);
+});
 module.exports = app;

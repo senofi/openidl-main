@@ -13,15 +13,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 const express = require('express');
 const log4js = require('log4js');
 const config = require('config');
 const openidlDataCallCommonApp = require('@openidl-org/openidl-common-lib');
 const apiAuthHandler = openidlDataCallCommonApp.ApiAuthHandler;
-const cognitoAuthHandler = openidlDataCallCommonApp.cognitoAuthHandler;
+const cognitoAuthHandler = openidlDataCallCommonApp.CognitoAuthHandler;
 const fabricUserEnrollment = require('../controller/fabric-user-controller');
 const appUser = require('../controller/app-user-controller');
+const cognitoUser = require('../controller/cognito-user-controller');
 const router = express.Router();
 
 /**
@@ -33,6 +34,9 @@ logger.level = config.logLevel;
  * Add routes
  */
 router.use('/fabric-user-enrollment', cognitoAuthHandler.validateToken, fabricUserEnrollment.enroll);
-router.use('/app-user-enrollment', cognitoAuthHandler.validateToken, appUser.register);
+router.use('/app-user-enrollment', apiAuthHandler.authenticate, appUser.register);
+router.use('/cognito-user-enrollment', cognitoAuthHandler.validateToken, cognitoUser.register);
+router.use('/cognito-user-attributes', cognitoAuthHandler.validateToken, cognitoUser.updateUserAttributes);
+router.use('/cognito-user-login', cognitoAuthHandler.authenticate, cognitoAuthHandler.getUserAttributes, cognitoUser.login);
 
 module.exports = router;
