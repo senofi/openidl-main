@@ -5,6 +5,7 @@ import { MESSAGE } from '../../assets/messageBundle';
 import { DialogConfirmationComponent } from '../components/dialogs/dialog-confirmation.component/dialog-confirmation.component';
 import { DialogDeleteDataComponent } from '../components/dialogs/dialog-delete-data.component/dialog-delete-data.component';
 import { DialogForumComponent } from '../components/dialogs/dialog-forum.component/dialog-forum.component';
+import { DialogPatternDetailsComponent } from '../components/dialogs/dialog-pattern-details.component/dialog-pattern-details.component';
 import { DialogPatternComponent } from '../components/dialogs/dialog-pattern.component/dialog-pattern.component';
 import { DialogSessionComponent } from '../components/dialogs/dialog-session.component/dialog-session.component';
 
@@ -166,17 +167,15 @@ export class DialogService {
 		}
 	}
 
-	openPatternDetails(data: any, type: string) {
+	openPatternDetails(pattern: any, type: string) {
 		const isModalOpen = sessionStorage.getItem('isModalOpen');
 		// TODO: If one modal is open then do not show another modal
 		if (isModalOpen !== 'true') {
-			data[0].selected = true;
-
-			this.dialog.open(DialogSessionComponent, {
+			this.dialog.open(DialogPatternDetailsComponent, {
 				...this.dialogConfig,
 				data: {
 					type,
-					data
+					pattern
 				}
 			});
 			sessionStorage.setItem('isModalOpen', 'true');

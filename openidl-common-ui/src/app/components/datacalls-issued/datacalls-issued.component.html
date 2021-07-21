@@ -134,35 +134,48 @@
 					</p>
 				</div>
 				<div class="col readonly">
-					<h4>Proposed Delivery Date</h4>
-					<p>
-						<mat-form-field
-							appearance="fill"
-							*ngIf="isStatAgent && isUpdate"
-						>
-							<mat-label>Select Delivery Date</mat-label>
-							<input matInput [matDatepicker]="dp3" disabled />
-							<mat-datepicker-toggle
-								matSuffix
-								[for]="dp3"
-							></mat-datepicker-toggle>
-							<mat-datepicker
-								#dp3
-								disabled="false"
-							></mat-datepicker>
-						</mat-form-field>
-						<span *ngIf="isUpdate">{{
-							draft.proposedDeliveryDate | date: 'MM/dd/yyyy '
-						}}</span>
-					</p>
+					<div *ngIf="!isDelivery">
+						<h4>Proposed Delivery Date</h4>
+						<p>
+							<mat-form-field
+								appearance="fill"
+								*ngIf="isStatAgent && isUpdate"
+							>
+								<mat-label>Select Delivery Date</mat-label>
+								<input
+									matInput
+									[matDatepicker]="dp3"
+									disabled
+								/>
+								<mat-datepicker-toggle
+									matSuffix
+									[for]="dp3"
+								></mat-datepicker-toggle>
+								<mat-datepicker
+									#dp3
+									disabled="false"
+								></mat-datepicker>
+							</mat-form-field>
+							<span *ngIf="isUpdate">{{
+								draft.proposedDeliveryDate | date: 'MM/dd/yyyy '
+							}}</span>
+						</p>
+					</div>
 				</div>
 			</div>
 
-			<div class="row">
-				<div class="col readonly">
+			<div
+				class="row"
+				*ngIf="
+					(isForumUrl && isForumUpdate) ||
+					(isPattern && isPatternUpdate)
+				"
+			>
+				<div class="col readonly" *ngIf="isForumUrl && isForumUpdate">
 					<h4>Forum URL</h4>
 					<p>
 						<button
+							*ngIf="isStatAgent"
 							mat-icon-button
 							color="primary"
 							(click)="editForum()"
@@ -176,11 +189,10 @@
 							(click)="openURL(draft.forumURL)"
 						>
 							{{ draft.forumURL }}
-							https://google.com
 						</button>
 					</p>
 				</div>
-				<div class="col readonly">
+				<div class="col readonly" *ngIf="isPattern && isPatternUpdate">
 					<h4>Extraction Pattern</h4>
 					<p>
 						<button
@@ -269,11 +281,10 @@
 						</p>
 					</mat-card-content>
 					<mat-divider *ngIf="isStatAgent"></mat-divider>
-					<mat-card-actions align="end">
+					<mat-card-actions align="end" *ngIf="isStatAgent">
 						<button
 							mat-stroked-button
 							color="primary"
-							*ngIf="isStatAgent"
 							(click)="viewDrafts()"
 						>
 							<mat-icon>bookmarks</mat-icon>
@@ -342,6 +353,7 @@
 		</div>
 	</div>
 	<app-update-report
+		*ngIf="isStatAgent"
 		[datacall]="draft"
 		[username]="this.loginResult.username"
 		(updateReportEvent)="updateReport($event)"

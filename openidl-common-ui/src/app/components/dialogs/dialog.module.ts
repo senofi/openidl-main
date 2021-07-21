@@ -10,6 +10,7 @@ import { DialogDeleteDataComponent } from './dialog-delete-data.component/dialog
 import { DialogForumComponent } from './dialog-forum.component/dialog-forum.component';
 import { DialogPatternComponent } from './dialog-pattern.component/dialog-pattern.component';
 import { DialogDateComponent } from './dialog-date.component/dialog-date.component';
+import { DialogPatternDetailsComponent } from './dialog-pattern-details.component/dialog-pattern-details.component';
 
 @NgModule({
 	imports: [CommonModule, FormsModule, MaterialModule],
@@ -20,6 +21,7 @@ import { DialogDateComponent } from './dialog-date.component/dialog-date.compone
 		DialogForumComponent,
 		DialogPatternComponent,
 		DialogDateComponent,
+		DialogPatternDetailsComponent,
 		BaseDialogComponent
 	],
 	exports: [
@@ -30,6 +32,7 @@ import { DialogDateComponent } from './dialog-date.component/dialog-date.compone
 		DialogForumComponent,
 		DialogPatternComponent,
 		DialogDateComponent,
+		DialogPatternDetailsComponent,
 		BaseDialogComponent
 	],
 	providers: []

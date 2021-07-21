@@ -1313,6 +1313,7 @@ export class DatacallsIssuedComponent implements OnInit {
 
 	getExtractionPatternById() {
 		let filterList = [];
+
 		this.extractionPatternList.forEach((element) => {
 			if (
 				this.draft.extractionPatternID === element.extractionPatternID
