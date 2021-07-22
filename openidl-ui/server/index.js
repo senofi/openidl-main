@@ -1,4 +1,5 @@
 'use strict';
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const cfenv = require('cfenv');
@@ -99,7 +100,7 @@ if (NODE_ENV === 'production') {
 
 }
 
-if (NODE_ENV === 'production') {
+if (NODE_ENV === 'production' || NODE_ENV === 'qa') {
     app.use(express.static('dist'));
 }
 // app.get('/', (req, res) => {

@@ -1,0 +1,52 @@
+header {
+  padding:20px 0px;
+  height:83px;
+  border-bottom: 3px solid #005698;
+  display:block;
+  background-color: #fff;
+}
+header img {
+  display:inline-block;
+  padding: 0 10px;
+}
+header .divider {
+  border-left: 2px solid #005698;
+  height: 30px;
+  vertical-align: middle;
+  width: 1px;
+  display: inline-block;
+}
+header ul {
+  display: inline-block;
+  padding: 20px 0;
+  list-style-type: none;
+}
+header ul li {
+  display: inline-block;
+    padding: 0 20px;
+}
+header ul li a {
+  font-size: 14px;
+    text-transform: capitalize;
+    font-family: 'IBM Plex Sans Bold';
+    text-decoration: none;
+    height: 35px;
+    display: block;
+    padding-top: 10px;
+}
+header ul li.active {
+  border-bottom:5px solid #005698;
+}
+.nav-container {
+  float: right;
+  padding:0 20px;
+  vertical-align: middle;
+}
+
+.logout-link {
+  font-size: 14px;
+  text-transform: capitalize;
+  font-family: 'IBM Plex Sans Bold';
+  border-left:2px solid #005698;
+  padding:0 15px;
+}
