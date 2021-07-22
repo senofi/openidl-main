@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
- 
+
 
 const log4js = require('log4js');
 const config = require('config');
@@ -31,6 +31,8 @@ class transaction {
     }
     init(connProfilePath) {
         this.ccp = connProfilePath;
+        this.peer = this.ccp.organizations[this.org].peers[0];
+        this.isLocalHost = this.ccp.peers[this.peer].url.indexOf('localhost') > -1;
     }
     static initWallet(options) {
         walletHelper.init(options);
@@ -102,7 +104,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: false }
+                discovery: { enabled: true, asLocalhost: this.isLocalHost }
             });
 
             const network = await this.gateway.getNetwork(this.channelName);
@@ -138,7 +140,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: false }
+                discovery: { enabled: true, asLocalhost: this.isLocalHost }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const contract = network.getContract(this.chaincodeName);
@@ -155,7 +157,7 @@ class transaction {
             this.gateway.disconnect();
         }
     };
-    async transientTransaction(functionName, parameters, pageNumber, retryCountPending, ) {
+    async transientTransaction(functionName, parameters, pageNumber, retryCountPending,) {
         logger.debug('inside transaction.transientTransaction() functionName...' + functionName);
         logger.debug('inside transaction.transientTransaction() parameters...');
         try {
@@ -166,7 +168,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: false }
+                discovery: { enabled: true, asLocalhost: this.isLocalHost }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const contract = network.getContract(this.chaincodeName);
@@ -202,7 +204,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: false }
+                discovery: { enabled: true, asLocalhost: this.isLocalHost }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const channel = network.getChannel();
@@ -235,7 +237,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: false }
+                discovery: { enabled: true, asLocalhost: this.isLocalHost }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const channel = network.getChannel();
@@ -262,7 +264,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: false }
+                discovery: { enabled: true, asLocalhost: this.isLocalHost }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const channel = network.getChannel();
@@ -289,7 +291,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: false }
+                discovery: { enabled: true, asLocalhost: this.isLocalHost }
             });
             await this.gateway.getNetwork(this.channelName);
             const client = await this.gateway.getClient(this.channelName);
@@ -325,7 +327,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: false }
+                discovery: { enabled: true, asLocalhost: this.isLocalHost }
             });
             await this.gateway.getNetwork(this.channelName);
             const client = await this.gateway.getClient(this.channelName);

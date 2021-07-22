@@ -19,7 +19,6 @@ const config = require('config');
 const FabricCAServices = require('fabric-ca-client');
 const FabricClient = require('fabric-client');
 const fs = require('fs');
-
 /**
  * Util object
  */
@@ -63,6 +62,8 @@ util.userEnroll = (orgName, enrollId, enrollSecret) => {
         logger.debug("Org CA URL -> ", caURL);
         const caName = ccp.certificateAuthorities[orgCAKey].caName;
         logger.debug("Org CA Name -> ", caName);
+        const mspId = org.mspid;
+        logger.debug("MSP Id -> ", mspId);
 
         // enroll user with certificate authority for orgName
         const tlsOptions = {
@@ -82,6 +83,7 @@ util.userEnroll = (orgName, enrollId, enrollSecret) => {
         caService.enroll(req).then(
             (enrollment) => {
                 enrollment.key = enrollment.key.toBytes();
+                enrollment.mspId = mspId;
                 logger.debug("enrolling ");
                 return resolve(enrollment);
             },
@@ -116,6 +118,8 @@ util.userRegister = (orgName, enrollId, enrollSecret, affiliation, role, attrs, 
         logger.debug("Org CA URL -> ", caURL);
         const caName = ccp.certificateAuthorities[orgCAKey].caName;
         logger.debug("Org CA Name -> ", caName);
+        const mspId = org.mspid;
+        logger.debug("MSP Id -> ", mspId);
 
         var fabricClient = new FabricClient();
         fabricClient.loadFromConfig(connectionProfile);
@@ -150,7 +154,6 @@ util.userRegister = (orgName, enrollId, enrollSecret, affiliation, role, attrs, 
             const caService = new FabricCAServices(caURL, tlsOptions, caName);
             const req = {
                 enrollmentID: enrollId,
-                affiliation: affiliation,
                 role: role,
                 enrollmentSecret: enrollSecret,
                 attrs: attrs,

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
- 
+
 
 const log4js = require('log4js');
 const config = require('config');
@@ -18,7 +18,7 @@ const MESSAGE_CONFIG = require('./config/ibp-messages-config.js');
 
 
 class FabricListenerHelper {
-    constructor(org, user, channelName, orgMSPId, wallet, peer) {
+    constructor(org, user, channelName, orgMSPId, wallet, peer, isLocalHost) {
         this.org = org;
         this.user = user;
         this.channelName = channelName;
@@ -26,6 +26,7 @@ class FabricListenerHelper {
         this.gateway = new Gateway();
         this.wallet = wallet;
         this.peer = peer;
+        this.isLocalHost = isLocalHost;
     }
     init(connProfilePath) {
         this.ccp = connProfilePath;
@@ -38,14 +39,14 @@ class FabricListenerHelper {
         await this.gateway.connect(this.ccp, {
             identity: this.user,
             wallet: this.wallet,
-            discovery: { enabled: true, asLocalhost: false }
+            discovery: { enabled: true, asLocalhost: this.isLocalHost }
         });
         const network = await this.gateway.getNetwork(this.channelName);
         logger.info("Network is " + network);
         const channel = network.getChannel();
         logger.info("channel  is " + channel);
         const peer = channel.getPeersForOrg(this.orgMSPId);
-        
+
         logger.info("peer  is " + peer[0]);
         this.eventHub = channel.newChannelEventHub(peer[0]);
         //  finally { //TODO need to discuss 
@@ -87,7 +88,7 @@ class FabricListenerHelper {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: this.wallet,
-                discovery: { enabled: true, asLocalhost: false }
+                discovery: { enabled: true, asLocalhost: this.isLocalHost }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const channel = network.getChannel();
@@ -116,7 +117,7 @@ class FabricListenerHelper {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: this.wallet,
-                discovery: { enabled: true, asLocalhost: false }
+                discovery: { enabled: true, asLocalhost: this.isLocalHost }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const channel = network.getChannel();
@@ -139,7 +140,7 @@ class FabricListenerHelper {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: this.wallet,
-                discovery: { enabled: true, asLocalhost: false }
+                discovery: { enabled: true, asLocalhost: this.isLocalHost }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const channel = network.getChannel();

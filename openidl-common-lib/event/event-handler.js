@@ -34,11 +34,12 @@ EventListener.init = async (networkConfig, listenerConfig, blockManagementDB) =>
     this.orgMSPId = networkConfig.client.organization;
     this.mspid = networkConfig.organizations[this.orgName].mspid;
     this.peer = networkConfig.organizations[this.orgName].peers[0];
+    this.isLocalHost = networkConfig.peers[this.peer].url.indexOf('localhost') > -1;
 
     for (let index = 0; index < this.listenerChannels.length; index++) {
         const channel = this.listenerChannels[index];
         logger.info("Channel is " + channel);
-        const channelTransaction = new FabricHelperTransaction(this.org, this.user, channel.channelName, this.mspId, this.wallet, this.peer);
+        const channelTransaction = new FabricHelperTransaction(this.org, this.user, channel.channelName, this.mspId, this.wallet, this.peer, this.isLocalHost);
         channelTransaction.init(this.networkConfig);
         logger.info("network config is " + this.networkConfig);
         let isChannelInitalized = false;
@@ -67,9 +68,9 @@ EventListener.processInvoke = async () => {
             await mainHandler(channel.channelName);
             logger.debug("AFTER MAINHANDLER()");
             let blockHeight = 0;
-            logger.debug("BLOCK HEIGHT BFORE " + blockHeight );
+            logger.debug("BLOCK HEIGHT BFORE " + blockHeight);
             blockHeight = await carrierChannelTransactionMap.get(channel.channelName).getBlockHeight();
-            logger.debug("BLOCK HEIGHT AFTER " + blockHeight );
+            logger.debug("BLOCK HEIGHT AFTER " + blockHeight);
             await registerBlockEventListener(channel.channelName, blockHeight - 1);
             logger.debug("processInvoke channel done:" + channel.channelName);
         }
@@ -80,7 +81,7 @@ EventListener.processInvoke = async () => {
 };
 
 const mainHandler = async (channelName) => {
-    
+
     try {
         logger.debug('eventHandler mainHandler method entry for channel ' + channelName);
         const blockInfo = await getBlockInfoFromCloudant(this.applicationName + "-" + channelName);
@@ -126,12 +127,12 @@ const loopHandler = async (blockNumber, channelName) => {
         //get the block height from network
         let blockHeight = await carrierChannelTransactionMap.get(channelName).getBlockHeight();
         console.log("THE BLOCK HEIGHT FROM NETWORK IN LOOPHANDLER IS ", blockHeight);
-        while (blockNumber <  blockHeight) {
-                blockData = await carrierChannelTransactionMap.get(channelName).getBlockDataByBlockNumber(blockNumber);
-                if(blockData !== null){
-                    await eventVerificationHandler(blockData);
-                    blockNumber++;
-                }
+        while (blockNumber < blockHeight) {
+            blockData = await carrierChannelTransactionMap.get(channelName).getBlockDataByBlockNumber(blockNumber);
+            if (blockData !== null) {
+                await eventVerificationHandler(blockData);
+                blockNumber++;
+            }
         }
 
     } catch (error) {

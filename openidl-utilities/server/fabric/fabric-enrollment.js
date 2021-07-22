@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 const fs = require("fs");
 const lodash = require('lodash');
@@ -39,9 +39,9 @@ fabricEnrollment.registerUser = async (user) => {
     const adminConfigPath = path.join(__dirname, './config', fabric_constants.adminConfigFile);
     const adminList = require(adminConfigPath);
     console.log("Admin Details config file >> " + adminList.adminlist.length);
-    var adminMsp = user.org;
+    var adminOrg = user.org;
 
-    let admin = lodash.filter(adminList.adminlist, ["mspid", adminMsp]);
+    let admin = lodash.filter(adminList.adminlist, ["org", adminOrg]);
     let adminUser = admin[0].user;
     let adminSecret = admin[0].secret;
     console.log("adminUser" + adminUser);
@@ -83,7 +83,7 @@ fabricEnrollment.enrollUser = async (user, persistent) => {
                     console.log("Incorrect Usage of script. Refer README for more details");
                     return;
                 }
-                walletHelper.importIdentity(user.user, user.org, enrollInfo.certificate, enrollInfo.key);
+                walletHelper.importIdentity(user.user, enrollInfo.mspId, enrollInfo.certificate, enrollInfo.key);
             } else {
                 console.log("Storing User Certificate on File System...");
                 fs.writeFile('enrollInfo.json', enrollJson, function (err) {
