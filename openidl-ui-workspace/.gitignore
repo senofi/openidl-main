@@ -43,3 +43,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+.env
+/projects/openidl-ui/server/config/local-appid-config.json
