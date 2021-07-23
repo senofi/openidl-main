@@ -6,9 +6,10 @@
 		"start": "node projects/openidl-ui/server/index.js",
 		"build": "ng build",
 		"test": "ng test",
-		"watch": "ng build --project=openidl-ui --watch --configuration development",
-		"build:common": "ng build --project=openidl-common-ui",
-		"build:ui": "ng build --project=openidl-ui"
+		"watch": "ng build openidl-common-ui --watch --configuration development",
+		"build:common": "ng build openidl-common-ui",
+		"build:ui": "ng build openidl-ui",
+		"serve": "ng serve openidl-ui --proxy-config proxy.conf.json"
 	},
 	"private": true,
 	"dependencies": {
