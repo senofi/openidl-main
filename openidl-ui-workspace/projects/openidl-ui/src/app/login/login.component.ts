@@ -104,9 +104,6 @@ export class LoginComponent implements OnInit {
         },
         (error) => {
           this.isError = true;
-          this.type = MESSAGE.LOGIN.INVALID_CREDENTIALS.type;
-          this.message = MESSAGE.LOGIN.INVALID_CREDENTIALS.message;
-          this.title = MESSAGE.LOGIN.INVALID_CREDENTIALS.title;
           this.isSpinner = false;
           formDirective.resetForm();
           this.userForm.reset();

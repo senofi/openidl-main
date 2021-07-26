@@ -3,13 +3,16 @@
 	"version": "0.0.0",
 	"scripts": {
 		"ng": "ng",
-		"start": "node projects/openidl-ui/server/index.js",
 		"build": "ng build",
 		"test": "ng test",
 		"watch": "ng build openidl-common-ui --watch --configuration development",
 		"build:common": "ng build openidl-common-ui",
+		"start:ui": "node projects/openidl-ui/server/index.js",
+		"start:ui2": "node projects/openidl-carrier-ui/server/index.js",
 		"build:ui": "ng build openidl-ui",
-		"serve": "ng serve openidl-ui --proxy-config proxy.conf.json"
+		"build:ui2": "ng build openidl-carrier-ui",
+		"serve:ui": "ng serve openidl-ui --proxy-config proxy.conf.json",
+		"serve:ui2": "ng serve openidl-carrier-ui --proxy-config proxy.conf.json"
 	},
 	"private": true,
 	"dependencies": {

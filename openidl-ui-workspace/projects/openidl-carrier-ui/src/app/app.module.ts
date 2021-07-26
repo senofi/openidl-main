@@ -15,9 +15,7 @@ import { StorageService } from 'openidl-common-ui';
 import { DataService } from 'openidl-common-ui';
 import { AuthService } from 'openidl-common-ui';
 import { MaterialModule } from 'openidl-common-ui';
-
 import { AppComponent } from './app.component';
-import { CreateDatacallComponent } from './create-datacall/create-datacall.component';
 import { DatacallListComponent } from './datacall-list/datacall-list.component';
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
@@ -29,7 +27,6 @@ import { ViewReportComponent } from './view-report/view-report.component';
 @NgModule({
 	declarations: [
 		AppComponent,
-		CreateDatacallComponent,
 		DatacallListComponent,
 		LoginComponent,
 		HeaderComponent,
