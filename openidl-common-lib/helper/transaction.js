@@ -31,11 +31,13 @@ class transaction {
     }
     init(connProfilePath) {
         this.ccp = connProfilePath;
-        this.peer = this.ccp.organizations[this.org].peers[0];
-        this.isLocalHost = this.ccp.peers[this.peer].url.indexOf('localhost') > -1;
     }
     static initWallet(options) {
-        walletHelper.init(options);
+        if (options.isLocal) {
+            walletHelper.initCloudant(options);
+        } else {
+            walletHelper.init(options);
+        }
     }
 
     async initEventHub() {
@@ -104,7 +106,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: this.isLocalHost }
+                discovery: { enabled: true, asLocalhost: false }
             });
 
             const network = await this.gateway.getNetwork(this.channelName);
@@ -140,7 +142,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: this.isLocalHost }
+                discovery: { enabled: true, asLocalhost: false }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const contract = network.getContract(this.chaincodeName);
@@ -168,7 +170,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: this.isLocalHost }
+                discovery: { enabled: true, asLocalhost: false }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const contract = network.getContract(this.chaincodeName);
@@ -204,7 +206,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: this.isLocalHost }
+                discovery: { enabled: true, asLocalhost: false }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const channel = network.getChannel();
@@ -237,7 +239,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: this.isLocalHost }
+                discovery: { enabled: true, asLocalhost: false }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const channel = network.getChannel();
@@ -264,7 +266,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: this.isLocalHost }
+                discovery: { enabled: true, asLocalhost: false }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const channel = network.getChannel();
@@ -291,7 +293,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: this.isLocalHost }
+                discovery: { enabled: true, asLocalhost: false }
             });
             await this.gateway.getNetwork(this.channelName);
             const client = await this.gateway.getClient(this.channelName);
@@ -327,7 +329,7 @@ class transaction {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: walletHelper.getWallet(),
-                discovery: { enabled: true, asLocalhost: this.isLocalHost }
+                discovery: { enabled: true, asLocalhost: false }
             });
             await this.gateway.getNetwork(this.channelName);
             const client = await this.gateway.getClient(this.channelName);

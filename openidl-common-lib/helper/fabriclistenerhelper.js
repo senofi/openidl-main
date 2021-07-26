@@ -18,7 +18,7 @@ const MESSAGE_CONFIG = require('./config/ibp-messages-config.js');
 
 
 class FabricListenerHelper {
-    constructor(org, user, channelName, orgMSPId, wallet, peer, isLocalHost) {
+    constructor(org, user, channelName, orgMSPId, wallet, peer) {
         this.org = org;
         this.user = user;
         this.channelName = channelName;
@@ -26,7 +26,6 @@ class FabricListenerHelper {
         this.gateway = new Gateway();
         this.wallet = wallet;
         this.peer = peer;
-        this.isLocalHost = isLocalHost;
     }
     init(connProfilePath) {
         this.ccp = connProfilePath;
@@ -39,7 +38,7 @@ class FabricListenerHelper {
         await this.gateway.connect(this.ccp, {
             identity: this.user,
             wallet: this.wallet,
-            discovery: { enabled: true, asLocalhost: this.isLocalHost }
+            discovery: { enabled: true, asLocalhost: false }
         });
         const network = await this.gateway.getNetwork(this.channelName);
         logger.info("Network is " + network);
@@ -88,7 +87,7 @@ class FabricListenerHelper {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: this.wallet,
-                discovery: { enabled: true, asLocalhost: this.isLocalHost }
+                discovery: { enabled: true, asLocalhost: false }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const channel = network.getChannel();
@@ -117,7 +116,7 @@ class FabricListenerHelper {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: this.wallet,
-                discovery: { enabled: true, asLocalhost: this.isLocalHost }
+                discovery: { enabled: true, asLocalhost: false }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const channel = network.getChannel();
@@ -140,7 +139,7 @@ class FabricListenerHelper {
             await this.gateway.connect(this.ccp, {
                 identity: this.user,
                 wallet: this.wallet,
-                discovery: { enabled: true, asLocalhost: this.isLocalHost }
+                discovery: { enabled: true, asLocalhost: false }
             });
             const network = await this.gateway.getNetwork(this.channelName);
             const channel = network.getChannel();

@@ -158,6 +158,9 @@ secrets:
     - name: uniqueidentifiersaais-config
       file: config/unique-identifiers-config.json
       namespace: default
+    - name: off-chain-kvs-credentials
+      file: config/off-chain-kvs-credentials.json
+      namespace: default
     - name: nifi-config
       file: config/nifi-flowconfig.json
       namespace: nifi

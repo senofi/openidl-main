@@ -3,6 +3,7 @@ global:
   appsecret: apps-secret
   hdssecret: hds-secret
   hdsconfigmap: hds-configmap
+  minikubeip: minikube-ip
   datacallapp:
     install: true
     port: 8080

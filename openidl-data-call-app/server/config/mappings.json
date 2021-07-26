@@ -28,5 +28,11 @@
             "env:IBM_CERTIFICATE_MANAGER_CONFIG",
             "file:/server/config/local-certmanager-config.json"
         ]
+    },
+    "off-chain-kvs-credentials": {
+        "searchPatterns": [
+            "env:OFF_CHAIN_KVS_CREDENTIALS",
+            "file:/server/config/off-chain-kvs-credentials.json"
+        ]
     }
 }

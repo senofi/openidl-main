@@ -136,11 +136,11 @@ cognitoPassport.use(cognitoStrategy);
 
 // Passport session persistance
 cognitoPassport.serializeUser(function (user, cb) {
-  cb(null, user);
+    cb(null, user);
 });
 
 cognitoPassport.deserializeUser(function (obj, cb) {
-  cb(null, obj);
+    cb(null, obj);
 });
 
 app.enable('trust proxy');
@@ -190,14 +190,19 @@ const host = process.env.HOST || config.host;
 const port = process.env.PORT || config.port;
 console.log("  cert config  " + IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'));
 
-transactionFactory.init(IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'), networkConfig).then(data => {
-    console.log('transaction factory init done');
-    app.listen(port, () => {
-        logger.info(`app listening on http://${host}:${port}`);
-        logger.info(`Swagger UI is available at http://${host}:${port}/api-docs`);
-        app.emit("listened", null);
+
+transactionFactory.init(networkConfig.isLocal ?
+    // use the off chain kvs store for local network
+    IBMCloudEnv.getDictionary('off-chain-kvs-credentials')
+    : IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'), networkConfig)
+    .then(data => {
+        console.log('transaction factory init done');
+        app.listen(port, () => {
+            logger.info(`app listening on http://${host}:${port}`);
+            logger.info(`Swagger UI is available at http://${host}:${port}/api-docs`);
+            app.emit("listened", null);
+        });
+    }).catch(err => {
+        logger.error('transaction factory init error' + err);
     });
-}).catch(err => {
-    logger.error('transaction factory init error' + err);
-});
 module.exports = app;

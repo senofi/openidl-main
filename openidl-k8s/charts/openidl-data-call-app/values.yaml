@@ -105,3 +105,5 @@ secrets:
       file: default.json
     - name: data-call-app-mappings-config
       file: mappings.json
+    - name: off-chain-kvs-credentials
+      file: off-chain-kvs-credentials.json

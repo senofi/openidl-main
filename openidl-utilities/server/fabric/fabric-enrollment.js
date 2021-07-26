@@ -73,7 +73,7 @@ fabricEnrollment.enrollUser = async (user, persistent) => {
             }
             if (isPersistentStore) {
                 if (typeof (persistent) !== 'undefined' && persistent === "cloudant") {
-                    walletHelper.initCloudant(IBMCloudEnv.getDictionary('db-credentials'));
+                    walletHelper.initCloudant(IBMCloudEnv.getDictionary('off-chain-kvs-credentials'));
                     console.log("wallet initialised with Cloudant");
                 } else if (typeof (persistent) === 'undefined' || persistent === "certificate-manager") {
                     console.log(cert);

@@ -111,3 +111,5 @@ secrets:
       file: s3-bucket-config.json
     - name: uniqueidentifiersaais-config
       file: unique-identifiers-config.json
+    - name: off-chain-kvs-credentials
+      file: off-chain-kvs-credentials.json

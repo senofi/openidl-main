@@ -21,6 +21,14 @@ spec:
       labels:
         {{- include "openidl-data-call-app.selectorLabels" . | nindent 8 }}
     spec:
+      {{- if .Values.global.minikubeip }}
+      hostAliases:
+      - ip: {{ .Values.global.minikubeip }}
+        hostnames:
+        - "peer0.org1.example.com"
+        - "peer0.org2.example.com"
+        - "orderer.example.com"
+      {{- end }}
       # {{- with .Values.imagePullSecrets }}
       # imagePullSecrets:
       #   {{- toYaml . | nindent 8 }}
