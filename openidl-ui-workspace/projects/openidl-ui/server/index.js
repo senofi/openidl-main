@@ -24,7 +24,7 @@ app.use(express.urlencoded({
  * Set up logging
  */
 const logger = log4js.getLogger('server');
-logger.setLevel(config.logLevel);
+logger.level = config.logLevel || "debug";
 
 logger.debug('setting up app: registering routes, middleware...');
 

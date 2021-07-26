@@ -18,13 +18,13 @@ IBMCloudEnv.init("/projects/openidl-carrier-ui/server/config/mappings.json");
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({
-    extended: true
+  extended: true
 }));
 /**
  * Set up logging
  */
 const logger = log4js.getLogger('server');
-logger.setLevel(config.logLevel);
+logger.level = config.logLevel || "debug";
 
 logger.debug('setting up app: registering routes, middleware...');
 
@@ -50,9 +50,9 @@ app.use(userAuthHandler.configureSSL);
 // TODO Undable to move passport related stuff to middleware need expert help
 // TODO discuss on standard session maintaince approach from Node.js for production
 app.use(session({
-	secret: "123456",
-	resave: true,
-	saveUninitialized: true
+  secret: "123456",
+  resave: true,
+  saveUninitialized: true
 }));
 logger.debug('setting up app: initializing passport');
 const passport = userAuthHandler.getPassport();
@@ -63,11 +63,11 @@ passport.use(webAppStrategy);
 
 // Passport session persistance
 passport.serializeUser(function (user, cb) {
-	cb(null, user);
+  cb(null, user);
 });
 
 passport.deserializeUser(function (obj, cb) {
-	cb(null, obj);
+  cb(null, obj);
 });
 
 const apiPassport = apiAuthHandler.getPassport();
@@ -78,11 +78,11 @@ apiPassport.use(apiAppStrategy);
 
 // Passport session persistance
 apiPassport.serializeUser(function (user, cb) {
-	cb(null, user);
+  cb(null, user);
 });
 
 apiPassport.deserializeUser(function (obj, cb) {
-	cb(null, obj);
+  cb(null, obj);
 });
 
 
@@ -99,7 +99,7 @@ if (NODE_ENV === 'production') {
 }
 
 if (NODE_ENV === 'production' || NODE_ENV === 'qa') {
-    app.use(express.static('dist/openidl-carrier-ui'));
+  app.use(express.static('dist/openidl-carrier-ui'));
 }
 // app.get('/', (req, res) => {
 //   res.json({
@@ -110,6 +110,6 @@ if (NODE_ENV === 'production' || NODE_ENV === 'qa') {
 app.use('/', routes)
 
 var portNumber = IBMCloudEnv.getString("portnumber");
-app.listen(portNumber, function() {
+app.listen(portNumber, function () {
   console.log('App started listening at ', portNumber);
 });
