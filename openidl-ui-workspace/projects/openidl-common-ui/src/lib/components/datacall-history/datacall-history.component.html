@@ -10,4 +10,11 @@
 		<div mat-line>Data Call Issued.</div>
 		<div mat-line>7/13/2021 04:38 PM</div>
 	</mat-list-item> -->
+	<div class="loading">
+		<mat-spinner
+			matSuffix
+			[diameter]="40"
+			*ngIf="datacallHistory === undefined"
+		></mat-spinner>
+	</div>
 </mat-list>

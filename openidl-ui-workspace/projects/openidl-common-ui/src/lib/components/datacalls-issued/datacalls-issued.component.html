@@ -298,7 +298,13 @@
 					<mat-card-content>
 						<h2>Carrier Consents</h2>
 						<p>
+							<mat-spinner
+								matSuffix
+								[diameter]="20"
+								*ngIf="consentCount === undefined"
+							></mat-spinner>
 							<mat-icon
+								*ngIf="consentCount >= 0"
 								class="count-icon"
 								color="primary"
 								aria-label="Number of Carriers"
@@ -318,10 +324,16 @@
 						</p>
 						<h2>Organization Likes</h2>
 						<p>
+							<mat-spinner
+								matSuffix
+								[diameter]="20"
+								*ngIf="likeCount === undefined"
+							></mat-spinner>
 							<mat-icon
+								*ngIf="likeCount >= 0"
 								class="count-icon"
 								color="primary"
-								aria-label="Number of Carriers"
+								aria-label="Number of Likes"
 								[matBadge]="likeCount"
 								matBadgeColor="warn"
 							>
