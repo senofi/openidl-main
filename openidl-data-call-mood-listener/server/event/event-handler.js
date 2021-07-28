@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 const log4js = require('log4js');
 const config = require('config');
@@ -31,7 +31,10 @@ logger.level = config.logLevel;
 
 console.log(targetChannelConfig);
 
-Transaction.initWallet(IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'));
+// use the off chain kvs store for local network
+Transaction.initWallet(IBMCloudEnv.getDictionary(
+    networkConfig.isLocal
+        ? 'off-chain-kvs-credentials' : 'IBM-certificate-manager-credentials'));
 let targetChannelTransaction = new Transaction(targetChannelConfig.users[0].org, targetChannelConfig.users[0].user, targetChannelConfig.targetChannels[0].channelName, targetChannelConfig.targetChannels[0].chaincodeName, targetChannelConfig.users[0].mspId);
 targetChannelTransaction.init(networkConfig);
 

@@ -108,6 +108,7 @@ node is in (aais, analytics, carrier)
 | local-appid-config.json                | local-appid-config        |
 | local-cognito-config.json              | local-cognito-config      |
 | local-certmanager-config.json          | local-certmanager-config  |
+| local-kvs-config.json                  | local-kvs-config          |
 | local-cloudant-config.json             | local-cloudant-config     |
 | local-mongo-config.json                | local-mongo-config        |
 | flowconfig.json                        | nifi-flowconfig           |

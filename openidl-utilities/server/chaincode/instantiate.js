@@ -9,23 +9,27 @@ const transactionFactory = require('./TransactionFactory/transactionFactory');
 const networkConfig = require('./config/connection-profile.json');
 const collection = require('./config/collection-config.json');
 
-transactionFactory.init(IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'), networkConfig).then(data => {
-    logger.info("initialization done");
-    instantiateConfig.channel.forEach(element => {
-        console.log(process.argv[2]);
-        if (process.argv[2] === '-i') {
-            instantiate(element);
-        } else if (process.argv[2] === '-u') {
-            update(element);
-        } else {
-            logger.warn("Invalid Option please select -i for instantiate and -u for update");
-        }
+// use the off chain kvs store for local network
+transactionFactory.init(
+    IBMCloudEnv.getDictionary(networkConfig.isLocal
+        ? 'off-chain-kvs-credentials' : 'IBM-certificate-manager-credentials')
+    , networkConfig).then(data => {
+        logger.info("initialization done");
+        instantiateConfig.channel.forEach(element => {
+            console.log(process.argv[2]);
+            if (process.argv[2] === '-i') {
+                instantiate(element);
+            } else if (process.argv[2] === '-u') {
+                update(element);
+            } else {
+                logger.warn("Invalid Option please select -i for instantiate and -u for update");
+            }
 
+        });
+
+    }).catch(err => {
+        logger.error('transaction factory init error' + err);
     });
-
-}).catch(err => {
-    logger.error('transaction factory init error' + err);
-});
 
 async function instantiate(element) {
     element.request['collections-config'] = collection;

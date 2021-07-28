@@ -21,7 +21,7 @@ const transactionFactory = {};
 transactionFactory.init = async (config, networkConfig) => {
     try {
         logger.debug('transactionFactory init method entry');
-        Transaction.initWallet({ ...config, isLocal: networkConfig.isLocal || false });
+        Transaction.initWallet(config);
         DefaultChannelTransaction = new Transaction(org, user, channelConfig.channels[0].channelName, channelConfig.channels[0].chaincodeName, mspId);
         DefaultChannelTransaction.init(networkConfig);
 

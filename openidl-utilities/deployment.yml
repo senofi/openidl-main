@@ -40,6 +40,9 @@ spec:
           mountPath: /server/fabric/config/local-certmanager-config.json
           subPath: certmanager
         - name: apkey
+          mountPath: /server/fabric/config/local-kvs-config.json
+          subPath: kvs
+        - name: apkey
           mountPath: /server/fabric/config/local-cloudant-config.json"
           subPath: cloudantdb
         - name: apkey

@@ -1,20 +1,20 @@
 'use strict';
- 
- /**
- * Copyright 2018 IBM Corp. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the 'License');
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an 'AS IS' BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
+
+/**
+* Copyright 2018 IBM Corp. All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the 'License');
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an 'AS IS' BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*  See the License for the specific language governing permissions and
+*  limitations under the License.
+*/
 
 
 const log4js = require('log4js');
@@ -32,7 +32,10 @@ const {
 let ChannelTransactionMap = new Map();
 logger.level = config.logLevel;
 
-Transaction.initWallet(IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'));
+// use the off chain kvs store for local network
+Transaction.initWallet(
+    IBMCloudEnv.getDictionary(networkConfig.isLocal
+        ? 'off-chain-kvs-credentials' : 'IBM-certificate-manager-credentials'));
 for (let channelIndex = 0; channelIndex < targetChannelConfig.targetChannels.length; channelIndex++) {
     const targetChannelTransaction = new Transaction(targetChannelConfig.users[0].org, targetChannelConfig.users[0].user, targetChannelConfig.targetChannels[channelIndex].channelName, targetChannelConfig.targetChannels[channelIndex].chaincodeName, targetChannelConfig.users[0].mspId);
     targetChannelTransaction.init(networkConfig);

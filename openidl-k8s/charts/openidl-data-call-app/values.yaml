@@ -91,6 +91,8 @@ secrets:
       file: local-cognito-config.json
     - name: certmanager-config
       file: local-certmanager-config.json
+    - name: kvs-config
+      file: local-kvs-config.json
     - name: mongodb-config
       file: local-mongo-config.json
     - name: cloudantdb-config
@@ -105,5 +107,3 @@ secrets:
       file: default.json
     - name: data-call-app-mappings-config
       file: mappings.json
-    - name: off-chain-kvs-credentials
-      file: off-chain-kvs-credentials.json

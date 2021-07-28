@@ -19,8 +19,8 @@
     },
     "off-chain-kvs-credentials": {
         "searchPatterns": [
-            "env:OFF_CHAIN_KVS_CREDENTIALS",
-            "file:/server/config/off-chain-kvs-credentials.json"
+            "env:OFF_CHAIN_KVS_CONFIG",
+            "file:/server/config/local-kvs-config.json"
         ]
     }
 }

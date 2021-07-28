@@ -16,5 +16,11 @@
             "env:OFF_CHAIN_DB_CONFIG",
             "file:/server/config/local-cloudant-config.json"
         ]
+    },
+    "off-chain-kvs-credentials": {
+        "searchPatterns": [
+            "env:OFF_CHAIN_KVS_CONFIG",
+            "file:/server/config/local-kvs-config.json"
+        ]
     }
 }

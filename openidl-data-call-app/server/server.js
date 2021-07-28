@@ -188,13 +188,18 @@ app.use(errorHandler.handleError);
  */
 const host = process.env.HOST || config.host;
 const port = process.env.PORT || config.port;
-console.log("  cert config  " + IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'));
+if (networkConfig.isLocal) {
+    console.log("  local cert config  " + IBMCloudEnv.getDictionary('off-chain-kvs-credentials'));
+} else {
+    console.log("  cert config  " + IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'));
+}
 
 
-transactionFactory.init(networkConfig.isLocal ?
-    // use the off chain kvs store for local network
-    IBMCloudEnv.getDictionary('off-chain-kvs-credentials')
-    : IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'), networkConfig)
+// use the off chain kvs store for local network
+transactionFactory.init(
+    IBMCloudEnv.getDictionary(networkConfig.isLocal
+        ? 'off-chain-kvs-credentials' : 'IBM-certificate-manager-credentials')
+    , networkConfig)
     .then(data => {
         console.log('transaction factory init done');
         app.listen(port, () => {

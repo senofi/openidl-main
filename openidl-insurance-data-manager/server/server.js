@@ -64,7 +64,7 @@ app.use(cors());
  * Set up logging
  */
 
- 
+
 
 logger.debug('setting up app: registering routes, middleware...');
 /**
@@ -126,11 +126,11 @@ cognitoPassport.use(cognitoStrategy);
 
 // Passport session persistance
 cognitoPassport.serializeUser(function (user, cb) {
-  cb(null, user);
+    cb(null, user);
 });
 
 cognitoPassport.deserializeUser(function (obj, cb) {
-  cb(null, obj);
+    cb(null, obj);
 });
 
 app.enable('trust proxy');
@@ -192,17 +192,21 @@ let dbServiceRunning = util.isMongoServiceRunning(dbManagerFactoryObject);
 
 if (dbServiceRunning) {
     logger.info("Mongo DB service is up and running");
-    transactionFactory.init(IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'), networkConfig).then(() => {
-        logger.info('transaction factory init done');
-        app.listen(port, () => {
-            logger.info(`app listening on http://${host}:${port}`);
-            logger.info(`Swagger UI is available at http://${host}:${port}/api-docs`);
-            app.emit("listened", null);
-           // dbTaskInitialization();
+    // use the off chain kvs store for local network
+    transactionFactory.init(
+        IBMCloudEnv.getDictionary(networkConfig.isLocal
+            ? 'off-chain-kvs-credentials' : 'IBM-certificate-manager-credentials')
+        , networkConfig).then(() => {
+            logger.info('transaction factory init done');
+            app.listen(port, () => {
+                logger.info(`app listening on http://${host}:${port}`);
+                logger.info(`Swagger UI is available at http://${host}:${port}/api-docs`);
+                app.emit("listened", null);
+                // dbTaskInitialization();
+            });
+        }).catch(err => {
+            logger.error('Transaction factory Init Error. Please contact system admin' + err);
         });
-    }).catch(err => {
-        logger.error('Transaction factory Init Error. Please contact system admin' + err);
-    });
 } else {
     logger.error("Mongo DB service is down. Please contact system administrator");
     process.exit();

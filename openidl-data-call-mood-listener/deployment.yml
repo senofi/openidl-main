@@ -28,6 +28,9 @@ spec:
           mountPath: /server/config/local-certmanager-config.json
           subPath: certmanager
         - name: apkey
+          mountPath: /server/config/local-kvs-config.json
+          subPath: kvs
+        - name: apkey
           mountPath: /server/config/local-mongo-config.json
           subPath: mongodb
         - name: apkey

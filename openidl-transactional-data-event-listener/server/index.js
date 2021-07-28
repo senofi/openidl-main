@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
- 
+
 const express = require('express');
 const log4js = require('log4js');
 const config = require('config');
@@ -82,7 +82,11 @@ async function init() {
 
     }
     listenerConfig['listenerChannels'] = listernerChannels;
-    walletHelper.init(IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'));
+    if (networkConfig.isLocal) {
+        await walletHelper.initCloudant(IBMCloudEnv.getDictionary('off-chain-kvs-credentials'));
+    } else {
+        await walletHelper.init(IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'));
+    }
     let idExists = await walletHelper.identityExists(channelConfig.identity.user);
     if (!idExists) {
         throw new Error("Invalid Identity, no certificate found in certificate store");

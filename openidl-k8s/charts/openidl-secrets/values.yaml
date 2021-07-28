@@ -128,6 +128,9 @@ secrets:
     - name: certmanager-config
       file: config/local-certmanager-config.json
       namespace: default
+    - name: kvs-config
+      file: config/local-kvs-config.json
+      namespace: default
     - name: mongodb-config
       file: config/local-mongo-config.json
       namespace: default
@@ -157,9 +160,6 @@ secrets:
       namespace: default
     - name: uniqueidentifiersaais-config
       file: config/unique-identifiers-config.json
-      namespace: default
-    - name: off-chain-kvs-credentials
-      file: config/off-chain-kvs-credentials.json
       namespace: default
     - name: nifi-config
       file: config/nifi-flowconfig.json
