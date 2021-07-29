@@ -447,7 +447,9 @@ export class TableComponent implements OnInit, AfterViewInit {
 					}
 					this.isSpinner = false;
 					this.dataSource.data = this.data;
-					this.table.renderRows();
+					if (this.table) {
+						this.table.renderRows();
+					}
 				}
 			},
 			(error) => {
