@@ -52,7 +52,7 @@ export class UpdateFormComponent implements OnInit {
 	role;
 	datacall;
 	buttonText: any = 'Like Data Call';
-	forumurl: String = '';
+	forumurl: string = '';
 	LOBs = [];
 	consentCount: any;
 	likeCount: any;
@@ -652,14 +652,6 @@ export class UpdateFormComponent implements OnInit {
 		}
 	}
 
-	// Handle event triggered by forum model
-	updateForumByModal(event) {
-		if (!(event === '' || event === undefined)) {
-			this.model.forumURL = event;
-			this.updateForum();
-		}
-	}
-
 	// Updates the forum URL
 	updateForum() {
 		let value = {
@@ -698,19 +690,20 @@ export class UpdateFormComponent implements OnInit {
 	}
 
 	// Edits the forum URL
-	editforum() {
-		this.type = MESSAGE.FORUMURL_UPDATE_INFO.type;
-		this.message = MESSAGE.FORUMURL_UPDATE_INFO.message;
-		this.title = MESSAGE.FORUMURL_UPDATE_INFO.title;
-		const data = this.forumurl;
-		const isData = true;
-		this.dialogService.openForumModal(
-			this.title,
-			this.message,
-			this.type,
-			data,
-			isData
+	editForum() {
+		const dialogRef = this.dialogService.openForumModal(
+			MESSAGE.FORUMURL_UPDATE_INFO.title,
+			MESSAGE.FORUMURL_UPDATE_INFO.type,
+			this.forumurl
 		);
+
+		const sub = dialogRef.afterClosed().subscribe((result) => {
+			if (!(result === '' || result === undefined)) {
+				this.model.forumURL = result;
+				this.updateForum();
+			}
+			sub.unsubscribe();
+		});
 	}
 
 	// Abandon the data call in draft mode

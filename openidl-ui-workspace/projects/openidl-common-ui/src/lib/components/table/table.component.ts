@@ -5,7 +5,6 @@ import {
 	Output,
 	EventEmitter,
 	ViewChild,
-	OnDestroy,
 	AfterViewInit
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -23,7 +22,7 @@ import { DialogService } from '../../services/dialog.service';
 	templateUrl: './table.component.html',
 	styleUrls: ['./table.component.scss']
 })
-export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TableComponent implements OnInit, AfterViewInit {
 	// Input props received by the component
 	@Input() status: any;
 	@Input() prop: any;
@@ -117,7 +116,6 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 		private dialogService: DialogService
 	) {
 		this.statusObj = appConfig.status;
-		// this.dataSource = new DataTableDataSource();
 	}
 
 	ngOnInit() {
@@ -186,8 +184,6 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 		// Get the data as per the data call status
 		this.getDataCallsByStatus();
 	}
-
-	ngOnDestroy(): void {}
 
 	// material table page change event
 	// onPageChange(page: PageEvent) {
@@ -451,7 +447,6 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 					}
 					this.isSpinner = false;
 					this.dataSource.data = this.data;
-					// this.dataSource.data = this.data;
 					this.table.renderRows();
 				}
 			},
@@ -488,48 +483,6 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.viewReportEvent.emit(data);
 		}
 	}
-
-	// formatDate(d) {
-	// 	const date = new Date(d);
-	// 	let dd: any = date.getDate();
-	// 	let mm: any = date.getMonth() + 1;
-	// 	const yyyy = date.getFullYear();
-	// 	if (dd < 10) {
-	// 		dd = '0' + dd;
-	// 	}
-	// 	if (mm < 10) {
-	// 		mm = '0' + mm;
-	// 	}
-	// 	return (d = mm + '/' + dd + '/' + yyyy);
-	// }
-
-	// showModal() {
-	// 	this.dialogService.openModal(this.title, this.message, this.type);
-	// }
-
-	// showSessionModal() {
-	// 	this.dialogService.openModal(this.title, this.message, this.type, true);
-	// }
-
-	// modalClose() {
-	// 	this.isSuccess = false;
-	// 	this.isError = false;
-	// 	this.isopen = false;
-	// }
-
-	// redirectLogin() {
-	// 	this.isSuccess = false;
-	// 	this.isError = false;
-	// 	this.isopen = false;
-	// 	this.authService.logout('login').subscribe(
-	// 		(resp) => {
-	// 			console.log(resp);
-	// 		},
-	// 		(err) => {
-	// 			console.log(err);
-	// 		}
-	// 	);
-	// }
 }
 
 export interface DataTableItem {

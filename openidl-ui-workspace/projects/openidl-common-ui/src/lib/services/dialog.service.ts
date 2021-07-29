@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { MESSAGE } from '../config/messageBundle';
 import { DialogConfirmationComponent } from '../components/dialogs/dialog-confirmation.component/dialog-confirmation.component';
@@ -8,6 +8,7 @@ import { DialogForumComponent } from '../components/dialogs/dialog-forum.compone
 import { DialogPatternDetailsComponent } from '../components/dialogs/dialog-pattern-details.component/dialog-pattern-details.component';
 import { DialogPatternComponent } from '../components/dialogs/dialog-pattern.component/dialog-pattern.component';
 import { DialogSessionComponent } from '../components/dialogs/dialog-session.component/dialog-session.component';
+import { DialogDateComponent } from '../components/dialogs/dialog-date.component/dialog-date.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -25,13 +26,10 @@ export class DialogService {
 		message: string,
 		type: string,
 		isSessionExpired = false
-	) {
-		// TODO: Check if any modal is already opened
+	): MatDialogRef<DialogSessionComponent> {
 		const isModalOpen = sessionStorage.getItem('isModalOpen');
-
-		// TODO: If one modal is open then do not show another modal
 		if (isModalOpen !== 'true') {
-			this.dialog.open(DialogSessionComponent, {
+			const ref = this.dialog.open(DialogSessionComponent, {
 				...this.dialogConfig,
 				data: {
 					type,
@@ -42,7 +40,9 @@ export class DialogService {
 			});
 
 			sessionStorage.setItem('isModalOpen', 'true');
+			return ref;
 		}
+		return null;
 	}
 
 	handleNotification(error, messageBundle, locale = 'en-US') {
@@ -116,30 +116,27 @@ export class DialogService {
 
 	openForumModal(
 		title: string,
-		message: string,
 		type: string,
-		data: any,
-		isData: boolean
-	) {
-		this.dialog.open(DialogForumComponent, {
+		data: any
+	): MatDialogRef<DialogForumComponent> {
+		const ref = this.dialog.open(DialogForumComponent, {
 			...this.dialogConfig,
 			data: {
 				type,
 				title,
-				message,
-				data,
-				isData
+				url: data
 			}
 		});
+		return ref;
 	}
 
-	openDeliveryModal(
+	openDeliveryDateModal(
 		title: string,
 		message: string,
 		type: string,
 		date: Date
-	) {
-		this.dialog.open(DialogSessionComponent, {
+	): MatDialogRef<DialogDateComponent> {
+		const ref = this.dialog.open(DialogDateComponent, {
 			...this.dialogConfig,
 			data: {
 				title,
@@ -148,6 +145,8 @@ export class DialogService {
 				date
 			}
 		});
+
+		return ref;
 	}
 
 	openPattern(pattern, type) {

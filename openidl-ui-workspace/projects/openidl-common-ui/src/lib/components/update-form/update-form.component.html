@@ -455,31 +455,32 @@
 								*ngIf="!model.proposedDeliveryDate"
 							></div>
 						</div>
-						<div
-							class="row pb-1 row-top-padding"
-							*ngIf="isForumUrl"
-						>
-							<div class="col-sm-12">
-								<div class="col-sm-12 no-row-padding">
-									<span class="text-heading">Forum URL</span
-									>&nbsp;&nbsp;<span
-										*ngIf="isStatAgent && !isViewAbandoned"
-										class="
-											glyphicon glyphicon glyphicon-pencil
-											glypEdit
-										"
-										(click)="editforum()"
-										aria-hidden="true"
-									></span>
-									<span class="text-content"
-										><a
-											href="javascript:void(0)"
-											(click)="openURL(forumurl)"
-											target="_blank"
-											>{{ forumurl }}</a
-										></span
+						<div class="row pb-1">
+							<div class="col readonly" *ngIf="isForumUrl">
+								<h4>Forum URL</h4>
+								<p>
+									<button
+										*ngIf="isStatAgent"
+										mat-mini-fab
+										matTooltip="Edit forum URL"
+										matTooltipPosition="above"
+										color="primary"
+										(click)="editForum()"
+										aria-label="Edit Forum URL"
 									>
-								</div>
+										<mat-icon>edit</mat-icon>
+									</button>
+									<button
+										mat-button
+										class="text-wrap"
+										[matTooltip]="forumurl"
+										matTooltipPosition="above"
+										color="primary"
+										(click)="openURL(forumurl)"
+									>
+										{{ forumurl }}
+									</button>
+								</p>
 							</div>
 						</div>
 						<div class="row pb-1">
@@ -493,95 +494,109 @@
 									}}
 								</p>
 							</div>
-							<!-- <div class="col readonly" *ngIf="datacall.isLocked">
+							<div class="col readonly" *ngIf="datacall.isLocked">
 								<h4>Carrier Consents</h4>
-								<p>Number of Carriers : {{ consentCount }}</p>
-								<button
-									mat-button
-									*ngIf="isStatAgent"
-									(click)="viewCarriers('Consented')"
-									color="primary"
-								>
-									View Carriers
-								</button>
-							</div> -->
+								<p>
+									<mat-spinner
+										class="mat-spin"
+										matSuffix
+										aria-label="Loading carriers count"
+										[diameter]="20"
+										*ngIf="consentCount === undefined"
+									></mat-spinner>
+									<mat-icon
+										*ngIf="consentCount >= 0"
+										class="count-icon"
+										color="primary"
+										aria-label="Number of Carriers"
+										[matBadge]="consentCount"
+										matBadgeColor="warn"
+										>business</mat-icon
+									>
+									<button
+										class="btn-org"
+										mat-button
+										color="primary"
+										*ngIf="isStatAgent"
+										(click)="viewCarriers('Consented')"
+									>
+										View Carriers
+									</button>
+								</p>
+							</div>
 							<div class="col readonly">
 								<h4>Organization Likes</h4>
 								<p>
-									<!-- <span class="likes"
-										>Likes : {{ likeCount }}</span
-									> -->
-
-									<button
-										class="mr-1"
+									<span
 										*ngIf="
 											(isStatAgent || isCarr) &&
-											datacall.status !== 'ISSUED' &&
-											!datacall.isLocked &&
-											!isViewAbandoned
+												datacall.status !== 'ISSUED' &&
+												!datacall.isLocked &&
+												!isViewAbandoned;
+											else elseBlock
 										"
-										matBadgeColor="warn"
-										mat-stroked-button
-										[attr.aria-label]="buttonText"
-										color="primary"
-										(click)="toggleAction()"
-										[class.spinner]="isSmallSpinner"
-										[disabled]="isSmallSpinner"
 									>
-										<mat-icon *ngIf="isLike">
+										<button
+											[matBadge]="likeCount"
+											matBadgeColor="warn"
+											mat-flat-button
+											[attr.aria-label]="buttonText"
+											color="primary"
+											(click)="toggleAction()"
+											[class.spinner]="isSmallSpinner"
+											[disabled]="isSmallSpinner"
+											[matTooltip]="buttonText"
+										>
+											<mat-icon *ngIf="isLike">
+												favorite
+											</mat-icon>
+											<mat-icon *ngIf="!isLike">
+												favorite_border
+											</mat-icon>
+										</button>
+									</span>
+									<ng-template #elseBlock>
+										<mat-spinner
+											class="mat-spin"
+											aria-label="Loading Organizations count"
+											matSuffix
+											[diameter]="20"
+											*ngIf="likeCount === undefined"
+										></mat-spinner>
+										<mat-icon
+											*ngIf="likeCount >= 0"
+											class="count-icon"
+											color="primary"
+											aria-label="Number of Likes"
+											[matBadge]="likeCount"
+											matBadgeColor="warn"
+										>
 											favorite
 										</mat-icon>
-										<mat-icon *ngIf="!isLike">
-											favorite_border
-										</mat-icon>
-										{{ buttonText }}
-									</button>
+									</ng-template>
 
 									<button
-										mat-stroked-button
+										class="btn-org"
+										mat-button
 										color="primary"
-										*ngIf="isStatAgent"
-										[disabled]="!isLikeCountPositive"
+										[disabled]="
+											!(
+												isStatAgent &&
+												isLikeCountPositive
+											)
+										"
 										(click)="viewCarriers('Liked')"
 									>
 										View Organizations
 									</button>
 								</p>
-								<!-- <p
-									*ngIf="
-										(isStatAgent || isCarr) &&
-										datacall.status !== 'ISSUED' &&
-										!datacall.isLocked &&
-										!isViewAbandoned
-									"
-								>
-									<button
-										*ngIf="isLike"
-										mat-flat-button
-										[attr.aria-label]="buttonText"
-										color="primary"
-										(click)="toggleAction()"
-										[class.spinner]="isSmallSpinner"
-										[disabled]="isSmallSpinner"
+								<p *ngIf="isRecorded">
+									<mat-icon class="record-time"
+										>schedule</mat-icon
 									>
-										<mat-icon> favorite </mat-icon>
-										{{ buttonText }}
-									</button>
-									<button
-										*ngIf="!isLike"
-										mat-stroked-button
-										[attr.aria-label]="buttonText"
-										color="primary"
-										(click)="toggleAction()"
-										[class.spinner]="isSmallSpinner"
-										[disabled]="isSmallSpinner"
-									>
-										<mat-icon> favorite_border </mat-icon>
-										{{ buttonText }}
-									</button>
-								</p> -->
+									{{ recordTime }}
+								</p>
 							</div>
-							<div class="col readonly"></div>
 						</div>
 						<div
 							*ngIf="

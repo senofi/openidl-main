@@ -29,6 +29,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatRadioModule } from '@angular/material/radio';
+
 @NgModule({
 	declarations: [],
 	imports: [
@@ -57,7 +61,10 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 		MatDividerModule,
 		MatCheckboxModule,
 		MatMenuModule,
-		MatButtonToggleModule
+		MatButtonToggleModule,
+		ClipboardModule,
+		MatTooltipModule,
+		MatRadioModule
 	],
 	exports: [
 		MatCardModule,
@@ -84,7 +91,10 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 		MatDividerModule,
 		MatCheckboxModule,
 		MatMenuModule,
-		MatButtonToggleModule
+		MatButtonToggleModule,
+		ClipboardModule,
+		MatTooltipModule,
+		MatRadioModule
 	],
 	providers: [MatDatepickerModule, MatPaginatorModule],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]

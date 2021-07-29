@@ -4,7 +4,12 @@
 	</mat-card-header>
 	<mat-divider></mat-divider>
 	<mat-card-content class="data-form">
-		<form [formGroup]="registerForm" class="pb-1">
+		<form
+			[formGroup]="registerForm"
+			class="pb-1"
+			#formDirective="ngForm"
+			(ngSubmit)="updateReport(registerForm.value, formDirective)"
+		>
 			<div class="row">
 				<div class="col">
 					<mat-form-field class="full-width" appearance="outline">
@@ -18,7 +23,7 @@
 				</div>
 				<div class="col">
 					<mat-form-field class="full-width" appearance="outline">
-						<mat-label>Forum URL</mat-label>
+						<mat-label>Report Hash</mat-label>
 						<input
 							matInput
 							placeholder="Type report hash here"
@@ -33,7 +38,6 @@
 						mat-flat-button
 						color="primary"
 						[disabled]="!shouldUpdateReport"
-						(click)="updateReport(registerForm.value)"
 					>
 						Update Report
 					</button>
@@ -41,6 +45,7 @@
 			</div>
 		</form>
 		<mat-divider></mat-divider>
+		<div class="heading">Reports</div>
 		<app-report-table (reportStatus)="getReportStatus()"></app-report-table>
 	</mat-card-content>
 </mat-card>

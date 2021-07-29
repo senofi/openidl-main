@@ -15,13 +15,7 @@
 	</mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-	<button
-		mat-flat-button
-		(click)="onClickUpdate()"
-		cdkFocusInitial
-		color="primary"
-	>
+	<button mat-flat-button [mat-dialog-close]="data.date" color="primary">
 		Update Delivery Date
 	</button>
-	<button mat-flat-button mat-dialog-close>Close</button>
 </mat-dialog-actions>

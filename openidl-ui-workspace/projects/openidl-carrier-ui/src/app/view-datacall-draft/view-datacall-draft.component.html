@@ -22,7 +22,7 @@
 			Back to Data Calls
 		</button>
 	</div>
-	<div class="col-sm-10 col-sm-offset-1" *ngIf="!isBack">
+	<div class="breadcrumb" *ngIf="!isBack">
 		<a class="back-link" [routerLink]="['/datacallList']">Data Calls</a>
 		&nbsp; / &nbsp;
 		<a class="back-link" [routerLink]="['/viewIssued']"

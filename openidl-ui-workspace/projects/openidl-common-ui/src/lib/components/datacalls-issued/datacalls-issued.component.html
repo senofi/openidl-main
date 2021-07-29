@@ -6,28 +6,32 @@
 		<mat-divider></mat-divider>
 		<mat-card-content class="data-form">
 			<form
-				*ngIf="isStatAgent"
+				*ngIf="
+					isStatAgent &&
+					(!hasForumUrl || !hasPattern || !hasDeliveryDate)
+				"
 				class="pb-2"
 				[formGroup]="registerForm"
-				(submit)="updateFields(tempDate, tempURL, tempPattern)"
 			>
 				<div class="row">
-					<div class="col" *ngIf="isDelivery">
+					<div class="col" *ngIf="!hasDeliveryDate">
 						<mat-form-field appearance="outline" class="full-width">
 							<mat-label>Delivery Date</mat-label>
 							<input
 								matInput
-								[matDatepicker]="deadlinePicker"
+								[matDatepicker]="proposedDeliveryDate"
 								formControlName="proposedDeliveryDate"
 							/>
 							<mat-datepicker-toggle
 								matSuffix
-								[for]="deadlinePicker"
+								[for]="proposedDeliveryDate"
 							></mat-datepicker-toggle>
-							<mat-datepicker #deadlinePicker></mat-datepicker>
+							<mat-datepicker
+								#proposedDeliveryDate
+							></mat-datepicker>
 						</mat-form-field>
 					</div>
-					<div class="col flex2" *ngIf="!isForumUrl">
+					<div class="col flex2" *ngIf="!hasForumUrl">
 						<mat-form-field class="full-width" appearance="outline">
 							<mat-label>Forum URL</mat-label>
 							<input
@@ -40,7 +44,7 @@
 					</div>
 				</div>
 				<div class="row pb-2">
-					<div class="col" *ngIf="!isPattern">
+					<div class="col" *ngIf="!hasPattern">
 						<mat-form-field appearance="outline" class="full-width">
 							<mat-label>Extraction Pattern</mat-label>
 							<mat-select
@@ -57,7 +61,7 @@
 							</mat-select>
 						</mat-form-field>
 					</div>
-					<div class="col" *ngIf="!isPattern">
+					<div class="col" *ngIf="!hasPattern">
 						<div class="btn-container">
 							<button
 								mat-button
@@ -68,9 +72,16 @@
 							</button>
 						</div>
 					</div>
-					<div class="col right" *ngIf="!isForumUrl || isDelivery">
+					<div
+						class="col right"
+						*ngIf="!hasForumUrl || !hasPattern || !hasDeliveryDate"
+					>
 						<div class="btn-container">
-							<button mat-flat-button color="primary">
+							<button
+								mat-flat-button
+								color="primary"
+								(click)="updateFields(registerForm)"
+							>
 								Update Details
 							</button>
 						</div>
@@ -108,15 +119,15 @@
 				<div class="col readonly">
 					<h4>Premium Dates</h4>
 					<p>
-						{{ draft.premiumFromDate }} to
-						{{ draft.premiumToDate }}
+						{{ draft.premiumFromDate | date: 'MM/dd/yyyy' }} to
+						{{ draft.premiumToDate | date: 'MM/dd/yyyy' }}
 					</p>
 				</div>
 				<div class="col readonly">
 					<h4>Loss Dates</h4>
 					<p>
-						{{ draft.lossFromDate }} to
-						{{ draft.lossToDate }}
+						{{ draft.lossFromDate | date: 'MM/dd/yyyy' }} to
+						{{ draft.lossToDate | date: 'MM/dd/yyyy' }}
 					</p>
 				</div>
 			</div>
@@ -134,49 +145,40 @@
 					</p>
 				</div>
 				<div class="col readonly">
-					<div *ngIf="!isDelivery">
+					<div *ngIf="hasDeliveryDate">
 						<h4>Proposed Delivery Date</h4>
 						<p>
-							<mat-form-field
-								appearance="fill"
-								*ngIf="isStatAgent && isUpdate"
+							<button
+								*ngIf="isStatAgent"
+								mat-mini-fab
+								color="primary"
+								(click)="deliveryDateEdit()"
+								matTooltip="Edit delivery date"
+								matTooltipPosition="above"
+								aria-label="Edit delivery date"
 							>
-								<mat-label>Select Delivery Date</mat-label>
-								<input
-									matInput
-									[matDatepicker]="dp3"
-									disabled
-								/>
-								<mat-datepicker-toggle
-									matSuffix
-									[for]="dp3"
-								></mat-datepicker-toggle>
-								<mat-datepicker
-									#dp3
-									disabled="false"
-								></mat-datepicker>
-							</mat-form-field>
-							<span *ngIf="isUpdate">{{
-								draft.proposedDeliveryDate | date: 'MM/dd/yyyy '
-							}}</span>
+								<mat-icon>edit</mat-icon>
+							</button>
+							<span [class.delivery-date]="isStatAgent">
+								{{
+									draft.proposedDeliveryDate
+										| date: 'MM/dd/yyyy '
+								}}
+							</span>
 						</p>
 					</div>
 				</div>
 			</div>
 
-			<div
-				class="row"
-				*ngIf="
-					(isForumUrl && isForumUpdate) ||
-					(isPattern && isPatternUpdate)
-				"
-			>
-				<div class="col readonly" *ngIf="isForumUrl && isForumUpdate">
+			<div class="row" *ngIf="hasForumUrl || hasPattern">
+				<div class="col readonly" *ngIf="hasForumUrl">
 					<h4>Forum URL</h4>
 					<p>
 						<button
 							*ngIf="isStatAgent"
-							mat-icon-button
+							mat-mini-fab
+							matTooltip="Edit forum URL"
+							matTooltipPosition="above"
 							color="primary"
 							(click)="editForum()"
 							aria-label="Edit Forum URL"
@@ -185,6 +187,9 @@
 						</button>
 						<button
 							mat-button
+							class="text-wrap"
+							[matTooltip]="draft.forumURL"
+							matTooltipPosition="above"
 							color="primary"
 							(click)="openURL(draft.forumURL)"
 						>
@@ -192,7 +197,7 @@
 						</button>
 					</p>
 				</div>
-				<div class="col readonly" *ngIf="isPattern && isPatternUpdate">
+				<div class="col readonly" *ngIf="hasPattern">
 					<h4>Extraction Pattern</h4>
 					<p>
 						<button
@@ -295,7 +300,7 @@
 			</div>
 			<div class="col">
 				<mat-card class="mb-2">
-					<mat-card-content>
+					<mat-card-content class="consent-card">
 						<h2>Carrier Consents</h2>
 						<p>
 							<mat-spinner

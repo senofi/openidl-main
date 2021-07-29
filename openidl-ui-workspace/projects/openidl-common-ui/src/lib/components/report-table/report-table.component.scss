@@ -5,6 +5,32 @@
 		width: 100%;
 	}
 
+	.col-status {
+		text-transform: capitalize;
+	}
+
+	.col-action {
+		width: 40px;
+	}
+
+	.row-icon {
+		padding-bottom: 10px;
+
+		.mat-icon {
+			top: 8px;
+			position: relative;
+			margin-left: 5px;
+		}
+	}
+
+	.text-wrap {
+		max-width: 400px;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		display: block;
+	}
+
 	.mat-row:hover {
 		background-color: $table-hover;
 		cursor: pointer;
@@ -19,14 +45,22 @@
 		text-decoration: underline;
 		cursor: pointer;
 	}
-}
 
-.report-table {
 	.report-link {
-		color: #2d74da;
+		color: $primary;
 		text-decoration: underline;
 		cursor: pointer;
 	}
+
+	.spinner-container {
+		height: 3rem;
+	}
+	.spinner {
+		position: relative;
+	}
+}
+
+.report-table {
 	.truncate-url {
 		width: 350px;
 		white-space: nowrap;

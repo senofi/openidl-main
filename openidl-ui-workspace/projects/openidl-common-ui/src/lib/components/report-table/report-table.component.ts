@@ -1,9 +1,18 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	Output,
+	EventEmitter,
+	ViewChild
+} from '@angular/core';
+import { MatTable } from '@angular/material/table';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 import { DataService } from '../../services/data.service';
 import { StorageService } from '../../services/storage.service';
 import { MESSAGE } from '../../config/messageBundle';
 import { DialogService } from '../../services/dialog.service';
+import { NotifierService } from '../../services/notifier.service';
 
 @Component({
 	selector: 'app-report-table',
@@ -11,23 +20,23 @@ import { DialogService } from '../../services/dialog.service';
 	styleUrls: ['./report-table.component.scss']
 })
 export class ReportTableComponent implements OnInit {
-	// Output event which is emmitted to the update report component which then disables the update button
+	// Output event which is emitted to the update report component which then disables the update button
 	// if the report status is accepted/published.
 	@Output() reportStatus = new EventEmitter();
 
 	// Flags to conditionally handle the expression
-	isSpinner: Boolean = false;
-	isError: Boolean = false;
-	isSuccess: Boolean = false;
-	isDisabled: Boolean = true;
-	isAccepted: Boolean = false;
-	isPublished: Boolean = false;
-	isReportSelected: Boolean = false;
-	isShowUrl: Boolean = true;
-	isCopyBtn: Boolean = false;
-	isHashCopied: Boolean = false;
-	isURLCopied: Boolean = false;
-	isJurisdiction: Boolean = false;
+	isSpinner: boolean = false;
+	isError: boolean = false;
+	isSuccess: boolean = false;
+	isDisabled: boolean = true;
+	isAccepted: boolean = false;
+	isPublished: boolean = false;
+	isReportSelected: boolean = false;
+	isShowUrl: boolean = true;
+	isCopyBtn: boolean = false;
+	isHashCopied: boolean = false;
+	isURLCopied: boolean = false;
+	isJurisdiction: boolean = false;
 	// Props to be passed to the modal component
 	type: any;
 	message: any;
@@ -39,14 +48,25 @@ export class ReportTableComponent implements OnInit {
 	role: any;
 	currentDatacall: any;
 	copyIndex: any;
-	copyHashText: any = 'Copy Report Hash';
-	copyURLText: any = 'Copy Report URL';
 	jurisdiction: any;
+
+	displayedColumns: string[] = [
+		'reportVersion',
+		'updatedTs',
+		'status',
+		'url',
+		'hash',
+		'action'
+	];
+	// material table variables
+	@ViewChild(MatTable) table!: MatTable<any>;
 
 	constructor(
 		private dataService: DataService,
 		private storageService: StorageService,
-		private dialogService: DialogService
+		private dialogService: DialogService,
+		private notifierService: NotifierService,
+		private clipboard: Clipboard
 	) {}
 
 	ngOnInit() {
@@ -59,6 +79,9 @@ export class ReportTableComponent implements OnInit {
 		} else {
 			this.isJurisdiction = false;
 			console.log('Jurisdiction is not same');
+		}
+		if (this.role === 'regulator') {
+			this.displayedColumns.unshift('select');
 		}
 		this.getReports();
 	}
@@ -78,7 +101,7 @@ export class ReportTableComponent implements OnInit {
 				this.reportList = JSON.parse(response);
 
 				if (this.reportList && this.reportList.length > 0) {
-					let publistReportList = [];
+					let publishedReportList = [];
 					this.reportList.forEach((element) => {
 						element.status = element.status.toLowerCase();
 						if (
@@ -106,8 +129,8 @@ export class ReportTableComponent implements OnInit {
 							this.isDisabled = false;
 							this.isReportSelected = true;
 							console.log('published element pushed');
-							publistReportList.push(element);
-							console.log(publistReportList);
+							publishedReportList.push(element);
+							console.log(publishedReportList);
 							this.reportStatus.emit();
 						}
 						element.updatedTs = this.formatDate2(element.updatedTs);
@@ -122,9 +145,7 @@ export class ReportTableComponent implements OnInit {
 						this.isShowUrl = true;
 					}
 					if (this.isPublished) {
-						console.log('published element');
-						this.reportList = publistReportList;
-						console.log(this.reportList);
+						this.reportList = publishedReportList;
 					}
 				}
 
@@ -218,7 +239,18 @@ export class ReportTableComponent implements OnInit {
 
 	// Show modal according to success, error or info
 	showModal() {
-		this.dialogService.openModal(this.title, this.message, this.type);
+		const dialogRef = this.dialogService.openModal(
+			this.title,
+			this.message,
+			this.type
+		);
+
+		if (dialogRef) {
+			const sub = dialogRef.afterClosed().subscribe((result) => {
+				this.modalClose();
+				sub.unsubscribe();
+			});
+		}
 	}
 
 	// Show the session expired modal
@@ -238,20 +270,20 @@ export class ReportTableComponent implements OnInit {
 	// Format date in mm dd yyyy | hr:min:ss format
 	formatDate2(d) {
 		const date = new Date(d);
-		const monthNames = [
-			'January',
-			'February',
-			'March',
-			'April',
-			'May',
-			'June',
-			'July',
-			'August',
-			'September',
-			'October',
-			'November',
-			'December'
-		];
+		// const monthNames = [
+		// 	'January',
+		// 	'February',
+		// 	'March',
+		// 	'April',
+		// 	'May',
+		// 	'June',
+		// 	'July',
+		// 	'August',
+		// 	'September',
+		// 	'October',
+		// 	'November',
+		// 	'December'
+		// ];
 		let dd: any = date.getDate();
 		let ss = 'AM';
 
@@ -280,29 +312,23 @@ export class ReportTableComponent implements OnInit {
 			mm + '/' + dd + '/' + yyyy + '  ' + hr + ':' + min + ' ' + ss);
 	}
 
-	toggleCopyBtn(index) {
-		this.isHashCopied = false;
-		this.isURLCopied = false;
-		this.copyHashText = 'Copy Report Hash';
-		this.copyURLText = 'Copy Report URL';
-
-		this.copyIndex = index;
-		this.isCopyBtn = !this.isCopyBtn;
-	}
-
-	copyToClipboard(text, copyType, event) {
+	copyToClipboard(text: string, source: string, event: Event) {
 		event.preventDefault();
 		event.stopPropagation();
-		if (copyType === 'hash') {
-			this.isHashCopied = true;
-			this.isURLCopied = false;
-			this.copyHashText = text;
-			this.copyURLText = 'Copy Report URL';
-		} else if (copyType === 'URL') {
-			this.isHashCopied = false;
-			this.isURLCopied = true;
-			this.copyHashText = 'Copy Report Hash';
-			this.copyURLText = text;
+		if (source === 'hash') {
+			this.clipboard.copy(text);
+			this.notifierService.openSnackbar(
+				'info',
+				'Info',
+				'Report Hash Copied!'
+			);
+		} else if (source === 'URL') {
+			this.clipboard.copy(text);
+			this.notifierService.openSnackbar(
+				'info',
+				'Info',
+				'Report URL Copied!'
+			);
 		}
 	}
 

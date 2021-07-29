@@ -1,3 +1,5 @@
+@import 'variables';
+
 html,
 body {
 	height: 100%;
@@ -59,5 +61,24 @@ body {
 	.data-form {
 		margin-top: 1rem;
 		padding: 1rem;
+	}
+}
+
+.button-row {
+	text-align: end;
+	margin: 1rem 0;
+	button {
+		// width: 9rem;
+		margin: 0 0.5rem;
+	}
+	button:last-child {
+		margin-right: 0;
+	}
+}
+
+.breadcrumb {
+	padding-bottom: 1rem;
+	a {
+		color: $primary;
 	}
 }

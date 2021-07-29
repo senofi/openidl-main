@@ -1,5 +1,12 @@
-<div class="data-table">
-	<table mat-table class="width-table" matSort [dataSource]="dataSource">
+<div class="data-table" *ngIf="!isSpinner">
+	<table
+		mat-table
+		class="width-table"
+		matSort
+		[dataSource]="dataSource"
+		matSortActive="updatedTs"
+		matSortDirection="desc"
+	>
 		<!-- Name Column -->
 		<ng-container matColumnDef="name">
 			<th

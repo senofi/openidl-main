@@ -5,14 +5,15 @@ import {
 	EventEmitter,
 	ViewChild
 } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { DatacallHistoryComponent } from '../datacall-history/datacall-history.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StorageService } from '../../services/storage.service';
 import { DataService } from '../../services/data.service';
 import { UpdateReportComponent } from '../update-report/update-report.component';
 import { MESSAGE } from '../../config/messageBundle';
 import { DialogService } from '../../services/dialog.service';
+
 @Component({
 	selector: 'app-datacalls-issued',
 	templateUrl: './datacalls-issued.component.html',
@@ -63,20 +64,13 @@ export class DatacallsIssuedComponent implements OnInit {
 	data: any;
 	proposedDeliveryDate: any;
 	registerForm: FormGroup;
-	minDeadline: any;
 	buttonText: any = 'Consent to the Report';
 	loginResult: any;
 	consentCount: any;
 	likeCount: any;
 	action: any = 'Consent';
 	recordTime: any;
-	tempDate: any;
-	tempURL: any;
-	tempPattern: any;
-	// props passed to modal component
-	title: any;
-	message: any;
-	type: any;
+
 	// Flags to conditionally handle expressions
 	isSpinner: boolean = false;
 	isSmallSpinner: boolean = false;
@@ -85,22 +79,19 @@ export class DatacallsIssuedComponent implements OnInit {
 	isSmallSpinner3: boolean = false;
 	isError: boolean = false;
 	isSuccess: boolean = false;
-	isData: boolean = false;
 	isReg: boolean = false;
 	isStatAgent: boolean = false;
 	isLikeCountPositive: boolean = false;
 	isCarr: boolean = false;
-	isForumUrl: boolean = false;
-	isPattern: boolean = false;
 	isConsent: boolean = false;
-	isDelivery: boolean = true;
 	isReportAvlbl: boolean = false;
 	isPublished: boolean = false;
 	isRecorded: boolean = false;
 	hasAllFields: boolean = false;
-	isUpdate: boolean = false;
-	isPatternUpdate: boolean = false;
-	isForumUpdate: boolean = false;
+	hasDeliveryDate: boolean = false;
+	hasForumUrl: boolean = false;
+	hasPattern: boolean = false;
+	readonly defaultDate = '0001-01-01T00:00:00Z';
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -144,44 +135,23 @@ export class DatacallsIssuedComponent implements OnInit {
 		if (data) {
 			this.draft = Object.assign({}, data);
 
-			this.draft.premiumFromDate = this.formatDate(
-				this.draft.premiumFromDate
-			);
-			this.draft.premiumToDate = this.formatDate(
-				this.draft.premiumToDate
-			);
-			this.draft.lossFromDate = this.formatDate(this.draft.lossFromDate);
-			this.draft.lossToDate = this.formatDate(this.draft.lossToDate);
+			this.setControlsState();
 
-			this.minDeadline = new Date(this.draft.premiumToDate);
-			if (this.draft.proposedDeliveryDate == '0001-01-01T00:00:00Z') {
-				console.log('delivery date not set');
-				this.isUpdate = false;
-				this.isDelivery = true;
-			} else {
-				console.log('delivery date is set');
-				this.isDelivery = false;
-				this.isUpdate = true;
-			}
 			this.registerForm = this.formBuilder.group({
 				proposedDeliveryDate: [
-					new Date(this.draft.proposedDeliveryDate),
+					this.draft.proposedDeliveryDate,
 					Validators.required
 				],
 				forumUrl: [this.draft.forumURL],
 				extractionPatternID: [this.draft.extractionPatternID]
 			});
 
-			if (this.role && this.role === 'carrier') {
-				console.log(
-					'this.draft.extractionPatternName at Oninit Method->  ' +
-						this.draft.extractionPatternName
-				);
+			if (this.isCarr) {
 				if (
-					this.draft.extractionPatternName == '' ||
-					this.draft.extractionPatternName == null ||
-					this.draft.extractionPatternName == undefined ||
-					this.draft.extractionPatternName.length == 0
+					this.draft.extractionPatternName === '' ||
+					this.draft.extractionPatternName === null ||
+					this.draft.extractionPatternName === undefined ||
+					this.draft.extractionPatternName.length === 0
 				) {
 					this.isConsent = false;
 				} else {
@@ -189,48 +159,42 @@ export class DatacallsIssuedComponent implements OnInit {
 				}
 			}
 
-			console.log(
-				'this.isConsent value at Oninit Method ->  ' + this.isConsent
-			);
-
 			this.getConsentCount();
 		} else {
 			this.isError = true;
-			this.type = 'error';
-			this.message = 'Error';
-			this.title = 'Error';
-			setTimeout(() => {
-				this.showModal();
-			}, 10);
+			this.showSessionModal();
 		}
-		if (this.draft.forumURL == '' || this.draft.forumURL == 'undefined') {
-			console.log('forum url is blank');
-			this.draft.forumURL = '';
-			this.isForumUrl = false;
-			this.isForumUpdate = false;
-		} else {
-			console.log('forum url is not blank');
-			this.isForumUrl = true;
-			this.isForumUpdate = true;
-		}
-		if (
-			this.draft.extractionPatternID == '' ||
-			this.draft.extractionPatternID == undefined ||
-			this.draft.extractionPatternID == 'undefined'
-		) {
-			console.log('extration pattern is blank');
-			this.draft.extractionPatternID = '';
-			this.isPattern = false;
-			this.isPatternUpdate = false;
-		} else {
-			console.log('extration pattern is not blank');
-			// console.log(this.draft.extractionPatternID);
-			this.isPattern = true;
-			this.isPatternUpdate = true;
-		}
+
 		this.getExtractionPattern();
 		this.getReports();
 	} // init ends
+
+	setControlsState() {
+		if (this.draft.proposedDeliveryDate === this.defaultDate) {
+			this.draft.proposedDeliveryDate = '';
+			this.hasDeliveryDate = false;
+		} else {
+			this.hasDeliveryDate = true;
+		}
+
+		if (this.draft.forumURL === '' || this.draft.forumURL === 'undefined') {
+			this.draft.forumURL = '';
+			this.hasForumUrl = false;
+		} else {
+			this.hasForumUrl = true;
+		}
+
+		if (
+			this.draft.extractionPatternID === '' ||
+			this.draft.extractionPatternID === undefined ||
+			this.draft.extractionPatternID === 'undefined'
+		) {
+			this.draft.extractionPatternID = '';
+			this.hasPattern = false;
+		} else {
+			this.hasPattern = true;
+		}
+	}
 
 	// Get reports and set isReportAvlbl
 	getReports() {
@@ -263,20 +227,20 @@ export class DatacallsIssuedComponent implements OnInit {
 
 	// Opens forum url modal in edit mode
 	editForum() {
-		this.type = 'info';
-		this.message = 'Forum URL';
-		this.title = 'Update Forum URL';
 		const data = this.draft.forumURL;
-		const isData = true;
-		this.dialogService.openForumModal(
-			this.title,
-			this.message,
-			this.type,
-			data,
-			isData
+		const dialogRef = this.dialogService.openForumModal(
+			'Update Forum URL',
+			'info',
+			data
 		);
-		// this.isForumUrl = false;
-		// this.model.forumurl = '';
+
+		const sub = dialogRef.afterClosed().subscribe((result) => {
+			if (!(result === '' || result === undefined)) {
+				this.draft.forumURL = result;
+				this.updateForum();
+			}
+			sub.unsubscribe();
+		});
 	}
 
 	//check whether consent is provided for the data call
@@ -292,7 +256,6 @@ export class DatacallsIssuedComponent implements OnInit {
 		this.dataService.getData(uri).subscribe(
 			(response) => {
 				const res = JSON.parse(response);
-				console.log('consent response ::: ', response);
 				if (res == null || res == 'null') {
 					this.isConsent = true;
 					this.isRecorded = false;
@@ -315,11 +278,6 @@ export class DatacallsIssuedComponent implements OnInit {
 					this.isConsent = true;
 				}
 
-				console.log(
-					'this.isConsent value at getConsentStatus Method ->  ' +
-						this.isConsent
-				);
-
 				setTimeout(() => {
 					this.isSpinner = false;
 				}, 1000);
@@ -336,7 +294,7 @@ export class DatacallsIssuedComponent implements OnInit {
 					messageBundle,
 					locale
 				);
-				console.log(error);
+				console.error(error);
 			}
 		);
 	}
@@ -349,7 +307,6 @@ export class DatacallsIssuedComponent implements OnInit {
 			'/consent-count/' + this.draft.id + '/' + this.draft.version;
 		this.dataService.getData(uri).subscribe(
 			(response) => {
-				// console.log('consent count ::: ', response);
 				this.consentCount = JSON.parse(response).delta;
 				this.isSpinner = false;
 				this.isSmallSpinner1 = false;
@@ -376,10 +333,7 @@ export class DatacallsIssuedComponent implements OnInit {
 		const uri = '/like-count/' + this.draft.id + '/' + this.draft.version;
 		this.dataService.getData(uri).subscribe(
 			(response) => {
-				// console.log('like count ::: ', response);
 				this.likeCount = JSON.parse(response).delta;
-				console.log('isLikeCountPositive ', this.isLikeCountPositive);
-				console.log('this.likeCount ', this.likeCount);
 				if (this.likeCount > 0) {
 					this.isLikeCountPositive = true;
 				}
@@ -396,7 +350,6 @@ export class DatacallsIssuedComponent implements OnInit {
 
 	// Emit the event of cloning a data call
 	cloneDatacall(draft) {
-		console.log(draft);
 		this.storageService.setItem('datacalldraft', draft);
 		this.cloneDatacallEvent.emit();
 	}
@@ -415,19 +368,29 @@ export class DatacallsIssuedComponent implements OnInit {
 
 	// Show the session expired modal
 	showSessionModal() {
-		this.dialogService.openModal(this.title, this.message, this.type, true);
+		const { title, type, message } = MESSAGE.ACTIVITY_FAIL.Unauthorized;
+		this.dialogService.openModal(title, message, type, true);
 	}
 
 	// Show the modal of success, error or info type
-	showModal() {
-		this.dialogService.openModal(this.title, this.message, this.type);
+	showModal(bundle) {
+		const dialogRef = this.dialogService.openModal(
+			bundle.title,
+			bundle.message,
+			bundle.type
+		);
+
+		if (dialogRef) {
+			const sub = dialogRef.afterClosed().subscribe((result) => {
+				this.modalClose();
+				sub.unsubscribe();
+			});
+		}
 	}
 
 	// Reset flags, emit events and set the data conditionally on closing the modal
 	modalClose() {
 		sessionStorage.removeItem('isModalOpen');
-		console.log('modal close');
-		this.isData = false;
 		if (this.isError) {
 			this.isError = false;
 			this.fail.emit();
@@ -438,9 +401,6 @@ export class DatacallsIssuedComponent implements OnInit {
 			this.isSpinner = true;
 			this.dataService.getData(uri).subscribe(
 				(resp) => {
-					this.isUpdate = true;
-					this.isForumUpdate = true;
-					this.isPatternUpdate = true;
 					this.isSpinner = false;
 					this.draft = JSON.parse(resp);
 					this.storageService.setItem('datacall', this.draft);
@@ -450,19 +410,13 @@ export class DatacallsIssuedComponent implements OnInit {
 							this.draft.extractionPatternName = element.name;
 						}
 					});
-					console.log('modal is closed');
-					// console.log('extraction patter name set = ' + this.draft.extractionPatternName);
+					this.setControlsState();
 				},
 				(err) => {
 					this.isSpinner = false;
 					this.isError = true;
 					this.isSuccess = false;
-					this.type = MESSAGE.DATACALL_FETCH_ERROR.type;
-					this.message = MESSAGE.DATACALL_FETCH_ERROR.message;
-					this.title = MESSAGE.DATACALL_FETCH_ERROR.title;
-					setTimeout(() => {
-						this.showModal();
-					}, 10);
+					this.showModal(MESSAGE.DATACALL_FETCH_ERROR);
 				}
 			);
 		}
@@ -470,35 +424,33 @@ export class DatacallsIssuedComponent implements OnInit {
 
 	// Opens modal to edit the delivery date
 	deliveryDateEdit() {
-		this.type = 'info';
-		this.message = 'Forum URL';
-		this.title = 'Update Delivery Date';
 		const date = new Date(this.draft.proposedDeliveryDate);
-		//  console.log(this.draft.proposedDeliveryDate)
-		this.dialogService.openDeliveryModal(
-			this.title,
-			this.message,
-			this.type,
+		const dialogRef = this.dialogService.openDeliveryDateModal(
+			'Update Delivery Date',
+			'',
+			'info',
 			date
 		);
+
+		const sub = dialogRef.afterClosed().subscribe((result) => {
+			if (!(result === '' || result === undefined)) {
+				this.draft.proposedDeliveryDate = result;
+				this.updateForum();
+			}
+			sub.unsubscribe();
+		});
 	}
 
 	// Set the delivery date to be updated
 	updatedDelivery(event) {
-		this.isUpdate = false;
-		console.log('delivery date update');
-		console.log(event);
 		let value = {
 			proposedDeliveryDate: event
 		};
-		console.log(value);
 		this.updateDeliveryDate(value);
 	}
 
 	// Update the set delivery date using REST API
-	updateDeliveryDate(value) {
-		this.isUpdate = false;
-		console.log('del date value ::: ', value);
+	private updateDeliveryDate(value) {
 		if (
 			!(
 				value.proposedDeliveryDate === undefined ||
@@ -529,21 +481,14 @@ export class DatacallsIssuedComponent implements OnInit {
 				extractionPatternID: this.draft.extractionPatternID,
 				comments: '' + this.draft.comments.trim()
 			};
-			console.log('draft data');
-			console.log(dataobject);
+
 			const uri = '/update-data-call';
 			this.isSpinner = true;
 			this.dataService.putData(uri, dataobject).subscribe(
 				(resp) => {
 					this.isSpinner = false;
 					this.isSuccess = true;
-					this.type = MESSAGE.DELIVERY_DATE_UPDATE_SUCCESS.type;
-					this.title = MESSAGE.DELIVERY_DATE_UPDATE_SUCCESS.title;
-					this.message = MESSAGE.DELIVERY_DATE_UPDATE_SUCCESS.message;
-					setTimeout(() => {
-						this.showModal();
-					}, 10);
-					this.isDelivery = false;
+					this.showModal(MESSAGE.DELIVERY_DATE_UPDATE_SUCCESS);
 					this.appDatacallHistory.getDatacallHistory(
 						this.draft.id,
 						this.draft.version
@@ -559,76 +504,8 @@ export class DatacallsIssuedComponent implements OnInit {
 		}
 	}
 
-	// Handle event triggered by forum model
-	updateForumByModal(event) {
-		console.log('update forum by modal event : ', event);
-		if (!(event === '' || event === undefined)) {
-			this.draft.forumURL = event;
-			this.updateForum();
-		}
-	}
-
-	// Update the edited Extration pattern
-	updatePattern(pattern) {
-		this.isPatternUpdate = false;
-		const dataobject = {
-			id: this.draft.id,
-			version: this.draft.version,
-			forumURL: this.draft.forumURL,
-			name: this.draft.name.trim(),
-			intentToPublish: this.draft.intentToPublish,
-			proposedDeliveryDate: this.draft.proposedDeliveryDate,
-			description: this.draft.description.trim(),
-			purpose: this.draft.purpose.trim(),
-			lineOfBusiness: this.draft.lineOfBusiness.trim(),
-			deadline: '' + this.draft.deadline,
-			premiumFromDate: '' + this.draft.premiumFromDate,
-			premiumToDate: '' + this.draft.premiumToDate,
-			lossFromDate: '' + this.draft.lossFromDate,
-			lossToDate: '' + this.draft.lossToDate,
-			jurisdiction: this.draft.jurisdiction.trim(),
-			detailedCriteria: this.draft.detailedCriteria.trim(),
-			eligibilityRequirement: this.draft.eligibilityRequirement.trim(),
-			status: this.draft.status,
-			isShowParticipants: this.draft.isShowParticipants,
-			extractionPatternID: pattern,
-			comments: '' + this.draft.comments.trim()
-		};
-
-		console.log(dataobject);
-		const uri = '/update-data-call';
-		this.isSpinner = true;
-		this.dataService.putData(uri, dataobject).subscribe(
-			(resp) => {
-				this.isSpinner = false;
-				this.isSuccess = true;
-				this.type = MESSAGE.SET_EXTRACTION_SUCCESS.type;
-				this.title = MESSAGE.SET_EXTRACTION_SUCCESS.title;
-				if (this.hasAllFields) {
-					this.message = MESSAGE.SET_EXTRACTION_SUCCESS.message;
-					this.hasAllFields = false;
-				} else {
-					this.message = MESSAGE.SET_EXTRACTION_SUCCESS.message;
-				}
-				this.isPattern = true;
-				setTimeout(() => {
-					this.showModal();
-				}, 10);
-			},
-			(error) => {
-				this.isSpinner = false;
-				this.isError = true;
-				const messageBundle = MESSAGE.SET_EXTRACTION_FAIL;
-				this.dialogService.handleNotification(error, messageBundle);
-			}
-		);
-	}
-
 	// Update the edited forum URL
-	updateForum() {
-		this.isForumUpdate = false;
-		console.log('draft data');
-		console.log(this.draft);
+	private updateForum() {
 		if (
 			!(this.draft.forumURL === '' || this.draft.forumURL === undefined)
 		) {
@@ -657,22 +534,16 @@ export class DatacallsIssuedComponent implements OnInit {
 				comments: '' + this.draft.comments.trim()
 			};
 
-			console.log(dataobject);
 			const uri = '/update-data-call';
 			this.isSpinner = true;
 			this.dataService.putData(uri, dataobject).subscribe(
 				(resp) => {
 					this.isSpinner = false;
 					this.isSuccess = true;
-					this.type = MESSAGE.SET_FORUM_SUCCESS.type;
-					this.title = MESSAGE.SET_FORUM_SUCCESS.title;
-					this.message = MESSAGE.SET_FORUM_SUCCESS.message;
 					this.hasAllFields = false;
+					this.hasForumUrl = true;
 
-					this.isForumUrl = true;
-					setTimeout(() => {
-						this.showModal();
-					}, 10);
+					this.showModal(MESSAGE.SET_FORUM_SUCCESS);
 				},
 				(error) => {
 					this.isSpinner = false;
@@ -684,50 +555,15 @@ export class DatacallsIssuedComponent implements OnInit {
 		}
 	}
 
-	//Update DeliveryDate And Forum.
-
-	updateDateAndForum(date, forumurl) {
-		this.isUpdate = false;
-		this.isForumUpdate = false;
-		const dataobject = {
-			id: this.draft.id,
-			version: this.draft.version,
-			forumURL: forumurl,
-			name: this.draft.name.trim(),
-			intentToPublish: this.draft.intentToPublish,
-			proposedDeliveryDate: date,
-			description: this.draft.description.trim(),
-			purpose: this.draft.purpose.trim(),
-			lineOfBusiness: this.draft.lineOfBusiness.trim(),
-			deadline: '' + this.draft.deadline,
-			premiumFromDate: '' + this.draft.premiumFromDate,
-			premiumToDate: '' + this.draft.premiumToDate,
-			lossFromDate: '' + this.draft.lossFromDate,
-			lossToDate: '' + this.draft.lossToDate,
-			jurisdiction: this.draft.jurisdiction.trim(),
-			detailedCriteria: this.draft.detailedCriteria.trim(),
-			eligibilityRequirement: this.draft.eligibilityRequirement.trim(),
-			status: this.draft.status,
-			isShowParticipants: this.draft.isShowParticipants,
-			extractionPatternID: this.draft.extractionPatternID,
-			comments: '' + this.draft.comments.trim()
-		};
-		console.log('both fields');
-		console.log(dataobject);
+	private updateCallData(data) {
 		const uri = '/update-data-call';
 		this.isSpinner = true;
-		this.dataService.putData(uri, dataobject).subscribe(
+
+		this.dataService.putData(uri, data).subscribe(
 			(resp) => {
 				this.isSpinner = false;
 				this.isSuccess = true;
-				this.type = MESSAGE.SET_FORUM_DATE_SUCCESS.type;
-				this.title = MESSAGE.SET_FORUM_DATE_SUCCESS.title;
-				this.message = MESSAGE.SET_FORUM_DATE_SUCCESS.message;
-				setTimeout(() => {
-					this.showModal();
-				}, 10);
-				this.isDelivery = false;
-				this.isForumUrl = true;
+				this.showModal(MESSAGE.SET_ALL_FIELDS_SUCCESS);
 				this.appDatacallHistory.getDatacallHistory(
 					this.draft.id,
 					this.draft.version
@@ -736,65 +572,7 @@ export class DatacallsIssuedComponent implements OnInit {
 			(error) => {
 				this.isSpinner = false;
 				this.isError = true;
-				const messageBundle = MESSAGE.SET_FORUM_DATE__FAIL;
-				this.dialogService.handleNotification(error, messageBundle);
-			}
-		);
-	}
-
-	//Update DeliveryDate And pattern.
-
-	updateDateAndPattern(date, pattern) {
-		this.isUpdate = false;
-		this.isPatternUpdate = false;
-		const dataobject = {
-			id: this.draft.id,
-			version: this.draft.version,
-			forumURL: this.draft.forumURL,
-			name: this.draft.name.trim(),
-			intentToPublish: this.draft.intentToPublish,
-			proposedDeliveryDate: date,
-			description: this.draft.description.trim(),
-			purpose: this.draft.purpose.trim(),
-			lineOfBusiness: this.draft.lineOfBusiness.trim(),
-			deadline: '' + this.draft.deadline,
-			premiumFromDate: '' + this.draft.premiumFromDate,
-			premiumToDate: '' + this.draft.premiumToDate,
-			lossFromDate: '' + this.draft.lossFromDate,
-			lossToDate: '' + this.draft.lossToDate,
-			jurisdiction: this.draft.jurisdiction.trim(),
-			detailedCriteria: this.draft.detailedCriteria.trim(),
-			eligibilityRequirement: this.draft.eligibilityRequirement.trim(),
-			status: this.draft.status,
-			isShowParticipants: this.draft.isShowParticipants,
-			extractionPatternID: pattern,
-			comments: '' + this.draft.comments.trim()
-		};
-		console.log('both fields');
-		console.log(dataobject);
-		const uri = '/update-data-call';
-		this.isSpinner = true;
-		this.dataService.putData(uri, dataobject).subscribe(
-			(resp) => {
-				this.isSpinner = false;
-				this.isSuccess = true;
-				this.type = MESSAGE.SET_PATTERN_DATE_SUCCESS.type;
-				this.title = MESSAGE.SET_PATTERN_DATE_SUCCESS.title;
-				this.message = MESSAGE.SET_PATTERN_DATE_SUCCESS.message;
-				setTimeout(() => {
-					this.showModal();
-				}, 10);
-				this.isDelivery = false;
-				this.isPattern = true;
-				this.appDatacallHistory.getDatacallHistory(
-					this.draft.id,
-					this.draft.version
-				);
-			},
-			(error) => {
-				this.isSpinner = false;
-				this.isError = true;
-				const messageBundle = MESSAGE.SET_PATTERN_DATE__FAIL;
+				const messageBundle = MESSAGE.SET_ALL_FIELDS_FAIL;
 				const locale = 'en-US';
 				this.dialogService.handleNotification(
 					error,
@@ -805,219 +583,34 @@ export class DatacallsIssuedComponent implements OnInit {
 		);
 	}
 
-	//Update DeliveryDate And pattern.
+	updateFields(form: FormGroup) {
+		if (!form.valid) return;
 
-	updatePatternAndForum(pattern, forum) {
-		this.isForumUpdate = false;
-		this.isPatternUpdate = false;
-		const dataobject = {
-			id: this.draft.id,
-			version: this.draft.version,
-			forumURL: forum,
-			name: this.draft.name.trim(),
-			intentToPublish: this.draft.intentToPublish,
-			proposedDeliveryDate: this.draft.proposedDeliveryDate,
-			description: this.draft.description.trim(),
-			purpose: this.draft.purpose.trim(),
-			lineOfBusiness: this.draft.lineOfBusiness.trim(),
-			deadline: '' + this.draft.deadline,
-			premiumFromDate: '' + this.draft.premiumFromDate,
-			premiumToDate: '' + this.draft.premiumToDate,
-			lossFromDate: '' + this.draft.lossFromDate,
-			lossToDate: '' + this.draft.lossToDate,
-			jurisdiction: this.draft.jurisdiction.trim(),
-			detailedCriteria: this.draft.detailedCriteria.trim(),
-			eligibilityRequirement: this.draft.eligibilityRequirement.trim(),
-			status: this.draft.status,
-			isShowParticipants: this.draft.isShowParticipants,
-			extractionPatternID: pattern,
-			comments: '' + this.draft.comments.trim()
-		};
-		console.log('both fields');
-		console.log(dataobject);
-		const uri = '/update-data-call';
-		this.isSpinner = true;
-		this.dataService.putData(uri, dataobject).subscribe(
-			(resp) => {
-				this.isSpinner = false;
-				this.isSuccess = true;
-				this.type = MESSAGE.SET_PATTERN_DATE_SUCCESS.type;
-				this.title = MESSAGE.SET_PATTERN_DATE_SUCCESS.title;
-				this.message = MESSAGE.SET_PATTERN_DATE_SUCCESS.message;
-				setTimeout(() => {
-					this.showModal();
-				}, 10);
-				this.isForumUrl = true;
-				this.isPattern = true;
-				this.appDatacallHistory.getDatacallHistory(
-					this.draft.id,
-					this.draft.version
-				);
-			},
-			(error) => {
-				this.isSpinner = false;
-				this.isError = true;
-				const messageBundle = MESSAGE.SET_PATTERN_DATE__FAIL;
-				const locale = 'en-US';
-				this.dialogService.handleNotification(
-					error,
-					messageBundle,
-					locale
-				);
-			}
-		);
-	}
+		let isDataUpdated = false;
+		const data = Object.assign({}, this.draft);
+		const proposedDeliveryDate: string = form.value.proposedDeliveryDate;
+		const forumUrl: string = form.value.forumUrl;
+		const extractionPatternID: string = form.value.extractionPatternID;
 
-	// update all the fields
+		if (forumUrl && forumUrl.trim() !== '') {
+			data.forumURL = forumUrl;
+			isDataUpdated = true;
+		}
 
-	updateAllFields(date, forumurl, pattern) {
-		this.isUpdate = false;
-		this.isForumUpdate = false;
-		this.isPatternUpdate = false;
-		const dataobject = {
-			id: this.draft.id,
-			version: this.draft.version,
-			forumURL: forumurl,
-			name: this.draft.name.trim(),
-			intentToPublish: this.draft.intentToPublish,
-			proposedDeliveryDate: date,
-			description: this.draft.description.trim(),
-			purpose: this.draft.purpose.trim(),
-			lineOfBusiness: this.draft.lineOfBusiness.trim(),
-			deadline: '' + this.draft.deadline,
-			premiumFromDate: '' + this.draft.premiumFromDate,
-			premiumToDate: '' + this.draft.premiumToDate,
-			lossFromDate: '' + this.draft.lossFromDate,
-			lossToDate: '' + this.draft.lossToDate,
-			jurisdiction: this.draft.jurisdiction.trim(),
-			detailedCriteria: this.draft.detailedCriteria.trim(),
-			eligibilityRequirement: this.draft.eligibilityRequirement.trim(),
-			status: this.draft.status,
-			isShowParticipants: this.draft.isShowParticipants,
-			extractionPatternID: pattern,
-			comments: '' + this.draft.comments.trim()
-		};
-		console.log('both fields');
-		console.log(dataobject);
-		const uri = '/update-data-call';
-		this.isSpinner = true;
-		this.dataService.putData(uri, dataobject).subscribe(
-			(resp) => {
-				this.isSpinner = false;
-				this.isSuccess = true;
-				this.type = MESSAGE.SET_ALLFIELDS_SUCCESS.type;
-				this.title = MESSAGE.SET_ALLFIELDS_SUCCESS.title;
-				this.message = MESSAGE.SET_ALLFIELDS_SUCCESS.message;
-				setTimeout(() => {
-					this.showModal();
-				}, 10);
-				this.isDelivery = false;
-				this.isForumUrl = true;
-				this.isPattern = true;
-				this.appDatacallHistory.getDatacallHistory(
-					this.draft.id,
-					this.draft.version
-				);
-			},
-			(error) => {
-				this.isSpinner = false;
-				this.isError = true;
-				const messageBundle = MESSAGE.SET_ALLFIELDS_FAIL;
-				const locale = 'en-US';
-				this.dialogService.handleNotification(
-					error,
-					messageBundle,
-					locale
-				);
-			}
-		);
-	}
-	updateFields(tempdate, tempurl, tempPattern) {
-		if (
-			(tempdate != undefined || tempdate != null) &&
-			tempurl &&
-			tempurl !== '' &&
-			tempPattern &&
-			tempPattern !== ''
-		) {
-			this.hasAllFields = true;
-			this.draft.forumURL = tempurl;
-			console.log(
-				'calling upateAllField with data ' +
-					tempdate +
-					' ' +
-					tempurl +
-					' ' +
-					tempPattern
-			);
-			this.updateAllFields(tempdate, tempurl, tempPattern);
-			this.tempDate = null;
-			this.tempURL = '';
-			this.tempPattern = '';
-		} else if (
-			(tempdate != undefined || tempdate != null) &&
-			(tempurl == undefined || tempurl == '') &&
-			(tempPattern == undefined || tempPattern == '')
-		) {
-			console.log('calling deliverydate');
-			this.updateDeliveryDate({
-				proposedDeliveryDate: tempdate
-			});
-			this.tempDate = null;
-			this.tempPattern = null;
-		} else if (
-			(tempdate == undefined || tempdate == null) &&
-			(tempurl != undefined || tempurl != '') &&
-			(tempPattern == undefined || tempPattern == '')
-		) {
-			console.log('calling forumURL');
-			this.draft.forumURL = tempurl;
-			setTimeout(() => {
-				this.updateForum();
-			}, 100);
-			this.tempURL = '';
-			this.tempPattern = '';
-			this.tempDate = null;
-		} else if (
-			(tempdate == undefined || tempdate == null) &&
-			(tempurl == undefined || tempurl == '') &&
-			(tempPattern != undefined || tempPattern != '')
-		) {
-			console.log('calling pattern ');
-			this.updatePattern(tempPattern);
-			this.tempURL = '';
-			this.tempPattern = '';
-			this.tempDate = null;
-		} else if (
-			(tempdate != undefined || tempdate != null) &&
-			(tempurl == undefined || tempurl == '') &&
-			(tempPattern != undefined || tempPattern != '')
-		) {
-			console.log('calling deliveryDate and pattern ');
-			this.updateDateAndPattern(tempdate, tempPattern);
-			this.tempURL = '';
-			this.tempPattern = '';
-			this.tempDate = null;
-		} else if (
-			(tempdate != undefined || tempdate != null) &&
-			(tempurl != undefined || tempurl != '') &&
-			(tempPattern == undefined || tempPattern == '')
-		) {
-			console.log('calling deliveryDate and forumURL ');
-			this.updateDateAndForum(tempdate, tempurl);
-			this.tempURL = '';
-			this.tempPattern = '';
-			this.tempDate = null;
-		} else if (
-			(tempdate == undefined || tempdate == null) &&
-			(tempurl != undefined || tempurl != '') &&
-			(tempPattern != undefined || tempPattern != '')
-		) {
-			console.log('calling pattern and forumURL ');
-			this.updatePatternAndForum(tempPattern, tempurl);
-			this.tempURL = '';
-			this.tempPattern = '';
-			this.tempDate = null;
+		if (proposedDeliveryDate) {
+			data.proposedDeliveryDate = proposedDeliveryDate;
+			isDataUpdated = true;
+		} else {
+			data.proposedDeliveryDate = this.defaultDate;
+		}
+
+		if (extractionPatternID && extractionPatternID.trim() !== '') {
+			isDataUpdated = true;
+			data.extractionPatternID = extractionPatternID;
+		}
+
+		if (isDataUpdated) {
+			this.updateCallData(data);
 		}
 	}
 
@@ -1029,12 +622,7 @@ export class DatacallsIssuedComponent implements OnInit {
 			(response) => {
 				this.isSpinner = false;
 				this.isSuccess = true;
-				this.title = MESSAGE.HASH_UPDATE_SUCCESS.title;
-				this.message = MESSAGE.HASH_UPDATE_SUCCESS.message;
-				this.type = MESSAGE.HASH_UPDATE_SUCCESS.type;
-				setTimeout(() => {
-					this.showModal();
-				}, 500);
+				this.showModal(MESSAGE.HASH_UPDATE_SUCCESS);
 				this.appUpdateReport.getReports(true);
 				this.appDatacallHistory.getDatacallHistory(
 					this.draft.id,
@@ -1047,49 +635,18 @@ export class DatacallsIssuedComponent implements OnInit {
 				this.isSpinner = false;
 				this.isError = true;
 				if (error === 'Unauthorized') {
-					this.type = MESSAGE.ACTIVITY_FAIL.Unauthorized.type;
-					this.message = MESSAGE.ACTIVITY_FAIL.Unauthorized.message;
-					this.title = MESSAGE.ACTIVITY_FAIL.Unauthorized.title;
-					setTimeout(() => {
-						this.showSessionModal();
-					}, 100);
+					this.showSessionModal();
 				} else if (error.message.search('Report already exist') > -1) {
-					this.type = MESSAGE.DUPLICATE_HASH.type;
-					this.message = MESSAGE.DUPLICATE_HASH.message;
-					this.title = MESSAGE.DUPLICATE_HASH.title;
-					setTimeout(() => {
-						this.showModal();
-					}, 500);
+					this.showModal(MESSAGE.DUPLICATE_HASH);
 				} else {
-					this.type = 'error';
-					this.message = 'Error';
-					this.title = 'Error';
-					setTimeout(() => {
-						this.showModal();
-					}, 500);
+					this.showModal(MESSAGE.GENERIC_ERROR);
 				}
 			}
 		);
 	}
 
-	// Format the date to mm/dd/yyyy format
-	formatDate(d) {
-		console.log('date format');
-		const date = new Date(d);
-		let dd: any = date.getDate();
-		let mm: any = date.getMonth() + 1;
-		const yyyy = date.getFullYear();
-		if (dd < 10) {
-			dd = '0' + dd;
-		}
-		if (mm < 10) {
-			mm = '0' + mm;
-		}
-		return (d = mm + '/' + dd + '/' + yyyy);
-	}
-
 	// Format date in mm dd yyyy | hr:min:ss format
-	formatDate2(d) {
+	private formatDate2(d) {
 		const date = new Date(d);
 		// const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
 		//                       'July', 'August', 'September', 'October', 'November', 'December'];
@@ -1122,7 +679,6 @@ export class DatacallsIssuedComponent implements OnInit {
 
 	// Provide consent to the issued data call
 	toggleAction() {
-		// console.log('isconsent::: ', this.isConsent);
 		if (this.isConsent) {
 			this.isConsent = false;
 			this.action = 'Consent';
@@ -1138,20 +694,17 @@ export class DatacallsIssuedComponent implements OnInit {
 			this.dataService.postData(uri, requestData).subscribe(
 				(response) => {
 					this.isSmallSpinner = false;
-					// console.log('consent response: ', response);
 					this.isConsent = false;
 					this.isSuccess = true;
-					this.type = 'success';
-					this.message =
+					const type = 'success';
+					const message =
 						'Your ' +
 						this.action.toLowerCase() +
 						' has been recorded. The ' +
 						this.action.toLowerCase() +
 						' count will be updated shortly.';
-					this.title = 'Consent Recorded';
-					setTimeout(() => {
-						this.showModal();
-					}, 10);
+					const title = 'Consent Recorded';
+					this.dialogService.openModal(title, message, type);
 					this.getConsentCount();
 				},
 				(error) => {
@@ -1164,7 +717,7 @@ export class DatacallsIssuedComponent implements OnInit {
 						messageBundle,
 						locale
 					);
-					console.log(error);
+					console.error(error);
 				}
 			);
 		}
@@ -1191,7 +744,6 @@ export class DatacallsIssuedComponent implements OnInit {
 		this.isSpinner = true;
 		this.dataService.getData(uri).subscribe(
 			(response) => {
-				console.log('list response #### ', JSON.parse(response));
 				res = JSON.parse(response);
 				if (res === null) {
 					res = [];
@@ -1211,20 +763,14 @@ export class DatacallsIssuedComponent implements OnInit {
 						type: 'Organizations'
 					};
 				}
-				this.type = 'info';
-				this.data = data;
-				this.message = '';
-				this.title = '';
-				this.isData = true;
-				setTimeout(() => {
-					this.dialogService.openInfoModal(
-						this.title,
-						this.message,
-						this.type,
-						this.data,
-						this.isData
-					);
-				}, 10);
+
+				this.dialogService.openInfoModal(
+					'',
+					'',
+					'info',
+					this.data,
+					true
+				);
 				this.isSpinner = false;
 			},
 			(error) => {
@@ -1241,7 +787,6 @@ export class DatacallsIssuedComponent implements OnInit {
 	}
 
 	openURL(url) {
-		console.log('url  ', url);
 		let extURL = url;
 		if (!/^(http:|https:)/i.test(extURL)) {
 			extURL = 'http://' + extURL;
@@ -1256,15 +801,10 @@ export class DatacallsIssuedComponent implements OnInit {
 		const uri = '/list-extraction-patterns';
 		this.dataService.getData(uri).subscribe(
 			(response) => {
-				console.log(
-					'list-extraction-patterns response #### ',
-					JSON.parse(response)
-				);
 				this.extractionPatternList = JSON.parse(response);
 				this.extractionPatternList.sort((a, b) =>
 					a.extractionPatternID.localeCompare(b.extractionPatternID)
 				);
-				// console.log("this.extrationPatterList :- ", this.extrationPatterList);
 
 				let patterns = [];
 				this.extractionPatternList.forEach((el) => {
@@ -1286,9 +826,8 @@ export class DatacallsIssuedComponent implements OnInit {
 				});
 
 				this.extractionPatternList = _formattedPatterns;
-				// console.log("this.extrationPatterList _formattedPatterns :- ", this.extrationPatterList);
+
 				this.extractionPatternList.forEach((element) => {
-					// console.log("getExtrationPattern element :- ", element);
 					if (
 						this.draft.extractionPatternID ===
 						element.extractionPatternID
@@ -1326,24 +865,6 @@ export class DatacallsIssuedComponent implements OnInit {
 			this.dialogService.openPatternDetails(filterList, 'info');
 		}
 	}
-
-	// getExtrationPatternById(){
-	//   const uri = '/extraction-patterns';
-	//   console.log(this.draft.extractionPatternID)
-	//   const requestData = {
-	//     "id": [this.draft.extractionPatternID]
-	//   };
-	//   this.dataService.postData(uri, requestData)
-	//                   .subscribe((response: any) => {
-	//                     // console.log('getExtrationPatternById ', response)
-	//                     this.appModal.openPatternDetails(JSON.parse(response), 'info');
-	//                   }, error => {
-	//                     this.isSpinner = false;
-	//                     const messageBundle=MESSAGE.NAME_FETCH_FAIL;
-	//                     const locale="en-US";
-	//                     this.appModal.handleNotification(error,messageBundle,locale);
-	//                   })
-	// }
 
 	showPattern() {
 		this.dialogService.openPattern(this.extractionPatternList, 'info');

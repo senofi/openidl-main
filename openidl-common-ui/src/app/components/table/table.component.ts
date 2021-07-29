@@ -5,7 +5,6 @@ import {
 	Output,
 	EventEmitter,
 	ViewChild,
-	OnDestroy,
 	AfterViewInit
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -24,7 +23,7 @@ import { DialogService } from '../../services/dialog.service';
 	templateUrl: './table.component.html',
 	styleUrls: ['./table.component.scss']
 })
-export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TableComponent implements OnInit, AfterViewInit {
 	// Input props received by the component
 	@Input() status: any;
 	@Input() prop: any;
@@ -187,8 +186,6 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 		// Get the data as per the data call status
 		this.getDataCallsByStatus();
 	}
-
-	ngOnDestroy(): void {}
 
 	// material table page change event
 	// onPageChange(page: PageEvent) {

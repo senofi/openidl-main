@@ -14,6 +14,4 @@ export class DialogForumComponent implements OnDestroy {
 	ngOnDestroy() {
 		sessionStorage.removeItem('isModalOpen');
 	}
-
-	onClickUpdate() {}
 }

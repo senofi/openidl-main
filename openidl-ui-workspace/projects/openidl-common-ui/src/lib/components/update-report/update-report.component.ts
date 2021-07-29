@@ -7,7 +7,12 @@ import {
 	ViewChild
 } from '@angular/core';
 import { ReportTableComponent } from '../report-table/report-table.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+	FormBuilder,
+	FormGroup,
+	FormGroupDirective,
+	Validators
+} from '@angular/forms';
 import { MESSAGE } from '../../config/messageBundle';
 
 @Component({
@@ -43,14 +48,7 @@ export class UpdateReportComponent implements OnInit {
 		});
 	}
 
-	get reportURLfield() {
-		return this.registerForm.get('reportURL');
-	}
-	get reportHashfield() {
-		return this.registerForm.get('reportHash');
-	}
-
-	updateReport(formValues) {
+	updateReport(formValues, formDirective: FormGroupDirective) {
 		console.log(this.shouldUpdateReport);
 		if (this.shouldUpdateReport) {
 			if (!this.registerForm.valid) {
@@ -70,6 +68,8 @@ export class UpdateReportComponent implements OnInit {
 				};
 				// Following event will be handled in parent component mostly which is datacalls issued component in case of AAIS
 				this.updateReportEvent.emit(data);
+				formDirective.resetForm();
+				this.registerForm.reset();
 				this.registerForm = this.formBuilder.group({
 					reportURL: ['', Validators.required],
 					reportHash: ['', Validators.required]
@@ -91,5 +91,6 @@ export class UpdateReportComponent implements OnInit {
 
 	getReportStatus() {
 		this.shouldUpdateReport = false;
+		this.registerForm.disable();
 	}
 }

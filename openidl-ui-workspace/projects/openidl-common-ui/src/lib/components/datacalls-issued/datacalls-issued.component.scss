@@ -73,6 +73,21 @@
 		top: 6px;
 	}
 
+	.consent-card {
+		height: 17rem;
+	}
+
+	.delivery-date {
+		padding: 1rem;
+	}
+
+	.text-wrap {
+		max-width: 300px;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+
 	.data-form {
 		margin: 0 auto;
 		padding: 1rem;
