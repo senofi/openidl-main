@@ -7,12 +7,13 @@ import {
 	OnDestroy
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 import { DataService } from '../../services/data.service';
 import { StorageService } from '../../services/storage.service';
 import { MESSAGE } from '../../config/messageBundle';
 import { DialogService } from '../../services/dialog.service';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { NotifierService } from '../../services/notifier.service';
 
 @Component({
 	selector: 'app-form',
@@ -67,7 +68,8 @@ export class FormComponent implements OnInit, OnDestroy {
 		private formBuilder: FormBuilder,
 		private dataService: DataService,
 		private storageService: StorageService,
-		private dialogService: DialogService
+		private dialogService: DialogService,
+		private notifierService: NotifierService
 	) {}
 
 	ngOnInit() {
@@ -202,13 +204,12 @@ export class FormComponent implements OnInit, OnDestroy {
 
 	// Set data call to be issued
 	issueDataCall(value) {
-		console.log('issueDataCall', value);
-
 		if (!this.registerForm.valid) {
-			// this.isError = true;
-			this.type = MESSAGE.MANDATORY_FIELDS_ERROR.type;
-			this.message = MESSAGE.MANDATORY_FIELDS_ERROR.message;
-			this.title = MESSAGE.MANDATORY_FIELDS_ERROR.title;
+			this.notifierService.openSnackbar(
+				MESSAGE.MANDATORY_FIELDS_ERROR.type,
+				MESSAGE.MANDATORY_FIELDS_ERROR.title,
+				MESSAGE.MANDATORY_FIELDS_ERROR.message
+			);
 		} else {
 			this.title = MESSAGE.DATACALL_ISSUE_SUCCESS.title;
 			this.message = MESSAGE.DATACALL_ISSUE_SUCCESS.message;
@@ -219,13 +220,12 @@ export class FormComponent implements OnInit, OnDestroy {
 
 	// Set data call to be saved as a draft
 	saveDataCall(value) {
-		console.log('saveDataCall', value);
-
 		if (!this.registerForm.valid) {
-			// this.isError = true;
-			this.type = MESSAGE.MANDATORY_FIELDS_ERROR.type;
-			this.message = MESSAGE.MANDATORY_FIELDS_ERROR.message;
-			this.title = MESSAGE.MANDATORY_FIELDS_ERROR.title;
+			this.notifierService.openSnackbar(
+				MESSAGE.MANDATORY_FIELDS_ERROR.type,
+				MESSAGE.MANDATORY_FIELDS_ERROR.title,
+				MESSAGE.MANDATORY_FIELDS_ERROR.message
+			);
 		} else {
 			this.title = MESSAGE.DATACALL_DRAFT_SUCCESS.title;
 			this.message = MESSAGE.DATACALL_DRAFT_SUCCESS.message;

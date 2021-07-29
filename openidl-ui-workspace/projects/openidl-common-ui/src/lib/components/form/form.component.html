@@ -147,18 +147,6 @@
 
 				<div class="row">
 					<div class="col toggle">
-						<!-- <mat-form-field appearance="outline" class="full-width">
-							<mat-label>Expected Public Circulation?</mat-label>
-							<mat-select
-								placeholder="Select Expected Public Circulation?"
-								formControlName="intentToPublish"
-							>
-								<mat-option value="true" selected
-									>Yes</mat-option
-								>
-								<mat-option value="false">No</mat-option>
-							</mat-select>
-						</mat-form-field> -->
 						<mat-slide-toggle
 							formControlName="intentToPublish"
 							color="primary"
@@ -241,27 +229,28 @@
 						</mat-slide-toggle>
 					</div>
 				</div>
-			</form>
-			<div class="row">
-				<div class="col button-row">
-					<button
-						mat-stroked-button
-						color="primary"
-						(click)="saveDataCall(registerForm.value)"
-					>
-						<mat-icon color="primary">bookmark</mat-icon>
-						Save as Draft
-					</button>
-					<button
-						mat-flat-button
-						color="primary"
-						(click)="issueDataCall(registerForm.value)"
-					>
-						<mat-icon>note_add</mat-icon>
-						Issue
-					</button>
+
+				<div class="row">
+					<div class="col button-row">
+						<button
+							mat-stroked-button
+							color="primary"
+							(click)="saveDataCall(registerForm.value)"
+						>
+							<mat-icon color="primary">bookmark</mat-icon>
+							Save as Draft
+						</button>
+						<button
+							mat-flat-button
+							color="primary"
+							(click)="issueDataCall(registerForm.value)"
+						>
+							<mat-icon>note_add</mat-icon>
+							Issue
+						</button>
+					</div>
 				</div>
-			</div>
+			</form>
 		</mat-card-content>
 	</mat-card>
 </div>
