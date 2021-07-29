@@ -9,7 +9,9 @@ export class DialogConfirmationComponent implements OnDestroy {
 	constructor(
 		public dialogRef: MatDialogRef<DialogConfirmationComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: any
-	) {}
+	) {
+		console.log(data);
+	}
 
 	ngOnDestroy() {
 		sessionStorage.removeItem('isModalOpen');

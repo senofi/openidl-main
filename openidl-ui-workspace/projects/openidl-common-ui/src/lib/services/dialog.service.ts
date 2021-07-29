@@ -77,8 +77,12 @@ export class DialogService {
 		});
 	}
 
-	openConfirmationModal(title: string, message: string, type: string) {
-		this.dialog.open(DialogConfirmationComponent, {
+	openConfirmationModal(
+		title: string,
+		message: string,
+		type: string
+	): MatDialogRef<DialogConfirmationComponent> {
+		const ref = this.dialog.open(DialogConfirmationComponent, {
 			...this.dialogConfig,
 			data: {
 				type,
@@ -86,6 +90,8 @@ export class DialogService {
 				message
 			}
 		});
+
+		return ref;
 	}
 
 	openInfoModal(

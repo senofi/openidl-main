@@ -53,10 +53,14 @@
 	}
 
 	.spinner-container {
-		height: 3rem;
-	}
-	.spinner {
+		height: 5rem;
 		position: relative;
+		text-align: center;
+
+		.spin {
+			display: inline;
+			top: 40%;
+		}
 	}
 }
 
