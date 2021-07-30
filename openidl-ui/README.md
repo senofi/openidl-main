@@ -62,18 +62,6 @@ To successfully install this dependency, you should replace `{GITHUB_TOKEN}` in 
     * On YAML tag of pop-up window, you can find the host key value which is data call app server URL. The value looks like -> [PREFIX]-data-call-app.[CLUSTERNAME].us-south.containers.appdomain.cloud
     * To the above URL, add prefix as "https://"" and suffix as "/openidl/api". Use this URL as "DATA_CALL_APP_URL" value.
     * Example of development environment => exports.DATA_CALL_APP_URL = 'https://dev-aais-openidl-data-call-app.dev-openidl-aais-ibp2-0-93fbc942734a2ff6b0991658d589b54e-0000.us-south.containers.appdomain.cloud/openidl/api';
-
-### Configure local-appid-config.json
-
-* Create local-appid-config.json file under server/config
-* Get appid Service Credentials from respective node administrator or Clould administrator or follow the below steps:
-    * Filter the services by selecting the desired Resource group on IBM cloud dashboard page.
-    * Click on the AppId instance
-    * Click Service Credentials
-    * If service credential already exists, then copy the JSON or create a new Service Credential by clicking on "Create" and copy the generated JSON. Please use appropriate role.
-* Paste the above JSON in 'local-appid-config.json' file and add a new attribute named `callerId`. Copy the `clientId` value and assign it to `callerId` element. You should then end up with the same value for both attributes 
-* Add a new attribute as "version":"4" to this JSON.
-
 ### Configure local-cognito-config.json
 
 * Create local-cognito-config.json file under server/config

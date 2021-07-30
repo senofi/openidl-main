@@ -4,14 +4,14 @@ HOME_DIR=`pwd`
 
 cd $HOME_DIR/openidl-data-call-app
 echo "****** Inside ... " `pwd`
-. ./buildLocalDockerImage.sh
+. ./build-image.sh
 
 cd $HOME_DIR/openidl-data-call-processor
 echo "****** Inside ... " `pwd`
-. ./buildLocalDockerImage.sh
+. ./build-image.sh
 
 cd $HOME_DIR/openidl-insurance-data-manager
 echo "****** Inside ... " `pwd`
-. ./buildLocalDockerImage.sh
+. ./build-image.sh
 
 echo "run this command to load the images 'make reinstall_in_k8s', ensure images are not in use before running the command."

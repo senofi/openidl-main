@@ -7,4 +7,4 @@ cp ~/.npmrc npmrc
 docker build -t openidl/data-call-app .
 
 echo "=====> delete npmrc"
-rm npmrc
+rm -rf npmrc

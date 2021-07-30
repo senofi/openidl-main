@@ -11,5 +11,5 @@ applications:
   health-check-type: http
   health-check-http-endpoint: /health
   env:
-    APPID_CONFIG: env-appid
+    IDP_CONFIG: env-cognito
     IBM_CERTIFICATE_MANAGER_CONFIG: <cert value goes here>

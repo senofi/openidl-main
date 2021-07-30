@@ -13,6 +13,7 @@ COPY . .
 
 RUN npm install
 
+RUN mkdir lib
 RUN cp -r node_modules/openidl-common-ui/* lib/
 RUN npm install @angular/cli -g
 

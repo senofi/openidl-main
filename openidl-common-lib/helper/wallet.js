@@ -1,4 +1,4 @@
- 
+
 /**
  * Updated Implementation of FileSystem Memory Wallet with InMemory Wallet
  * Same applies to couchdb wallet to be implemented
@@ -16,7 +16,6 @@ const {
   InMemoryWallet
 } = require('fabric-network');
 const logger = log4js.getLogger('helpers - wallet');
-//logger.setLevel(config.logLevel);
 logger.level = config.logLevel;
 
 const {

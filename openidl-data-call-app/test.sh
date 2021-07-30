@@ -17,9 +17,8 @@ npm -v
 sed -i 's/${GITHUB_TOKEN}/'$GITHUB_TOKEN'/g' package.json
 sed -i 's/${GITHUB_TOKEN}/'$GITHUB_TOKEN'/g' package-lock.json
 
-# Add Cloudand and App ID credentials to local config files (this is foe execution of test cases)
-cat <<< ${APPID_CONFIG} | sed -e 's/^"//' -e 's/"$//' | sed -r 's/\\/"/g' > server/config/local-appid-config.json
-cat <<< ${COGNITO_CONFIG} | sed -e 's/^"//' -e 's/"$//' | sed -r 's/\\/"/g' > server/config/local-cognito-config.json
+# Add Cloudand and IDP credentials to local config files (this is foe execution of test cases)
+cat <<< ${IDP_CONFIG} | sed -e 's/^"//' -e 's/"$//' | sed -r 's/\\/"/g' > server/config/local-cognito-config.json
 cat <<< ${CLOUDANT_CONFIG}| sed -e 's/^"//' -e 's/"$//' | sed -r 's/\\/"/g' > server/config/local-cloudant-config.json
 cat <<< ${IBM_CERTIFICATE_MANAGER_CONFIG}| sed -e 's/^"//' -e 's/"$//' | sed -r 's/\\/"/g' > server/config/local-certmanager-config.json
 

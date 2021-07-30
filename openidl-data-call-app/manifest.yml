@@ -9,6 +9,5 @@ applications:
   domain: mybluemix.net
   host: env-host
   env:
-    APPID_CONFIG: <value goes here>
-    COGNITO_CONFIG: <value goes here>
+    IDP_CONFIG: <value goes here>
     IBM_CERTIFICATE_MANAGER_CONFIG: <cert value goes here>

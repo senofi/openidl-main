@@ -9,5 +9,4 @@ applications:
   domain: mybluemix.net
   host: env-host
   env:
-    APPID_CONFIG: <value goes here>
-    COGNITO_CONFIG: <value goes here>
+    IDP_CONFIG: <value goes here>

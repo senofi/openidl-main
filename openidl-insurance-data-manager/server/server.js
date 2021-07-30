@@ -31,7 +31,7 @@ const IBMCloudEnv = require('ibm-cloud-env');
 IBMCloudEnv.init();
 global.fetch = require('node-fetch');
 const routes = require('./routes');
-const openidlDataCallCommonApp = require('@openidl-org/openidl-common-lib');
+const openidlCommonLib = require('@openidl-org/openidl-common-lib');
 const transactionFactory = require('./helpers/transaction-factory');
 const networkConfig = require('./config/connection-profile.json');
 
@@ -39,19 +39,15 @@ const networkConfig = require('./config/connection-profile.json');
 const logger = log4js.getLogger('server');
 logger.level = config.logLevel;
 
-const DBManagerFactory = openidlDataCallCommonApp.DBManagerFactory;
+const DBManagerFactory = openidlCommonLib.DBManagerFactory;
 const dbManagerFactoryObject = new DBManagerFactory();
 const insuranceManagerDB = config.targetDB;
 //vv
 //const carrerIds = config.carrierid;
 
 const util = require('./helpers/util');
-
-const apiAuthHandler = openidlDataCallCommonApp.ApiAuthHandler;
-apiAuthHandler.init(IBMCloudEnv.getDictionary('appid-credentials'));
-
-const cognitoAuthHandler = openidlDataCallCommonApp.CognitoAuthHandler;
-cognitoAuthHandler.init(IBMCloudEnv.getDictionary('cognito-credentials'));
+const authHandler = openidlCommonLib.AuthHandler.setHandler('cognito');
+authHandler.init(IBMCloudEnv.getDictionary('idp-credentials'));
 
 const errorHandler = require('./middlewares/error-handler');
 const { init } = require('@openidl-org/openidl-common-lib/helper/wallet');
@@ -102,36 +98,12 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+
 logger.debug('setting up app: initializing passport');
-
-let apiAppStrategy = apiAuthHandler.getAPIStrategy();
-const apiPassport = apiAuthHandler.getPassport();
-app.use(apiPassport.initialize());
-apiPassport.use(apiAppStrategy);
-
-// Passport session persistance
-apiPassport.serializeUser(function (user, cb) {
-    cb(null, user);
-});
-
-apiPassport.deserializeUser(function (obj, cb) {
-    cb(null, obj);
-});
-
-const cognitoPassport = cognitoAuthHandler.getPassport();
-app.use(cognitoPassport.initialize());
-app.use(cognitoPassport.session());
-const cognitoStrategy = cognitoAuthHandler.getCognitoAuthStrategy();
-cognitoPassport.use(cognitoStrategy);
-
-// Passport session persistance
-cognitoPassport.serializeUser(function (user, cb) {
-    cb(null, user);
-});
-
-cognitoPassport.deserializeUser(function (obj, cb) {
-    cb(null, obj);
-});
+const passport = authHandler.getPassport();
+app.use(passport.initialize());
+app.use(passport.session());
+authHandler.setStrategy(passport);
 
 app.enable('trust proxy');
 

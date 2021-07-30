@@ -1,4 +1,4 @@
- 
+
 'use strict';
 
 /**
@@ -15,7 +15,6 @@ const BaseWallet = require('fabric-network/lib/impl/wallet/basewallet');
 const CouchDBVStore = require('fabric-client/lib/impl/CouchDBKeyValueStore');
 const Nano = require('nano');
 const logger = log4js.getLogger('helpers - couchdbwallet');
-//logger.setLevel(config.logLevel);
 logger.level = config.logLevel;
 
 /**
@@ -33,7 +32,7 @@ class CouchDBWallet extends BaseWallet {
 	 * @param {WalletMixin} mixin
 	 * @memberof CouchDBWallet
 	 */
-	
+
 	constructor(options, mixin) {
 		const method = 'constructor';
 		super(mixin);
@@ -49,7 +48,7 @@ class CouchDBWallet extends BaseWallet {
 		this.dbOptions = {};
 		Object.assign(this.dbOptions, this.options);
 	}
-	
+
 	_createOptions() {
 		const dbOptions = {};
 		Object.assign(dbOptions, this.options);

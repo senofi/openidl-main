@@ -1,20 +1,14 @@
 {
   "portnumber": {
-      "searchPatterns": [
-          "env:PORT",
-          "file:/server/config/port-config.json:PORT"
-      ]
-  },
-  "appid-credentials": {
     "searchPatterns": [
-      "env:APPID_CONFIG",
-      "file:/server/config/local-appid-config.json"
+      "env:PORT",
+      "file:/server/config/port-config.json:PORT"
     ]
-},
-"cognito-credentials": {
-  "searchPatterns": [
-    "env:COGNITO_CONFIG",
-    "file:/server/config/local-cognito-config.json"
-  ]
-}
+  },
+  "idp-credentials": {
+    "searchPatterns": [
+      "env:IDP_CONFIG",
+      "file:/server/config/local-cognito-config.json"
+    ]
+  }
 }

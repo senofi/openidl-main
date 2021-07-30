@@ -19,7 +19,7 @@ var cognitoUserRegister = {};
 const IBMCloudEnv = require('ibm-cloud-env');
 IBMCloudEnv.init();
 
-const cognitoConfig = IBMCloudEnv.getDictionary('cognito-credentials');
+const cognitoConfig = IBMCloudEnv.getDictionary('idp-credentials');
 const config = require('../config/default.json');
 
 const AWS = require('aws-sdk');

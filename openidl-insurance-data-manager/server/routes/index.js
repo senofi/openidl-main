@@ -17,10 +17,8 @@
 const express = require('express');
 const log4js = require('log4js');
 const config = require('config');
-const openidlDataCallCommonApp = require('@openidl-org/openidl-common-lib');
-
-const apiAuthHandler = openidlDataCallCommonApp.ApiAuthHandler;
-const cognitoAuthHandler = openidlDataCallCommonApp.CognitoAuthHandler;
+const openidlCommonLib = require('@openidl-org/openidl-common-lib');
+const authHandler = openidlCommonLib.AuthHandler.setHandler('cognito');
 const health = require('./health');
 const ping = require('./ping');
 const statAgentController = require('../controllers/stat-agent');
@@ -38,20 +36,20 @@ logger.level = config.logLevel;
 /**
  * Add routes
  */
-router.use('/health', cognitoAuthHandler.validateToken, health);
-router.use('/ping', cognitoAuthHandler.validateToken, ping);
-router.use('/insurance-data', cognitoAuthHandler.validateToken, statAgentController.insuranceData);
-router.use('/ins-data-hash', cognitoAuthHandler.validateToken, statAgentController.saveInsuranceDataHash);
-router.use('/ins-data-hds', cognitoAuthHandler.validateToken, statAgentController.saveInsuranceDataHDS);
-router.use('/ins-data-hds-err', cognitoAuthHandler.validateToken, statAgentController.saveInsuranceDataHDSError);
+router.use('/health', authHandler.validateToken, health);
+router.use('/ping', authHandler.validateToken, ping);
+router.use('/insurance-data', authHandler.validateToken, statAgentController.insuranceData);
+router.use('/ins-data-hash', authHandler.validateToken, statAgentController.saveInsuranceDataHash);
+router.use('/ins-data-hds', authHandler.validateToken, statAgentController.saveInsuranceDataHDS);
+router.use('/ins-data-hds-err', authHandler.validateToken, statAgentController.saveInsuranceDataHDSError);
 
 // Jira - AAISPROD-14 Changes
-router.use('/sendemail', cognitoAuthHandler.validateToken, emailController.sendEmail);
+router.use('/sendemail', authHandler.validateToken, emailController.sendEmail);
 
 /**
  * This API end point is invoked by Nifi to load insurance data into mongodb and store insurance
  * hash value into blockchain
  */
-router.use('/load-insurance-data', cognitoAuthHandler.validateToken, statAgentController.loadInsuranceData);
+router.use('/load-insurance-data', authHandler.validateToken, statAgentController.loadInsuranceData);
 
 module.exports = router;

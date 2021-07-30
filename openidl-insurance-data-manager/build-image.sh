@@ -7,4 +7,4 @@ cp ~/.npmrc npmrc
 docker build -t openidl/insurance-data-manager .
 
 echo "=====> delete npmrc"
-rm npmrc
+rm -rf npmrc

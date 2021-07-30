@@ -29,17 +29,6 @@ This repository leverages common functionality from the [openidl-common-lib](htt
 
 For development, testing, and debugging purposes, it is very convenient to run this Node.js component locally on your system and have it connect to the corresponding IBM Blockchain Platform instance that is running on the IBM Cloud.
 
-### 1. Configure local-appid-config.json
-
-* Create local-appid-config.json file under server/config
-* Get appid Service Credentials from respective node administrator or Clould administrator or follow the below steps:
-    * Filter the services by selecting the desired Resource group on IBM cloud dashboard page.
-    * Click on the AppId instance
-    * Click Service Credentials
-    * If service credential already exists, then copy the JSON or create a new Service Credential by clicking on "Create" and copy the generated JSON. Please use appropriate role.
-* Paste the above JSON in 'local-appid-config.json' file and add a new attribute named `callerId`. Copy the `clientId` value and assign it to `callerId` element. You should then end up with the same value for both attributes 
-* Add a new attribute as "version":"4" to this JSON.
-
 ### 1. Configure local-cognito-config.json
 
 * Create local-cognito-config.json file under server/config

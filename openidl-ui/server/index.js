@@ -2,7 +2,6 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const cfenv = require('cfenv');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
@@ -15,6 +14,8 @@ const openidlCommonApp = require('../../openidl-common-ui//server/index');
 
 const IBMCloudEnv = require('ibm-cloud-env');
 IBMCloudEnv.init();
+
+global.fetch = require('node-fetch');
 
 app.use(cors());
 app.use(express.json());
@@ -31,17 +32,10 @@ logger.level = "debug";
 logger.debug('setting up app: registering routes, middleware...');
 
 logger.info('credential info');
-logger.info(IBMCloudEnv.getDictionary('appid-credentials'));
-logger.info(IBMCloudEnv.getDictionary('cognito-credentials'));
+logger.info(IBMCloudEnv.getDictionary('idp-credentials'));
 
-const userAuthHandler = openidlCommonApp.UserAuthHandler;
-userAuthHandler.init(IBMCloudEnv.getDictionary('appid-credentials'));
-
-const apiAuthHandler = openidlCommonApp.ApiAuthHandler;
-apiAuthHandler.init(IBMCloudEnv.getDictionary('appid-credentials'));
-
-const cognitoAuthHandler = openidlCommonApp.CognitoAuthHandler;
-cognitoAuthHandler.init(IBMCloudEnv.getDictionary('cognito-credentials'));
+const authHandler = openidlCommonLib.AuthHandler.setHandler('cognito');
+authHandler.init(IBMCloudEnv.getDictionary('idp-credentials'));
 
 /**
  * middleware for authentication
@@ -52,7 +46,7 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(noCache());
 app.enable("trust proxy");
-app.use(userAuthHandler.configureSSL);
+app.use(authHandler.configureSSL);
 // TODO Undable to move passport related stuff to middleware need expert help
 // TODO discuss on standard session maintaince approach from Node.js for production
 app.use(session({
@@ -60,8 +54,9 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+
 logger.debug('setting up app: initializing passport');
-const passport = userAuthHandler.getPassport();
+const passport = authHandler.getPassport();
 app.use(passport.initialize());
 app.use(passport.session());
 let webAppStrategy = userAuthHandler.getUserAuthStrategy();

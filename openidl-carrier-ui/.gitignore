@@ -9,9 +9,6 @@
 # dependencies
 /node_modules
 
-# app id config
-server/config/local-appid-config.json
-
 # cognito config
 server/config/local-cognito-config.json
 
