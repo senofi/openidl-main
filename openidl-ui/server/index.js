@@ -34,8 +34,10 @@ logger.debug('setting up app: registering routes, middleware...');
 logger.info('credential info');
 logger.info(IBMCloudEnv.getDictionary('idp-credentials'));
 
-const authHandler = openidlCommonLib.AuthHandler.setHandler('cognito');
+const idpCredentials = IBMCloudEnv.getDictionary('idp-credentials');
+const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials.idpType);
 authHandler.init(IBMCloudEnv.getDictionary('idp-credentials'));
+
 
 /**
  * middleware for authentication

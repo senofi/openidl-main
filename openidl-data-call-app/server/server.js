@@ -29,32 +29,24 @@ const cookieParser = require("cookie-parser");
 const session = require('express-session');
 const IBMCloudEnv = require('ibm-cloud-env');
 IBMCloudEnv.init();
+
 const routes = require('./routes');
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
 const transactionFactory = require('./helpers/transaction-factory');
 const networkConfig = require('./config/connection-profile.json');
-global.fetch = require('node-fetch');
 const logger = log4js.getLogger('server');
 logger.level = config.logLevel;
 
-// transactionFactory.init(IBMCloudEnv.getDictionary('aais-db-credentials'), networkConfig);
-logger.info('the idp credentials from env/local file');
-logger.info(IBMCloudEnv.getDictionary('idp-credentials'));
+global.fetch = require('node-fetch');
 
-const authHandler = openidlCommonLib.AuthHandler.setHandler('cognito');
+const idpCredentials = IBMCloudEnv.getDictionary('idp-credentials');
+const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials.idpType);
 authHandler.init(IBMCloudEnv.getDictionary('idp-credentials'));
 
 const errorHandler = require('./middlewares/error-handler');
 const app = express();
 
 app.use(cors());
-/**
- * Set up logging
- */
-
-
-logger.debug('setting up app: registering routes, middleware...');
-
 
 /**
  * Load swagger document
@@ -143,17 +135,10 @@ app.use(errorHandler.handleError);
  */
 const host = process.env.HOST || config.host;
 const port = process.env.PORT || config.port;
-if (networkConfig.isLocal) {
-    console.log("  local cert config  " + IBMCloudEnv.getDictionary('off-chain-kvs-credentials'));
-} else {
-    console.log("  cert config  " + IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'));
-}
+console.log("  kvs config  " + IBMCloudEnv.getDictionary('kvs-credentials'));
 
-
-// use the off chain kvs store for local network
 transactionFactory.init(
-    IBMCloudEnv.getDictionary(networkConfig.isLocal
-        ? 'off-chain-kvs-credentials' : 'IBM-certificate-manager-credentials')
+    IBMCloudEnv.getDictionary('kvs-credentials')
     , networkConfig)
     .then(data => {
         console.log('transaction factory init done');

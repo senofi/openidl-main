@@ -35,20 +35,20 @@ let persistence;
 const memoryWallet = new InMemoryWallet();
 
 /**
- * initCloudant initializes persistent wallet to Cloudant DB 
- */
-wallet.initCloudant = (options) => {
-  persistantWallet = new CouchDBWallet(options);
-  logger.debug('cloudant persistence wallet init done ');
-}
-/**
  * init initializes persistent wallet to IBM Certificate Manager. 
  * All application uses IBM Certification manager as default 
  */
 wallet.init = (options) => {
-  persistantWallet = new CertificatemanagerWallet(options);
-  persistantWallet.loadoptions(options);
-  logger.debug('certificate manager persistence wallet init done ');
+  if (options.walletType === 'certificate_manager') {
+    persistantWallet = new CertificatemanagerWallet(options);
+    persistantWallet.loadoptions(options);
+    logger.debug('certificate manager persistence wallet init done ');
+  } else if (options.walletType === 'couchdb') {
+    persistantWallet = new CouchDBWallet(options);
+    logger.debug('cloudant persistence wallet init done ');
+  } else {
+    logger.error("Incorrect Usage of wallet type. Refer README for more details");
+  }
 }
 
 

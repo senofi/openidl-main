@@ -24,6 +24,7 @@ const EventListener = openidlCommonLib.EventListener;
 const walletHelper = openidlCommonLib.Wallet;
 const channelConfig = require('./config/listener-channel-config.json');
 const networkConfig = require('./config/connection-profile.json');
+const DBConfig = require('./config/DBConfig.json');
 const mainEvent = require('./controllers/event-function');
 let DBManagerFactory = openidlCommonLib.DBManagerFactory;
 let dbManagerFactoryObject = new DBManagerFactory();
@@ -65,7 +66,7 @@ app.listen(port, () => {
 async function init() {
 
   try {
-    let dbManager = await dbManagerFactoryObject.getInstance();
+    let dbManager = await dbManagerFactoryObject.getInstance(DBConfig);
     logger.debug("<<<DB manager instance >>> " + dbManager);
     let listenerConfig = {};
     let listernerChannels = new Array();
@@ -86,11 +87,7 @@ async function init() {
       listernerChannels.push(listenerChannel);
     }
     listenerConfig['listenerChannels'] = listernerChannels;
-    if (networkConfig.isLocal) {
-      await walletHelper.initCloudant(IBMCloudEnv.getDictionary('off-chain-kvs-credentials'));
-    } else {
-      await walletHelper.init(IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'));
-    }
+    await walletHelper.init(IBMCloudEnv.getDictionary('kvs-credentials'));
 
     var idExists = await walletHelper.identityExists(channelConfig.identity.user);
     if (!idExists) {
@@ -105,7 +102,7 @@ async function init() {
     listenerConfig["applicationName"] = applicationName;
     listenerConfig['identity'] = identity;
     logger.debug(listenerConfig);
-    await EventListener.init(networkConfig, listenerConfig, dbManager);
+    await EventListener.init(networkConfig, listenerConfig, dbManager, config.targetDB);
     await EventListener.processInvoke();
 
     await schedulerInit();

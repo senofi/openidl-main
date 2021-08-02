@@ -32,10 +32,7 @@ const {
 let ChannelTransactionMap = new Map();
 logger.level = config.logLevel;
 
-// use the off chain kvs store for local network
-Transaction.initWallet(
-    IBMCloudEnv.getDictionary(networkConfig.isLocal
-        ? 'off-chain-kvs-credentials' : 'IBM-certificate-manager-credentials'));
+Transaction.initWallet(IBMCloudEnv.getDictionary('kvs-credentials'));
 for (let channelIndex = 0; channelIndex < targetChannelConfig.targetChannels.length; channelIndex++) {
     const targetChannelTransaction = new Transaction(targetChannelConfig.users[0].org, targetChannelConfig.users[0].user, targetChannelConfig.targetChannels[channelIndex].channelName, targetChannelConfig.targetChannels[channelIndex].chaincodeName, targetChannelConfig.users[0].mspId);
     targetChannelTransaction.init(networkConfig);

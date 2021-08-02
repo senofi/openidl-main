@@ -24,7 +24,6 @@ const fabricCAUtil = require('../../helper/util.js');
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
 const walletHelper = openidlCommonLib.Wallet;
 const logger = log4js.getLogger('fabric - fabric-enrolment.js');
-const cert = require('../fabric/config/local-certmanager-config.json');
 const fabric_constants = require('../fabric/config/fabric-config.json')
 let isPersistentStore = true;
 logger.level = fabric_constants.logLevel;
@@ -73,11 +72,10 @@ fabricEnrollment.enrollUser = async (user, persistent) => {
             }
             if (isPersistentStore) {
                 if (typeof (persistent) !== 'undefined' && persistent === "cloudant") {
-                    walletHelper.initCloudant(IBMCloudEnv.getDictionary('off-chain-kvs-credentials'));
+                    walletHelper.init(IBMCloudEnv.getDictionary('kvs-credentials'));
                     console.log("wallet initialised with Cloudant");
                 } else if (typeof (persistent) === 'undefined' || persistent === "certificate-manager") {
-                    console.log(cert);
-                    walletHelper.init(cert);
+                    walletHelper.init(IBMCloudEnv.getDictionary('kvs-credentials'));
                     console.log("wallet initialised with Certificate manager");
                 } else {
                     console.log("Incorrect Usage of script. Refer README for more details");

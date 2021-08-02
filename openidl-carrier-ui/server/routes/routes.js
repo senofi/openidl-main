@@ -1,8 +1,12 @@
 'use strict';
 const express = require('express');
 const app = express();
-const openidlCommonLib = require('../../lib/server/index');
-const authHandler = openidlCommonLib.AuthHandler.setHandler('cognito');
+const IBMCloudEnv = require('ibm-cloud-env');
+IBMCloudEnv.init();
+
+const openidlCommonLib = require('@openidl-org/openidl-common-lib');
+const idpCredentials = IBMCloudEnv.getDictionary('idp-credentials');
+const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials.idpType);
 const commonController = require('../controllers/common');
 const bodyParser = require('body-parser');
 const router = express.Router();

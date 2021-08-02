@@ -13,11 +13,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 const log4js = require('log4js');
 const config = require('config');
 const messageObject = require('../config/constant')
+const DBConfig = require('../config/DBConfig.json');
+
 //vv
 // const metaData = require('../config/metadata.json');
 /**
@@ -32,13 +34,13 @@ logger.level = config.logLevel;
 const util = {};
 
 util.apiResponse = async (statusCode, success, errorMessage, batchId = '', chunkId = '', inputRecords = 0, processedRecords = 0, unProcessedRecords = 0) => {
- 
+
     return {
         "statusCode": statusCode,
         "success": success,
         "message": errorMessage,
-        "batchId" : batchId,
-        "chunkId" : chunkId,
+        "batchId": batchId,
+        "chunkId": chunkId,
         "inputDocuments": inputRecords,
         "processedDocuments": processedRecords,
         "unProcessedDocuments": unProcessedRecords
@@ -48,7 +50,7 @@ util.apiResponse = async (statusCode, success, errorMessage, batchId = '', chunk
 util.isMongoServiceRunning = async (dbManagerFactory, collectionName, carrierIds) => {
     logger.info("Inside isMongoServiceRunning method......");
     try {
-        let dbManager = dbManagerFactory.getInstance();
+        let dbManager = dbManagerFactory.getInstance(DBConfig);
         logger.debug("DB Manager instantiated successfully ");
         if (dbManager) return true;
         else return false;
@@ -63,7 +65,7 @@ util.isMongoServiceRunning = async (dbManagerFactory, collectionName, carrierIds
 //             let carrierIds = metaData.carrierIds
 //             let collections = metaData.collections;
 //             if(carrierIds.length > 0) {
-//             let dbManager = await dbManagerFactory.getInstance();
+//             let dbManager = await dbManagerFactory.getInstance(DBConfig);
 //             logger.debug("DB Manager instantiated successfully ");
 //             if (dbManager) {
 //                 carrierIds.forEach(carrierId => {
@@ -101,7 +103,7 @@ util.isMongoServiceRunning = async (dbManagerFactory, collectionName, carrierIds
 //     logger.debug("Inside createIndex method......");
 //     try {
 //         let carrierIds = metaData.carrierIds
-//         let dbManager = await dbManagerFactory.getInstance();
+//         let dbManager = await dbManagerFactory.getInstance(DBConfig);
 //         logger.debug("DB Manager instantiated successfully ");
 //         if (dbManager) {
 //             carrierIds.forEach(carrierId => {
@@ -209,8 +211,8 @@ util.validatePayload = (insurancePayload) => {
     if (!insurancePayload.batchId || insurancePayload.batchId === null || insurancePayload.batchId === undefined || insurancePayload.batchId.trim().length === 0) {
         logger.error('BatchId is missing in the Request payload');
         return util.apiResponse(
-            messageObject.Message.validationStatusCode, 
-            messageObject.Message.failure, 
+            messageObject.Message.validationStatusCode,
+            messageObject.Message.failure,
             messageObject.Message.batchIdMessage,
             insurancePayload.batchId,
             insurancePayload.chunkId,
@@ -222,8 +224,8 @@ util.validatePayload = (insurancePayload) => {
     else if (!insurancePayload.chunkId || insurancePayload.chunkId === null || insurancePayload.chunkId === undefined || insurancePayload.chunkId.trim().length === 0) {
         logger.error('ChunkID is missing in the Request payload');
         return util.apiResponse(
-            messageObject.Message.validationStatusCode, 
-            messageObject.Message.failure, 
+            messageObject.Message.validationStatusCode,
+            messageObject.Message.failure,
             messageObject.Message.chunkIdMessage,
             insurancePayload.batchId,
             insurancePayload.chunkId,
@@ -235,8 +237,8 @@ util.validatePayload = (insurancePayload) => {
     else if (!insurancePayload.carrierId || insurancePayload.carrierId === null || insurancePayload.carrierId === undefined || insurancePayload.carrierId.trim().length === 0) {
         logger.error('CarrierId is missing in the Request payload');
         return util.apiResponse(
-            messageObject.Message.validationStatusCode, 
-            messageObject.Message.failure, 
+            messageObject.Message.validationStatusCode,
+            messageObject.Message.failure,
             messageObject.Message.carrierIdMessage,
             insurancePayload.batchId,
             insurancePayload.chunkId,
@@ -248,8 +250,8 @@ util.validatePayload = (insurancePayload) => {
     else if (!Array.isArray(insurancePayload.records) || insurancePayload.records === undefined || insurancePayload.records === null || insurancePayload.records.length === 0) {
         logger.error('records array is blank or missing in the request payload');
         return util.apiResponse(
-            messageObject.Message.validationStatusCode, 
-            messageObject.Message.failure, 
+            messageObject.Message.validationStatusCode,
+            messageObject.Message.failure,
             messageObject.Message.documentMessage,
             insurancePayload.batchId,
             insurancePayload.chunkId,
@@ -260,8 +262,8 @@ util.validatePayload = (insurancePayload) => {
     } else {
         logger.info('Valid Insurance Data Payload');
         return util.apiResponse(
-            messageObject.Message.successStatusCode, 
-            messageObject.Message.success, 
+            messageObject.Message.successStatusCode,
+            messageObject.Message.success,
             messageObject.Message.successValidation,
             insurancePayload.batchId,
             insurancePayload.chunkId,

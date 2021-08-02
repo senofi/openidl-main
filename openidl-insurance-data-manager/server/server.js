@@ -46,7 +46,8 @@ const insuranceManagerDB = config.targetDB;
 //const carrerIds = config.carrierid;
 
 const util = require('./helpers/util');
-const authHandler = openidlCommonLib.AuthHandler.setHandler('cognito');
+const idpCredentials = IBMCloudEnv.getDictionary('idp-credentials');
+const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials.idpType);
 authHandler.init(IBMCloudEnv.getDictionary('idp-credentials'));
 
 const errorHandler = require('./middlewares/error-handler');
@@ -164,10 +165,7 @@ let dbServiceRunning = util.isMongoServiceRunning(dbManagerFactoryObject);
 
 if (dbServiceRunning) {
     logger.info("Mongo DB service is up and running");
-    // use the off chain kvs store for local network
-    transactionFactory.init(
-        IBMCloudEnv.getDictionary(networkConfig.isLocal
-            ? 'off-chain-kvs-credentials' : 'IBM-certificate-manager-credentials')
+    transactionFactory.init(IBMCloudEnv.getDictionary('kvs-credentials')
         , networkConfig).then(() => {
             logger.info('transaction factory init done');
             app.listen(port, () => {

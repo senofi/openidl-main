@@ -33,11 +33,7 @@ class transaction {
         this.ccp = connProfilePath;
     }
     static initWallet(options) {
-        if (options.isLocal) {
-            walletHelper.initCloudant(options);
-        } else {
-            walletHelper.init(options);
-        }
+        walletHelper.init(options);
     }
 
     async initEventHub() {

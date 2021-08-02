@@ -9,10 +9,8 @@ const transactionFactory = require('./TransactionFactory/transactionFactory');
 const networkConfig = require('./config/connection-profile.json');
 const collection = require('./config/collection-config.json');
 
-// use the off chain kvs store for local network
 transactionFactory.init(
-    IBMCloudEnv.getDictionary(networkConfig.isLocal
-        ? 'off-chain-kvs-credentials' : 'IBM-certificate-manager-credentials')
+    IBMCloudEnv.getDictionary('kvs-credentials')
     , networkConfig).then(data => {
         logger.info("initialization done");
         instantiateConfig.channel.forEach(element => {

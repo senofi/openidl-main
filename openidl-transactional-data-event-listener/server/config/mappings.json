@@ -1,10 +1,4 @@
 {
-    "IBM-certificate-manager-credentials": {
-        "searchPatterns": [
-            "env:IBM_CERTIFICATE_MANAGER_CONFIG",
-            "file:/server/config/local-certmanager-config.json"
-        ]
-    },
     "off-chain-db-credentials-mongo": {
         "searchPatterns": [
             "file:/server/config/local-mongo-config.json"
@@ -17,9 +11,9 @@
             "file:/server/config/local-cloudant-config.json"
         ]
     },
-    "off-chain-kvs-credentials": {
+    "kvs-credentials": {
         "searchPatterns": [
-            "env:OFF_CHAIN_KVS_CONFIG",
+            "env:KVS_CONFIG",
             "file:/server/config/local-kvs-config.json"
         ]
     }

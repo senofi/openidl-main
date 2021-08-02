@@ -17,15 +17,9 @@
             "file:/server/config/local-cognito-config.json"
         ]
     },
-    "IBM-certificate-manager-credentials": {
+    "kvs-credentials": {
         "searchPatterns": [
-            "env:IBM_CERTIFICATE_MANAGER_CONFIG",
-            "file:/server/config/local-certmanager-config.json"
-        ]
-    },
-    "off-chain-kvs-credentials": {
-        "searchPatterns": [
-            "env:OFF_CHAIN_KVS_CONFIG",
+            "env:KVS_CONFIG",
             "file:/server/config/local-kvs-config.json"
         ]
     }

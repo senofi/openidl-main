@@ -5,7 +5,6 @@ const config = require('config');
 const IBMCloudEnv = require('ibm-cloud-env');
 IBMCloudEnv.init();
 const FabricHelperTransaction = require('../helper/fabriclistenerhelper');
-const eventListenersDB = require('../server/config/default.json').targetDB;
 const logger = log4js.getLogger('event - eventHandler');
 logger.level = config.logLevel;
 
@@ -19,13 +18,14 @@ const {
 } = require('fabric-network');
 
 
-EventListener.init = async (networkConfig, listenerConfig, blockManagementDB) => {
+EventListener.init = async (networkConfig, listenerConfig, blockManagementDB, eventListenersDB) => {
     const method = 'init';
     logger.debug('in %s', method);
     this.listenerConfig = listenerConfig
     this.listenerChannels = listenerConfig.listenerChannels;
     this.networkConfig = networkConfig;
     this.blockManagementDB = blockManagementDB;
+    this.eventListenersDB = eventListenersDB;
     this.applicationName = listenerConfig.applicationName;
     this.wallet = listenerConfig.identity.wallet;
     this.orgName = networkConfig.client.organization;
@@ -110,7 +110,7 @@ const getBlockInfoFromCloudant = async (channelId) => {
     logger.info("getting data" + this.blockManagementDB);
     try {
         return new Promise((resolve, reject) => {
-            this.blockManagementDB.get(channelId, eventListenersDB).then((data) => {
+            this.blockManagementDB.get(channelId, this.eventListenersDB).then((data) => {
                 resolve(data);
             });
         });
@@ -230,13 +230,13 @@ const errorBlockEventHandler = async (err) => {
 const updateBlockNumberInDatabase = async (blockNumber, id) => {
     return new Promise((resolve, reject) => {
         logger.info('updateBlockNumberInDatabase function entry ' + blockNumber, id);
-        this.blockManagementDB.get(id, eventListenersDB).then((blockInfo) => {
+        this.blockManagementDB.get(id, this.eventListenersDB).then((blockInfo) => {
             if (!blockInfo) {
                 blockInfo = {};
                 blockInfo._id = id;
             }
             blockInfo.blockNumber = blockNumber;
-            this.blockManagementDB.insert(blockInfo, eventListenersDB).then((data) => {
+            this.blockManagementDB.insert(blockInfo, this.eventListenersDB).then((data) => {
                 logger.info('block number update to db done ' + blockNumber);
                 resolve();
             }).catch((err) => {

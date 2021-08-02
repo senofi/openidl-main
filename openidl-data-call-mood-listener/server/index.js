@@ -23,6 +23,7 @@ const walletHelper = openidlCommonLib.Wallet;
 const IBMCloudEnv = require('ibm-cloud-env');
 const channelConfig = require('./config/listener-channel-config.json');
 const networkConfig = require('./config/connection-profile.json');
+const DBConfig = require('./config/DBConfig.json');
 const mainEvent = require('./event/event-handler');
 
 
@@ -61,7 +62,7 @@ app.listen(port, () => {
 });
 
 async function init() {
-    let dbManager = await dbManagerFactoryObject.getInstance();
+    let dbManager = await dbManagerFactoryObject.getInstance(DBConfig);
     logger.debug("dbManager instance " + dbManager);
     let listenerConfig = {};
     let listernerChannels = new Array();
@@ -85,11 +86,7 @@ async function init() {
 
     }
     listenerConfig['listenerChannels'] = listernerChannels;
-    if (networkConfig.isLocal) {
-        await walletHelper.initCloudant(IBMCloudEnv.getDictionary('off-chain-kvs-credentials'));
-    } else {
-        await walletHelper.init(IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'));
-    }
+    await walletHelper.init(IBMCloudEnv.getDictionary('kvs-credentials'));
     var idExists = await walletHelper.identityExists(channelConfig.identity.user);
     if (!idExists) {
         throw new Error("Invalid Identity, no certificate found in certificate store");
@@ -105,7 +102,7 @@ async function init() {
     logger.debug('Listener Config', listenerConfig);
 
     try {
-        await EventListener.init(networkConfig, listenerConfig, dbManager);
+        await EventListener.init(networkConfig, listenerConfig, dbManager, config.targetDB);
         await EventListener.processInvoke();
     } catch (err) {
         logger.error('eventHandler init error' + err);

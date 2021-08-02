@@ -18,7 +18,12 @@ const express = require('express');
 const log4js = require('log4js');
 const config = require('config');
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
-const authHandler = openidlCommonLib.AuthHandler.setHandler('cognito');
+const IBMCloudEnv = require('ibm-cloud-env');
+IBMCloudEnv.init();
+
+const idpCredentials = IBMCloudEnv.getDictionary('idp-credentials');
+const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials.idpType);
+
 const fabricUserEnrollment = require('../controller/fabric-user-controller');
 const appUser = require('../controller/app-user-controller');
 const cognitoUser = require('../controller/cognito-user-controller');

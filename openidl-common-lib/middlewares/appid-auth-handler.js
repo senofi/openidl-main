@@ -20,6 +20,8 @@ const cfEnv = require("cfenv");
 const passport = require("passport");
 const express_enforces_ssl = require("express-enforces-ssl");
 const jwt = require("jsonwebtoken");
+const IBMCloudEnv = require('ibm-cloud-env');
+IBMCloudEnv.init();
 
 const isLocal = cfEnv.getAppEnv().isLocal;
 const logger = log4js.getLogger("middleware - appid-auth-handler");

@@ -9,7 +9,7 @@ const cors = require('cors');
 const config = require('config');
 const log4js = require('log4js');
 const bodyParser = require('body-parser');
-const openidlCommonLib = require('../lib/server/index');
+const openidlCommonLib = require('@openidl-org/openidl-common-lib');
 
 const IBMCloudEnv = require('ibm-cloud-env');
 IBMCloudEnv.init();
@@ -22,11 +22,12 @@ app.use(bodyParser.json());
  * Set up logging
  */
 const logger = log4js.getLogger('server');
-logger.setLevel(config.logLevel);
+logger.level = config.logLevel;
 
 logger.debug('setting up app: registering routes, middleware...');
 
-const authHandler = openidlCommonLib.AuthHandler.setHandler('cognito');
+const idpCredentials = IBMCloudEnv.getDictionary('idp-credentials');
+const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials.idpType);
 authHandler.init(IBMCloudEnv.getDictionary('idp-credentials'));
 
 /**

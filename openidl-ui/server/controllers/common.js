@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const request = require('request');
-const config = require('../config/config');
+const config = require('config');
 const log4js = require('log4js');
 const openidlCommonApp = require('../../../openidl-common-ui/server/index');
 const util = openidlCommonApp.Util;
@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 common.getQueryString = (queryObj) => {
     var keys = Object.keys(queryObj);
     var queryString = '';
-    keys.forEach(function(el) {
+    keys.forEach(function (el) {
         queryString += '' + el + '=' + queryObj[el] + '&';
     });
     console.log('queryString: ' + queryString);
@@ -28,7 +28,7 @@ common.getQueryString = (queryObj) => {
 
 common.getSearchDataCalls = (req, res) => {
     var queryString = common.getQueryString(req.query);
-    
+
     var url = '/search-data-calls?' + queryString;
     logger.debug('ROLE In LIST');
     logger.debug(res.locals.role);
@@ -55,7 +55,7 @@ common.handleRequest = (req, res, url) => {
     }
     logger.debug('REQUEST OPTIONS');
     logger.debug(options);
-    request(options, function(err, response, body) {
+    request(options, function (err, response, body) {
         if (response) {
             res.status(response.statusCode).send(body);
         } else {
@@ -97,7 +97,7 @@ common.handleLogOutRequest = (req, res, url) => {
         json: req.body
     };
 
-    request(options, function(err, response, body) {
+    request(options, function (err, response, body) {
         if (response) {
             res.status(response.statusCode).send(body);
         } else {

@@ -6,32 +6,25 @@ const MongoDBManager = require('./mongoDBManager');
 const logger = log4js.getLogger('DBManagerFactory');
 logger.level = config.logLevel;
 
-let DBConfig;
-let mongoDBName;
-
-try {
-    DBConfig = require('../../server/config/DBConfig.json');
-    mongoDBName = DBConfig.databaseService[0].mongodb;
-} catch (err) {
-    logger.info('DBConfig not found!!');
-}
-
-
 class DBManagerFactory {
     constructor() {
         this.option = null;
         this.instance = null;
     }
-    async getInstance() {
+    async getInstance(config) {
+        if (!config || !config.databaseService) {
+            logger.info('DBConfig not found!!');
+        }
         logger.info('Inside DBManagerFactory getInstance');
-        logger.info('Persistent store selected', DBConfig.persistentStore);
+        logger.info('Persistent store selected', config.persistentStore);
         try {
-            this.option = DBConfig.persistentStore;
-            let dbservice = lodash.filter(DBConfig.databaseService, { 'name': this.option });
+            this.option = config.persistentStore;
+            let dbservice = lodash.filter(config.databaseService, { 'name': this.option });
             let mongoDBInstance = new MongoDBManager(dbservice);
             switch (this.option) {
                 case "mongo":
-                    let simpleURI = DBConfig.databaseService[0].simpleURI
+                    let mongoDBName = config.databaseService[0].mongodb;
+                    let simpleURI = config.databaseService[0].simpleURI
                     if (simpleURI) {  // use the simple db connection
                         mongoDBInstance.initSimpleMongoDBConnection(mongoDBName, simpleURI)
                     } else {  // use the cloud db connection

@@ -34,7 +34,9 @@ logger.info("Starting");
 const app = express();
 
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
-const authHandler = openidlCommonLib.AuthHandler.setHandler('cognito');
+const idpCredentials = IBMCloudEnv.getDictionary('idp-credentials');
+const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials.idpType);
+authHandler.init(IBMCloudEnv.getDictionary('idp-credentials'));
 
 const passport = authHandler.getPassport();
 app.use(passport.initialize());
