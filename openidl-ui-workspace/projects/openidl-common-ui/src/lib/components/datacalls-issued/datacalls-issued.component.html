@@ -218,25 +218,6 @@
 			<div class="row">
 				<div class="col button-row">
 					<button
-						*ngIf="isCarr"
-						mat-stroked-button
-						color="primary"
-						[disabled]="isSmallSpinner"
-						[class.spinner]="isSmallSpinner"
-					>
-						<mat-icon color="primary">check_circle</mat-icon>
-						Consent to the Report
-					</button>
-					<button
-						mat-stroked-button
-						color="primary"
-						*ngIf="isReg"
-						(click)="cloneDatacall(draft)"
-					>
-						<mat-icon color="primary">content_copy</mat-icon>
-						Clone Data Call
-					</button>
-					<button
 						mat-stroked-button
 						color="primary"
 						*ngIf="isReg || isCarr"
@@ -255,10 +236,30 @@
 						<mat-icon>analytics</mat-icon>
 						View Reports
 					</button>
+					<button
+						*ngIf="isCarr"
+						mat-flat-button
+						color="primary"
+						(click)="toggleAction()"
+						[disabled]="isSmallSpinner"
+						[class.spinner]="isSmallSpinner"
+					>
+						<mat-icon>check_circle</mat-icon>
+						Consent to the Report
+					</button>
+					<button
+						mat-stroked-button
+						color="primary"
+						*ngIf="isReg"
+						(click)="cloneDatacall(draft)"
+					>
+						<mat-icon color="primary">content_copy</mat-icon>
+						Clone Data Call
+					</button>
 				</div>
 			</div>
 			<div class="row" *ngIf="isRecorded">
-				<div class="col">
+				<div class="col right">
 					<p>{{ action }} recorded: {{ recordTime }}</p>
 				</div>
 			</div>
