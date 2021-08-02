@@ -220,6 +220,15 @@
 					<button
 						mat-stroked-button
 						color="primary"
+						*ngIf="isReg"
+						(click)="cloneDatacall(draft)"
+					>
+						<mat-icon color="primary">content_copy</mat-icon>
+						Clone Data Call
+					</button>
+					<button
+						mat-stroked-button
+						color="primary"
 						*ngIf="isReg || isCarr"
 						(click)="viewDrafts()"
 					>
@@ -246,15 +255,6 @@
 					>
 						<mat-icon>check_circle</mat-icon>
 						Consent to the Report
-					</button>
-					<button
-						mat-stroked-button
-						color="primary"
-						*ngIf="isReg"
-						(click)="cloneDatacall(draft)"
-					>
-						<mat-icon color="primary">content_copy</mat-icon>
-						Clone Data Call
 					</button>
 				</div>
 			</div>
