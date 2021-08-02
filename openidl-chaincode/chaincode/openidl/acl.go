@@ -4,8 +4,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/hyperledger/fabric/core/chaincode/lib/cid"
-	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/hyperledger/fabric-chaincode-go/pkg/cid"
+	"github.com/hyperledger/fabric-chaincode-go/shim"
+	logger "github.com/sirupsen/logrus"
 )
 
 //returns true(if orgType has access for that function)

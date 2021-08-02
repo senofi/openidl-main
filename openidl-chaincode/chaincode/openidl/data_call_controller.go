@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/hyperledger/fabric/core/chaincode/shim"
-	pb "github.com/hyperledger/fabric/protos/peer"
 	"strconv"
 	"time"
+
+	"github.com/hyperledger/fabric-chaincode-go/shim"
+	pb "github.com/hyperledger/fabric-protos-go/peer"
+	logger "github.com/sirupsen/logrus"
 )
 
 // generateVersion is a helper function for generating a version number.
@@ -18,7 +20,7 @@ func generateVersion(number int) string {
 // CreateDataCall creates a new DataCall object. This method receives as a parameter a DataCall object in JSON format.
 // Success: nil
 // Error: {"message":"....","errorCode":"Sys_Err/Bus_Err"}
-func (this *openIDLCC) CreateDataCall(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (s *SmartContract) CreateDataCall(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("CreateDataCall: enter")
 	defer logger.Debug("CreateDataCall: exit")
 	logger.Debug("CreaCreateDataCall json received : ", args)
@@ -66,7 +68,8 @@ func (this *openIDLCC) CreateDataCall(stub shim.ChaincodeStubInterface, args str
 	if dataCall.Status == STATUS_ISSUED {
 		dataCallIssuedLog := DataCallLog{dataCall.ID, dataCall.Version, ActionIssued.ActionID, ActionIssued.ActionDesc, dataCall.UpdatedTs, dataCall.UpdatedBy}
 		dataCallIssuedLogAsBytes, _ := json.Marshal(dataCallIssuedLog)
-		this.LogDataCallTransaction(stub, string(dataCallIssuedLogAsBytes))
+		logger.Info((dataCallIssuedLogAsBytes))
+		// this.LogDataCallTransaction(stub, string(dataCallIssuedLogAsBytes))
 	}
 
 	if err != nil {
@@ -78,8 +81,9 @@ func (this *openIDLCC) CreateDataCall(stub shim.ChaincodeStubInterface, args str
 	logger.Info("Toggling ", dataCall.Status)
 	toggleDataCallCount := ToggleDataCallCount{"", dataCall.Status}
 	datacallIssueLogAsBytes, _ := json.Marshal(toggleDataCallCount)
-	dataCallCountAsBytes := this.ToggleDataCallCount(stub, string(datacallIssueLogAsBytes))
-	logger.Info("The reply from toggle is ", dataCallCountAsBytes)	
+	logger.Info((datacallIssueLogAsBytes))
+	// dataCallCountAsBytes := this.ToggleDataCallCount(stub, string(datacallIssueLogAsBytes))
+	// logger.Info("The reply from toggle is ", dataCallCountAsBytes)
 
 	return shim.Success(nil)
 
@@ -95,7 +99,7 @@ func (this *openIDLCC) CreateDataCall(stub shim.ChaincodeStubInterface, args str
 //  "status" :"DRAFT OR ISSUED OR CANCELLED"}
 // Success {byte[]}: byte[]
 // Error   {json}:{"message":"....","errorCode":"Sys_Err/Bus_Err"}
-func (this *openIDLCC) ListDataCallsByCriteria(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) ListDataCallsByCriteria(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("ListDataCallsByCriteria: enter")
 	defer logger.Debug("ListDataCallsByCriteria: exit")
 	logger.Debug("ListDataCallsByCriteria json received : ", args)
@@ -142,7 +146,7 @@ func (this *openIDLCC) ListDataCallsByCriteria(stub shim.ChaincodeStubInterface,
 	elapsedTime := time.Since(startTime)
 	logger.Info("RESPONSE META DATA ", responseMetadata.FetchedRecordsCount)
 	logger.Info("Time consumed to get Data Calls", elapsedTime)
-	defer resultsIterator.Close()	
+	defer resultsIterator.Close()
 	if err != nil {
 		logger.Error("Failed to get state for all the data calls")
 		return shim.Error("Failed to get state for all the data calls")
@@ -280,7 +284,7 @@ func paginate(dataCall []DataCall, startIndex int, pageSize int) []DataCall {
 // Error   {json}:{"message":"....","errorCode":"Sys_Err/Bus_Err"}
 // Description : Creates/Update new version of the data call.
 
-func (this *openIDLCC) SaveNewDraft(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) SaveNewDraft(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("SaveNewDraft: enter")
 	defer logger.Debug("SaveNewDraft: exit")
 	logger.Debug("SaveNewDraft json received : ", args)
@@ -366,15 +370,14 @@ func (this *openIDLCC) SaveNewDraft(stub shim.ChaincodeStubInterface, args strin
 	}
 	logger.Debug("SaveNewDraft: Latest Datacall saved!")
 
-	if(currentDataCall.Status != dataCalls[0].Status){
+	if currentDataCall.Status != dataCalls[0].Status {
 		//change the count of the statuses
 		logger.Info("Toggling ", currentDataCall.Status, " and ", dataCalls[0].Status)
 		toggleDataCallCount := ToggleDataCallCount{dataCalls[0].Status, currentDataCall.Status}
 		datacallIssueLogAsBytes, _ := json.Marshal(toggleDataCallCount)
 		dataCallCountAsBytes := this.ToggleDataCallCount(stub, string(datacallIssueLogAsBytes))
-		logger.Info("The reply from toggle is ", dataCallCountAsBytes)	
+		logger.Info("The reply from toggle is ", dataCallCountAsBytes)
 	}
-
 
 	return shim.Success(nil)
 
@@ -390,7 +393,7 @@ func (this *openIDLCC) SaveNewDraft(stub shim.ChaincodeStubInterface, args strin
 // Description : returns a datacall of specifc version and id.
 // if pageSize is blank returns all versions
 
-func (this *openIDLCC) GetDataCallVersionsById(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) GetDataCallVersionsById(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("GetDataCallVersionsById: enter")
 	defer logger.Debug("GetDataCallVersionsById: exit")
 
@@ -458,7 +461,7 @@ func (this *openIDLCC) GetDataCallVersionsById(stub shim.ChaincodeStubInterface,
 // Error   {json}:{"message":"....","errorCode":"Sys_Err/Bus_Err"}
 // Description : returns a datacall of specifc version and id.
 
-func (this *openIDLCC) GetDataCallByIdAndVersion(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (s *SmartContract) GetDataCallByIdAndVersion(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("GetDataCallByIdAndVersion: enter")
 	defer logger.Debug("GetDataCallByIdAndVersion: exit")
 
@@ -492,7 +495,7 @@ func (this *openIDLCC) GetDataCallByIdAndVersion(stub shim.ChaincodeStubInterfac
 // Description : Updates the data call, without creating new version.
 //   This needs to be invoked when we need to change delivery date
 
-func (this *openIDLCC) UpdateDataCall(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) UpdateDataCall(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("UpdateDataCall: enter")
 	defer logger.Debug("UpdateDataCall: exit")
 	logger.Debug("UpdateDataCall json received : ", args)
@@ -613,13 +616,13 @@ func (this *openIDLCC) UpdateDataCall(stub shim.ChaincodeStubInterface, args str
 
 	_ = stub.SetEvent(SET_EXTRACTION_PATTERN_EVENT, extPatternResponseAsBytes)
 
-	if(dataCall.Status != prevDataCall.Status){
+	if dataCall.Status != prevDataCall.Status {
 		//change the count of the statuses
 		logger.Info("Toggling ", dataCall.Status, " and ", prevDataCall.Status)
 		toggleDataCallCount := ToggleDataCallCount{prevDataCall.Status, dataCall.Status}
 		datacallIssueLogAsBytes, _ := json.Marshal(toggleDataCallCount)
 		dataCallCountAsBytes := this.ToggleDataCallCount(stub, string(datacallIssueLogAsBytes))
-		logger.Info("The reply from toggle is ", dataCallCountAsBytes)	
+		logger.Info("The reply from toggle is ", dataCallCountAsBytes)
 	}
 
 	return shim.Success(nil)
@@ -633,7 +636,7 @@ func (this *openIDLCC) UpdateDataCall(stub shim.ChaincodeStubInterface, args str
 // Description : Updates the status of DataCall to STATUS_ISSUED
 // set all the versions of DataCall to isLocked="true"
 
-func (this *openIDLCC) IssueDataCall(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) IssueDataCall(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("IssueDataCall: enter")
 	defer logger.Debug("IssueDataCall: exit")
 	logger.Debug("IssueDataCall json received : ", args)
@@ -708,15 +711,15 @@ func (this *openIDLCC) IssueDataCall(stub shim.ChaincodeStubInterface, args stri
 			return shim.Error("Error commiting the previous DataCall")
 		}
 
-		if(dataCall.Status != prevDataCall.Status){
+		if dataCall.Status != prevDataCall.Status {
 			//change the count of the statuses
 			logger.Info("Toggling ", dataCall.Status, " and ", prevDataCall.Status)
 			toggleDataCallCount := ToggleDataCallCount{prevDataCall.Status, dataCall.Status}
 			datacallIssueLogAsBytes, _ := json.Marshal(toggleDataCallCount)
 			dataCallCountAsBytes := this.ToggleDataCallCount(stub, string(datacallIssueLogAsBytes))
-			logger.Info("The reply from toggle is ", dataCallCountAsBytes)	
+			logger.Info("The reply from toggle is ", dataCallCountAsBytes)
 		}
-	
+
 	}
 
 	return shim.Success(nil)
@@ -731,7 +734,7 @@ func (this *openIDLCC) IssueDataCall(stub shim.ChaincodeStubInterface, args stri
 // Description : Updates the status of DataCall to STATUS_ISSUED
 // set all the versions of DataCall to isLocked="true"
 
-func (this *openIDLCC) SaveAndIssueDataCall(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) SaveAndIssueDataCall(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("SaveAndIssueDataCall: enter")
 	defer logger.Debug("SaveAndIssueDataCall: exit")
 	logger.Debug("SaveAndIssueDataCall json received : ", args)
@@ -769,7 +772,7 @@ func (this *openIDLCC) SaveAndIssueDataCall(stub shim.ChaincodeStubInterface, ar
 	return shim.Success(issueDataCallResponse.Payload)
 }
 
-func (this *openIDLCC) toggleDataCallCount(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) toggleDataCallCount(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Info("REACHED INSIDE************** ")
 
 	version := generateVersion(0)
@@ -805,15 +808,13 @@ func (this *openIDLCC) toggleDataCallCount(stub shim.ChaincodeStubInterface, arg
 // 		return shim.Error("Incorrect number of arguments!!")
 // 	}
 
-	
-	
 // 	var pks []string = []string{DATA_CALL_PREFIX, "COUNT", "10"}
 // 	countPatternKey, _ := stub.CreateCompositeKey(DOCUMENT_TYPE, pks)
-	
+
 // 	args3 := map[string]int{"ISSUED": 1,"DRAFT": 0, "CANCELLED": 0}
 // 	var dataCallCount = DataCallCount{counts: args3}
 // 	fmt.Println("REACHED INSIDE 3 " + countPatternKey)
-	
+
 // 	logger.Info("REACHED INSIDE 4 ", dataCallCount)
 
 // 	prevDataCallAsBytes, _ := json.Marshal(dataCallCount)
@@ -846,13 +847,11 @@ func (this *openIDLCC) toggleDataCallCount(stub shim.ChaincodeStubInterface, arg
 // 	}
 // 	logger.Info("GOT THE RESPONSE ", prevDataCall)
 
-
 // 	return shim.Success(nil)
 
 // }
 
-
-func (this *openIDLCC) ToggleDataCallCount(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) ToggleDataCallCount(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("ToggleDataCallCount: enter")
 	defer logger.Debug("ToggleDataCallCount: exit")
 	logger.Debug("ToggleDataCallCount json received : ", args)
@@ -868,25 +867,24 @@ func (this *openIDLCC) ToggleDataCallCount(stub shim.ChaincodeStubInterface, arg
 	}
 	logger.Info("Unmarshalled object ", toggleDataCallCount)
 
-
 	getDataCallCount := GetDataCallCount{"123456", "1"}
 	datacallIssueLogAsBytes, _ := json.Marshal(getDataCallCount)
 	dataCallCountAsBytes := this.GetDataCallCount(stub, string(datacallIssueLogAsBytes))
 	var dataCallCount DataCallCount
 	err = json.Unmarshal(dataCallCountAsBytes.Payload, &dataCallCount)
-	
+
 	logger.Info("The retrieved data is ", dataCallCount)
 
 	if toggleDataCallCount.OriginalStatus == "ISSUED" {
-		dataCallCount.ISSUED = dataCallCount.ISSUED - 1 
+		dataCallCount.ISSUED = dataCallCount.ISSUED - 1
 	} else if toggleDataCallCount.OriginalStatus == "DRAFT" {
 		dataCallCount.DRAFT = dataCallCount.DRAFT - 1
 	} else if toggleDataCallCount.OriginalStatus == "CANCELLED" {
 		dataCallCount.CANCELLED = dataCallCount.CANCELLED - 1
 	}
-	
+
 	if toggleDataCallCount.NewStatus == "ISSUED" {
-		dataCallCount.ISSUED = dataCallCount.ISSUED + 1 
+		dataCallCount.ISSUED = dataCallCount.ISSUED + 1
 	} else if toggleDataCallCount.NewStatus == "DRAFT" {
 		dataCallCount.DRAFT = dataCallCount.DRAFT + 1
 	} else if toggleDataCallCount.NewStatus == "CANCELLED" {
@@ -913,7 +911,7 @@ func (this *openIDLCC) ToggleDataCallCount(stub shim.ChaincodeStubInterface, arg
 
 }
 
-func (this *openIDLCC) GetDataCallCount(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) GetDataCallCount(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("GetDataCallCount: enter")
 	defer logger.Debug("GetDataCallCount: exit")
 
@@ -936,7 +934,7 @@ func (this *openIDLCC) GetDataCallCount(stub shim.ChaincodeStubInterface, args s
 
 }
 
-func (this *openIDLCC) UpdateDataCallCount(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) UpdateDataCallCount(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("UpdateDataCallCount: enter")
 	defer logger.Debug("UpdateDataCallCount: exit")
 	logger.Debug("UpdateDataCallCount json received : ", args)
@@ -973,7 +971,6 @@ func (this *openIDLCC) UpdateDataCallCount(stub shim.ChaincodeStubInterface, arg
 
 }
 
-
 // SearchDataCalls retrives all data calls that match given criteria. If startindex and pageSize are not provided,
 // this method returns the complete list of data calls. If version = latest, the it returns only latest version of a data call
 // using the specified criteria. If version = all, it returns all data calls with their versions as individual items in list.
@@ -984,7 +981,7 @@ func (this *openIDLCC) UpdateDataCallCount(stub shim.ChaincodeStubInterface, arg
 //  "status" :"DRAFT OR ISSUED OR CANCELLED"}
 // Success {byte[]}: byte[]
 // Error   {json}:{"message":"....","errorCode":"Sys_Err/Bus_Err"}
-func (this *openIDLCC) SearchDataCalls(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) SearchDataCalls(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("SearchDataCalls: enter")
 	defer logger.Debug("SearchDataCalls: exit")
 	logger.Debug("SearchDataCalls json received : ", args)

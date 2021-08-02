@@ -3,13 +3,15 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"github.com/hyperledger/fabric/core/chaincode/shim"
-	pb "github.com/hyperledger/fabric/protos/peer"
 	"strconv"
 	"strings"
+
+	"github.com/hyperledger/fabric-chaincode-go/shim"
+	pb "github.com/hyperledger/fabric-protos-go/peer"
+	logger "github.com/sirupsen/logrus"
 )
 
-func (this *openIDLCC) SaveInsuranceDataHash(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) SaveInsuranceDataHash(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("SaveInsuranceDataHash: enter")
 	defer logger.Debug("SaveInsuranceDataHash: exit")
 	var insurance InsuranceDataHash
@@ -28,7 +30,7 @@ func (this *openIDLCC) SaveInsuranceDataHash(stub shim.ChaincodeStubInterface, a
 	} else if insurance.ChunkId == "" {
 		return shim.Error("ChunkId should not be Empty")
 	}
-	
+
 	namespacePrefix := INSURANCE_HASH_PREFIX
 	//var pks []string = []string{INSURANCE_HASH_PREFIX, insurance.CarrierId, insurance.BatchId}
 	key, _ := stub.CreateCompositeKey(namespacePrefix, []string{insurance.CarrierId, insurance.BatchId, insurance.ChunkId})
@@ -51,7 +53,7 @@ func (this *openIDLCC) SaveInsuranceDataHash(stub shim.ChaincodeStubInterface, a
 // Error   {json}:{"message":"....","errorCode":"Sys_Err/Bus_Err"}
 // Description : returns a InsuranceHashRecord of specifc batchid
 
-func (this *openIDLCC) GetHashById(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) GetHashById(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("GetHashById: enter")
 	defer logger.Debug("GetHashById: exit")
 
@@ -77,7 +79,7 @@ func (this *openIDLCC) GetHashById(stub shim.ChaincodeStubInterface, args string
 }
 
 //this function puts the Insurance data extracted based on extraction pattern into private data collection
-func (this *openIDLCC) SaveInsuranceData(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (this *SmartContract) SaveInsuranceData(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	logger.Debug("SaveInsuranceData: enter")
 	defer logger.Debug("SaveInsuranceData: exit")
 	var insurance InsuranceData
@@ -156,7 +158,7 @@ func (this *openIDLCC) SaveInsuranceData(stub shim.ChaincodeStubInterface, args 
 }
 
 // this function returns true if InsuranceData exists in pdc for a data call else returns false
-func (this *openIDLCC) CheckInsuranceDataExists(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) CheckInsuranceDataExists(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("CheckInsuranceDataExists: enter")
 	defer logger.Debug("CheckInsuranceDataExists: exit")
 
@@ -190,7 +192,7 @@ func (this *openIDLCC) CheckInsuranceDataExists(stub shim.ChaincodeStubInterface
 }
 
 // this function returns Insurance Data fetching from pdc
-func (this *openIDLCC) GetInsuranceData(stub shim.ChaincodeStubInterface, args string) pb.Response {
+func (this *SmartContract) GetInsuranceData(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("GetInsuranceData: enter")
 	defer logger.Debug("GetInsuranceData: exit")
 
