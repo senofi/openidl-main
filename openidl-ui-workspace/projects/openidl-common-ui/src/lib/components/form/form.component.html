@@ -13,21 +13,15 @@
 							/>
 						</mat-form-field>
 					</div>
-
 					<div class="col">
-						<mat-form-field appearance="outline" class="full-width">
-							<mat-label>Line of Business</mat-label>
-							<mat-select
-								placeholder="Select Line of Business"
-								formControlName="lineOfBusiness"
-								[class.spinner]="LOBs.length === 0"
-							>
-								<mat-option
-									[value]="lob.value"
-									*ngFor="let lob of LOBs"
-									>{{ lob.value }}</mat-option
-								>
-							</mat-select>
+						<mat-form-field class="full-width" appearance="outline">
+							<mat-label>Jurisdiction</mat-label>
+							<input
+								readonly
+								matInput
+								placeholder="Enter Jurisdiction"
+								formControlName="jurisdiction"
+							/>
 						</mat-form-field>
 					</div>
 				</div>
@@ -44,14 +38,19 @@
 						</mat-form-field>
 					</div>
 					<div class="col">
-						<mat-form-field class="full-width" appearance="outline">
-							<mat-label>Jurisdiction</mat-label>
-							<input
-								readonly
-								matInput
-								placeholder="Enter Jurisdiction"
-								formControlName="jurisdiction"
-							/>
+						<mat-form-field appearance="outline" class="full-width">
+							<mat-label>Line of Business</mat-label>
+							<mat-select
+								placeholder="Select Line of Business"
+								formControlName="lineOfBusiness"
+								[class.spinner]="LOBs.length === 0"
+							>
+								<mat-option
+									[value]="lob.value"
+									*ngFor="let lob of LOBs"
+									>{{ lob.value }}</mat-option
+								>
+							</mat-select>
 						</mat-form-field>
 					</div>
 				</div>
@@ -102,7 +101,7 @@
 					</div>
 					<div class="col">
 						<mat-form-field appearance="outline" class="full-width">
-							<mat-label>Loss Date Range</mat-label>
+							<mat-label>Loss Dates</mat-label>
 							<mat-date-range-input
 								[rangePicker]="lossDatePicker"
 							>
