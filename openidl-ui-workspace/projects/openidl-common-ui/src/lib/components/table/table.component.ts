@@ -360,6 +360,10 @@ export class TableComponent implements OnInit, AfterViewInit {
 					this.isSpinner = false;
 					this.ispagination = false;
 					this.isRecord = false;
+					this.dataSource.data = [];
+					if (this.table) {
+						this.table.renderRows();
+					}
 				} else {
 					this.isRecord = true;
 					this.ispagination = true;
