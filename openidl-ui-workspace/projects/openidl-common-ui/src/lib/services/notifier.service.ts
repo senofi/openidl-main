@@ -9,7 +9,8 @@ export class NotifierService {
 
 	openSnackbar(type: string, title: string, message: string) {
 		this._snackBar.open(`${title} : ${message}`, 'Close', {
-			verticalPosition: 'top'
+			verticalPosition: 'top',
+			duration: 5000
 		});
 	}
 }
