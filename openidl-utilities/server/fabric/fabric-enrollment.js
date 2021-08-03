@@ -32,9 +32,21 @@ fabricEnrollment.init = async (net_config) => {
     const networkConfig = path.join(__dirname, './config', net_config);
     fabricCAUtil.init(networkConfig);
 }
-fabricEnrollment.registerUser = async (user) => {
-    //Fetch admin details from config file
 
+fabricEnrollment.enrollAdmin = async (adminUser, adminSecret, org) => {
+    try {
+        // Enroll the admin user, and import the new identity into the wallet.
+        const enrollment = await fabricCAUtil.userEnroll(org, adminUser, adminSecret);
+        logger.info('Successfully enrolled admin user');
+        return enrollment
+    } catch (error) {
+        console.error(`Failed to enroll admin user : ${error}`);
+    }
+};
+
+
+fabricEnrollment.registerUser = async (user, persistent) => {
+    //Fetch admin details from config file
     const adminConfigPath = path.join(__dirname, './config', fabric_constants.adminConfigFile);
     const adminList = require(adminConfigPath);
     console.log("Admin Details config file >> " + adminList.adminlist.length);
@@ -45,14 +57,40 @@ fabricEnrollment.registerUser = async (user) => {
     let adminSecret = admin[0].secret;
     console.log("adminUser" + adminUser);
     console.log("Registering User in Fabric CA...");
+
+    if (isPersistentStore) {
+        await walletHelper.init(IBMCloudEnv.getDictionary('kvs-credentials'));
+    } else {
+        throw new Error("PersistentStore not there!");
+    }
+
+    // Must use an admin to register a new user
+    const wallet = walletHelper.getWallet();
+    let adminIdentity = await wallet.get(adminUser);
+    logger.info("adminidentity now: ", adminIdentity)
+    if (!adminIdentity) {
+        logger.info('An identity for the admin user does not exist in the wallet');
+        logger.info('Enroll the admin user before retrying');
+        const enrollInfo = await fabricEnrollment.enrollAdmin(adminUser, adminSecret, user.org);
+        await walletHelper.importIdentity(adminUser, enrollInfo);
+    }
+    adminIdentity = await wallet.get(adminUser);
+    logger.info("adminidentity after: ", adminIdentity)
+
+    // build a user object for authenticating with the CA
+    const provider = wallet.getProviderRegistry().getProvider(adminIdentity.type);
+    const adminUserInfo = await provider.getUserContext(adminIdentity, adminUser);
+
     return new Promise(((resolve, reject) => {
-        fabricCAUtil.userRegister(user.org, user.user, user.pw, user.affiliation, user.role, user.attrs, adminUser, adminSecret).then((secret) => {
-            console.log("Secret....");
-            console.log(secret);
-            return resolve(secret);
-        }).catch((err) => {
-            return reject(err);
-        });
+        fabricCAUtil.userRegister(
+            user.org, user.user, user.pw, user.affiliation, user.role, user.attrs, adminUser, adminSecret, adminUserInfo)
+            .then((secret) => {
+                console.log("Secret....");
+                console.log(secret);
+                return resolve(secret);
+            }).catch((err) => {
+                return reject(err);
+            });
     }));
 }
 
@@ -60,40 +98,29 @@ fabricEnrollment.registerUser = async (user) => {
  * Enroll user in Hyperledger Fabric and store certificate in persistant store
  */
 fabricEnrollment.enrollUser = async (user, persistent) => {
-    console.log("Enrolling User in Fabric CA...  new user");
-    console.log("Storing User Certificate in Persistant Store...");
-    return new Promise(((resolve, reject) => {
-        fabricCAUtil.userEnroll(user.org, user.user, user.pw).then((enrollInfo) => {
-            let enrollJson = {
-                "user": user.user,
-                "org": user.org,
-                "certificate": enrollInfo.certificate,
-                "key": enrollInfo.key
-            }
-            if (isPersistentStore) {
-                if (typeof (persistent) !== 'undefined' && persistent === "cloudant") {
-                    walletHelper.init(IBMCloudEnv.getDictionary('kvs-credentials'));
-                    console.log("wallet initialised with Cloudant");
-                } else if (typeof (persistent) === 'undefined' || persistent === "certificate-manager") {
-                    walletHelper.init(IBMCloudEnv.getDictionary('kvs-credentials'));
-                    console.log("wallet initialised with Certificate manager");
-                } else {
-                    console.log("Incorrect Usage of script. Refer README for more details");
-                    return;
-                }
-                walletHelper.importIdentity(user.user, enrollInfo.mspId, enrollInfo.certificate, enrollInfo.key);
-            } else {
-                console.log("Storing User Certificate on File System...");
-                fs.writeFile('enrollInfo.json', enrollJson, function (err) {
-                    if (err) throw err;
-                    console.log('Saved!');
-                });
-            }
-            return resolve(enrollInfo);
-        }).catch((err) => {
-            return reject(err);
-        });
-        return;
-    }));
+    logger.info("Enrolling User in Fabric CA...  new user");
+    logger.info("Storing User Certificate in Persistant Store...");
+    try {
+        const enrollInfo = await fabricCAUtil.userEnroll(user.org, user.user, user.pw)
+        let enrollJson = {
+            "user": user.user,
+            "org": user.org,
+            "certificate": enrollInfo.certificate,
+            "key": enrollInfo.key
+        }
+        if (isPersistentStore) {
+            await walletHelper.init(IBMCloudEnv.getDictionary('kvs-credentials'));
+            await walletHelper.importIdentity(user.user, enrollInfo);
+        } else {
+            logger.info("Storing User Certificate on File System...");
+            fs.writeFile('enrollInfo.json', enrollJson, function (err) {
+                if (err) throw err;
+                console.log('Saved!');
+            });
+        }
+        return enrollInfo;
+    } catch (err) {
+        throw err;
+    };
 }
 module.exports = fabricEnrollment;

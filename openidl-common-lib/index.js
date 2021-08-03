@@ -7,7 +7,6 @@
 */
 
 
-module.exports.CouchDBWallet = require('./helper/couchdbwallet');
 module.exports.Wallet = require('./helper/wallet');
 module.exports.Transaction = require('./helper/transaction');
 module.exports.AppIdAuthHandler = require('./middlewares/appid-auth-handler');

@@ -1,4 +1,3 @@
-
 /**
  * Updated Implementation of FileSystem Memory Wallet with InMemory Wallet
  * Same applies to couchdb wallet to be implemented
@@ -6,18 +5,10 @@
 const log4js = require('log4js');
 const config = require('config');
 const {
-  FileSystemWallet,
-  X509WalletMixin
-} = require('fabric-network');
-const {
-  CouchDBWallet
-} = require('./couchdbwallet');
-const {
-  InMemoryWallet
+  Wallets
 } = require('fabric-network');
 const logger = log4js.getLogger('helpers - wallet');
 logger.level = config.logLevel;
-
 const {
   CertificatemanagerWallet
 } = require('./certificatemanagerwallet');
@@ -29,22 +20,22 @@ const {
 const wallet = {};
 
 let persistantWallet;
-let persistence;
 
 // memory wallet for caching
-const memoryWallet = new InMemoryWallet();
+memoryWallet = {};
 
 /**
  * init initializes persistent wallet to IBM Certificate Manager. 
  * All application uses IBM Certification manager as default 
  */
-wallet.init = (options) => {
+wallet.init = async (options) => {
+  memoryWallet = await Wallets.newInMemoryWallet();
   if (options.walletType === 'certificate_manager') {
     persistantWallet = new CertificatemanagerWallet(options);
     persistantWallet.loadoptions(options);
     logger.debug('certificate manager persistence wallet init done ');
   } else if (options.walletType === 'couchdb') {
-    persistantWallet = new CouchDBWallet(options);
+    persistantWallet = await Wallets.newCouchDBWallet(options.url);
     logger.debug('cloudant persistence wallet init done ');
   } else {
     logger.error("Incorrect Usage of wallet type. Refer README for more details");
@@ -64,10 +55,10 @@ wallet.getWallet = () => {
  * @param {string} id - label of id in wallet
  */
 wallet.identityExists = async (id) => {
-  let existsInMemory = await memoryWallet.exists(id);
+  let existsInMemory = await memoryWallet.get(id);
   if (!existsInMemory) {
     logger.debug("Identity doesn't exists in memory, checking in persistant database...");
-    let existsInPersistant = await persistantWallet.exists(id);
+    let existsInPersistant = await persistantWallet.get(id);
     if (!existsInPersistant) {
       throw new Error("Invalid Identity, no certificate found in certificate store");
     } else {
@@ -91,16 +82,13 @@ wallet.identityExists = async (id) => {
  * @param {string} cert - cert from enrolling user
  * @param {string} key - key from enrolling user
  */
-wallet.importIdentity = async (id, org, cert, key) => {
+wallet.importIdentity = async (id, x509Identity) => {
   // check if the identity exists in persistant wallet
-  const exists = await persistantWallet.exists(id);
-  logger.info("id", id, "org", org, "cert", cert, "key", key);
-  if (!exists) {
+  const exists = await persistantWallet.get(id);
+  if (exists === undefined) {
     try {
       logger.debug(`Importing ${id} into wallet`);
-
-      await persistantWallet.import(id, X509WalletMixin.createIdentity(org, cert, key));
-
+      await persistantWallet.put(id, x509Identity);
     } catch (err) {
       logger.debug(`Error importing ${id} into wallet: ${err}`);
       throw new Error(err);
@@ -109,7 +97,7 @@ wallet.importIdentity = async (id, org, cert, key) => {
   // export from persistant wallet and store in memory wallet
   let identity = await exportIdentity(id);
   logger.debug("Identity Exportted ", id, ", importing to memory wallet");
-  await memoryWallet.import(id, identity);
+  await memoryWallet.put(id, identity);
   logger.debug("Identity ", id, "imported to memory wallet");
 
 };
@@ -121,7 +109,7 @@ wallet.importIdentity = async (id, org, cert, key) => {
 let exportIdentity = async (id) => {
   try {
     logger.debug(`Export ${id} from persistant wallet`);
-    return await persistantWallet.export(id);
+    return await persistantWallet.get(id);
   } catch (err) {
     logger.debug(`Error Exorting ${id} into wallet: ${err}`);
     throw new Error(err);

@@ -17,7 +17,6 @@
 const log4js = require('log4js');
 const config = require('config');
 const FabricCAServices = require('fabric-ca-client');
-const FabricClient = require('fabric-client');
 const fs = require('fs');
 /**
  * Util object
@@ -82,10 +81,15 @@ util.userEnroll = (orgName, enrollId, enrollSecret) => {
         logger.debug(req);
         caService.enroll(req).then(
             (enrollment) => {
-                enrollment.key = enrollment.key.toBytes();
-                enrollment.mspId = mspId;
-                logger.debug("enrolling ");
-                return resolve(enrollment);
+                const x509Identity = {
+                    credentials: {
+                        certificate: enrollment.certificate,
+                        privateKey: enrollment.key.toBytes()
+                    },
+                    mspId: orgName,
+                    type: 'X.509',
+                };
+                return resolve(x509Identity);
             },
             (err) => {
                 logger.debug(err);
@@ -99,9 +103,10 @@ util.userEnroll = (orgName, enrollId, enrollSecret) => {
 /**
  * Enroll given user with given org Fabric CA
  */
-util.userRegister = (orgName, enrollId, enrollSecret, affiliation, role, attrs, adminUser, adminSecret) => {
+util.userRegister = async (orgName, enrollId, enrollSecret, affiliation, role, attrs, adminUser, adminSecret, adminUserInfo) => {
     logger.debug(`Registering user ${enrollId}`);
     logger.debug("adminUser" + adminUser);
+
     return new Promise(((resolve, reject) => {
         // add network config file to fabric ca service and get orgs and CAs fields
         logger.debug("load connection profile");
@@ -121,83 +126,32 @@ util.userRegister = (orgName, enrollId, enrollSecret, affiliation, role, attrs, 
         const mspId = org.mspid;
         logger.debug("MSP Id -> ", mspId);
 
-        var fabricClient = new FabricClient();
-        fabricClient.loadFromConfig(connectionProfile);
-        FabricClient.newDefaultKeyValueStore({
-            path: "."
-        }).then((state_store) => {
-            // assign the store to the fabric client
-            fabricClient.setStateStore(state_store);
-            var crypto_suite = FabricClient.newCryptoSuite();
-            // use the same location for the state store (where the users' certificate are kept)
-            // and the crypto store (where the users' keys are kept)
-            var crypto_store = FabricClient.newCryptoKeyStore({
-                path: "."
-            });
-            crypto_suite.setCryptoKeyStore(crypto_store);
-            fabricClient.setCryptoSuite(crypto_suite);
-            var tlsOptions = {
-                trustedRoots: [],
-                verify: false
-            };
-            return fabricClient.setUserContext({
-                username: adminUser,
-                password: adminSecret
+        const tlsOptions = {
+            trustedRoots: [],
+            verify: false,
+        };
+        const caService = new FabricCAServices(caURL, tlsOptions, caName);
+        const req = {
+            enrollmentID: enrollId,
+            role: role,
+            enrollmentSecret: enrollSecret,
+            attrs: attrs,
+            maxEnrollments: -1
+
+        };
+        caService.register(req, adminUserInfo).then(
+            (enrollment) => {
+                logger.debug("enrolling ");
+                return resolve(enrollment);
+            }).catch((err) => {
+                logger.debug("err " + err);
+                return reject(err);
             });
 
-        }).then((registrarUser) => {
-            // enroll user with certificate authority for orgName
-            const tlsOptions = {
-                trustedRoots: [],
-                verify: false,
-            };
-            const caService = new FabricCAServices(caURL, tlsOptions, caName);
-            const req = {
-                enrollmentID: enrollId,
-                role: role,
-                enrollmentSecret: enrollSecret,
-                attrs: attrs,
-                maxEnrollments: -1
-
-            };
-            caService.register(req, registrarUser).then(
-                (enrollment) => {
-                    logger.debug("enrolling ");
-                    return resolve(enrollment);
-                }).catch((err) => {
-                    logger.debug("err " + err);
-                    return reject(err);
-                });
-        })
     }));
 };
 
 /**
  * Installing Chaincode
  */
-util.installChaincode = (requestObj, adminCert) => {
-    logger.info('inside util.installChaincode()... ');
-    return new Promise(((resolve, reject) => {
-        var fabricClient = new FabricClient();
-        fabricClient.loadFromConfig(connectionProfile);
-        FabricClient.newDefaultKeyValueStore({
-            path: "."
-        }).then((state_store) => {
-            fabricClient.setStateStore(state_store);
-            var crypto_suite = FabricClient.newCryptoSuite();
-            var crypto_store = FabricClient.newCryptoKeyStore({
-                path: "."
-            });
-            crypto_suite.setCryptoKeyStore(crypto_store);
-            fabricClient.setCryptoSuite(crypto_suite);
-            logger.info('setAdminSigningIdentity:  setting admin identity to client...... ')
-            fabricClient.setAdminSigningIdentity(adminCert.private_key, adminCert.cert, adminCert.mspid);
-            requestObj.txId = fabricClient.newTransactionID(true);
-            let response = fabricClient.installChaincode(requestObj, 50000);
-            resolve(response);
-        }).catch((err) => {
-            reject(err);
-        });
-    }));
-};
 module.exports = util;
