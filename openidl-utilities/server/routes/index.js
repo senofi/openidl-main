@@ -38,7 +38,6 @@ logger.level = config.logLevel;
  * Add routes
  */
 router.use('/fabric-user-enrollment', authHandler.validateToken, fabricUserEnrollment.enroll);
-router.use('/app-user-enrollment', apiAuthHandler.authenticate, appUser.register);
 router.use('/cognito-user-enrollment', authHandler.validateToken, cognitoUser.register);
 router.use('/cognito-user-attributes', authHandler.validateToken, cognitoUser.updateUserAttributes);
 router.use('/cognito-user-login', authHandler.authenticate, authHandler.getUserAttributes, cognitoUser.login);

@@ -51,7 +51,7 @@ logger.debug('setting up app: registering routes, middleware...');
 /**
  * Load swagger document
  */
-const swaggerDocument = yaml.safeLoad(fs.readFileSync(path.join(__dirname, '../public', 'openapi.yaml'), 'utf8'));
+const swaggerDocument = yaml.load(fs.readFileSync(path.join(__dirname, '../public', 'openapi.yaml'), 'utf8'));
 
 /**
  * Support json parsing

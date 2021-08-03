@@ -10,3 +10,6 @@ hosts update.txt
 hosts updated.txt
 openidl-common-ui/dist/
 openidl-ui/server/config/local-cognito-config.json
+**/vendor
+*.mod
+*.sum

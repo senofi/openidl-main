@@ -19,5 +19,5 @@
 # deploy the chaincode to all the peers
 ./network.sh deployCC -c defaultchannel -ccn openidl-cc-default -ccp ./openidl/ -ccl go
 
-# Pre-register user openidl-aais-data-call-processor-ibp-2.0
-./pre-registerUser.sh
+# Pre-register users on certificate authority
+./pre-register-users.sh
