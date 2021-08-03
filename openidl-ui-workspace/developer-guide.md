@@ -6,7 +6,7 @@ The `openidl-ui-workspace` folder structure is based on the default **Angular Li
 
 More info is available here https://angular.io/guide/creating-libraries
 
-## How to add new components or services to the openidl-common-ui library?
+# How to add new components or services to the openidl-common-ui library?
 
 To generate new components or services in the library run the below command inside the `openidl-ui-workspace` folder.
 
@@ -16,7 +16,8 @@ ng generate component component-name --project openidl-common-ui
 
 More info about code scaffolding is located under [`projects\openidl-common-ui\README.md`](/projects/openidl-common-ui/README.md) file.
 
-## How to debug UI and Library projects locally?
+
+# How to debug UI and Library projects locally?
 
 The Angular UI projects like openidl-ui builds/dist are served as static resources via express js server and that runs on a different port `8080` whereas Angular dev server, by default, runs on `4200`.
 
@@ -24,16 +25,38 @@ All API request is first sent to express js server and then internally forwarded
 
 >Note: Inside `projects\openidl-ui\server\index.js` file there is logic to redirect all HTTP calls to HTTPS if `NODE_ENV` is set to `production`. To make this work we will need an `OpenSSL` certificate. To bypass this requirement for local development we have an npm package called `dotenv` which can load NODE environment variables from `.env` files. Inside the `openidl-ui-workspace` folder create a `.env` file and add the following `NODE_ENV='development'` for local development. If you are serving generated build from dist folder then use `NODE_ENV='qa'`. We don’t need this file in a production environment, hence this file is added in `.gitigonore`.
 
-Inside the `openidl-ui-workspace` folder, run `npm start` to launch an express server on `8080` port. Form different terminal run `npm run serve`, this command will launch Angular app on `4200` with proxy for API. It means all API call to `4200` will be forwarded to port `8080` where the express server is running.
+All commands must be executed from inside the `openidl-ui-workspace` folder. 
 
->Note: When developing `Angular Library` locally we need to run build in watch mode. There is a npm command in the package.json to run library in watch mode, `npm run watch`. This will detect any changes made to the library and re-build it.
+## How to debug openidl-ui locally?
 
-## Production Release
+Execute the following commands.
 
-To generate a production build first we need to build the `openidl-common-ui` library and then UI projects. We have below npm scripts in package.json to do so.
+1. Execute `npm run watch` command to run `openidl-common-ui` Angular Library in watch mode. Angular will detect any code changes and rebuild it while debugging.
+2. Execute `npm run start:regulator` command to launch an express server on `8080` port. If you want to use different port number then update port # in `openidl-ui-workspace\projects\openidl-ui\server\config\port-config.json` file.
+   > If you are updating the port # from 8080 to something else then you need to update same port # in `openidl-ui-workspace\proxy.conf.json` file as well. Angular uses this file to proxy all API calls from 4200 to 8080.
+3. Execute `npm run serve:regulator` command to launch `openidl-ui` on port `4200` port.
 
->Note: In the case of running it locally, make sure NODE_ENV is set to production inside the .env file.
+## How to debug openidl-carrier-ui locally?
 
-1. The `npm run build:common` will generate an openidl-common-ui library inside the `dist\openidl-common-ui` folder.
-2. The `npm run build:ui` will generate the openidl-ui App inside the `dist\openidl-ui` folder. It will use the library generated in the previous step.
-3. Once the above steps are executed successfully now we can run `npm start` to start node API on `8080` port. This will serve UI App from `dist\openidl-ui`.
+Execute the following commands.
+
+1. Execute `npm run watch` command to run `openidl-common-ui` Angular Library in watch mode. Angular will detect any code changes and rebuild it while debugging.
+2. Execute `npm run start:carrier` command to launch an express server on `8080` port. If you want to use different port number then update port # in `openidl-ui-workspace\projects\openidl-carrier-ui\server\config\port-config.json` file.
+   > If you are updating the port # from 8080 to something else then you need to update same port # in `openidl-ui-workspace\proxy.conf.json` file as well. Angular uses this file to proxy all API calls from 4200 to 8080.
+3. Execute `npm run serve:carrier` command to launch `openidl-carrier-ui` on port `4200` port.
+
+# Production Release
+
+To generate a production build, first we need to build the `openidl-common-ui` library and then build UI projects. We have below npm scripts in package.json to do so.
+
+>Note: Set NODE_ENV to `production` in the .env file of root directory.
+
+*  The `npm run build:common` will generate an openidl-common-ui library inside the `dist\openidl-common-ui` folder. This build folder will be used in other two UI projects while generating prod build.
+
+## Building openidl-ui production build
+1. The `npm run build:regulator` command will generate the openidl-ui App inside the `dist\openidl-ui` folder.
+2. Once the above steps are executed successfully now we can run `npm run start:regulator` to start node API on `8080` port. This will serve prod build from `dist\openidl-ui`.
+
+## Building openidl-carrier-ui production build
+1. The `npm run build:carrier` command will generate the openidl-carrier-ui App inside the `dist\openidl-carrier-ui` folder.
+2. Once the above steps are executed successfully now we can run `npm run start:carrier` to start node API on `8080` port. This will serve prod build from `dist\openidl-carrier-ui`.
