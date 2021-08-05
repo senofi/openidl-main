@@ -250,7 +250,7 @@
 						mat-flat-button
 						color="primary"
 						(click)="toggleAction()"
-						[disabled]="isSmallSpinner"
+						[disabled]="!isConsent"
 						[class.spinner]="isSmallSpinner"
 					>
 						<mat-icon>check_circle</mat-icon>
@@ -349,15 +349,12 @@
 								class="btn-org"
 								mat-button
 								color="primary"
-								*ngIf="isStatAgent"
 								[disabled]="!isLikeCountPositive"
 								(click)="viewCarriers('Liked')"
 							>
 								View Organizations
 							</button>
 						</p>
-						<h2>Consent Status</h2>
-						<p></p>
 					</mat-card-content>
 				</mat-card>
 
