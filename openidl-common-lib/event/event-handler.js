@@ -11,7 +11,6 @@ logger.level = config.logLevel;
 const EventListener = {};
 let mainHandlerStartedMap = new Map();
 let carrierChannelTransactionMap = new Map();
-let registerBlockMap = new Map();
 
 const {
     Gateway
@@ -35,22 +34,20 @@ EventListener.init = async (networkConfig, listenerConfig, blockManagementDB, ev
     this.mspid = networkConfig.organizations[this.orgName].mspid;
     this.peer = networkConfig.organizations[this.orgName].peers[0];
     this.isLocalHost = networkConfig.peers[this.peer].url.indexOf('localhost') > -1;
+    this.eventListener = async (event) => {
+        try {
+            await processInvokeHandler(event.blockData)
+        } catch (error) {
+            await errorBlockEventHandler(error)
+        }
+    };
 
     for (let index = 0; index < this.listenerChannels.length; index++) {
         const channel = this.listenerChannels[index];
         logger.info("Channel is " + channel);
-        const channelTransaction = new FabricHelperTransaction(this.org, this.user, channel.channelName, this.mspId, this.wallet, this.peer, this.isLocalHost);
+        const channelTransaction = new FabricHelperTransaction(this.org, this.user, channel.channelName, this.mspid, this.wallet, this.peer, this.isLocalHost);
         channelTransaction.init(this.networkConfig);
         logger.info("network config is " + this.networkConfig);
-        let isChannelInitalized = false;
-        while (!isChannelInitalized) {
-            try {
-                await channelTransaction.initEventHub();
-                isChannelInitalized = true;
-            } catch (err) {
-                logger.error('initEventHub errored out for user:' + this.user + " and channel:" + channel.channelName + " Error is " + err);
-            }
-        }
         carrierChannelTransactionMap.set(channel.channelName, channelTransaction);
         mainHandlerStartedMap.set(channel.channelName, false);
     }
@@ -151,14 +148,12 @@ const registerBlockEventListener = async (channelName, blockNumber) => {
     logger.debug('registerBlockEventListener :start block ' + blockNumber);
     logger.debug('registerBlockEventListener :channelName ' + channelName);
     let options = {
-        startBlock: blockNumber,
-        unregister: false,
-        disconnect: false
+        startBlock: blockNumber
     };
-    registerBlockMap.set(channelName, carrierChannelTransactionMap.get(channelName).eventHub.registerBlockEvent(processInvokeHandler, errorBlockEventHandler, options));
+
+    const channelTransaction = carrierChannelTransactionMap.get(channelName)
+    await channelTransaction.registerBlockEventListener(channelName, this.eventListener, options);
     logger.debug('registerBlockEventListener :registerBlockMap ' + channelName);
-    await carrierChannelTransactionMap.get(channelName).eventHub.connect(true);
-    logger.debug('registerBlockEventListener :connect ' + channelName);
 
 };
 
@@ -214,8 +209,8 @@ const errorBlockEventHandler = async (err) => {
         let channel = this.listenerChannels[index];
         let channelName = channel.channelName;
         logger.debug("setting up channel:" + channelName);
-        carrierChannelTransactionMap.get(channelName).eventHub.unregisterBlockEvent(registerBlockMap.get(channelName));
-        await carrierChannelTransactionMap.get(channelName).eventHub.disconnect();
+        const channelTransaction = carrierChannelTransactionMap.get(channelName);
+        await channelTransaction.removeBlockEventListener(channelName, this.eventListener);
         logger.debug("setting up channel done:" + channelName);
     }
     //Reinitialse and invoke process
@@ -235,7 +230,7 @@ const updateBlockNumberInDatabase = async (blockNumber, id) => {
                 blockInfo = {};
                 blockInfo._id = id;
             }
-            blockInfo.blockNumber = blockNumber;
+            blockInfo.blockNumber = blockNumber.low;
             this.blockManagementDB.insert(blockInfo, this.eventListenersDB).then((data) => {
                 logger.info('block number update to db done ' + blockNumber);
                 resolve();

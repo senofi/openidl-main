@@ -65,8 +65,8 @@ wallet.identityExists = async (id) => {
       // export from persistant wallet and store in memory wallet
       logger.debug("Identity " + id + " found in persistant store");
       let identity = await exportIdentity(id);
-      logger.debug("Identity Exportted ", id, ", importing to memory wallet");
-      await memoryWallet.import(id, identity);
+      logger.debug("Identity Exported ", id, ", importing to memory wallet");
+      await memoryWallet.put(id, identity);
       logger.debug("Identity ", id, "imported to memory wallet");
       existsInMemory = true;
     }

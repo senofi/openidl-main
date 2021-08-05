@@ -18,7 +18,7 @@ const {
 
 
 async function getChannelInstance() {
-    Transaction.initWallet('kvs-credentials');
+    Transaction.initWallet(IBMCloudEnv.getDictionary('kvs-credentials'));
     let targetChannelTransaction = new Transaction(targetChannelConfig.users[0].org, targetChannelConfig.users[0].user, targetChannelConfig.targetChannels[0].channelName, targetChannelConfig.targetChannels[0].chaincodeName, targetChannelConfig.users[0].mspId);
     targetChannelTransaction.init(networkConfig);
     return targetChannelTransaction;

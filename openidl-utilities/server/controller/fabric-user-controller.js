@@ -65,7 +65,7 @@ fabricEnrollmentAPI.enroll = async (req, res) => {
     else if (payload.options == 'enroll') {
         try {
             logger.debug("payload.users[0]" + payload.users[0]);
-            await fabricUserEnrollment.enrollUser(payload.users[0], fabric_config.persistantStore);
+            await fabricUserEnrollment.enrollUser(payload.users[0]);
             logger.info("Fabric user enrolled  = " + new Date().toISOString());
             jsonRes = {
                 statusCode: 200,

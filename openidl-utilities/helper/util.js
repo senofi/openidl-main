@@ -41,7 +41,7 @@ util.init = (connProfilePath) => {
 /**
  * Enroll given user with given org Fabric CA
  */
-util.userEnroll = (orgName, enrollId, enrollSecret) => {
+util.userEnroll = (enrollId, enrollSecret) => {
     logger.debug(`Enrolling user ${enrollId}`);
     return new Promise(((resolve, reject) => {
         // add network config file to fabric ca service and get orgs and CAs fields
@@ -86,7 +86,7 @@ util.userEnroll = (orgName, enrollId, enrollSecret) => {
                         certificate: enrollment.certificate,
                         privateKey: enrollment.key.toBytes()
                     },
-                    mspId: orgName,
+                    mspId: mspId,
                     type: 'X.509',
                 };
                 return resolve(x509Identity);

@@ -25,7 +25,6 @@ const idpCredentials = IBMCloudEnv.getDictionary('idp-credentials');
 const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials.idpType);
 
 const fabricUserEnrollment = require('../controller/fabric-user-controller');
-const appUser = require('../controller/app-user-controller');
 const cognitoUser = require('../controller/cognito-user-controller');
 const router = express.Router();
 
