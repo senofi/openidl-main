@@ -6,13 +6,13 @@
 		"build": "ng build",
 		"test": "ng test",
 		"watch": "ng build openidl-common-ui --watch --configuration development",
-		"start:regulator": "node projects/openidl-ui/server/index.js",
-		"serve:regulator": "ng serve openidl-ui --proxy-config proxy.conf.json",
-		"start:carrier": "node projects/openidl-carrier-ui/server/index.js",
-		"serve:carrier": "ng serve openidl-carrier-ui --proxy-config proxy.conf.json",
+		"start:aais": "node projects/openidl-ui/server/index.js",
+		"serve:aais": "ng serve openidl-ui --proxy-config proxy.conf.json",
+		"start:member": "node projects/openidl-carrier-ui/server/index.js",
+		"serve:member": "ng serve openidl-carrier-ui --proxy-config proxy.conf.json",
 		"build:common": "ng build openidl-common-ui",
-		"build:regulator": "ng build openidl-ui",
-		"build:carrier": "ng build openidl-carrier-ui"
+		"build:aais": "ng build openidl-ui",
+		"build:member": "ng build openidl-carrier-ui"
 	},
 	"private": true,
 	"dependencies": {
