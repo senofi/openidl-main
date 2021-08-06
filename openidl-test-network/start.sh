@@ -1,8 +1,8 @@
-# Pull the images
-./bootstrap.sh 2.2.3 1.5.0
-
 # bring down the current network
 ./network.sh down
+
+# Pull the images
+./bootstrap.sh 2.2.3 1.5.0
 
 # bring up the network
 ./network.sh up -ca -s couchdb
