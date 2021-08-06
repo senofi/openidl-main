@@ -339,15 +339,15 @@ function networkDown() {
     #Cleanup images
     removeUnwantedImages
     # remove orderer block and other channel configuration transactions and certs
-    docker run --rm -v $(pwd):/data busybox sh -c 'cd /data && rm -rf system-genesis-block/*.block organizations/peerOrganizations organizations/ordererOrganizations'
+    rm -rf bin
+    rm -rf system-genesis-block/*.block organizations/peerOrganizations organizations/ordererOrganizations
     ## remove fabric ca artifacts
-    docker run --rm -v $(pwd):/data busybox sh -c 'cd /data && rm -rf organizations/fabric-ca/aais/msp organizations/fabric-ca/aais/tls-cert.pem organizations/fabric-ca/aais/ca-cert.pem organizations/fabric-ca/aais/IssuerPublicKey organizations/fabric-ca/aais/IssuerRevocationPublicKey organizations/fabric-ca/aais/fabric-ca-server.db'
-    docker run --rm -v $(pwd):/data busybox sh -c 'cd /data && rm -rf organizations/fabric-ca/analytics/msp organizations/fabric-ca/analytics/tls-cert.pem organizations/fabric-ca/analytics/ca-cert.pem organizations/fabric-ca/analytics/IssuerPublicKey organizations/fabric-ca/analytics/IssuerRevocationPublicKey organizations/fabric-ca/analytics/fabric-ca-server.db'
-    docker run --rm -v $(pwd):/data busybox sh -c 'cd /data && rm -rf organizations/fabric-ca/carrier/msp organizations/fabric-ca/carrier/tls-cert.pem organizations/fabric-ca/carrier/ca-cert.pem organizations/fabric-ca/carrier/IssuerPublicKey organizations/fabric-ca/carrier/IssuerRevocationPublicKey organizations/fabric-ca/carrier/fabric-ca-server.db'
-    docker run --rm -v $(pwd):/data busybox sh -c 'cd /data && rm -rf organizations/fabric-ca/ordererOrg/msp organizations/fabric-ca/ordererOrg/tls-cert.pem organizations/fabric-ca/ordererOrg/ca-cert.pem organizations/fabric-ca/ordererOrg/IssuerPublicKey organizations/fabric-ca/ordererOrg/IssuerRevocationPublicKey organizations/fabric-ca/ordererOrg/fabric-ca-server.db'
-    docker run --rm -v $(pwd):/data busybox sh -c 'cd /data && rm -rf addcarrier/fabric-ca/carrier/msp addcarrier/fabric-ca/carrier/tls-cert.pem addcarrier/fabric-ca/carrier/ca-cert.pem addcarrier/fabric-ca/carrier/IssuerPublicKey addcarrier/fabric-ca/carrier/IssuerRevocationPublicKey addcarrier/fabric-ca/carrier/fabric-ca-server.db'
+    rm -rf organizations/fabric-ca/aais
+    rm -rf organizations/fabric-ca/analytics
+    rm -rf organizations/fabric-ca/carrier
+    rm -rf organizations/fabric-ca/ordererOrg
     # remove channel and script artifacts
-    docker run --rm -v $(pwd):/data busybox sh -c 'cd /data && rm -rf channel-artifacts log.txt *.tar.gz'
+    rm -rf channel-artifacts log.txt *.tar.gz
   fi
 }
 

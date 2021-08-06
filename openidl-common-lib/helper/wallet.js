@@ -12,6 +12,10 @@ logger.level = config.logLevel;
 const {
   CertificatemanagerWallet
 } = require('./certificatemanagerwallet');
+const {
+  HashiCorpVault
+} = require('./hashicorpvaultwallet');
+
 
 
 /**
@@ -32,16 +36,19 @@ wallet.init = async (options) => {
   memoryWallet = await Wallets.newInMemoryWallet();
   if (options.walletType === 'certificate_manager') {
     persistantWallet = new CertificatemanagerWallet(options);
-    persistantWallet.loadoptions(options);
+    await persistantWallet.loadoptions(options);
     logger.debug('certificate manager persistence wallet init done ');
   } else if (options.walletType === 'couchdb') {
     persistantWallet = await Wallets.newCouchDBWallet(options.url);
-    logger.debug('cloudant persistence wallet init done ');
+    logger.debug('couchdb persistence wallet init done ');
+  } else if (options.walletType === 'hashicorp_vault') {
+    persistantWallet = new HashiCorpVault(options);
+    await persistantWallet.loadoptions(options);
+    logger.debug('hashicorp vault persistence wallet init done ');
   } else {
     logger.error("Incorrect Usage of wallet type. Refer README for more details");
   }
 }
-
 
 /**
  * Return inmemory wallet and hide FileSystemWallet object
@@ -96,7 +103,7 @@ wallet.importIdentity = async (id, x509Identity) => {
   }
   // export from persistant wallet and store in memory wallet
   let identity = await exportIdentity(id);
-  logger.debug("Identity Exportted ", id, ", importing to memory wallet");
+  logger.debug("Identity Exported ", id, ", importing to memory wallet");
   await memoryWallet.put(id, identity);
   logger.debug("Identity ", id, "imported to memory wallet");
 

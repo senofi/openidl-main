@@ -8,7 +8,9 @@
 
 const log4js = require('log4js');
 const request = require('request');
+const config = require('config');
 const logger = log4js.getLogger('helpers - certificate manager');
+logger.level = config.logLevel;
 const itm = require('@ibm-functions/iam-token-manager');
 const certificateManagerConfig = require('./config/certification_manager.json');
 /**
@@ -102,9 +104,7 @@ class CertificatemanagerWallet {
 					reject(error);
 				} else {
 					var responsebody = JSON.parse(body);
-					resolve({
-						data: responsebody['data']
-					});
+					resolve(responsebody['data']);
 				}
 			});
 		});
@@ -114,7 +114,8 @@ class CertificatemanagerWallet {
 		const myAuthToken = 'Bearer ' + await this.generateAuthToken(this.CMOptions.apikey);
 		var certificateId = await this.getCertificateId(label, myAuthToken);
 		var identity = await this.getCertificate(certificateId, myAuthToken);
-		return identity ? Buffer.from(identity.data, 'utf8') : undefined;
+		logger.debug("identity   =>   " + JSON.stringify(identity));
+		return identity;
 	}
 
 	async put(name, identity) {
@@ -130,7 +131,7 @@ class CertificatemanagerWallet {
 		};
 		const body = {
 			"name": name,
-			data: identity.toString('utf8'),
+			data: identity,
 		};
 
 		return new Promise((resolve, reject) => {

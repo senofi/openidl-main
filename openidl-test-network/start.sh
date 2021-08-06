@@ -17,7 +17,7 @@
 ./network.sh createChannel -c analytics-carrier -p AnalyticsCarrierChannel
 
 # deploy the chaincode to all the peers
-./network.sh deployCC -c defaultchannel -ccn openidl-cc-default -ccp ./openidl/ -ccl go
+./network.sh deployCC -c defaultchannel -ccn openidl-cc-default -ccp ../openidl-chaincode/chaincode/openidl -ccl go
 
 # Pre-register users on certificate authority
 ./pre-register-users.sh
