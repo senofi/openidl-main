@@ -1,148 +1,164 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { appConst } from '../const/app.const';
-import { StorageService } from '../../../lib/src/app/services/storage.service';
-import { AuthService } from '../../../lib/src/app/services/auth.service';
-import { environment } from './../../environments/environment';
-import { DataService } from './../../../lib/src/app/services/data.service';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalComponent } from '../../../lib/src/app/components/modal/modal.component';
+import { environment } from './../../environments/environment';
+
+import { appConst } from '../const/app.const';
+
+import { StorageService } from '../../../../openidl-common-ui/src/app/services/storage.service';
+import { AuthService } from '../../../../openidl-common-ui/src/app/services/auth.service';
+import { DataService } from './../../../../openidl-common-ui/src/app/services/data.service';
+import { DialogService } from '../../../../openidl-common-ui/src/app/services/dialog.service';
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+	selector: 'app-header',
+	templateUrl: './header.component.html',
+	styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+	@Input() selected;
+	@Input() fieldChanged;
+	@Output() navigate = new EventEmitter();
+	appConst;
+	role;
+	orgLogo;
+	org;
+	isSpinner: Boolean = false;
+	isResetWorldState: Boolean = false;
+	isResetBtn: Boolean = false;
+	shouldLogout: Boolean = false;
+	shouldConfirm: Boolean = false;
+	requestedRoute = '';
 
-  @Input() selected;
-  @Input() fieldChanged;
-  @Output() navigate = new EventEmitter();
-  @ViewChild(ModalComponent) appModal: ModalComponent;
-  appConst; role; orgLogo; org;
-  isSpinner: Boolean = false;
-  isResetWorldState: Boolean = false;
-  isResetBtn: Boolean = false;
-  shouldLogout: Boolean = false;
-  shouldConfirm: Boolean = false;
-  requestedRoute = '';
+	title: any;
+	message: any;
+	type: any;
 
-  title: any;
-  message: any;
-  type: any;
+	constructor(
+		private storageService: StorageService,
+		private authService: AuthService,
+		private dataService: DataService,
+		private router: Router,
+		private dialogService: DialogService
+	) {}
 
-  constructor(private storageService: StorageService,
-              private authService: AuthService,
-              private dataService: DataService,
-              private router: Router) {
-   }
+	ngOnInit() {
+		this.role = this.storageService.getItem('role');
+		this.org = this.storageService.getItem('org');
+		this.appConst = appConst[this.role];
+		this.orgLogo = this.appConst.org[this.org];
 
-  ngOnInit() {
+		if (environment.RESET_WORLD_STATE === 'true') {
+			this.isResetWorldState = true;
+		} else {
+			this.isResetWorldState = false;
+		}
+	}
 
-    this.role = this.storageService.getItem('role');
-    this.org = this.storageService.getItem('org');
-    this.appConst = appConst[this.role];
-    this.orgLogo = this.appConst.org[this.org];
+	setSelected(selected) {
+		this.selected = selected;
+	}
+	checkLogout() {
+		if (this.fieldChanged) {
+			this.shouldLogout = true;
+			this.showConfirmationModal();
+		} else {
+			this.logout();
+		}
+	}
+	logout() {
+		this.isSpinner = true;
+		this.authService.logout('login').subscribe(
+			(resp) => {
+				console.log(resp);
+				this.isSpinner = false;
+			},
+			(err) => {
+				this.isSpinner = false;
+				console.log(err);
+			}
+		);
+	}
 
-    if (environment.RESET_WORLD_STATE === 'true') {
-      this.isResetWorldState = true;
-    } else {
-      this.isResetWorldState = false;
-    }
-  }
+	toggleResetBtn() {
+		this.isResetBtn = !this.isResetBtn;
+	}
 
-  setSelected(selected) {
-    this.selected = selected;
-  }
-  checkLogout() {
-    if(this.fieldChanged) {
-      this.shouldLogout = true;
-      this.showConfirmationModal();
-    } else {
-      this.logout();
-    }
-  }
-  logout() {
-    this.isSpinner = true;
-    this.authService.logout('login')
-                    .subscribe(resp => {
-                      console.log(resp);
-                      this.isSpinner = false;
-                    }, err => {
-                      this.isSpinner = false;
-                      console.log(err);
-                    });
-  }
+	navigateToRoute(route) {
+		this.requestedRoute = route;
+		if (this.router.url !== this.requestedRoute) {
+			if (this.fieldChanged) {
+				this.shouldLogout = false;
+				this.showConfirmationModal();
+			} else {
+				this.router.navigate([this.requestedRoute]);
+			}
+		}
+	}
 
-  toggleResetBtn() {
-    this.isResetBtn = ! this.isResetBtn;
-  }
+	onConfirmation() {
+		if (this.shouldLogout) {
+			this.shouldLogout = false;
+			this.logout();
+		} else {
+			this.router.navigate([this.requestedRoute]);
+		}
+	}
 
-  navigateToRoute(route) {
-    this.requestedRoute = route;
-    if (this.router.url !== this.requestedRoute) {
-      if(this.fieldChanged) {
-        this.shouldLogout = false;
-        this.showConfirmationModal();
-      } else {
-        this.router.navigate([this.requestedRoute]);
-      }
-    }
+	goHome() {
+		if (this.router.url !== '/datacallList') {
+			this.router.navigate(['/datacallList']);
+		} else {
+			location.reload();
+		}
+	}
 
-  }
+	confirmReset() {
+		this.title = '';
+		this.message = 'Are you sure you want to delete the data?';
+		this.type = 'info';
+		this.shouldConfirm = true;
+		this.showModal();
+	}
 
-  onConfirmation() {
-    if(this.shouldLogout) {
-      this.shouldLogout = false;
-      this.logout();
-    } else {
-      this.router.navigate([this.requestedRoute]);
-    }
-  }
+	// Show the modal of success, error or info type
+	showModal() {
+		this.dialogService.openDeleteDataModal(
+			this.title,
+			this.message,
+			this.type
+		);
+	}
 
-  goHome() {
-    if (this.router.url !== '/datacallList') {
-      this.router.navigate(['/datacallList']);
-    } else {
-      location.reload();
-    }
-  }
+	showConfirmationModal() {
+		this.title = '';
+		this.message =
+			'Are you sure you want to leave this page without submitting? Your information will be lost.';
+		this.type = 'info';
+		this.dialogService.openConfirmationModal(
+			this.title,
+			this.message,
+			this.type
+		);
+	}
 
-  conirmReset() {
-    this.title = '';
-    this.message = 'Are you sure you want to delete the data?';
-    this.type = 'info';
-    this.shouldConfirm = true;
-    this.showModal();
-  }
-
-  // Show the modal of success, error or info type
-  showModal() {
-    this.appModal.openDeleteDataModal(this.title, this.message, this.type);
-   }
-
-  showConfirmationModal() {
-    this.title = '';
-    this.message = 'Are you sure you want to leave this page without submitting? Your information will be lost.';
-    this.type = 'info';
-    this.appModal.openConfirmationModal(this.title, this.message, this.type);
-  }
-
-  resetData() {
-    console.log('url ', this.router.url);
-    this.isSpinner = true;
-    this.dataService.deleteData('/reset-data')
-                    .subscribe(res => {
-                      console.log(res);
-                      this.isSpinner = false;
-                      this.isResetBtn = false;
-                      this.setSelected(0);
-                      if (this.router.url !== '/datacallList') {
-                          this.router.navigate(['/datacallList']);
-                        } else {
-                          location.reload();
-                        }
-                    }, err => {
-                      this.isSpinner = false;
-                      this.isResetBtn = false;
-                    });
-  }
+	resetData() {
+		console.log('url ', this.router.url);
+		this.isSpinner = true;
+		this.dataService.deleteData('/reset-data').subscribe(
+			(res) => {
+				console.log(res);
+				this.isSpinner = false;
+				this.isResetBtn = false;
+				this.setSelected(0);
+				if (this.router.url !== '/datacallList') {
+					this.router.navigate(['/datacallList']);
+				} else {
+					location.reload();
+				}
+			},
+			(err) => {
+				this.isSpinner = false;
+				this.isResetBtn = false;
+			}
+		);
+	}
 }

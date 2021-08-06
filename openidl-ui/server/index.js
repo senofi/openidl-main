@@ -1,4 +1,5 @@
 'use strict';
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const cfenv = require('cfenv');
@@ -9,19 +10,23 @@ const session = require('express-session');
 const cors = require('cors');
 const config = require('config');
 const log4js = require('log4js');
-const bodyParser = require('body-parser');
-const openidlCommonApp = require('../lib/server/index');
+const noCache = require('nocache')
+const openidlCommonApp = require('../../openidl-common-ui//server/index');
 
 const IBMCloudEnv = require('ibm-cloud-env');
 IBMCloudEnv.init();
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: true
+}));
 /**
  * Set up logging
  */
 const logger = log4js.getLogger('server');
-logger.setLevel(config.logLevel);
+// logger.setLevel(config.logLevel);
+logger.level = "debug";
 
 logger.debug('setting up app: registering routes, middleware...');
 
@@ -41,7 +46,7 @@ const routes = require('./routes/routes');
 
 app.use(helmet());
 app.use(cookieParser());
-app.use(helmet.noCache());
+app.use(noCache());
 app.enable("trust proxy");
 app.use(userAuthHandler.configureSSL);
 // TODO Undable to move passport related stuff to middleware need expert help
@@ -59,11 +64,11 @@ let webAppStrategy = userAuthHandler.getUserAuthStrategy();
 passport.use(webAppStrategy);
 
 // Passport session persistance
-passport.serializeUser(function(user, cb) {
+passport.serializeUser(function (user, cb) {
     cb(null, user);
 });
 
-passport.deserializeUser(function(obj, cb) {
+passport.deserializeUser(function (obj, cb) {
     cb(null, obj);
 });
 
@@ -74,17 +79,17 @@ let apiAppStrategy = apiAuthHandler.getAPIStrategy();
 apiPassport.use(apiAppStrategy);
 
 // Passport session persistance
-apiPassport.serializeUser(function(user, cb) {
+apiPassport.serializeUser(function (user, cb) {
     cb(null, user);
 });
 
-apiPassport.deserializeUser(function(obj, cb) {
+apiPassport.deserializeUser(function (obj, cb) {
     cb(null, obj);
 });
 
 
 if (NODE_ENV === 'production') {
-    app.use(function(req, res, next) {
+    app.use(function (req, res, next) {
         if (!req.secure) {
             res.redirect("https://" + req.headers.host + req.url)
         } else {
@@ -95,7 +100,9 @@ if (NODE_ENV === 'production') {
 
 }
 
-app.use(express.static('dist'));
+if (NODE_ENV === 'production' || NODE_ENV === 'qa') {
+    app.use(express.static('dist'));
+}
 // app.get('/', (req, res) => {
 //   res.json({
 //     'message': 'Welcome to openidl ui application.'
@@ -105,6 +112,6 @@ app.use(express.static('dist'));
 app.use('/', routes)
 
 var portNumber = IBMCloudEnv.getString("portnumber");
-app.listen(portNumber, function() {
+app.listen(portNumber, function () {
     console.log('App started listening at ', portNumber);
 });

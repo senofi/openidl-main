@@ -1,79 +1,87 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { StorageService } from '../../../lib/src/app/services/storage.service';
-import { ModalComponent } from '../../../lib/src/app/components/modal/modal.component';
-import { MESSAGE } from 'lib/src/assets/messageBundle';
 
+import { StorageService } from '../../../../openidl-common-ui/src/app/services/storage.service';
+import { MESSAGE } from '../../../../openidl-common-ui/src/assets/messageBundle';
+import { DialogService } from '../../../../openidl-common-ui/src/app/services/dialog.service';
 
 @Component({
-  selector: 'app-view-datacall-draft',
-  templateUrl: './view-datacall-draft.component.html',
-  styleUrls: ['./view-datacall-draft.component.css']
+	selector: 'app-view-datacall-draft',
+	templateUrl: './view-datacall-draft.component.html',
+	styleUrls: ['./view-datacall-draft.component.scss']
 })
 export class ViewDatacallDraftComponent implements OnInit {
+	isBack: Boolean = true;
+	hasFieldChanged: Boolean = false;
+	title: any;
+	message: any;
+	type: any;
+	currentStatus = '';
 
-  @ViewChild(ModalComponent) appModal: ModalComponent;
+	constructor(
+		private router: Router,
+		private storageService: StorageService,
+		private dialogService: DialogService
+	) {}
 
-  isBack: Boolean = true;
-  hasFieldChanged: Boolean = false;
-  title: any;
-  message: any;
-  type: any;
+	selected: Number = 0;
 
-  constructor(private router: Router, private storageService: StorageService) { }
+	ngOnInit() {
+		this.currentStatus = this.storageService.getItem('currentStatus');
+		if (
+			this.storageService.getItem('isShowIssuedDrafts') &&
+			this.storageService.getItem('isShowIssuedDrafts') === 'true'
+		) {
+			this.isBack = false;
+			this.storageService.clearItem('isShowIssuedDrafts');
+		} else {
+			this.isBack = true;
+		}
+		this.hasFieldChanged = false;
+	}
 
-  selected: Number = 0;
+	checkBack() {
+		console.log('this.hasFieldChanged ', this.hasFieldChanged);
+		if (this.hasFieldChanged) {
+			this.showConfirmationModal();
+		} else {
+			this.goBack();
+		}
+	}
 
-  ngOnInit() {
-    if (this.storageService.getItem('isShowIssuedDrafts') &&
-    this.storageService.getItem('isShowIssuedDrafts') === 'true') {
-      this.isBack = false;
-      this.storageService.clearItem('isShowIssuedDrafts');
-    } else {
-      this.isBack = true;
-    }
-    this.hasFieldChanged = false;
-  }
+	showConfirmationModal() {
+		this.title = MESSAGE.PAGE_LEAVE_CONFIRMATION.title;
+		this.message = MESSAGE.PAGE_LEAVE_CONFIRMATION.message;
+		this.type = MESSAGE.PAGE_LEAVE_CONFIRMATION.type;
+		this.dialogService.openConfirmationModal(
+			this.title,
+			this.message,
+			this.type
+		);
+	}
 
-  checkBack() {
-    console.log('this.hasFieldChanged ', this.hasFieldChanged);
-    if (this.hasFieldChanged) {
-      this.showConfirmationModal();
-    } else {
-      this.goBack();
-    }
-  }
+	goBack() {
+		this.router.navigate(['/datacallList']);
+	}
+	cloneDatacall() {
+		this.storageService.setItem('isClone', 'true');
+		this.router.navigate(['/createDatacall']);
+	}
+	abandonDatacall() {
+		console.log('datacall abandonned');
+		this.storageService.setItem('isAbandon', 'true');
+		this.router.navigate(['/datacallList']);
+	}
 
-  showConfirmationModal() {
-    this.title = MESSAGE.PAGE_LEAVE_CONFIRMATION.title;
-    this.message = MESSAGE.PAGE_LEAVE_CONFIRMATION.message;
-    this.type = MESSAGE.PAGE_LEAVE_CONFIRMATION.type;
-    this.appModal.openConfirmationModal(this.title, this.message, this.type);
-  }
+	fieldChange() {
+		this.hasFieldChanged = true;
+	}
 
-  goBack() {
-    this.router.navigate(['/datacallList']);
-  }
-  cloneDatacall() {
-    this.storageService.setItem('isClone', 'true');
-    this.router.navigate(['/createDatacall']);
-  }
-  abandonDatacall() {
-    console.log('datacall abandonned');
-    this.storageService.setItem('isAbandon', 'true');
-    this.router.navigate(['/datacallList']);
-  }
+	noFieldChange() {
+		this.hasFieldChanged = false;
+	}
 
-  fieldChange() {
-    this.hasFieldChanged = true;
-  }
-
-  noFieldChange() {
-    this.hasFieldChanged = false;
-  }
-
-  onConfirmation() {
-    this.goBack();
-  }
-
+	onConfirmation() {
+		this.goBack();
+	}
 }

@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { CreateDatacallComponent } from '../create-datacall/create-datacall.component';
 import { DatacallListComponent } from './../datacall-list/datacall-list.component';
 import { LoginComponent } from './../login/login.component';
-import { AuthGaurdService } from '../../../lib/src/app/services/authgaurd.service';
+import { AuthGaurdService } from '../../../../openidl-common-ui/src/app/services/authgaurd.service';
 import { ViewDatacallDraftComponent } from '../view-datacall-draft/view-datacall-draft.component';
 import { ViewDatacallIssuedComponent } from '../view-datacall-issued/view-datacall-issued.component';
 import { ViewReportComponent } from '../view-report/view-report.component';

@@ -1,122 +1,161 @@
-<table class="table" [mfData]="data" #mf="mfDataTable" [mfRowsOnPage]="recordsPerPage" *ngIf='!isSpinner' [mfSortBy]="sortField" [mfSortOrder]="sortDir">
-    <thead>
-        <tr>
-            <th style="width: 15%">
-                <mfDefaultSorter by="name" style='position:relative'>
-                  Name
-                  <span class='sort-arrows'>
-                      <i class='glyphicon glyphicon-triangle-top'></i>
-                      <i class='glyphicon glyphicon-triangle-bottom'></i>
-                  </span>
-                </mfDefaultSorter>
-            </th>
-            <th style="width: 10%">
-                <mfDefaultSorter by="deadline">
-                  Deadline
-                  <span class='sort-arrows'>
-                      <i class='glyphicon glyphicon-triangle-top'></i>
-                      <i class='glyphicon glyphicon-triangle-bottom'></i>
-                  </span>
-                </mfDefaultSorter>
-            </th>
-            <th style="width: 10%">
-                <mfDefaultSorter by="jurisdiction">
-                  Jurisdiction
-                  <span class='sort-arrows'>
-                      <i class='glyphicon glyphicon-triangle-top'></i>
-                      <i class='glyphicon glyphicon-triangle-bottom'></i>
-                  </span>
-                </mfDefaultSorter>
-            </th>
-            <th style="width: 8%">
-                <mfDefaultSorter by="lineOfBusiness">
-                  Line of Business
-                  <span class='sort-arrows'>
-                      <i class='glyphicon glyphicon-triangle-top'></i>
-                      <i class='glyphicon glyphicon-triangle-bottom'></i>
-                  </span>
-                </mfDefaultSorter>
-            </th>
-            <th style="width: 10%;text-align:right; padding-right:25px;">
-                <mfDefaultSorter by="version">
-                  Version No.
-                  <span class='sort-arrows'>
-                      <i class='glyphicon glyphicon-triangle-top'></i>
-                      <i class='glyphicon glyphicon-triangle-bottom'></i>
-                  </span>
-                </mfDefaultSorter>
-            </th>
-            <!-- <th *ngIf='status === "DRAFT"' style="width: 10%;text-align:right">
-                <mfDefaultSorter by="draftVersions">No. of Drafts</mfDefaultSorter>
-            </th> -->
-            <th *ngIf='status === statusObj.DRAFT' style="width: 10%;text-align:right; padding-right:60px;">
-                <mfDefaultSorter by="noOfLikes">
-                  Likes
-                  <span class='sort-arrows'>
-                      <i class='glyphicon glyphicon-triangle-top'></i>
-                      <i class='glyphicon glyphicon-triangle-bottom'></i>
-                  </span>
-                </mfDefaultSorter>
-            </th>
-            <th *ngIf='status === statusObj.ISSUED' style="width: 10%; text-align:right; padding-right:50px;">
-                <mfDefaultSorter by="noOfConsents">
-                  Consents
-                  <span class='sort-arrows'>
-                      <i class='glyphicon glyphicon-triangle-top'></i>
-                      <i class='glyphicon glyphicon-triangle-bottom'></i>
-                  </span>
-                </mfDefaultSorter>
-            </th>
-            <th *ngIf='status === statusObj.ISSUED' style="width: 10%">
-                <mfDefaultSorter by="reportStatus">
-                  Report Status
-                  <span class='sort-arrows'>
-                      <i class='glyphicon glyphicon-triangle-top'></i>
-                      <i class='glyphicon glyphicon-triangle-bottom'></i>
-                  </span>
-                </mfDefaultSorter>
-            </th>
-            <th style="width: 12%;padding-left:20px;" [ngStyle]='{"padding-left":status === statusObj.CANCELLED? "5%":"20px"}'>
-                <mfDefaultSorter by="updatedTs">
-                  Updated Date
-                  <span class='sort-arrows'>
-                      <i class='glyphicon glyphicon-triangle-top'></i>
-                      <i class='glyphicon glyphicon-triangle-bottom'></i>
-                  </span>
-                </mfDefaultSorter>
-            </th>
-        </tr>
-    </thead>
-    <tbody *ngIf='isRecord'>
-        <tr *ngFor="let data of mf.data" (click)='viewDraft(data)'>
-            <td>{{data.name}}</td>
-            <td>{{data.deadline | date:'MM/dd/yyyy'}}</td>
-            <td>{{data.jurisdiction}}</td>
-            <td>{{data.lineOfBusiness}}</td>
-            <td style='text-align:right'>{{data.version}}</td>
-            <!-- <td *ngIf='status === "DRAFT"' style='text-align:right'>{{data.draftVersions}}</td> -->
-            <td *ngIf='status === statusObj.DRAFT' style='text-align:right; padding-right:48px;'>{{data.noOfLikes}}</td>
-            <td *ngIf='status === statusObj.ISSUED' style='text-align:right; padding-right:35px;'>{{data.noOfConsents}}</td>
-            <td *ngIf='status === statusObj.ISSUED' class='report-status' (click)='viewReport($event, data, data.reportStatus, data.reportUrl)' [ngClass]="{'activeLink': data.reportStatus && (!(data.reportStatus.toLowerCase() === 'awaiting'))  }" style='cursor:default;'> <!-- &&((!(this.role === 'carrier' && (data.reportStatus.toLowerCase() === 'candidate' || data.reportStatus.toLowerCase() === 'awaiting' || data.reportStatus.toLowerCase() === 'accepted')))) -->
-                {{data.reportStatus}}</td>
-            <td style='padding-left:20px;' [ngStyle]='{"padding-left":status=== statusObj.CANCELLED? "5%":"20px"}'>{{data.updatedTs | date:'MM/dd/yyyy'}}</td>
-        </tr>
-    </tbody>
-    <tbody *ngIf='!isRecord'>
-        <tr>
-            <td colspan='8'>
-                No {{statusText}} data calls are available
-            </td>
-        </tr>
-    </tbody>
-    <tfoot>
-        <tr>
-            <td colspan="8">
-                <app-pagination [Records]='pageCount' [currentIndex]='currentIndex' (getPageByIndexEvent)='getDatacallsByIndex($event)' (getNextPageEvent)='getNextDatacalls($event)' (getPrevPageEvent)='getPrevDatacalls($event)'></app-pagination>
-            </td>
-        </tr>
-    </tfoot>
-</table>
-<app-spinner *ngIf='isSpinner'></app-spinner>
+<div class="data-table">
+	<table mat-table class="width-table" matSort [dataSource]="dataSource">
+		<!-- Name Column -->
+		<ng-container matColumnDef="name">
+			<th
+				mat-header-cell
+				*matHeaderCellDef
+				mat-sort-header
+				class="col-name"
+			>
+				Name
+			</th>
+			<td mat-cell *matCellDef="let row">{{ row.name }}</td>
+		</ng-container>
 
-<app-modal [title]='title' [message]='message' [type]='type' (modalClose)='modalClose()' (redirectLogin)='redirectLogin()'></app-modal>
+		<!-- Deadline Column -->
+		<ng-container matColumnDef="deadline">
+			<th
+				mat-header-cell
+				*matHeaderCellDef
+				mat-sort-header
+				class="col-deadline"
+			>
+				Deadline
+			</th>
+			<td mat-cell *matCellDef="let row">
+				{{ row.deadline | date: 'MM/dd/yyyy' }}
+			</td>
+		</ng-container>
+		<!-- Jurisdiction Column -->
+		<ng-container matColumnDef="jurisdiction">
+			<th
+				mat-header-cell
+				*matHeaderCellDef
+				mat-sort-header
+				class="col-jurisdiction"
+			>
+				Jurisdiction
+			</th>
+			<td mat-cell *matCellDef="let row">{{ row.jurisdiction }}</td>
+		</ng-container>
+		<!-- lineOfBusiness Column -->
+		<ng-container matColumnDef="lineOfBusiness">
+			<th
+				mat-header-cell
+				*matHeaderCellDef
+				mat-sort-header
+				class="col-line-of-business"
+			>
+				Line Of Business
+			</th>
+			<td mat-cell *matCellDef="let row">{{ row.lineOfBusiness }}</td>
+		</ng-container>
+		<!-- Version Column -->
+		<ng-container matColumnDef="version">
+			<th
+				mat-header-cell
+				*matHeaderCellDef
+				mat-sort-header
+				class="col-version"
+			>
+				Version No.
+			</th>
+			<td mat-cell *matCellDef="let row">{{ row.version }}</td>
+		</ng-container>
+		<!-- Status Column -->
+		<ng-container
+			matColumnDef="noOfLikes"
+			*ngIf="status === statusObj.DRAFT"
+		>
+			<th
+				mat-header-cell
+				*matHeaderCellDef
+				mat-sort-header
+				class="col-status draft"
+			>
+				Likes
+			</th>
+			<td mat-cell *matCellDef="let row">{{ row.noOfLikes }}</td>
+		</ng-container>
+		<ng-container
+			matColumnDef="noOfConsents"
+			*ngIf="status === statusObj.ISSUED"
+		>
+			<th
+				mat-header-cell
+				*matHeaderCellDef
+				mat-sort-header
+				class="col-status issued"
+			>
+				Consents
+			</th>
+			<td mat-cell *matCellDef="let row">{{ row.noOfConsents }}</td>
+		</ng-container>
+		<ng-container
+			matColumnDef="reportStatus"
+			*ngIf="status === statusObj.ISSUED"
+		>
+			<th
+				mat-header-cell
+				*matHeaderCellDef
+				mat-sort-header
+				class="col-status"
+			>
+				Report Status
+			</th>
+			<td
+				mat-cell
+				*matCellDef="let row"
+				(click)="
+					viewReport($event, row, row.reportStatus, row.reportUrl)
+				"
+				class="row-status"
+				[ngClass]="{
+					active:
+						row.reportStatus &&
+						!(row.reportStatus.toLowerCase() === 'awaiting')
+				}"
+			>
+				{{ row.reportStatus }}
+			</td>
+		</ng-container>
+		<!-- Updated Date Column -->
+		<ng-container matColumnDef="updatedTs">
+			<th
+				mat-header-cell
+				*matHeaderCellDef
+				mat-sort-header
+				[ngClass]="{ cancelled1: status === statusObj.CANCELLED }"
+				class="col-updated-date"
+			>
+				Updated Date
+			</th>
+			<td mat-cell *matCellDef="let row">
+				{{ row.updatedTs | date: 'MM/dd/yyyy' }}
+			</td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+		<tr
+			mat-row
+			*matRowDef="let row; columns: tableColumns"
+			(click)="viewDraft(row)"
+		></tr>
+		<tr class="mat-row" *matNoDataRow>
+			<td class="mat-cell" colspan="9999">
+				No {{ statusText }} data calls are available
+			</td>
+		</tr>
+	</table>
+
+	<mat-paginator
+		#paginator
+		[length]="50"
+		[pageIndex]="0"
+		[pageSize]="recordsPerPage"
+		[pageSizeOptions]="[10, 15, 20]"
+	>
+	</mat-paginator>
+</div>
+<app-spinner *ngIf="isSpinner"></app-spinner>

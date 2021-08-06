@@ -1,35 +1,46 @@
-<div class="fourth-container">
-    <div class="row">
-        <div class="col-sm-12">
-            <span class="page-header">Update Report</span>
-        </div>
-    </div><br>
-    <div class="row">
-        <div class="col-sm-12 no-row-padding">
-            <form name='reportForm' [formGroup]="registerForm">
-            <div class="reporturlText col-sm-6">
-                <label for="reportURL" class="text-heading">Report URL</label>
-                <input formControlName="reportURL" [ngClass]="{'requiredfield':reportURLfield.invalid && isError}" class="input-style-table" placeholder="Paste report URL here">
-            </div>
-            <div class="reportHashText col-sm-4">
-                <label for="reporthash" class="text-heading">Report Hash</label>
-                <input formControlName="reportHash" [ngClass]="{'requiredfield':reportHashfield.invalid && isError}" class="input-style-table reporthash" placeholder="Type report hash here">
-            </div>
-            <div class="statusText col-sm-2">
-                <button class='btn-primary update' type="button" (click)='updateReport(registerForm.value)' style='margin-left:0!important;' [disabled]='!shouldUpdateReport' [ngStyle]="{'opacity':!shouldUpdateReport?0.5:1, 'cursor':!shouldUpdateReport?'not-allowed':'pointer'}">Update Report</button>
-            </div>
-            </form>
-        </div>
-        <div class="col-sm-12">
-          <app-notify *ngIf='isError' [type]='this.type' [message]='this.message' [title]='this.title' (close)='closeNotify()'></app-notify>
-      </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <span class='table-heading'>Reports</span>
-        </div>
-    </div>
-    <div class="row">
-        <app-report-table (reportStatus)='getReportStatus()'></app-report-table>
-    </div>
-</div>
+<mat-card class="update-form">
+	<mat-card-header>
+		<mat-card-title>Update Report</mat-card-title>
+	</mat-card-header>
+	<mat-divider></mat-divider>
+	<mat-card-content class="data-form">
+		<form [formGroup]="registerForm" class="pb-1">
+			<div class="row">
+				<div class="col">
+					<mat-form-field class="full-width" appearance="outline">
+						<mat-label>Report URL</mat-label>
+						<input
+							matInput
+							placeholder="Paste report URL here"
+							formControlName="reportURL"
+						/>
+					</mat-form-field>
+				</div>
+				<div class="col">
+					<mat-form-field class="full-width" appearance="outline">
+						<mat-label>Forum URL</mat-label>
+						<input
+							matInput
+							placeholder="Type report hash here"
+							formControlName="reportHash"
+						/>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col right">
+					<button
+						mat-flat-button
+						color="primary"
+						[disabled]="!shouldUpdateReport"
+						(click)="updateReport(registerForm.value)"
+					>
+						Update Report
+					</button>
+				</div>
+			</div>
+		</form>
+		<mat-divider></mat-divider>
+		<app-report-table (reportStatus)="getReportStatus()"></app-report-table>
+	</mat-card-content>
+</mat-card>
