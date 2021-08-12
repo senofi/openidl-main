@@ -2,8 +2,6 @@ const log4js = require('log4js');
 const config = require('../config/default.json');
 const logger = log4js.getLogger('data-processor-Mongo');
 logger.level = config.logLevel;
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
 const sleep = require('sleep');
 const sizeof = require('object-sizeof');
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
@@ -13,8 +11,6 @@ let InstanceFactory = require('../middleware/instance-factory');
 let emailService = openidlCommonLib.Email;
 const emailkey = require('../config/default.json').send_grid_apikey;
 const emailData = require('../config/email.json').Config;
-
-const DBConfig = require('../config/DBConfig.json');
 
 // Venkat Jira 104
 let pdcFailureStatus;
@@ -408,7 +404,7 @@ class DataProcessorMongo {
             logger.info("In  MapReduceCollection   " + carrierId + " START_TIME = " + new Date().toISOString());
             let DBManagerFactory = openidlCommonLib.DBManagerFactory;
             let dbManagerFactoryObject = new DBManagerFactory();
-            this.dbManager = await dbManagerFactoryObject.getInstance(DBConfig);
+            this.dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
             let DBName = config.insuranceDB + "_" + carrierId;
             logger.debug("DBName>>>> " + DBName);
             // Fix for Jira88

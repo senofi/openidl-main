@@ -6,7 +6,6 @@
 
 
 const log4js = require('log4js');
-const config = require('config');
 const {
     Gateway
 } = require('fabric-network');
@@ -15,7 +14,7 @@ const { BlockDecoder } = require('fabric-common');
 const walletHelper = require('./wallet');
 
 const logger = log4js.getLogger('helper -transaction ');
-logger.level = config.logLevel;
+logger.level = process.env.LOG_LEVEL || 'debug';
 
 const MESSAGE_CONFIG = require('./config/ibp-messages-config.js');
 

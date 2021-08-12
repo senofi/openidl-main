@@ -2,8 +2,6 @@ const log4js = require('log4js');
 const config = require('config');
 const logger = log4js.getLogger('Processor');
 logger.level = config.logLevel;
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
 const mongoDataProcessor = require('./data-processor-mongo');
 const dataProcessor = require('../controllers/data-processor');
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
@@ -15,15 +13,13 @@ let emailService = openidlCommonLib.Email;
 const emailkey = require('../config/default.json').send_grid_apikey;
 const emailData = require('../config/email.json').Config;
 
-const DBConfig = require('../config/DBConfig.json');
-
 class Processor {
     constructor() {
         logger.debug("In Processor");
     }
     async getProcessorInstance(dataCallId, dataCallVersion, carrierID, extractionPattern, targetChannelTransaction, reduceCollectionName) {
         logger.info('Inside getProcessorInstance');
-        let dbManager = await dbManagerFactoryObject.getInstance(DBConfig);
+        let dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
         let name = await dbManager.dbName();
         logger.debug("in getProcessorInstance Database " + name);
         logger.debug("in getProcessorInstance carrierID " + carrierID);

@@ -1,30 +1,24 @@
 const log4js = require('log4js');
-const config = require('config');
-const lodash = require('lodash');
 const CloudantDBManager = require('./cloudantDBManager');
 const MongoDBManager = require('./mongoDBManager');
 const logger = log4js.getLogger('DBManagerFactory');
-logger.level = config.logLevel;
+logger.level = process.env.LOG_LEVEL || 'debug';
 
 class DBManagerFactory {
     constructor() {
-        this.option = null;
-        this.instance = null;
     }
-    async getInstance(config) {
-        if (!config || !config.databaseService) {
-            logger.info('DBConfig not found!!');
+    async getInstance(options) {
+        if (!options || !options.persistentStore) {
+            logger.error('Database config not found!!');
         }
         logger.info('Inside DBManagerFactory getInstance');
-        logger.info('Persistent store selected', config.persistentStore);
+        logger.info('Persistent store selected', options.persistentStore);
         try {
-            this.option = config.persistentStore;
-            let dbservice = lodash.filter(config.databaseService, { 'name': this.option });
-            let mongoDBInstance = new MongoDBManager(dbservice);
-            switch (this.option) {
+            switch (options.persistentStore) {
                 case "mongo":
-                    let mongoDBName = config.databaseService[0].mongodb;
-                    let simpleURI = config.databaseService[0].simpleURI
+                    let mongoDBInstance = new MongoDBManager(options);
+                    let mongoDBName = options.mongodb;
+                    let simpleURI = options.simpleURI
                     if (simpleURI) {  // use the simple db connection
                         mongoDBInstance.initSimpleMongoDBConnection(mongoDBName, simpleURI)
                     } else {  // use the cloud db connection
@@ -32,14 +26,14 @@ class DBManagerFactory {
                     }
                     return mongoDBInstance;
                 case "cloudant":
-                    return new CloudantDBManager(dbservice)
+                    return new CloudantDBManager(options)
+                default:
+                    logger.error("Incorrect Usage of database type. Refer README for more details");
+                    break;
             }
         } catch (error) {
             throw error;
         }
-
     }
-
-
 }
 module.exports = DBManagerFactory;

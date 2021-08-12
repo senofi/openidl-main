@@ -18,7 +18,6 @@
 const fs = require("fs");
 const lodash = require('lodash');
 const log4js = require('log4js');
-const IBMCloudEnv = require('ibm-cloud-env');
 const path = require('path');
 const fabricCAUtil = require('../../helper/util.js');
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
@@ -59,7 +58,7 @@ fabricEnrollment.registerUser = async (user) => {
     console.log("Registering User in Fabric CA...");
 
     if (isPersistentStore) {
-        await walletHelper.init(IBMCloudEnv.getDictionary('kvs-credentials'));
+        await walletHelper.init(JSON.parse(process.env.KVS_CONFIG));
     } else {
         throw new Error("PersistentStore not there!");
     }
@@ -109,7 +108,7 @@ fabricEnrollment.enrollUser = async (user) => {
             "key": enrollInfo.key
         }
         if (isPersistentStore) {
-            await walletHelper.init(IBMCloudEnv.getDictionary('kvs-credentials'));
+            await walletHelper.init(JSON.parse(process.env.KVS_CONFIG));
             await walletHelper.importIdentity(user.user, enrollInfo);
         } else {
             logger.info("Storing User Certificate on File System...");

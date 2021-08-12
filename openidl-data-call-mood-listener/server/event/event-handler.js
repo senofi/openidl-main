@@ -20,8 +20,7 @@ const config = require('config');
 const uuid = require('uuid/v1');
 const targetChannelConfig = require('../config/target-channel-config');
 const networkConfig = require('../config/connection-profile.json');
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
+
 const {
     Transaction
 } = require('@openidl-org/openidl-common-lib');
@@ -31,7 +30,7 @@ logger.level = config.logLevel;
 
 console.log(targetChannelConfig);
 
-Transaction.initWallet(IBMCloudEnv.getDictionary('kvs-credentials'));
+Transaction.initWallet(JSON.parse(process.env.KVS_CONFIG));
 let targetChannelTransaction = new Transaction(targetChannelConfig.users[0].org, targetChannelConfig.users[0].user, targetChannelConfig.targetChannels[0].channelName, targetChannelConfig.targetChannels[0].chaincodeName, targetChannelConfig.users[0].mspId);
 targetChannelTransaction.init(networkConfig);
 

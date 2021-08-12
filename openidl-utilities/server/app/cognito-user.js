@@ -15,20 +15,9 @@
  */
 
 var cognitoUserRegister = {};
-
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
-
-const cognitoConfig = IBMCloudEnv.getDictionary('idp-credentials');
 const config = require('../config/default.json');
 
 const AWS = require('aws-sdk');
-AWS.config.update(IBMCloudEnv.getDictionary('cognito-admin-credentials'));
-const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider({
-    apiVersion: '2016-04-18',
-    region: cognitoConfig.region
-});
-
 const log4js = require('log4js');
 const logger = log4js.getLogger('cognito - cognitouser');
 logger.level = config.logLevel;
@@ -38,6 +27,13 @@ logger.level = config.logLevel;
  */
 cognitoUserRegister.createUserInCognito = async (usersConfig) => {
     let users = usersConfig.users;
+
+    const cognitoConfig = JSON.parse(process.env.IDP_CONFIG);;
+    AWS.config.update(JSON.parse(process.env.IDP_ADMIN_CONFIG));
+    const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider({
+        apiVersion: '2016-04-18',
+        region: cognitoConfig.region
+    });
 
     for (var i = 0; i < users.length; i++) {
         logger.debug("Request > " + users[i]);
@@ -77,6 +73,13 @@ cognitoUserRegister.createUserInCognito = async (usersConfig) => {
 cognitoUserRegister.updateUserAttributes = async (usersConfig) => {
     let users = usersConfig.users;
 
+    const cognitoConfig = JSON.parse(process.env.IDP_CONFIG);;
+    AWS.config.update(JSON.parse(process.env.IDP_ADMIN_CONFIG));
+    const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider({
+        apiVersion: '2016-04-18',
+        region: cognitoConfig.region
+    });
+    
     for (var i = 0; i < users.length; i++) {
         logger.debug("Request > " + users[i]);
         const params = {

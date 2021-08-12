@@ -17,12 +17,10 @@
 const express = require('express');
 const log4js = require('log4js');
 const config = require('config');
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
-const openidlCommonLib = require('@openidl-org/openidl-common-lib')
+const openidlCommonLib = require('@openidl-org/openidl-common-lib');
 
-const idpCredentials = IBMCloudEnv.getDictionary('idp-credentials');
-const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials.idpType);
+const idpCredentials = JSON.parse(process.env.IDP_CONFIG);
+const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials);
 
 const health = require('./health');
 const ping = require('./ping');

@@ -1,20 +1,10 @@
 {
-    "off-chain-db-credentials-mongo": {
-        "searchPatterns": [
-            "file:/server/config/local-mongo-config.json"
-        ]
-    },
     "off-chain-db-credentials": {
-        "searchPatterns": [
-            "cloudfoundry:off-chain-db",
-            "env:OFF_CHAIN_DB_CONFIG",
-            "file:/server/config/local-cloudant-config.json"
-        ]
+        "env": "OFF_CHAIN_DB_CONFIG",
+        "file": "local-db-config.json"
     },
-    "kvs-credentials": {
-        "searchPatterns": [
-            "env:KVS_CONFIG",
-            "file:/server/config/local-kvs-config.json"
-        ]
+    "kvs-credentialss": {
+        "env": "KVS_CONFIG",
+        "file": "local-kvs-config.json"
     }
 }

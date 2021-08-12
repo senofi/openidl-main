@@ -3,12 +3,11 @@
  * Same applies to couchdb wallet to be implemented
  */
 const log4js = require('log4js');
-const config = require('config');
 const {
   Wallets
 } = require('fabric-network');
 const logger = log4js.getLogger('helpers - wallet');
-logger.level = config.logLevel;
+logger.level = process.env.LOG_LEVEL || 'debug';
 const {
   CertificatemanagerWallet
 } = require('./certificatemanagerwallet');
@@ -33,20 +32,28 @@ memoryWallet = {};
  * All application uses IBM Certification manager as default 
  */
 wallet.init = async (options) => {
+  if (!options || !options.walletType) {
+    logger.error('Wallet config not found!!');
+}
   memoryWallet = await Wallets.newInMemoryWallet();
-  if (options.walletType === 'certificate_manager') {
-    persistantWallet = new CertificatemanagerWallet(options);
-    await persistantWallet.loadoptions(options);
-    logger.debug('certificate manager persistence wallet init done ');
-  } else if (options.walletType === 'couchdb') {
-    persistantWallet = await Wallets.newCouchDBWallet(options.url);
-    logger.debug('couchdb persistence wallet init done ');
-  } else if (options.walletType === 'hashicorp_vault') {
-    persistantWallet = new HashiCorpVault(options);
-    await persistantWallet.loadoptions(options);
-    logger.debug('hashicorp vault persistence wallet init done ');
-  } else {
-    logger.error("Incorrect Usage of wallet type. Refer README for more details");
+  switch (options.walletType) {
+    case 'certificate_manager':
+      persistantWallet = new CertificatemanagerWallet(options);
+      await persistantWallet.loadoptions(options);
+      logger.debug('certificate manager persistence wallet init done ');
+      break;
+    case 'couchdb':
+      persistantWallet = await Wallets.newCouchDBWallet(options.url);
+      logger.debug('couchdb persistence wallet init done ');
+      break;
+    case 'hashicorp_vault':
+      persistantWallet = new HashiCorpVault(options);
+      await persistantWallet.loadoptions(options);
+      logger.debug('hashicorp vault persistence wallet init done ');
+      break;
+    default:
+      logger.error("Incorrect Usage of wallet type. Refer README for more details");
+      break;
   }
 }
 

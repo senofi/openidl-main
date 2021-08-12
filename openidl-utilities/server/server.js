@@ -24,19 +24,19 @@ const fs = require('fs');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const yaml = require('js-yaml');
-global.fetch = require('node-fetch');
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
+const openidlCommonLib = require('@openidl-org/openidl-common-lib');
+openidlCommonLib.EnvConfig.init();
+
 const routes = require('./routes');
 const logger = log4js.getLogger('server');
 logger.level = config.logLevel;
 logger.info("Starting");
 const app = express();
 
-const openidlCommonLib = require('@openidl-org/openidl-common-lib');
-const idpCredentials = IBMCloudEnv.getDictionary('idp-credentials');
-const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials.idpType);
-authHandler.init(IBMCloudEnv.getDictionary('idp-credentials'));
+global.fetch = require('node-fetch');
+
+const idpCredentials = JSON.parse(process.env.IDP_CONFIG);
+const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials);
 
 const passport = authHandler.getPassport();
 app.use(passport.initialize());

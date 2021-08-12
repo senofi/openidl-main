@@ -104,9 +104,6 @@ secrets:
     - name: data-call-processor-metadata-config
       file: config/data-call-processor-metadata-config.json
       namespace: default
-    - name: config-config
-      file: config/config-config.js
-      namespace: default
     - name: data-call-app-mappings-config
       file: config/data-call-app-mappings-config.json
       namespace: default
@@ -115,9 +112,6 @@ secrets:
       namespace: default
     - name: ui-mappings-config
       file: config/ui-mappings-config.json
-      namespace: default
-    - name: ui-port-config
-      file: config/ui-port-config.json
       namespace: default
     - name: appid-config
       file: config/local-appid-config.json
@@ -130,6 +124,9 @@ secrets:
       namespace: default
     - name: kvs-config
       file: config/local-kvs-config.json
+      namespace: default
+    - name: vault-config
+      file: config/local-vault-config.json
       namespace: default
     - name: mongodb-config
       file: config/local-mongo-config.json
@@ -144,7 +141,7 @@ secrets:
       file: config/channel-config.json
       namespace: default
     - name: db-config
-      file: config/db-config.json
+      file: config/local-db-config.json
       namespace: default
     - name: email-config
       file: config/email-config.json

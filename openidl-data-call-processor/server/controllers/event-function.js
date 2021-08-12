@@ -16,15 +16,12 @@
 const dateMoment = require("moment")
 const log4js = require('log4js');
 const config = require('config');
-const dbconfig = require('../config/DBConfig');
 const logger = log4js.getLogger('Controller - eventfunction');
 const identifiers = require('../config/unique-identifiers-config.json').identifiers;
 const designDocument = require('./design-document');
 logger.level = config.logLevel;
 const targetChannelConfig = require('../config/target-channel-config');
 const networkConfig = require('../config/connection-profile.json');
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
 const Processor = require('./processor');
 const {
     Transaction
@@ -37,6 +34,7 @@ eventFunction.ConsentedEvent = async function processConsentEvent(payload, block
     try {
         logger.info('process ConsentEvent function entry');
         if (payload) {
+            const dbconfig = JSON.parse(process.env.OFF_CHAIN_DB_CONFIG);
             payload = JSON.parse(payload.toString('utf8'));
             logger.info(' processConsentEvent block number ==>' + blockNumber);
             let args = {
@@ -187,6 +185,7 @@ eventFunction.ExtractionPatternSpecified = async function processExtractionPatte
         if (payload.toString('utf8')) {
             payload = JSON.parse(payload.toString('utf8'));
             logger.debug(' ExtractionPattern block number ==> ' + blockNumber);
+            const dbconfig = JSON.parse(process.env.OFF_CHAIN_DB_CONFIG);
             let getDataCallArgs = {
                 dataCallID: payload.dataCallId,
                 dataCallVersion: payload.dataCallVersion,
@@ -265,14 +264,14 @@ eventFunction.getDataProcessorObject = async function getDataProcessorObject(dat
     return startDataProcessor;
 }
 eventFunction.getChannelInstance = async function getChannelInstance() {
-    Transaction.initWallet(IBMCloudEnv.getDictionary('kvs-credentials'));
+    Transaction.initWallet(JSON.parse(process.env.KVS_CONFIG));
     let targetChannelTransaction = new Transaction(targetChannelConfig.users[0].org, targetChannelConfig.users[0].user, targetChannelConfig.targetChannels[0].channelName, targetChannelConfig.targetChannels[0].chaincodeName, targetChannelConfig.users[0].mspId);
     targetChannelTransaction.init(networkConfig);
     return targetChannelTransaction;
 }
 
 eventFunction.getDefaultChannelTransaction = async function getChannelInstance() {
-    Transaction.initWallet(IBMCloudEnv.getDictionary('kvs-credentials'));
+    Transaction.initWallet(JSON.parse(process.env.KVS_CONFIG));
     let DefaultChannelTransaction = new Transaction(targetChannelConfig.users[0].org, targetChannelConfig.users[0].user, targetChannelConfig.targetChannels[1].channelName, targetChannelConfig.targetChannels[1].chaincodeName, targetChannelConfig.users[0].mspId);
     DefaultChannelTransaction.init(networkConfig);
     return DefaultChannelTransaction;

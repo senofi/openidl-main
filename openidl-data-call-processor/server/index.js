@@ -19,12 +19,12 @@ const express = require('express');
 const log4js = require('log4js');
 const config = require('config');
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
-const IBMCloudEnv = require('ibm-cloud-env');
+openidlCommonLib.EnvConfig.init();
+
 const EventListener = openidlCommonLib.EventListener;
 const walletHelper = openidlCommonLib.Wallet;
 const channelConfig = require('./config/listener-channel-config.json');
 const networkConfig = require('./config/connection-profile.json');
-const DBConfig = require('./config/DBConfig.json');
 const mainEvent = require('./controllers/event-function');
 let DBManagerFactory = openidlCommonLib.DBManagerFactory;
 let dbManagerFactoryObject = new DBManagerFactory();
@@ -66,7 +66,7 @@ app.listen(port, () => {
 async function init() {
 
   try {
-    let dbManager = await dbManagerFactoryObject.getInstance(DBConfig);
+    let dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
     logger.debug("<<<DB manager instance >>> " + dbManager);
     let listenerConfig = {};
     let listernerChannels = new Array();
@@ -87,7 +87,7 @@ async function init() {
       listernerChannels.push(listenerChannel);
     }
     listenerConfig['listenerChannels'] = listernerChannels;
-    await walletHelper.init(IBMCloudEnv.getDictionary('kvs-credentials'));
+    await walletHelper.init(JSON.parse(process.env.KVS_CONFIG));
 
     var idExists = await walletHelper.identityExists(channelConfig.identity.user);
     if (!idExists) {

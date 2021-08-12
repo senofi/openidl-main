@@ -1,14 +1,12 @@
 const log4js = require('log4js');
-const config = require('config');
 var safeEval = require('safe-eval');
-const IBMCloudEnv = require('ibm-cloud-env');
 const mongoDBManagerInstance = require("mongodb").MongoClient;
 let viewFunctionETL = require('./mongo_db_map_reduce_etl');
 const logger = log4js.getLogger('mongoDB-manager');
 const mongoResponseObject = require('../../helper/response')
 const messageObject = require('../../helper/config/constant');
+logger.level = process.env.LOG_LEVEL || 'debug';
 
-logger.level = config.logLevel;
 let mongodb;
 class MongoDBManager {
 
@@ -363,18 +361,16 @@ class MongoDBManager {
     async initMongoDBConnection(mongoDBName) {
         try {
             logger.info('Inside init mongodb connection');
-            const servicecredentials = this.DBService[0].servicecredentials;
-            IBMCloudEnv.init();
-            const mongoconfig = IBMCloudEnv.getDictionary(servicecredentials);
-            const ca = mongoconfig.connection.mongodb.certificate.certificate_base64;
+            const ca = this.DBService.connection.mongodb.certificate.certificate_base64;
 
             const options = {
                 ssl: true,
                 sslValidate: false,
                 sslCA: ca,
-                useNewUrlParser: true
+                useNewUrlParser: true,
+                useUnifiedTopology: true
             };
-            const connectionString = mongoconfig.connection.mongodb.composed[0];
+            const connectionString = this.DBService.connection.mongodb.composed[0];
             const mongoDBClient = await mongoDBManagerInstance.connect(connectionString, options);
             mongodb = mongoDBClient.db(mongoDBName);
             return mongodb;
@@ -389,7 +385,8 @@ class MongoDBManager {
             logger.info('Inside init mongodb connection');
 
             const options = {
-                useNewUrlParser: true
+                useNewUrlParser: true,
+                useUnifiedTopology: true
             };
             const mongoDBClient = await mongoDBManagerInstance.connect(uri, options);
             mongodb = mongoDBClient.db(mongoDBName);

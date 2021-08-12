@@ -101,7 +101,7 @@ node is in (aais, analytics, carrier)
 | -------------------------------------- | ------------------------- |
 | channel-config.json                    | channel-config            |
 | connection-profile.json                | connection-profile        |
-| DBConfig.json                          | db-config                 |
+| local-db-config.json                   | db-config                 |
 | default.json                           | default-config            |
 | email.json                             | email-config              |
 | listener-channel-config.json           | listener-channel-config   |

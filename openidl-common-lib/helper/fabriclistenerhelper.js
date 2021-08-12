@@ -6,14 +6,13 @@
 
 
  const log4js = require('log4js');
- const config = require('config');
  const { BlockDecoder } = require('fabric-common');
  const {
      Gateway
  } = require('fabric-network');
  
  const logger = log4js.getLogger('helper -fabriclistenerhelper ');
- logger.level = config.logLevel;
+ logger.level = process.env.LOG_LEVEL || 'debug';
  
  const MESSAGE_CONFIG = require('./config/ibp-messages-config.js');
  

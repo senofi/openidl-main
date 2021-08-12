@@ -1,4 +1,4 @@
-FROM node:10-alpine
+FROM node:14-alpine
 
 RUN apk update && apk upgrade && \
     apk add --no-cache \
@@ -11,7 +11,7 @@ RUN apk update && apk upgrade && \
 WORKDIR /app
 COPY . .
 
-RUN npm install @angular/cli@11.2.11 -g
+RUN npm install @angular/cli@12.1.0 -g
 
 RUN mv -f npmrc ~/.npmrc 2>/dev/null; true
 RUN npm install

@@ -89,9 +89,5 @@ secrets:
       file: local-appid-config.json
     - name: cognito-config
       file: local-cognito-config.json
-    - name: config-config
-      file: config.js
     - name: ui-mappings-config
       file: mappings.json
-    - name: ui-port-config
-      file: port-config.json

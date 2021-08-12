@@ -7,13 +7,13 @@ const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const session = require('express-session');
 const cors = require('cors');
-const config = require('config');
 const log4js = require('log4js');
 const noCache = require('nocache')
-const openidlCommonApp = require('../../openidl-common-ui//server/index');
+const openidlCommonLib = require('@openidl-org/openidl-common-lib');
+openidlCommonLib.EnvConfig.init();
 
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
+const idpCredentials = JSON.parse(process.env.IDP_CONFIG);;
+const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials);
 
 global.fetch = require('node-fetch');
 
@@ -26,19 +26,9 @@ app.use(express.urlencoded({
  * Set up logging
  */
 const logger = log4js.getLogger('server');
-// logger.setLevel(config.logLevel);
-logger.level = "debug";
+logger.level = process.env.LOG_LEVEL;
 
 logger.debug('setting up app: registering routes, middleware...');
-
-logger.info('credential info');
-logger.info(IBMCloudEnv.getDictionary('idp-credentials'));
-
-const idpCredentials = IBMCloudEnv.getDictionary('idp-credentials');
-const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials.idpType);
-authHandler.init(IBMCloudEnv.getDictionary('idp-credentials'));
-
-
 /**
  * middleware for authentication
  */
@@ -61,47 +51,7 @@ logger.debug('setting up app: initializing passport');
 const passport = authHandler.getPassport();
 app.use(passport.initialize());
 app.use(passport.session());
-let webAppStrategy = userAuthHandler.getUserAuthStrategy();
-passport.use(webAppStrategy);
-
-// Passport session persistance
-passport.serializeUser(function (user, cb) {
-    cb(null, user);
-});
-
-passport.deserializeUser(function (obj, cb) {
-    cb(null, obj);
-});
-
-const apiPassport = apiAuthHandler.getPassport();
-app.use(apiPassport.initialize());
-app.use(apiPassport.session());
-let apiAppStrategy = apiAuthHandler.getAPIStrategy();
-apiPassport.use(apiAppStrategy);
-
-// Passport session persistance
-apiPassport.serializeUser(function (user, cb) {
-    cb(null, user);
-});
-
-apiPassport.deserializeUser(function (obj, cb) {
-    cb(null, obj);
-});
-
-const cognitoPassport = cognitoAuthHandler.getPassport();
-app.use(cognitoPassport.initialize());
-app.use(cognitoPassport.session());
-const cognitoStrategy = cognitoAuthHandler.getCognitoAuthStrategy();
-cognitoPassport.use(cognitoStrategy);
-
-// Passport session persistance
-cognitoPassport.serializeUser(function (user, cb) {
-  cb(null, user);
-});
-
-cognitoPassport.deserializeUser(function (obj, cb) {
-  cb(null, obj);
-});
+authHandler.setStrategy(passport);
 
 if (NODE_ENV === 'production') {
     app.use(function (req, res, next) {
@@ -126,7 +76,7 @@ if (NODE_ENV === 'production' || NODE_ENV === 'qa') {
 
 app.use('/', routes)
 
-var portNumber = IBMCloudEnv.getString("portnumber");
+var portNumber = process.env.PORT;
 app.listen(portNumber, function () {
     console.log('App started listening at ', portNumber);
 });

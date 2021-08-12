@@ -14,18 +14,15 @@
  *  limitations under the License.
  */
 const log4js = require("log4js");
-const config = require("config");
 const appID = require("ibmcloud-appid");
 const cfEnv = require("cfenv");
 const passport = require("passport");
 const express_enforces_ssl = require("express-enforces-ssl");
 const jwt = require("jsonwebtoken");
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
 
 const isLocal = cfEnv.getAppEnv().isLocal;
 const logger = log4js.getLogger("middleware - appid-auth-handler");
-logger.level = config.logLevel;
+logger.level = process.env.LOG_LEVEL || 'debug';
 
 
 // Passport session persistance
@@ -218,7 +215,7 @@ appIdAuthHandler.validateToken = (req, res, next) => {
         logger.info("request.body.chunkID  " + req.body.chunkId)
 
         logger.info("****************************************************************************")
-        let whitelist = IBMCloudEnv.getDictionary('idp-credentials');
+        let whitelist = JSON.parse(process.env.IDP_CONFIG);
         logger.info("whitelist " + JSON.stringify(whitelist))
 
         const accessTokenString = _getAccessToken(req, next);
@@ -467,7 +464,6 @@ appIdAuthHandler.init = (config) => {
  * configure standard security and HTTPS
  */
 appIdAuthHandler.configureSSL = (req, res, next) => {
-    logger.debug("configureSSL");
     if (!isLocal) {
         express_enforces_ssl();
     }

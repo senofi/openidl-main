@@ -7,9 +7,8 @@
  */
 
 const log4js = require('log4js');
-const config = require('config');
 const logger = log4js.getLogger('helpers - hashicorpvaultwallet');
-logger.level = config.logLevel;
+logger.level = process.env.LOG_LEVEL || 'debug';
 
 
 /**

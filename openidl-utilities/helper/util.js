@@ -151,7 +151,4 @@ util.userRegister = async (orgName, enrollId, enrollSecret, affiliation, role, a
     }));
 };
 
-/**
- * Installing Chaincode
- */
 module.exports = util;

@@ -8,9 +8,8 @@
 
 const log4js = require('log4js');
 const request = require('request');
-const config = require('config');
 const logger = log4js.getLogger('helpers - certificate manager');
-logger.level = config.logLevel;
+logger.level = process.env.LOG_LEVEL || 'debug';
 const itm = require('@ibm-functions/iam-token-manager');
 const certificateManagerConfig = require('./config/certification_manager.json');
 /**

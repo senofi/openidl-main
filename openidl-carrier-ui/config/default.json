@@ -1,4 +1,0 @@
-{
-  "logLevel": "debug",
-  "DATA_CALL_CARRIER_APP_URL": "http://data-call-app-service.default.svc.cluster.local:8080/openidl/api"
-}

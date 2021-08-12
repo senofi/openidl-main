@@ -11,7 +11,7 @@
         "dev-test": "cross-env NODE_CONFIG_DIR=./server/config nyc mocha --timeout 600000 --exit"
     },
     "dependencies": {
-        "@openidl-org/openidl-common-lib": "^0.3.7",
+        "@openidl-org/openidl-common-lib": "^0.4.9",
         "@sendgrid/mail": "^7.2.1",
         "body-parser": "^1.18.3",
         "config": "^2.0.1",
@@ -21,10 +21,9 @@
         "express-session": "^1.15.1",
         "helmet": "3.21.2",
         "http-errors": "~1.6.2",
-        "ibm-cloud-env": "^0.2.6",
         "js-yaml": "^3.12.0",
         "lodash": "^4.17.21",
-        "log4js": "4.3.2",
+        "log4js": "^4.3.2",
         "moment": "^2.27.0",
         "swagger-ui-express": "^3.0.10",
         "uuid": "^3.3.2"

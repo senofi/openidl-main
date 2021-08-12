@@ -18,7 +18,6 @@
 const log4js = require('log4js');
 const config = require('config');
 const messageObject = require('../config/constant')
-const DBConfig = require('../config/DBConfig.json');
 
 //vv
 // const metaData = require('../config/metadata.json');
@@ -50,7 +49,7 @@ util.apiResponse = async (statusCode, success, errorMessage, batchId = '', chunk
 util.isMongoServiceRunning = async (dbManagerFactory, collectionName, carrierIds) => {
     logger.info("Inside isMongoServiceRunning method......");
     try {
-        let dbManager = dbManagerFactory.getInstance(DBConfig);
+        let dbManager = dbManagerFactory.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
         logger.debug("DB Manager instantiated successfully ");
         if (dbManager) return true;
         else return false;
@@ -65,7 +64,7 @@ util.isMongoServiceRunning = async (dbManagerFactory, collectionName, carrierIds
 //             let carrierIds = metaData.carrierIds
 //             let collections = metaData.collections;
 //             if(carrierIds.length > 0) {
-//             let dbManager = await dbManagerFactory.getInstance(DBConfig);
+//             let dbManager = await dbManagerFactory.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
 //             logger.debug("DB Manager instantiated successfully ");
 //             if (dbManager) {
 //                 carrierIds.forEach(carrierId => {
@@ -103,7 +102,7 @@ util.isMongoServiceRunning = async (dbManagerFactory, collectionName, carrierIds
 //     logger.debug("Inside createIndex method......");
 //     try {
 //         let carrierIds = metaData.carrierIds
-//         let dbManager = await dbManagerFactory.getInstance(DBConfig);
+//         let dbManager = await dbManagerFactory.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
 //         logger.debug("DB Manager instantiated successfully ");
 //         if (dbManager) {
 //             carrierIds.forEach(carrierId => {

@@ -27,11 +27,11 @@ const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const yaml = require('js-yaml');
 const session = require('express-session');
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
+const openidlCommonLib = require('@openidl-org/openidl-common-lib');
+openidlCommonLib.EnvConfig.init();
+
 global.fetch = require('node-fetch');
 const routes = require('./routes');
-const openidlCommonLib = require('@openidl-org/openidl-common-lib');
 const transactionFactory = require('./helpers/transaction-factory');
 const networkConfig = require('./config/connection-profile.json');
 
@@ -46,9 +46,8 @@ const insuranceManagerDB = config.targetDB;
 //const carrerIds = config.carrierid;
 
 const util = require('./helpers/util');
-const idpCredentials = IBMCloudEnv.getDictionary('idp-credentials');
-const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials.idpType);
-authHandler.init(IBMCloudEnv.getDictionary('idp-credentials'));
+const idpCredentials = JSON.parse(process.env.IDP_CONFIG);
+const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials);
 
 const errorHandler = require('./middlewares/error-handler');
 const { init } = require('@openidl-org/openidl-common-lib/helper/wallet');
@@ -165,7 +164,7 @@ let dbServiceRunning = util.isMongoServiceRunning(dbManagerFactoryObject);
 
 if (dbServiceRunning) {
     logger.info("Mongo DB service is up and running");
-    transactionFactory.init(IBMCloudEnv.getDictionary('kvs-credentials')
+    transactionFactory.init(JSON.parse(process.env.KVS_CONFIG)
         , networkConfig).then(() => {
             logger.info('transaction factory init done');
             app.listen(port, () => {

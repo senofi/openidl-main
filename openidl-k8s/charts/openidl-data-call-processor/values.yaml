@@ -95,6 +95,8 @@ secrets:
       file: local-certmanager-config.json
     - name: kvs-config
       file: local-kvs-config.json
+    - name: vault-config
+      file: local-vault-config.json
     - name: mongodb-config
       file: local-mongo-config.json
     - name: cloudantdb-config
@@ -102,7 +104,7 @@ secrets:
     - name: connectionprofile-config
       file: connection-profile.json
     - name: db-config
-      file: DBConfig.json
+      file: local-db-config.json
     - name: email-config
       file: email.json
     - name: listenerchannelaais-config

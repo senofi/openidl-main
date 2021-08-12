@@ -24,15 +24,13 @@ const logger = log4js.getLogger('event -eventHandler ');
 let InstanceFactory = require('../middleware/instance-factory');
 const targetChannelConfig = require('../config/target-channel-config');
 const networkConfig = require('../config/connection-profile.json');
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
 const {
     Transaction
 } = require('@openidl-org/openidl-common-lib');
 let ChannelTransactionMap = new Map();
 logger.level = config.logLevel;
 
-Transaction.initWallet(IBMCloudEnv.getDictionary('kvs-credentials'));
+Transaction.initWallet(JSON.parse(process.env.KVS_CONFIG));
 for (let channelIndex = 0; channelIndex < targetChannelConfig.targetChannels.length; channelIndex++) {
     const targetChannelTransaction = new Transaction(targetChannelConfig.users[0].org, targetChannelConfig.users[0].user, targetChannelConfig.targetChannels[channelIndex].channelName, targetChannelConfig.targetChannels[channelIndex].chaincodeName, targetChannelConfig.users[0].mspId);
     targetChannelTransaction.init(networkConfig);

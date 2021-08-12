@@ -27,11 +27,11 @@ const cors = require('cors');
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const session = require('express-session');
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
+
+const openidlCommonLib = require('@openidl-org/openidl-common-lib');
+openidlCommonLib.EnvConfig.init();
 
 const routes = require('./routes');
-const openidlCommonLib = require('@openidl-org/openidl-common-lib');
 const transactionFactory = require('./helpers/transaction-factory');
 const networkConfig = require('./config/connection-profile.json');
 const logger = log4js.getLogger('server');
@@ -39,10 +39,8 @@ logger.level = config.logLevel;
 
 global.fetch = require('node-fetch');
 
-const idpCredentials = IBMCloudEnv.getDictionary('idp-credentials');
-const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials.idpType);
-authHandler.init(IBMCloudEnv.getDictionary('idp-credentials'));
-
+const idpCredentials = JSON.parse(process.env.IDP_CONFIG);
+const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials);
 const errorHandler = require('./middlewares/error-handler');
 const app = express();
 
@@ -135,11 +133,10 @@ app.use(errorHandler.handleError);
  */
 const host = process.env.HOST || config.host;
 const port = process.env.PORT || config.port;
-console.log("  kvs config  " + IBMCloudEnv.getDictionary('kvs-credentials'));
 
 transactionFactory.init(
-    IBMCloudEnv.getDictionary('kvs-credentials')
-    , networkConfig)
+    JSON.parse(process.env.KVS_CONFIG),
+    networkConfig)
     .then(data => {
         console.log('transaction factory init done');
         app.listen(port, () => {

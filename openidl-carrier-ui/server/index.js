@@ -6,13 +6,9 @@ const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const session = require('express-session');
 const cors = require('cors');
-const config = require('config');
 const log4js = require('log4js');
 const bodyParser = require('body-parser');
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
-
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
 
 global.fetch = require('node-fetch');
 
@@ -22,13 +18,12 @@ app.use(bodyParser.json());
  * Set up logging
  */
 const logger = log4js.getLogger('server');
-logger.level = config.logLevel;
+logger.level = process.env.LOG_LEVEL;
 
 logger.debug('setting up app: registering routes, middleware...');
 
-const idpCredentials = IBMCloudEnv.getDictionary('idp-credentials');
-const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials.idpType);
-authHandler.init(IBMCloudEnv.getDictionary('idp-credentials'));
+const idpCredentials = JSON.parse(process.env.IDP_CONFIG);
+const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials);
 
 /**
  * middleware for authentication
@@ -75,7 +70,7 @@ app.use(express.static('dist'));
 
 app.use('/', routes)
 
-var portNumber = IBMCloudEnv.getString("portnumber");
+var portNumber = process.env.PORT;
 app.listen(portNumber, function () {
   console.log('App started listening at ', portNumber);
 });

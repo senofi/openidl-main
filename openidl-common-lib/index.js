@@ -16,5 +16,6 @@ module.exports.LineOfBusinessService = require('./service/lob/lob');
 module.exports.EventListener = require('./event/event-handler');
 module.exports.FabricListenerHelper = require('./helper/fabriclistenerhelper');
 module.exports.DBManagerFactory = require('./middlewares/DBService/DBManagerFactory');
+module.exports.EnvConfig = require('./helper/envconfig');
 
 module.exports.Email = require('./helper/sendemail');
