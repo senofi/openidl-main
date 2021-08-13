@@ -298,6 +298,8 @@ else
 
   if [ "$CC_NAME" = "openidl-cc-default" ]; then
     installChaincode aais
+    installChaincode analytics
+    installChaincode carrier
   elif [ "$CC_NAME" == "openidl-cc-aais-carriers" ]; then
     installChaincode aais
     installChaincode analytics
@@ -319,16 +321,20 @@ if [ "$CHANNEL_NAME" = "defaultchannel" ]; then
 
   ## approve the definition for aais
   approveForMyOrg aais
+  approveForMyOrg analytics
+  approveForMyOrg carrier
 
   ## check whether the chaincode definition is ready to be committed
   ## expect all of them to have approved
-  checkCommitReadiness aais "\"aaismsp\": true"
+  checkCommitReadiness aais "\"aaismsp\": true" "\"analyticsmsp\": true" "\"carriermsp\": true"
 
   ## commit the definition
-  commitChaincodeDefinition aais
+  commitChaincodeDefinition aais analytics carrier
 
   ## query to see that the definition committed successfully
   queryCommitted aais
+  queryCommitted analytics
+  queryCommitted carrier
 
   ## Invoke the chaincode - this does require that the chaincode have the 'initLedger'
   ## method defined

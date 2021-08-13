@@ -5,11 +5,13 @@
 replicaCount: 1
 
 image:
-    repository: ghcr.io/openidl-org/openidl-ui
+    # repository: ghcr.io/openidl-org/openidl-ui
     # repository: openidl/ui
+    repository: ghcr.io/openidl-org/ui
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: latest
+    # tag: latest
+    tag: 0.0.2
 
 imagePullSecrets: []
 nameOverride: ""

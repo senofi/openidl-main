@@ -10,16 +10,9 @@ echo "Setting up minikube"
 make delete_minikube
 make start_minikube
 
-echo "Build local images for minikube"
-eval $(minikube -p minikube docker-env)
-./build-local-images.sh
-
 echo "Enable ingress and update hosts"
 make enable_ingress
 ./updatehosts.sh
-
-echo "Check local images for minikube"
-docker images | grep openidl
 
 echo "Copy hyperledger fabric local test network connection profile"
 cp -R ./openidl-test-network/organizations/peerOrganizations/aais.example.com/connection-aais.json ./openidl-k8s/charts/openidl-secrets/config/connection-profile.json 

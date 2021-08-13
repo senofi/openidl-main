@@ -16,12 +16,9 @@
 
 const log4js = require('log4js');
 const CognitoStrategy = require('passport-cognito');
-const cfEnv = require('cfenv');
 const passport = require('passport');
-const express_enforces_ssl = require('express-enforces-ssl');
 const jwt = require('jsonwebtoken');
 
-const isLocal = cfEnv.getAppEnv().isLocal;
 const logger = log4js.getLogger('middleware - cognito-auth-handler');
 logger.level = process.env.LOG_LEVEL || 'debug';
 
@@ -303,16 +300,6 @@ cognitoAuthHandler.init = config => {
     cb(null, user);
   });
   logger.debug('init webstrategy initialised');
-};
-
-/**
- * configure standard security and HTTPS
- */
-cognitoAuthHandler.configureSSL = (req, res, next) => {
-  if (!isLocal) {
-    express_enforces_ssl();
-  }
-  next();
 };
 
 /**

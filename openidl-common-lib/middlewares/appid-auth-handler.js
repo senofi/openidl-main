@@ -15,12 +15,9 @@
  */
 const log4js = require("log4js");
 const appID = require("ibmcloud-appid");
-const cfEnv = require("cfenv");
 const passport = require("passport");
-const express_enforces_ssl = require("express-enforces-ssl");
 const jwt = require("jsonwebtoken");
 
-const isLocal = cfEnv.getAppEnv().isLocal;
 const logger = log4js.getLogger("middleware - appid-auth-handler");
 logger.level = process.env.LOG_LEVEL || 'debug';
 
@@ -458,16 +455,6 @@ appIdAuthHandler.init = (config) => {
     webAppStrategy = new WebAppStrategy(loginConfiguration);
     logger.debug("init webstrategy initialised");
     userProfileManager.init(loginConfiguration);
-};
-
-/**
- * configure standard security and HTTPS
- */
-appIdAuthHandler.configureSSL = (req, res, next) => {
-    if (!isLocal) {
-        express_enforces_ssl();
-    }
-    next();
 };
 
 /**

@@ -3,7 +3,7 @@ package main
 import (
 	//"bytes"
 	//"encoding/json"
-
+	"errors"
 	"fmt"
 	"os"
 
@@ -81,16 +81,16 @@ func (this *SmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 	//function and parameters
 	function, args := stub.GetFunctionAndParameters()
 
-	// hasAccess, err := checkAccessForOrg(stub, function)
+	hasAccess, err := checkAccessForOrg(stub, function)
 
-	// if err != nil {
-	// 	logger.Error(err)
-	// 	return shim.Error(err.Error())
-	// }
-	// if !hasAccess {
-	// 	errStr := fmt.Sprintf("checkAccessForOrg: The organisation doesn't have access for function %v", function)
-	// 	return shim.Error(errors.New(errStr).Error())
-	// }
+	if err != nil {
+		logger.Error(err)
+		return shim.Error(err.Error())
+	}
+	if !hasAccess {
+		errStr := fmt.Sprintf("checkAccessForOrg: The organisation doesn't have access for function %v", function)
+		return shim.Error(errors.New(errStr).Error())
+	}
 
 	logger.Debug("Invoke: function: ", function)
 

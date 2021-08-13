@@ -34,7 +34,6 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(helmet.noCache());
 app.enable("trust proxy");
-app.use(authHandler.configureSSL);
 // TODO Undable to move passport related stuff to middleware need expert help
 // TODO discuss on standard session maintaince approach from Node.js for production
 app.use(session({
