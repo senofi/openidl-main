@@ -14,6 +14,8 @@ CC_COLL_CONFIG=${9:-"NA"}
 DELAY=${10:-"3"}
 MAX_RETRY=${11:-"5"}
 VERBOSE=${12:-"false"}
+CC_SKIP_PACKAGE_INSTALL=${13:-"false"}
+CC_SKIP_DEPLOYMENT=${14:-"false"}
 
 println "executing with the following"
 println "- CHANNEL_NAME: ${C_GREEN}${CHANNEL_NAME}${C_RESET}"
@@ -28,6 +30,8 @@ println "- CC_INIT_FCN: ${C_GREEN}${CC_INIT_FCN}${C_RESET}"
 println "- DELAY: ${C_GREEN}${DELAY}${C_RESET}"
 println "- MAX_RETRY: ${C_GREEN}${MAX_RETRY}${C_RESET}"
 println "- VERBOSE: ${C_GREEN}${VERBOSE}${C_RESET}"
+println "- CC_SKIP_PACKAGE_INSTALL: ${C_GREEN}${CC_SKIP_PACKAGE_INSTALL}${C_RESET}"
+println "- CC_SKIP_DEPLOYMENT ${C_GREEN}${CC_SKIP_DEPLOYMENT}${C_RESET}"
 
 FABRIC_CFG_PATH=$PWD/config/
 
@@ -285,61 +289,112 @@ chaincodeQuery() {
 }
 
 ## package the chaincode
-packageChaincode
+if [ "$CC_SKIP_PACKAGE_INSTALL" = "true" ]; then
+  infoln "Skipping Chaincode packaging and installing..."
+else
+  packageChaincode
+
+  infoln "Installing chaincode ..."
+
+  if [ "$CC_NAME" = "openidl-cc-default" ]; then
+    installChaincode aais
+  elif [ "$CC_NAME" == "openidl-cc-aais-carriers" ]; then
+    installChaincode aais
+    installChaincode analytics
+    installChaincode carrier
+  else
+	  errorln "Chaincode name should be one of 'openidl-cc-default' or 'openidl-cc-aais-carriers'"
+  fi
+fi
 
 ## Install chaincode on peer0.aais and peer0.analytics
-infoln "Installing chaincode on peer0.aais..."
-installChaincode aais
-infoln "Install chaincode on peer0.analytics..."
-installChaincode analytics
-infoln "Install chaincode on peer0.carrier..."
-installChaincode carrier
+if [ "$CC_SKIP_DEPLOYMENT" = "true" ]; then
+  infoln "Skipping Chaincode deployments..."
+  exit 0
+fi
 
-## query whether the chaincode is installed
-queryInstalled aais
+if [ "$CHANNEL_NAME" = "defaultchannel" ]; then
+  ## query whether the chaincode is installed
+  queryInstalled aais
 
-## approve the definition for aais
-approveForMyOrg aais
+  ## approve the definition for aais
+  approveForMyOrg aais
 
-## check whether the chaincode definition is ready to be committed
-## expect aais to have approved and analytics not to
-checkCommitReadiness aais "\"aaismsp\": true" "\"analyticsmsp\": false" "\"carriermsp\": false"
-checkCommitReadiness analytics "\"aaismsp\": true" "\"analyticsmsp\": false" "\"carriermsp\": false"
-checkCommitReadiness carrier "\"aaismsp\": true" "\"analyticsmsp\": false" "\"carriermsp\": false"
+  ## check whether the chaincode definition is ready to be committed
+  ## expect all of them to have approved
+  checkCommitReadiness aais "\"aaismsp\": true"
 
-## now approve also for analytics
-approveForMyOrg analytics
+  ## commit the definition
+  commitChaincodeDefinition aais
 
-## check whether the chaincode definition is ready to be committed
-## expect them both to have approved
-checkCommitReadiness aais "\"aaismsp\": true" "\"analyticsmsp\": true"  "\"carriermsp\": false"
-checkCommitReadiness analytics "\"aaismsp\": true" "\"analyticsmsp\": true"  "\"carriermsp\": false"
-checkCommitReadiness carrier "\"aaismsp\": true" "\"analyticsmsp\": true"  "\"carriermsp\": false"
+  ## query to see that the definition committed successfully
+  queryCommitted aais
 
+  ## Invoke the chaincode - this does require that the chaincode have the 'initLedger'
+  ## method defined
+  if [ "$CC_INIT_FCN" = "NA" ]; then
+    infoln "Chaincode initialization is not required"
+  else
+    chaincodeInvokeInit aais
+  fi
+elif [ "$CHANNEL_NAME" == "analytics-aais" ]; then
 
-## now approve also for carrier
-approveForMyOrg carrier
+  ## query whether the chaincode is installed
+  queryInstalled aais
 
-## check whether the chaincode definition is ready to be committed
-## expect them both to have approved
-checkCommitReadiness aais "\"aaismsp\": true" "\"analyticsmsp\": true"  "\"carriermsp\": true"
-checkCommitReadiness analytics "\"aaismsp\": true" "\"analyticsmsp\": true"  "\"carriermsp\": true"
-checkCommitReadiness carrier "\"aaismsp\": true" "\"analyticsmsp\": true"  "\"carriermsp\": true"
+  ## approve the definition for aais
+  approveForMyOrg aais
+  approveForMyOrg analytics
 
-## now that we know for sure both orgs have approved, commit the definition
-commitChaincodeDefinition aais analytics carrier
+  ## check whether the chaincode definition is ready to be committed
+  ## expect them both to have approved
+  checkCommitReadiness aais "\"aaismsp\": true" "\"analyticsmsp\": true"
+  checkCommitReadiness analytics "\"aaismsp\": true" "\"analyticsmsp\": true"
 
-## query on both orgs to see that the definition committed successfully
-queryCommitted aais
-queryCommitted analytics
-queryCommitted carrier
+  ## now that we know for sure both orgs have approved, commit the definition
+  commitChaincodeDefinition aais analytics
 
-## Invoke the chaincode - this does require that the chaincode have the 'initLedger'
-## method defined
-if [ "$CC_INIT_FCN" = "NA" ]; then
-  infoln "Chaincode initialization is not required"
+  ## query on both orgs to see that the definition committed successfully
+  queryCommitted aais
+  queryCommitted analytics
+
+  ## Invoke the chaincode - this does require that the chaincode have the 'initLedger'
+  ## method defined
+  if [ "$CC_INIT_FCN" = "NA" ]; then
+    infoln "Chaincode initialization is not required"
+  else
+    chaincodeInvokeInit aais analytics
+  fi
+elif [ "$CHANNEL_NAME" == "analytics-carrier" ]; then
+
+  ## query whether the chaincode is installed
+  queryInstalled analytics
+
+  ## approve the definition for aais
+  approveForMyOrg analytics
+  approveForMyOrg carrier
+
+  ## check whether the chaincode definition is ready to be committed
+  ## expect them both to have approved
+  checkCommitReadiness analytics "\"analyticsmsp\": true"  "\"carriermsp\": true"
+  checkCommitReadiness carrier "\"analyticsmsp\": true"  "\"carriermsp\": true"
+
+  ## now that we know for sure both orgs have approved, commit the definition
+  commitChaincodeDefinition analytics carrier
+
+  ## query on both orgs to see that the definition committed successfully
+  queryCommitted analytics
+  queryCommitted carrier
+
+  ## Invoke the chaincode - this does require that the chaincode have the 'initLedger'
+  ## method defined
+  if [ "$CC_INIT_FCN" = "NA" ]; then
+    infoln "Chaincode initialization is not required"
+  else
+    chaincodeInvokeInit analytics carrier
+  fi
 else
-  chaincodeInvokeInit aais analytics carrier
+	errorln "Channel name unknown"
 fi
 
 exit 0

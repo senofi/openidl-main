@@ -11,7 +11,7 @@ const log4js = require('log4js');
 const noCache = require('nocache')
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
 if (NODE_ENV === 'development') {
-  openidlCommonLib.EnvConfig.init('/projects/openidl-ui/server/config');
+  openidlCommonLib.EnvConfig.init('/projects/openidl-carrier-ui/server/config');
 } else {
   openidlCommonLib.EnvConfig.init();
 };

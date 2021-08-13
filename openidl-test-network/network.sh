@@ -319,7 +319,7 @@ function createChannel() {
 
 ## Call the script to deploy a chaincode to the channel
 function deployCC() {
-  scripts/deployCC.sh $CHANNEL_NAME $CC_NAME $CC_SRC_PATH $CC_SRC_LANGUAGE $CC_VERSION $CC_SEQUENCE $CC_INIT_FCN $CC_END_POLICY $CC_COLL_CONFIG $CLI_DELAY $MAX_RETRY $VERBOSE
+  scripts/deployCC.sh $CHANNEL_NAME $CC_NAME $CC_SRC_PATH $CC_SRC_LANGUAGE $CC_VERSION $CC_SEQUENCE $CC_INIT_FCN $CC_END_POLICY $CC_COLL_CONFIG $CLI_DELAY $MAX_RETRY $VERBOSE $CC_SKIP_PACKAGE_INSTALL $CC_SKIP_DEPLOYMENT
 
   if [ $? -ne 0 ]; then
     fatalln "Deploying chaincode failed"
@@ -375,6 +375,10 @@ CC_END_POLICY="NA"
 CC_COLL_CONFIG="NA"
 # chaincode init function defaults to "NA"
 CC_INIT_FCN="NA"
+# chaincode skip packaging defaults to false
+CC_SKIP_PACKAGE_INSTALL="false"
+# chaincode skip installing defaults to false
+CC_SKIP_DEPLOYMENT="false"
 # use this as the default docker-compose yaml definition
 COMPOSE_FILE_BASE=docker/docker-compose-test-net.yaml
 # docker-compose.yaml file if you are using couchdb
@@ -489,6 +493,14 @@ while [[ $# -ge 1 ]] ; do
     ;;
   -verbose )
     VERBOSE=true
+    shift
+    ;;
+  -ccsp )
+    CC_SKIP_PACKAGE_INSTALL="$2"
+    shift
+    ;;
+  -ccsd )
+    CC_SKIP_DEPLOYMENT="$2"
     shift
     ;;
   * )

@@ -9,7 +9,7 @@ fabric-ca-client enroll -u https://admin:adminpw@localhost:7054 --caname ca-aais
 curl -X PUT http://admin:adminpw@localhost:9984/wallet
 
 # register user - openidl-aais-insurance-data-manager-ibp-2.0
-fabric-ca-client register --caname ca-aais --id.name openidl-aais-insurance-data-manager-ibp-2.0 --id.secret password --id.type client --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
+fabric-ca-client register --caname ca-aais --id.name openidl-aais-insurance-data-manager-ibp-2.0 --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
 
 # enroll user
 fabric-ca-client enroll -u https://openidl-aais-insurance-data-manager-ibp-2.0:password@localhost:7054 --caname ca-aais -M ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-insurance-data-manager-ibp-2.0@aais.example.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
@@ -29,7 +29,7 @@ curl -X PUT http://admin:adminpw@localhost:9984/wallet/"openidl-aais-insurance-d
 # openidl-aais-data-call-app-ibp-2.0
 
 # register user - openidl-aais-data-call-app-ibp-2.0
-fabric-ca-client register --caname ca-aais --id.name openidl-aais-data-call-app-ibp-2.0 --id.secret password --id.type client --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
+fabric-ca-client register --caname ca-aais --id.name openidl-aais-data-call-app-ibp-2.0 --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
 
 # enroll user
 fabric-ca-client enroll -u https://openidl-aais-data-call-app-ibp-2.0:password@localhost:7054 --caname ca-aais -M ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-data-call-app-ibp-2.0@aais.example.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
@@ -49,7 +49,7 @@ curl -X PUT http://admin:adminpw@localhost:9984/wallet/"openidl-aais-data-call-a
 # openidl-aais-data-call-processor-ibp-2.0
 
 # register user - openidl-aais-data-call-processor-ibp-2.0
-fabric-ca-client register --caname ca-aais --id.name openidl-aais-data-call-processor-ibp-2.0 --id.secret password --id.type client --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
+fabric-ca-client register --caname ca-aais --id.name openidl-aais-data-call-processor-ibp-2.0 --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
 
 # enroll user
 fabric-ca-client enroll -u https://openidl-aais-data-call-processor-ibp-2.0:password@localhost:7054 --caname ca-aais -M ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-data-call-processor-ibp-2.0@aais.example.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
@@ -69,7 +69,7 @@ curl -X PUT http://admin:adminpw@localhost:9984/wallet/"openidl-aais-data-call-p
 # openidl-transactional-data-event-listener-ibp-2.0
 
 # register user - openidl-transactional-data-event-listener-ibp-2.0
-fabric-ca-client register --caname ca-aais --id.name openidl-transactional-data-event-listener-ibp-2.0 --id.secret password --id.type client --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
+fabric-ca-client register --caname ca-aais --id.name openidl-transactional-data-event-listener-ibp-2.0 --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
 
 # enroll user
 fabric-ca-client enroll -u https://openidl-transactional-data-event-listener-ibp-2.0:password@localhost:7054 --caname ca-aais -M ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-transactional-data-event-listener-ibp-2.0@aais.example.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
@@ -89,7 +89,7 @@ curl -X PUT http://admin:adminpw@localhost:9984/wallet/"openidl-transactional-da
 # openidl-data-call-mood-listener-ibp-2.0
 
 # register user - openidl-data-call-mood-listener-ibp-2.0
-fabric-ca-client register --caname ca-aais --id.name openidl-data-call-mood-listener-ibp-2.0 --id.secret password --id.type client --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
+fabric-ca-client register --caname ca-aais --id.name openidl-data-call-mood-listener-ibp-2.0 --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
 
 # enroll user
 fabric-ca-client enroll -u https://openidl-data-call-mood-listener-ibp-2.0:password@localhost:7054 --caname ca-aais -M ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-data-call-mood-listener-ibp-2.0@aais.example.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem

@@ -46,3 +46,6 @@ Thumbs.db
 
 .env
 /projects/openidl-ui/server/config/local-appid-config.json
+/projects/openidl-ui/server/config/local-cognito-config.json
+/projects/openidl-carrier-ui/server/config/local-appid-config.json
+/projects/openidl-carrier-ui/server/config/local-cognito-config.json

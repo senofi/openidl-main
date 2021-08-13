@@ -1,7 +1,6 @@
 const log4js = require('log4js');
 const fs = require("fs");
 const _ = require("underscore");
-const config = require("config");
 const logger = log4js.getLogger('helpers - envconfig');
 logger.level = process.env.LOG_LEVEL || 'debug';
 
@@ -17,7 +16,7 @@ envconfig.init = (mappingsFilePath) => {
     logger.info('Inside envconfig init');
 
     //set log level
-    process.env.LOG_LEVEL = config.logLevel || 'debug';
+    process.env.LOG_LEVEL = 'debug';
 
     mappingsFilePath = mappingsFilePath || "/server/config";
     mappingsFilePath = process.cwd() + mappingsFilePath;
