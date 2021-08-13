@@ -21,9 +21,9 @@ spec:
       labels:
         {{- include "openidl-data-call-app.selectorLabels" . | nindent 8 }}
     spec:
-      {{- if .Values.global.minikubeip }}
+      {{- if .Values.global.minikubehostip }}
       hostAliases:
-      - ip: {{ .Values.global.minikubeip }}
+      - ip: {{ .Values.global.minikubehostip }}
         hostnames:
         - "peer0.aais.example.com"
         - "peer0.analytics.example.com"

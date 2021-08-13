@@ -7,7 +7,11 @@ NAME ?= openidl-k8s
 #image default tag
 IMAGE_TAG ?= latest
 #minikube ip
-MINIKUBE_IP := $(shell minikube ssh "route -n | grep ^0.0.0.0 | awk '{ print \$$2 }'")
+ifeq ($(UNAME), Darwin)
+	MINIKUBE_HOST_IP=$(shell minikube ssh "route -n | grep ^0.0.0.0 | awk '{ print \$$2 }'")
+else
+	MINIKUBE_HOST_IP=$(shell minikube ssh "cat /etc/hosts | grep host.minikube.internal | awk '{ print \$$1 }'")
+endif
 
 UNAME := $(shell uname)
 ifeq ($(UNAME), Darwin)
@@ -60,14 +64,14 @@ docker_load_upload:
 refresh_upload: | build_upload docker_save_upload docker_load_upload
 
 install_in_k8s:
-	helm install local-aais ./openidl-k8s -f ./openidl-k8s/global-values.yaml --set global.minikubeip=$(MINIKUBE_IP)
+	helm install local-aais ./openidl-k8s -f ./openidl-k8s/global-values.yaml --set global.minikubehostip=$(MINIKUBE_HOST_IP)
 
 uninstall_from_k8s:
 	helm uninstall local-aais
 
 reinstall_in_k8s:
 	helm uninstall local-aais
-	helm install local-aais ./openidl-k8s -f ./openidl-k8s/global-values.yaml --set global.minikubeip=$(MINIKUBE_IP)
+	helm install local-aais ./openidl-k8s -f ./openidl-k8s/global-values.yaml --set global.minikubehostip=$(MINIKUBE_HOST_IP)
 
 dashboard:
 	echo better to open a separate terminal for this
