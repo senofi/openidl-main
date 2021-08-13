@@ -338,16 +338,29 @@ function networkDown() {
     clearContainers
     #Cleanup images
     removeUnwantedImages
-    # remove orderer block and other channel configuration transactions and certs
-    docker run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf bin'
-    docker run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf system-genesis-block/*.block organizations/peerOrganizations organizations/ordererOrganizations'
-    ## remove fabric ca artifacts
-    docker run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf organizations/fabric-ca/aais'
-    docker run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf organizations/fabric-ca/analytics'
-    docker run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf organizations/fabric-ca/carrier'
-    docker run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf organizations/fabric-ca/ordererOrg'
-    # remove channel and script artifacts
-    docker run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf channel-artifacts log.txt *.tar.gz'
+    if [ "$OS_ARCH" == "darwin-amd64" ]; then
+      # remove orderer block and other channel configuration transactions and certs
+      rm -rf bin
+      rm -rf system-genesis-block/*.block organizations/peerOrganizations organizations/ordererOrganizations
+      ## remove fabric ca artifacts
+      rm -rf organizations/fabric-ca/aais
+      rm -rf organizations/fabric-ca/analytics
+      rm -rf organizations/fabric-ca/carrier
+      rm -rf organizations/fabric-ca/ordererOrg
+      # remove channel and script artifacts
+      rm -rf channel-artifacts log.txt *.tar.gz
+    else
+      # remove orderer block and other channel configuration transactions and certs
+      docker run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf bin'
+      docker run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf system-genesis-block/*.block organizations/peerOrganizations organizations/ordererOrganizations'
+      ## remove fabric ca artifacts
+      docker run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf organizations/fabric-ca/aais'
+      docker run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf organizations/fabric-ca/analytics'
+      docker run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf organizations/fabric-ca/carrier'
+      docker run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf organizations/fabric-ca/ordererOrg'
+      # remove channel and script artifacts
+      docker run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf channel-artifacts log.txt *.tar.gz'
+    fi
   fi
 }
 
