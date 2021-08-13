@@ -2,7 +2,7 @@
 
 This is a developer guide for migrating Angular to the latest version. Since we are migrating from v6 to v12, the process will be a bit time consuming than migrating v11 to v12.
 
->Note: Delete package-lock.json file before starting the version upgrade process.
+>Note: Delete package-lock.json file and node_modules folder before starting the version upgrade process.
 
 The `openidl-ui-workspace` has 2 angular apps and 1 angular library. Both apps share the same `package.json` file and `openidl-ui` is the default project. That means while running the `ng` command if you don’t specify the project name that command will run against the openidl-ui app.
 
