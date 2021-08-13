@@ -339,15 +339,7 @@ function networkDown() {
     #Cleanup images
     removeUnwantedImages
     # remove orderer block and other channel configuration transactions and certs
-    rm -rf bin
-    rm -rf system-genesis-block/*.block organizations/peerOrganizations organizations/ordererOrganizations
-    ## remove fabric ca artifacts
-    rm -rf organizations/fabric-ca/aais
-    rm -rf organizations/fabric-ca/analytics
-    rm -rf organizations/fabric-ca/carrier
-    rm -rf organizations/fabric-ca/ordererOrg
-    # remove channel and script artifacts
-    rm -rf channel-artifacts log.txt *.tar.gz
+    sudo rm -rf bin system-genesis-block/*.block organizations/peerOrganizations organizations/ordererOrganizations organizations/fabric-ca/aais organizations/fabric-ca/analytics organizations/fabric-ca/carrier organizations/fabric-ca/ordererOrg channel-artifacts log.txt *.tar.gz
   fi
 }
 

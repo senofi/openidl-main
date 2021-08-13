@@ -1,3 +1,4 @@
+#!/bin/bash
 # export path
 export PATH=${PWD}/bin:$PATH
 export FABRIC_CA_CLIENT_HOME=${PWD}/organizations/peerOrganizations/aais.example.com/
