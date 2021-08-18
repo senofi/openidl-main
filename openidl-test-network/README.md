@@ -1,4 +1,3 @@
-## Intro
 This document details the steps necessary for bringing up the Blokchain network and the smart contracts in local evironment. After following this document, you should be able to stand up a Blockchain network that will interact with the Openidl app to submit or query transaction that are to be persisted in the Blockchain.
 
 After introducing Hyperledger Fabric, we will go through the prerequisites, and then will go step by step on how to bring up the network. 
@@ -6,7 +5,9 @@ After introducing Hyperledger Fabric, we will go through the prerequisites, and 
 ## What is a Hyperledger Fabric Network
 Source and more details: https://hyperledger-fabric.readthedocs.io/en/release-2.2/whatis.html
 A blockchain is an immutable transaction ledger, maintained within a distributed network of peer nodes. These nodes each maintain a copy of the ledger by applying transactions that have been validated by a consensus protocol, grouped into blocks that include a hash that bind each block to the preceding block.
+
 Hyperledger Fabric is an open source enterprise-grade permissioned distributed ledger technology (DLT) platform, designed for use in enterprise contexts.
+
 Started under the Linux Foundation, Hyperledger Fabric has a mosular architecture that separates the duties of peer, ordering, and ideantity certificates. The Favric platform is **permissioned**, meaning that the participants, even though they may not fully trust each other, can come together under a governance model like a legal agreement and have a framework for handling disputes.
 
 At a high level, a hyperledger Fabric platorm is composed of the following components in addition to the participants("peers"):
@@ -19,8 +20,30 @@ Next, we will go through the steps to stand up the Hyperledger Fabric platform i
 
 ## Prerequisites
 To run the Blockchain network, you will need several applications installed in your device. We will show the commands For Ubuntu Linux and Mac, and the commands for other Oses should be available in the application dcos.
+
+### Install Golang
+The smart contracts we use are written in Go, and you need to install it.
+
+For ubuntu
+```
+$ wget https://dl.google.com/go/go1.16.4.linux-amd64.tar.gz
+$ rm -rf /usr/local/go && tar -C /usr/local -xzf  go1.16.4.linux-amd64.tar.gz
+$ export PATH=$PATH:/usr/local/go/bin
+$ go version
+```
+For Mac:
+```
+$ curl -o golang.pkg https://dl.google.com/go/go1.16.4.darwin-amd64.pkg
+$ sudo open golang.pkg
+```
+An installation wizard will come up, complete the provess there. After that, run the following command:
+```
+$ export PATH=$PATH:/usr/local/go/bin
+$ go version
+```
+
+For more details or troubleshooting, see https://golang.org/doc/install
 ### Install Git
-https://git-scm.com/downloads
 For ubuntu
 ```
 $ sudo apt install git-all
@@ -30,8 +53,8 @@ For Mac:
 $ brew install git
 ```
 
+For more details or troubleshooting, see https://git-scm.com/downloads
 ### Install Git
-https://curl.haxx.se/download.html
 For ubuntu
 ```
 $ sudo apt install git-all
@@ -41,6 +64,7 @@ For Mac:
 $ brew install git
 ```
 
+For more details or troubleshooting,see https://curl.haxx.se/download.html
 ### Install Docker
 Please follow the documrntation given below to make sure you have Docker and you have it set up in correct way:
 https://hyperledger-fabric.readthedocs.io/en/release-2.2/prereqs.html#docker-and-docker-compose
@@ -136,5 +160,19 @@ $ ./network.sh deployCC -c analytics-carrier -ccn openidl-cc-aais-carriers -ccp 
 ```
 After this step, the Chaincodes will be deployed and ready to process transactions. You can see the new chaincode containers listed in the ```docker ps -a``` command.
 ## Pre-register Users in Certificate Authorities:
-TODO
+After the Chaincode is deployed, the network is ready for operations. As Hyperledger Fabric is a permissioned network, you have to register users first with the Certificate Authority, and then those registered users will be able to interact with the Blockchain. You will register users for different services of the Openidl application and then sabe the certificates in the certificate store in `couchdb`.
+```
+$ ./pre-register-users.sh
+```
+
+Now the platform is ready. 
+
 ## Upgrades
+The Hyperledger Fabric version used in this network is v2.2.3, and this is the latest long-term support (LTS) release. If you want to use the latest version v2.3, you need to pull the Fabric Docker images with correct versions.
+
+Edit the `start.sh` file and use the following line instead
+```
+./bootstrap.sh 2.3.2 1.5.0
+```
+And remove all the existing docker images by running the following command:
+
