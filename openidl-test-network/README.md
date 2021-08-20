@@ -23,7 +23,7 @@ Next, we will go through the steps to stand up the Hyperledger Fabric platform i
 To run the Blockchain network, you will need several applications installed in your device. We will show the commands For Ubuntu Linux and Mac, and the commands for other OSes should be available in the corresponding application documentations.
 
 ### Install Golang
-The smart contracts we use are written in Go, and you need to install it.
+The smart contracts we use are written in Go, and you need to install it. Version 1.16 is recommended.
 
 For ubuntu
 ```
