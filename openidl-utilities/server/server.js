@@ -24,6 +24,7 @@ const fs = require('fs');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const yaml = require('js-yaml');
+const session = require('express-session');
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
 openidlCommonLib.EnvConfig.init();
 
@@ -34,6 +35,12 @@ logger.info("Starting");
 const app = express();
 
 global.fetch = require('node-fetch');
+
+app.use(session({
+    secret: "123456",
+    resave: true,
+    saveUninitialized: true
+}));
 
 const idpCredentials = JSON.parse(process.env.IDP_CONFIG);
 const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials);

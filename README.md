@@ -22,18 +22,53 @@ To get started quickly, follow these steps. This assumes you don't need to updat
 ## Initial setup
 
 There are several different ways to run things:
+* Install VirtualBox
+    * Make sure it has 4 cpus
+* Running on a local system
+* Running on a remote system
+    *See instructions below for setting up a proxy
 
-Install VirtualBox
+## Install Golang
+The smart contracts we use are written in Go. See below for installation instructions.
 
--   make sure it has 4 cpus
+For ubuntu
+```
+$ wget https://dl.google.com/go/go1.16.4.linux-amd64.tar.gz
+$ rm -rf /usr/local/go && tar -C /usr/local -xzf  go1.16.4.linux-amd64.tar.gz
+$ export PATH=$PATH:/usr/local/go/bin
+$ go version
+```
+For Mac:
+```
+$ curl -o golang.pkg https://dl.google.com/go/go1.16.4.darwin-amd64.pkg
+$ sudo open golang.pkg
+```
+An installation wizard will come up, complete the process there. After that, run the following command:
+```
+$ export PATH=$PATH:/usr/local/go/bin
+$ go version
+```
 
-Running on a local system
+For more details or troubleshooting, see https://golang.org/doc/install
 
-Running on a remote system
+## Install Git
+For ubuntu
+```
+$ sudo apt install git-all
+```
+For Mac:
+```
+$ brew install git
+```
 
--   See instructions below for setting up a proxy
+For more details or troubleshooting,see https://curl.haxx.se/download.html
 
-## Make sure git is available
+### Install Docker
+Please follow the documentation given below to make sure you have Docker and you have it set up in correct way:
+https://hyperledger-fabric.readthedocs.io/en/release-2.2/prereqs.html#docker-and-docker-compose
+
+For more details and troubleshooting, please refer to
+https://hyperledger-fabric.readthedocs.io/en/release-2.2/prereqs.html#
 
 ## Get Minikube working
 
@@ -101,15 +136,12 @@ node is in (aais, analytics, carrier)
 | -------------------------------------- | ------------------------- |
 | channel-config.json                    | channel-config            |
 | connection-profile.json                | connection-profile        |
-| local-db-config.json                   | db-config                 |
+| local-db-config.json                   | local-db-config           |
 | default.json                           | default-config            |
 | email.json                             | email-config              |
 | listener-channel-config.json           | listener-channel-config   |
 | local-cognito-config.json              | local-cognito-config      |
-| local-certmanager-config.json          | local-certmanager-config  |
 | local-kvs-config.json                  | local-kvs-config          |
-| local-cloudant-config.json             | local-cloudant-config     |
-| local-mongo-config.json                | local-mongo-config        |
 | flowconfig.json                        | nifi-flowconfig           |
 | s3-bucket-config.json                  | s3-bucket-config          |
 | target-channel-identifiers-config.json | target-channel-config     |
@@ -256,11 +288,3 @@ sudo apt-get install build-essential
 ```bash
 sudo apt update
 sudo apt install qemu-kvm libvirt-daemon-system
-<<<<<<< HEAD
-```
-
-=======
-
-```
->>>>>>> 7b3e0bc69033852b8d96e7ef789eefbe4a02bb82
-```

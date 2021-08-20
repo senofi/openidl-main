@@ -4,7 +4,7 @@
         "chaincodeName": "openidl-cc-default"
     }],
     "users": [{
-        "org": "analyticsmsp",
+        "org": "analytics",
         "user": "openidl-data-call-mood-listener-ibp-2.0",
         "mspId": "analyticsmsp"
     }]

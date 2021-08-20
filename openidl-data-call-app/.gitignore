@@ -13,7 +13,6 @@ helm-archive/**
 server/config/local-cognito-config.json
 server/config/local-cloudant-config.json
 server/config/openidl-ui-client-id.json
-server/config/channel-config.json
 server/config/connection-profile.json
 server/config/local-appid-config.json
 server/config/local-mongo-config.json

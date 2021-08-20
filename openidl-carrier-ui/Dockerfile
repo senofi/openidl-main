@@ -13,7 +13,7 @@ COPY . .
 
 RUN npm install @angular/cli@12.1.0 -g
 
-RUN mv -f npmrc ~/.npmrc 2>/dev/null; true
+RUN rm -rf node_modules
 RUN npm install
 
 RUN mkdir lib

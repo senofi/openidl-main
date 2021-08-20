@@ -3,13 +3,11 @@ openidl-mapper/referenceJson.json
 openidl-mapper/referenceJson2.json
 **/node_modules
 openidl-mapper/schema/Hack_openIDL_Tier3.json
-openidl-insurance-data-manager/server/config/*.json
 openidl-secrets-manager/config/*.json
-hosts input.txt
-hosts update.txt
-hosts updated.txt
+hosts-input.txt
+hosts-update.txt
+hosts-updated.txt
 openidl-common-ui/dist/
-openidl-ui/server/config/local-cognito-config.json
 **/vendor
 *.mod
 *.sum

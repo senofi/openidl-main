@@ -15,8 +15,6 @@ server/config/local-vault-config.json
 server/config/local-certmanager-config.json
 server/config/off-chain-db-credentials.json
 server/config/s3-bucket-config.json
-server/config/target-channel-config.json
-server/config/listener-channel-config.json
 .nyc_output
 
 

@@ -80,8 +80,14 @@ dashboard:
 run_mongo_express:
 	minikube service mongo-express-service
 
+build_insurance_data_manager:
+	docker build ./openidl-insurance-data-manager -t openidl/insurance-data-manager
+
 run_insurance_data_manager:
 	minikube service insurance-data-manager-service
+
+build_data_call_app:
+	docker build ./openidl-data-call-app -t openidl/data-call-app
 
 run_data_call_app:
 	minikube service data-call-app-service
@@ -90,7 +96,7 @@ run_ui:
 	minikube service ui-service
 
 build_ui:
-	docker build ./openidl-ui -t openidl/ui
+	docker build ./openidl-ui-workspace -t openidl/ui --build-arg PROJECT=aais
 
 run_upload:
 	minikube service upload-service
@@ -129,3 +135,16 @@ aws_load_image:
 	docker load -i openidl-iac-local/images/openidl-$(IMAGE_NAME).tar
 	docker tag openidl/$(IMAGE_NAME):latest 531234332176.dkr.ecr.us-east-1.amazonaws.com/openidl-$(IMAGE_NAME):latest
 	docker push 531234332176.dkr.ecr.us-east-1.amazonaws.com/openidl-$(IMAGE_NAME):latest
+
+build_all_images:
+	docker build ./openidl-data-call-app -t openidl/data-call-app
+	docker build ./openidl-data-call-processor -t openidl/data-call-processor
+	docker build ./openidl-data-call-mood-listener -t openidl/data-call-mood-listener
+	docker build ./openidl-insurance-data-manager -t openidl/insurance-data-manager
+	docker build ./openidl-transactional-data-event-listener -t openidl/transactional-data-event-listener
+	docker build ./openidl-ui-workspace -t openidl/ui --build-arg PROJECT=aais
+	docker build ./openidl-ui-workspace -t openidl/carrier-ui --build-arg PROJECT=carrier
+	(cd ./openidl-upload && npm run build && cd .. && docker build ./openidl-upload -t openidl/upload)
+
+delete_all_images:
+	docker rmi openidl/ui openidl/data-call-app openidl/data-call-processor openidl/data-call-mood-listener openidl/transactional-data-event-listener openidl/insurance-data-manager openidl/carrier-ui openidl/upload

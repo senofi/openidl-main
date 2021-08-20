@@ -13,9 +13,9 @@ RUN apk update && apk upgrade && \
 WORKDIR /app
 COPY . .
 
+RUN rm -rf node_modules
 RUN npm install @angular/cli@12.1.0 -g
 
-RUN mv -f npmrc ~/.npmrc 2>/dev/null; true
 RUN npm install
 
 RUN npm run build:common

@@ -10,8 +10,7 @@ RUN apk update && apk upgrade && \
 
 
 COPY . .
-RUN mv -f npmrc ~/.npmrc 2>/dev/null; true
-
+RUN rm -rf node_modules
 RUN npm install
 EXPOSE 8080
 CMD [ "npm","run","start"]

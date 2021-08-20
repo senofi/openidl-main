@@ -1,0 +1,5 @@
+{
+    "walletType": "couchdb",
+    "url": "http://admin:adminpw@localhost:9984",
+    "isLocal": true
+}

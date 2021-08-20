@@ -23,7 +23,7 @@ const idpCredentials = JSON.parse(process.env.IDP_CONFIG);
 const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials);
 
 const fabricUserEnrollment = require('../controller/fabric-user-controller');
-const cognitoUser = require('../controller/cognito-user-controller');
+const appUser = require('../controller/app-user-controller');
 const router = express.Router();
 
 /**
@@ -35,8 +35,8 @@ logger.level = config.logLevel;
  * Add routes
  */
 router.use('/fabric-user-enrollment', authHandler.validateToken, fabricUserEnrollment.enroll);
-router.use('/cognito-user-enrollment', authHandler.validateToken, cognitoUser.register);
-router.use('/cognito-user-attributes', authHandler.validateToken, cognitoUser.updateUserAttributes);
-router.use('/cognito-user-login', authHandler.authenticate, authHandler.getUserAttributes, cognitoUser.login);
+router.use('/app-user-enrollment', authHandler.validateToken, appUser.register);
+router.use('/app-user-login', authHandler.authenticate, authHandler.getUserAttributes, appUser.login);
+router.use('/app-user-attributes', authHandler.validateToken, appUser.updateUserAttributes);
 
 module.exports = router;
