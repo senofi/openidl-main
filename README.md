@@ -29,7 +29,7 @@ There are several different ways to run things:
     *See instructions below for setting up a proxy
 
 ## Install Golang
-The smart contracts we use are written in Go. See below for installation instructions.
+The smart contracts we use are written in Go. See below for installation instructions. Version 1.16 is recommended.
 
 For ubuntu
 ```
@@ -63,7 +63,7 @@ $ brew install git
 
 For more details or troubleshooting,see https://curl.haxx.se/download.html
 
-### Install Docker
+## Install Docker
 Please follow the documentation given below to make sure you have Docker and you have it set up in correct way:
 https://hyperledger-fabric.readthedocs.io/en/release-2.2/prereqs.html#docker-and-docker-compose
 
@@ -228,6 +228,13 @@ make run_upload
 make run_insurance_data_manager
 make run_data_call_app
 make run_mongo_express
+```
+
+# Builing Local Images
+This repository leverages common functionality from [openidl-common-lib](https://github.com/openidl-org/openidl-main/tree/main/openidl-common-lib) . To install this dependency, replace `{GITHUB_TOKEN}` in `.npmrc` with your own Git personal access token in all the repositories. For details on how to get an access token, please see [Personal access tokens](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) on the GitHub site. Access Token should have at least `read:packages` permissions
+
+```
+make build_all_images
 ```
 
 # Experimental

@@ -23,7 +23,7 @@ Next, we will go through the steps to stand up the Hyperledger Fabric platform i
 To run the Blockchain network, you will need several applications installed in your device. We will show the commands For Ubuntu Linux and Mac, and the commands for other OSes should be available in the corresponding application documentations.
 
 ### Install Golang
-The smart contracts we use are written in Go, and you need to install it. Version 1.16 is recommended.
+The smart contracts we use are written in Go. Follow the below steps to install it. Version 1.16 is recommended.
 
 For ubuntu
 ```
@@ -149,8 +149,9 @@ $ ./network.sh deployCC -c analytics-carrier -ccn openidl-cc-aais-carriers -ccp 
 
 ```
 After this step, the Chaincodes will be deployed and ready to process transactions. You can see the new chaincode containers listed in the ```docker ps -a``` command.
+
 ### Pre-register Users in Certificate Authorities:
-After the Chaincode is deployed, the network is ready for operations. As Hyperledger Fabric is a permissioned network, you have to register users first with the Certificate Authority, and then those registered users will be able to interact with the Blockchain. You will register users for different services of the Openidl application and then sase the certificates in the certificate store in `couchdb`.
+After the Chaincode is deployed, the network is ready for operations. As Hyperledger Fabric is a permissioned network, you have to register users first with the Certificate Authority, and then those registered users will be able to interact with the Blockchain. You will register users for different services of the Openidl application and then store the certificates in `couchdb`.
 ```
 $ ./pre-register-users.sh
 ```
