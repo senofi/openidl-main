@@ -1,6 +1,6 @@
 #!/bin/bash
 #set -x
-#./pullConfigs-vault.sh -U user-data-call-app -P password -a data-call-app -o AAISOrg
+#./pull-vault-config.sh -U user-data-call-app -P password -a data-call-app -o AAISOrg -c ./configs
 #
 
 declare -A configs=(
@@ -18,7 +18,7 @@ declare -A configs=(
   ["11"]="deployment-scripts-ansible-OrderingOrg_CA_Admin-json"
   ["12"]="deployment-scripts-token-json"
   ["13"]="email-config"
-  ["14"]="insurance-data-manager-constant-config"
+  # ["14"]="insurance-data-manager-constant-config"
   ["15"]="insurance-data-manager-default-config"
   ["16"]="insurance-data-manager-mappings-config"
   ["17"]="insurance-data-manager-metadata-config"
@@ -72,6 +72,10 @@ checkOptions() {
     echo "APP is not defined."
     exit 1
   fi
+  if [ -z "${CONFIG_PATH}" ]; then
+    echo "CONFIG_PATH is not defined."
+    exit 1
+  fi
 }
 
 pullVaultConfig() {
@@ -80,8 +84,8 @@ pullVaultConfig() {
   echo "Login to pull config data"
   LOGIN_RESPONSE=$(curl \
     --request POST \
-    --data '{"password": "'${PASSWORD}'"}' \
-    http://${VAULT_HOST}/v1/auth/${ORG}/login/${USER_NAME})
+    --data "{\"password\":\"${PASSWORD}\"}" \
+    ${VAULT_URL}/v1/auth/${ORG}/login/${USER_NAME})
   RESULT=$?
   if [ $RESULT -ne 0 ]; then
     echo "Failed to execute curl command."
@@ -91,10 +95,7 @@ pullVaultConfig() {
   USER_TOKEN=$(echo ${LOGIN_RESPONSE} | ${JQ} ".auth.client_token" | sed "s/\"//g")
   echo "Token is ${USER_TOKEN}"
 
-  # temp configs folder
-  mkdir ./configs
-
-  echo "Retrieve configs"
+  echo "Pull all configs"
   for config in "${!configs[@]}"; do
     HTTP_STATUS=$(curl \
       --header "X-Vault-Token: ${USER_TOKEN}" \
@@ -114,7 +115,7 @@ pullVaultConfig() {
     fi
 
     #Write config files
-    echo "${CONFIG_DATA}" >./configs/${configs[${config}]}.json
+    echo "${CONFIG_DATA}" >${CONFIG_PATH}/${configs[${config}]}.json
   done
 
   echo "All configs downloaded completed."
@@ -126,15 +127,16 @@ ORG=AAISOrg
 USER_NAME=""
 PASSWORD=""
 APP=""
-while getopts "V:u:p:a:o:" key; do
+CONFIG_PATH=""
+while getopts "V:U:P:a:o:c:" key; do
   case ${key} in
   V)
     VAULT_URL=${OPTARG}
     ;;
-  u)
+  U)
     USER_NAME=${OPTARG}
     ;;
-  p)
+  P)
     PASSWORD=${OPTARG}
     ;;
   a)
@@ -142,6 +144,9 @@ while getopts "V:u:p:a:o:" key; do
     ;;
   o)
     ORG=${OPTARG}
+    ;;
+  c)
+    CONFIG_PATH=${OPTARG}
     ;;
   \?)
     echo "Unknown flag: ${key}"

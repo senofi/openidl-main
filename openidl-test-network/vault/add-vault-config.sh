@@ -1,7 +1,7 @@
 #!/bin/bash
 #set -x
 #
-#./add-vault-user.sh -t s.NChugw1IiynKI3q6Zb674U4N -U user-data-call-app -P password -a data-call-app -o AAISOrg -e '"create","update","read"'
+#./add-vault-config.sh -U user-data-call-app -P password -a data-call-app -o AAISOrg -c ../../openidl-k8s/charts/openidl-secrets/config
 #
 
 declare -A configs=(
@@ -61,24 +61,16 @@ checkOptions() {
     echo "ORG is not defined."
     exit 1
   fi
-  if [ -z "${USER_TOKEN}" ]; then
-    echo "USER_TOKEN is not defined."
+  if [ -z "${USER_NAME}" ]; then
+    echo "USER_NAME is not defined."
     exit 1
   fi
-  if [ -z "${USER_TO_BE_CREATED}" ]; then
-    echo "USER_TO_BE_CREATED is not defined."
-    exit 1
-  fi
-  if [ -z "${PASSWORD_TO_BE_CREATED}" ]; then
-    echo "PASSWORD_TO_BE_CREATED is not defined."
+  if [ -z "${PASSWORD}" ]; then
+    echo "PASSWORD is not defined."
     exit 1
   fi
   if [ -z "${APP}" ]; then
     echo "APP is not defined."
-    exit 1
-  fi
-  if [ -z "${PERMISSIONS}" ]; then
-    echo "PERMISSIONS is not defined."
     exit 1
   fi
   if [ -z "${CONFIG_PATH}" ]; then
@@ -88,121 +80,21 @@ checkOptions() {
 }
 
 addVaultConfig() {
-  echo "Entering addVaultConfig()"
+  echo "Entering add vault config script"
 
-  echo "Enable userpass authentication"
-  HTTP_STATUS=$(curl --header "X-Vault-Token: ${USER_TOKEN}" \
+  echo "Login to add configuration files"
+  LOGIN_RESPONSE=$(curl \
     --request POST \
-    --data '{"type": "userpass"}' \
-    ${VAULT_URL}/v1/sys/auth/${ORG} --insecure -s -o /dev/null -w "%{http_code}")
-  RESULT=$?
-  if [ $RESULT -ne 0 ]; then
-    echo "Failed to execute curl."
-    exit 1
-  fi
-  HTTP_STATUS=${HTTP_STATUS}
-  if [ "${HTTP_STATUS}" != "204" ]; then
-    echo "Error in Invoking Vault with status ${HTTP_STATUS}."
-    exit 1
-  fi
-
-  echo "Enable path for storing config data"
-  HTTP_STATUS=$(curl --header "X-Vault-Token: ${USER_TOKEN}" \
-    --request POST \
-    --data '{"type":"kv","options":{"version":2},"generate_signing_key":true}' \
-    ${VAULT_URL}/v1/sys/mounts/${ORG} --insecure -s -o /dev/null -w "%{http_code}")
-  RESULT=$?
-  if [ $RESULT -ne 0 ]; then
-    echo "Failed to execute curl."
-    exit 1
-  fi
-  HTTP_STATUS=${HTTP_STATUS}
-  if [ "${HTTP_STATUS}" != "204" ]; then
-    echo "Error in Invoking Vault with status ${HTTP_STATUS}."
-    exit 1
-  fi
-
-  POLICY_FILE=$(mktemp).json
-  RESULT=$?
-  if [ $RESULT -ne 0 ]; then
-    echo "Failed to execute mktemp."
-    exit 1
-  fi
-  echo "Create policy file ${POLICY_FILE}."
-  PERMISSIONS=$(echo $PERMISSIONS | sed 's/\"/\\\"/g')
-  cat >${POLICY_FILE} <<EOF
-        {
-            "policy": "path \"${ORG}/data/${APP}/*\" { capabilities = [ ${PERMISSIONS} ]}"
-        }
-EOF
-  echo "Add policy"
-  HTTP_STATUS=$(curl \
-    --header "X-Vault-Token: ${USER_TOKEN}" \
-    --request PUT \
-    --data @${POLICY_FILE} \
-    ${VAULT_URL}/v1/sys/policy/${USER_TO_BE_CREATED}-policy --insecure -s -o /dev/null -w "%{http_code}")
-  RESULT=$?
-  if [ $RESULT -ne 0 ]; then
-    echo "Failed to execute curl."
-    exit 1
-  fi
-  HTTP_STATUS=${HTTP_STATUS}
-  if [ "${HTTP_STATUS}" != "204" ]; then
-    echo "Error in Invoking Vault with status ${HTTP_STATUS}."
-    exit 1
-  fi
-  rm ${POLICY_FILE}
-  POLICY_FILE=$(mktemp).json
-  RESULT=$?
-  if [ $RESULT -ne 0 ]; then
-    echo "Failed to execute mktemp."
-    exit 1
-  fi
-  echo "Create policy file ${POLICY_FILE}."
-  cat >${POLICY_FILE} <<EOF
-        {
-            "password": "${PASSWORD_TO_BE_CREATED}",
-            "policies": "${USER_TO_BE_CREATED}-policy"
-        }
-EOF
-  echo "Create new user"
-  HTTP_STATUS=$(curl \
-    --header "X-Vault-Token: ${USER_TOKEN}" \
-    --request POST \
-    --data @${POLICY_FILE} \
-    ${VAULT_URL}/v1/auth/${ORG}/users/${USER_TO_BE_CREATED} --insecure -s -o /dev/null -w "%{http_code}")
-  RESULT=$?
-  if [ $RESULT -ne 0 ]; then
-    echo "Failed to execute curl."
-    exit 1
-  fi
-  HTTP_STATUS=${HTTP_STATUS}
-  if [ "${HTTP_STATUS}" != "204" ]; then
-    echo "Error in Invoking Vault with status ${HTTP_STATUS}."
-    exit 1
-  fi
-  rm ${POLICY_FILE}
-  RESULT=$?
-  if [ $RESULT -ne 0 ]; then
-    echo "Failed to remove ${POLICY_FILE}."
-    exit 1
-  fi
-
-  for config in "${!configs[@]}"; do echo "$config - ${configs[$config]}"; done
-
-  echo "Login as the new user to add configuration files"
-  USER_TOKEN=$(curl \
-    --request POST \
-    --data '{"password": "${PASSWORD_TO_BE_CREATED}"}' \
-    ${VAULT_URL}/v1/auth/${ORG}/login/${USER_TO_BE_CREATED} --insecure)
+    --data "{\"password\":\"${PASSWORD}\"}" \
+    ${VAULT_URL}/v1/auth/${ORG}/login/${USER_NAME} --insecure)
 
   RESULT=$?
   if [ $RESULT -ne 0 ]; then
     echo "Failed to execute curl."
     exit 1
   fi
-  USER_TOKEN=${USER_TOKEN}
-  USER_TOKEN=$(echo ${USER_TOKEN} | ${JQ} ".auth.client_token" | sed "s/\"//g")
+  LOGIN_RESPONSE=${LOGIN_RESPONSE}
+  USER_TOKEN=$(echo ${LOGIN_RESPONSE} | ${JQ} ".auth.client_token" | sed "s/\"//g")
   echo "USER_TOKEN is ${USER_TOKEN}"
 
   for config in "${!configs[@]}"; do
@@ -230,46 +122,34 @@ EOF
     fi
   done
 
-  echo "All completed."
+  echo "All configs have been uploaded successfully."
 }
 
 VAULT_URL='http://127.0.0.1:8200'
 ORG=AAISOrg
 USER_NAME=""
 PASSWORD=""
-USER_TO_BE_CREATED=""
-PASSWORD_TO_BE_CREATED=""
 APP=""
 CONFIGPATH=""
-while getopts "V:t:U:P:a:o:e:c:" key; do
+while getopts "V:U:P:a:o:c:" key; do
   case ${key} in
   V)
-    VAULT_URL=${ARG}
-    ;;
-  t)
-    USER_TOKEN=${ARG}
+    VAULT_URL=${OPTARG}
     ;;
   U)
-    USER_TO_BE_CREATED=${ARG}
+    USER_NAME=${OPTARG}
     ;;
   P)
-    PASSWORD_TO_BE_CREATED=${ARG}
+    PASSWORD=${OPTARG}
     ;;
   a)
-    APP=${ARG}
+    APP=${OPTARG}
     ;;
   o)
-    ORG=${ARG}
-    ;;
-  e)
-    PERMISSIONS=${ARG}
+    ORG=${OPTARG}
     ;;
   c)
-    CONFIG_PATH=${ARG}
-    ;;
-  h)
-    echo "add-vault-user.sh -H http://VAULT_HOST:VAULT_PORT -u VAULT_USER -p  VAULT_PASSWORD -f"
-    exit 0
+    CONFIG_PATH=${OPTARG}
     ;;
   \?)
     echo "Unknown flag: ${key}"
