@@ -17,3 +17,4 @@ openidl-ui/.env
 openidl-ui-workspace/package-lock.json
 openidl-ui-workspace/projects/openidl-carrier-ui/server/config/local-appid-config.json
 openidl-ui-workspace/projects/openidl-ui/server/config/local-appid-config.json
+**/*for testing*.*
