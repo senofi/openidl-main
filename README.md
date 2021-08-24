@@ -22,28 +22,35 @@ To get started quickly, follow these steps. This assumes you don't need to updat
 ## Initial setup
 
 There are several different ways to run things:
-* Install VirtualBox
-    * Make sure it has 4 cpus
-* Running on a local system
-* Running on a remote system
-    *See instructions below for setting up a proxy
+
+-   Install VirtualBox
+    -   Make sure it has 4 cpus
+-   Running on a local system
+-   Running on a remote system
+    \*See instructions below for setting up a proxy
 
 ## Install Golang
+
 The smart contracts we use are written in Go. See below for installation instructions. Version 1.16 is recommended.
 
 For ubuntu
+
 ```
 $ wget https://dl.google.com/go/go1.16.4.linux-amd64.tar.gz
 $ rm -rf /usr/local/go && tar -C /usr/local -xzf  go1.16.4.linux-amd64.tar.gz
 $ export PATH=$PATH:/usr/local/go/bin
 $ go version
 ```
+
 For Mac:
+
 ```
 $ curl -o golang.pkg https://dl.google.com/go/go1.16.4.darwin-amd64.pkg
 $ sudo open golang.pkg
 ```
+
 An installation wizard will come up, complete the process there. After that, run the following command:
+
 ```
 $ export PATH=$PATH:/usr/local/go/bin
 $ go version
@@ -52,11 +59,15 @@ $ go version
 For more details or troubleshooting, see https://golang.org/doc/install
 
 ## Install Git
+
 For ubuntu
+
 ```
 $ sudo apt install git-all
 ```
+
 For Mac:
+
 ```
 $ brew install git
 ```
@@ -64,6 +75,7 @@ $ brew install git
 For more details or troubleshooting,see https://curl.haxx.se/download.html
 
 ## Install Docker
+
 Please follow the documentation given below to make sure you have Docker and you have it set up in correct way:
 https://hyperledger-fabric.readthedocs.io/en/release-2.2/prereqs.html#docker-and-docker-compose
 
@@ -100,6 +112,8 @@ If usinb bash then `bash systemdown.sh`
 ### Startup the system
 
 Run `./systemup.sh` from the `openidl-main` directory.
+
+If you get an error that includes "failed calling webhook", then wait 30 seconds and run `make reinstall_in_k8s`. The first time it may complain that it couldn't create new content in the nifi namespace. Just run `make reinstall_in_k8s` again after a short time.
 
 ### Monitor the Kubernetes cluster
 
@@ -231,6 +245,7 @@ make run_mongo_express
 ```
 
 # Builing Local Images
+
 This repository leverages common functionality from [openidl-common-lib](https://github.com/openidl-org/openidl-main/tree/main/openidl-common-lib) . To install this dependency, replace `{GITHUB_TOKEN}` in `.npmrc` with your own Git personal access token in all the repositories. For details on how to get an access token, please see [Personal access tokens](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) on the GitHub site. Access Token should have at least `read:packages` permissions
 
 ```
@@ -295,3 +310,4 @@ sudo apt-get install build-essential
 ```bash
 sudo apt update
 sudo apt install qemu-kvm libvirt-daemon-system
+```
