@@ -1,4 +1,4 @@
-module main
+module github.com/openidl-org/openidl-main/openidl-chaincode/chaincode/openidl
 
 go 1.16
 
