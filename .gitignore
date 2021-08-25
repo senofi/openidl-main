@@ -11,3 +11,4 @@ openidl-common-ui/dist/
 **/vendor
 *.mod
 *.sum
+systemup.log

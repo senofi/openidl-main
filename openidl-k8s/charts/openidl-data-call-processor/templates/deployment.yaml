@@ -29,6 +29,7 @@ spec:
         - "peer0.analytics.example.com"
         - "peer0.carrier.example.com"
         - "orderer.example.com"
+        - "host.minikube.internal"
       {{- end }}
       # {{- with .Values.imagePullSecrets }}
       # imagePullSecrets:
