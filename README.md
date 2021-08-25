@@ -56,6 +56,7 @@ $ export PATH=$PATH:/usr/local/go/bin
 $ go version
 ```
 
+**Troubleshooting note**: If you have "permission denied" error in untarring the file, please make sure to have correct ownership of directories, or you may want to use `sudo` for the untar. 
 For more details or troubleshooting, see https://golang.org/doc/install
 
 ## Install Git
@@ -81,6 +82,26 @@ https://hyperledger-fabric.readthedocs.io/en/release-2.2/prereqs.html#docker-and
 
 For more details and troubleshooting, please refer to
 https://hyperledger-fabric.readthedocs.io/en/release-2.2/prereqs.html#
+
+### Install Docker Compose
+For Ubuntu:
+```
+$ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+$ sudo chmod +x /usr/local/bin/docker-compose
+$ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+```
+For Mac:
+Docker Compose comes as a part of Docker, there's no need for a separate install.
+
+### Install Make
+If `make` is not installed, for Ubuntu:
+```
+$ sudo apt-get install build-essential
+```
+For mac
+```
+ brew install make
+ ```
 
 ## Get Minikube working
 
