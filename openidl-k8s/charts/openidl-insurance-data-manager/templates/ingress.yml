@@ -28,7 +28,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    - host: insurance-data-manager-aais.test.io
+    - host: insurance-data-manager-aais.internal.{{ .Values.global.clusterurl }}
       http:
         paths:
           - path: /
