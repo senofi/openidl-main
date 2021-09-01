@@ -44,77 +44,96 @@ use_minikube_as_registry:
 	echo This does not work for some reason, do it manually! Use only 1 dollar sign
 	eval $$(minikube -p minikube docker-env)
 
-load_images_full:
-	docker load -i ./openidl-iac-local/images/openidl-ui.tar
-	docker load -i ./openidl-iac-local/images/openidl-insurance-data-manager.tar
-	docker load -i ./openidl-iac-local/images/openidl-data-call-processor.tar
-	docker load -i ./openidl-iac-local/images/openidl-data-call-app.tar
-	docker load -i ./openidl-iac-local/images/openidl-upload.tar
-
-load_images:
-	echo No longer need to load images, they all come from github container registry
-	docker load -i ./openidl-iac-local/images/openidl-ui.tar
-	
-docker_load_ui:
-	docker load -i ./openidl-iac-local/images/openidl-ui.tar
-
-docker_load_upload:
-	docker load -i ./openidl-iac-local/images/openidl-upload.tar
-
 refresh_upload: | build_upload docker_save_upload docker_load_upload
 
 install_in_k8s:
-	helm install local-aais ./openidl-k8s -f ./openidl-k8s/global-values.yaml --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	kubectl create namespace openidl-aais-apps
+	kubectl create namespace openidl-analytics-apps
+	kubectl create namespace openidl-carrier-apps
+	helm install local-aais ./openidl-k8s/openidl-aais-k8s -f ./openidl-k8s/openidl-aais-k8s/global-values.yaml -n openidl-aais-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-analytics ./openidl-k8s/openidl-analytics-k8s -f ./openidl-k8s/openidl-analytics-k8s/global-values.yaml -n openidl-analytics-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-carrier ./openidl-k8s/openidl-carrier-k8s -f ./openidl-k8s/openidl-carrier-k8s/global-values.yaml -n openidl-carrier-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
 
 uninstall_from_k8s:
-	helm uninstall local-aais
+	helm uninstall local-aais -n openidl-aais-apps 
+	helm uninstall local-analytics -n openidl-analytics-apps
+	helm uninstall local-carrier -n openidl-carrier-apps
 
 reinstall_in_k8s:
-	helm uninstall local-aais
-	helm install local-aais ./openidl-k8s -f ./openidl-k8s/global-values.yaml --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm uninstall local-aais -n openidl-aais-apps 
+	helm uninstall local-analytics -n openidl-analytics-apps
+	helm uninstall local-carrier -n openidl-carrier-apps
+	helm install local-aais ./openidl-k8s/openidl-aais-k8s -f ./openidl-k8s/openidl-aais-k8s/global-values.yaml -n openidl-aais-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-analytics ./openidl-k8s/openidl-analytics-k8s -f ./openidl-k8s/openidl-analytics-k8s/global-values.yaml -n openidl-analytics-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-carrier ./openidl-k8s/openidl-carrier-k8s -f ./openidl-k8s/openidl-carrier-k8s/global-values.yaml -n openidl-carrier-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
 
 dashboard:
 	echo better to open a separate terminal for this
 	minikube dashboard
 
-run_mongo_express:
-	minikube service mongo-express-service
+build_all_images:
+	docker build ./openidl-data-call-app -t openidl/data-call-app
+	docker build ./openidl-data-call-processor -t openidl/data-call-processor
+	docker build ./openidl-data-call-mood-listener -t openidl/data-call-mood-listener
+	docker build ./openidl-insurance-data-manager -t openidl/insurance-data-manager
+	docker build ./openidl-transactional-data-event-listener -t openidl/transactional-data-event-listener
+	docker build ./openidl-ui-workspace -t openidl/ui --build-arg PROJECT=aais
+	docker build ./openidl-ui-workspace -t openidl/carrier-ui --build-arg PROJECT=carrier
+	(cd ./openidl-upload && npm run build && cd .. && docker build ./openidl-upload -t openidl/upload)
+
+delete_all_images:
+	docker rmi openidl/ui openidl/data-call-app openidl/data-call-processor openidl/data-call-mood-listener openidl/transactional-data-event-listener openidl/insurance-data-manager openidl/carrier-ui openidl/upload
 
 build_insurance_data_manager:
 	docker build ./openidl-insurance-data-manager -t openidl/insurance-data-manager
 
-run_insurance_data_manager:
-	minikube service insurance-data-manager-service
+build_data_call_mood_listener:
+	docker build ./openidl-data-call-mood-listener -t openidl/data-call-mood-listener
+
+build_transactional_data_event_listener:
+	docker build ./openidl-transactional-data-event-listener -t openidl/transactional-data-event-listener
+
+build_data_call_processor:
+	docker build ./openidl-data-call-processor -t openidl/data-call-processor
 
 build_data_call_app:
 	docker build ./openidl-data-call-app -t openidl/data-call-app
 
-run_data_call_app:
-	minikube service data-call-app-service
-
-run_ui:
-	minikube service ui-service
-
 build_ui:
 	docker build ./openidl-ui-workspace -t openidl/ui --build-arg PROJECT=aais
 
-run_upload:
-	minikube service upload-service
+build_carrier_ui:
+	docker build ./openidl-ui-workspace -t openidl/carrier-ui --build-arg PROJECT=carrier
 
 build_upload:
 	(cd ./openidl-upload && npm run build && cd .. && docker build ./openidl-upload -t openidl/upload)
 
-build_data_call_processor:
-	docker build ./openidl-data-call-processor -t openidl/data-call-processor
-	
-save_images:
-	docker_save_ui
+run_ui:
+	minikube service ui-service  -n openidl-aais-apps 
 
-docker_save_ui:
-	docker save -o ./openidl-iac-local/images/openidl-ui.tar openidl/ui:latest
+run_analytics_ui:
+	minikube service ui-service  -n openidl-analytics-apps 
 
-docker_save_upload:
-	docker save -o ./openidl-iac-local/images/openidl-upload.tar openidl/upload:latest
+run_carrier_ui:
+	minikube service carrier-ui-service  -n openidl-carrier-apps 
+
+run_data_call_app:
+	minikube service data-call-app-service -n openidl-aais-apps 
+
+run_analytics_data_call_app:
+	minikube service data-call-app-service -n openidl-analytics-apps 
+
+run_carrier_data_call_app:
+	minikube service data-call-app-service -n openidl-carrier-apps
+
+run_insurance_data_manager:
+	minikube service insurance-data-manager-service -n openidl-aais-apps 
+
+run_carrier_insurance_data_manager:
+	minikube service insurance-data-manager-service -n openidl-carrier-apps
+
+run_upload:
+	minikube service upload-service -n openidl-carrier-apps
 
 # The ingress targets are not necessary if the ingress addon can be applied successfully
 docker_save_ingress:
@@ -136,15 +155,4 @@ aws_load_image:
 	docker tag openidl/$(IMAGE_NAME):latest 531234332176.dkr.ecr.us-east-1.amazonaws.com/openidl-$(IMAGE_NAME):latest
 	docker push 531234332176.dkr.ecr.us-east-1.amazonaws.com/openidl-$(IMAGE_NAME):latest
 
-build_all_images:
-	docker build ./openidl-data-call-app -t openidl/data-call-app
-	docker build ./openidl-data-call-processor -t openidl/data-call-processor
-	docker build ./openidl-data-call-mood-listener -t openidl/data-call-mood-listener
-	docker build ./openidl-insurance-data-manager -t openidl/insurance-data-manager
-	docker build ./openidl-transactional-data-event-listener -t openidl/transactional-data-event-listener
-	docker build ./openidl-ui-workspace -t openidl/ui --build-arg PROJECT=aais
-	docker build ./openidl-ui-workspace -t openidl/carrier-ui --build-arg PROJECT=carrier
-	(cd ./openidl-upload && npm run build && cd .. && docker build ./openidl-upload -t openidl/upload)
 
-delete_all_images:
-	docker rmi openidl/ui openidl/data-call-app openidl/data-call-processor openidl/data-call-mood-listener openidl/transactional-data-event-listener openidl/insurance-data-manager openidl/carrier-ui openidl/upload

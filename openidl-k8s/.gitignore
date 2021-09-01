@@ -1,3 +1,6 @@
 charts/openidl-secrets/config/**
 charts/openidl-secrets/config-local/**
 charts/openidl-secrets/config-fabric/**
+openidl-aais-k8s/charts/openidl-secrets/config/**
+openidl-analytics-k8s/charts/openidl-secrets/config/**
+openidl-carrier-k8s/charts/openidl-secrets/config/**

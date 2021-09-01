@@ -88,6 +88,7 @@ appUserRegister.createUserInCognito = async (usersConfig) => {
  * Update user atrributes in aws cognito
  */
 appUserRegister.updateCognitoUserAttributes = async (usersConfig) => {
+	logger.info('updateCognitoUserAttributes method entry -');
 	let users = usersConfig.users;
 
 	const cognitoConfig = JSON.parse(process.env.IDP_CONFIG);;
@@ -122,10 +123,12 @@ appUserRegister.updateCognitoUserAttributes = async (usersConfig) => {
 				Value: users[i].givenName
 			})
 		}
-		params.UserAttributes.push({
-			Name: 'email',
-			Value: users[i].email
-		});
+		if (users[i].email) {
+			params.UserAttributes.push({
+				Name: 'email',
+				Value: users[i].email
+			});
+		}
 		await cognitoidentityserviceprovider.adminUpdateUserAttributes(params).promise();
 	}
 }

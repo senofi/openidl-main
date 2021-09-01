@@ -67,7 +67,7 @@ Application currently supports both AWS Cognito and IBM App ID. You can go with 
 * Final JSON would be
     ```
     {
-        "idpType": "cognito",
+        "idpType": "appid",
         "apikey":"*****************************",
         "clientId":"*****************************",
         "appidServiceEndpoint":"*****************************",
@@ -149,7 +149,7 @@ Application currently supports both AWS Cognito and IBM App ID. You can go with 
 3. Verify that the server has started successfully. The message `[2018-11-26 16:34:00.581] [INFO] server - app listening on http://localhost:8080` should be present in the logs, and there should be no errors.
 
 ## Verify server is up and running
-You can access the OpenAPI (aka Swagger) documentation locally at http://localhost:8080/ for information on the different endpoints and how to access them so you can validate the server is up and running as expected. Please note that you will need to generate an authentication token before you can invoke any of the endpoints.
+You can access the OpenAPI (aka Swagger) documentation locally at http://localhost:8080/api-docs for information on the different endpoints and how to access them so you can validate the server is up and running as expected. Please note that you will need to generate an authentication token before you can invoke any of the endpoints.
 
 ### Execute functional test cases
 Once the installation and app have been verified to work locally, test suites may be executed:

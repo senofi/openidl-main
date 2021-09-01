@@ -75,8 +75,9 @@ EventListener.processInvoke = async () => {
 };
 
 const mainHandler = async (channelName) => {
-
     try {
+        // adding sleep to wait for the transaction to be committed
+        await sleep(5000);
         logger.debug('eventHandler mainHandler method entry for channel ' + channelName);
         const blockInfo = await getBlockInfoFromCloudant(this.applicationName + "-" + channelName);
 
@@ -250,5 +251,9 @@ EventListener.getCarriersInstance = async (channelName) => {
     return carrierChannelTransactionMap.get(channelName);
 
 };
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 module.exports = EventListener;

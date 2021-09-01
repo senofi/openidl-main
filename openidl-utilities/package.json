@@ -26,7 +26,7 @@
         "log4js": "^4.3.2",
         "nconf": "^0.10.0",
         "node-fetch": "^2.6.1",
-        "@openidl-org/openidl-common-lib": "^0.5.3",
+        "@openidl-org/openidl-common-lib": "^0.5.4",
         "passport": "^0.4.0",
         "q": "^1.4.1",
         "request": "^2.88.0",

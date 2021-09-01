@@ -9,6 +9,4 @@ hosts-update.txt
 hosts-updated.txt
 openidl-common-ui/dist/
 **/vendor
-*.mod
-*.sum
 systemup.log

@@ -1,0 +1,27 @@
+global:
+  clusterurl: aais.test.io
+  appsecret: apps-secret
+  datacallapp:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: data-call-app-service
+    ingresshostname: data-call-app-aais.test.io
+  ui:
+    install: true
+    servicename: ui-service
+    port: 8080
+    targetport: 8080
+  insurancedatamanager:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: insurance-data-manager-service
+  datacallprocessor:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: data-call-processor-service
+  mongodb:
+    install: true
+    servicename: mongodb-service
