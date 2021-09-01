@@ -108,7 +108,7 @@ Application currently supports both AWS Cognito and IBM App ID. You can go with 
 | Config File Name      | Configured Value  |  Local Run Value|
 | --------------------- | ----------------- | --------------- |
 | `server/config/listener-channel-config.json` | `"channelName": "analytics-${HOST}"` | `"channelName": "analytics-aais"` |
-|  `server/config/channel-config.json` | `"org": "${HOST}"` | `"org": "aais"` |
+|  `server/config/target-channel-config.json` | `"org": "${HOST}"` | `"org": "aais"` |
 | `server/config/listener-channel-config.json` | ` "user": "openidl-${HOST}-data-call-processor-ibp-2.0","` | ` "user": "openidl-aais-data-call-processor-ibp-2.0","` |
 
 
@@ -151,7 +151,7 @@ https://aws.amazon.com/premiumsupport/knowledge-center/create-access-key/)).
 ### 8. Configure email.json
 
 * Create `email.json` file under `server/config`
-* TODO on how to get the JSON file
+* (Please ask your system administrator for this file)
 
 ## Start the Node.js server
 1. Run the `npm install` command and verify that there are no errors.
