@@ -1,5 +1,5 @@
 {{- if .Values.global.insurancedatamanager.install }}
-{{- if .Values.ingress.enabled -}}
+{{- if .Values.global.insurancedatamanager.ingressenabled -}}
 {{- $fullName := include "openidl-insurance-data-manager.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
@@ -28,7 +28,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    - host: insurance-data-manager-aais.internal.{{ .Values.global.clusterurl }}
+    - host: {{ Values.global.insurancedatamanager.ingresshostname }}
       http:
         paths:
           - path: /
@@ -36,9 +36,7 @@ spec:
             backend:
               service:
                 name: {{ .Values.global.insurancedatamanager.servicename }}
-                port: 
+                port:
                   number: {{ .Values.global.insurancedatamanager.port }}
 {{- end }}
 {{- end }}
-
-
