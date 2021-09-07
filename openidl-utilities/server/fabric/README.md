@@ -138,7 +138,7 @@ You can access the OpenAPI (aka Swagger) documentation locally at http://localho
         "users": [
             {
                 "org": "aais",
-                "user": "openidl-aais-data-call-processor-ibp-2.0",
+                "user": "openidl-aais-data-call-processor-ibp-2.1",
                 "pw": "password",
                 "affiliation": "aais",
                 "role": "client",
@@ -160,7 +160,8 @@ You can access the OpenAPI (aka Swagger) documentation locally at http://localho
         "users": [
             {
                 "org": "aais",
-                "user": "openidl-aais-data-call-processor-ibp-2.0",
+                "user": "openidl-aais-data-call-processor-ibp-2.1",
+                "pw": "password",
                 "affiliation": "aais",
                 "role": "client",
                 "attrs": [
