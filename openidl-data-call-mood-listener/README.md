@@ -75,10 +75,10 @@ The following configuration files are either to be created or edited(if already 
 ### Start the Node.js server
 1. Run the `npm install` command and verify that there are no errors.
 2. Run the `npm run dev` command.
-3. Verify that the server has started successfully. The message `server - app listening on http://localhost:3000` should be present in the logs, and there should be no errors.
+3. Verify that the server has started successfully. The message `server - app listening on http://localhost:8080` should be present in the logs, and there should be no errors.
 
 ### Verify server is up and running
-You can verify if server started successfully by browsing to http://localhost:3000/ 
+You can verify if server started successfully by browsing to http://localhost:8080/ 
 
 ### Execute unit test cases
 Once the installation and application have been verified to work locally, test suites may be executed:

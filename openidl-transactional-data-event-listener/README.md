@@ -69,7 +69,7 @@ For development, testing, and debugging purposes, it is very convenient to run t
 |  --------------------- | ----------------- | --------------- |
 |   `server/config/target-channel-config.json` | `"targetChannels": "${TARGET_CHANNELS}"` | `"targetChannels": [{"channelName":"analytics-aais","chaincodeName":"openidl-cc-aais-carriers"}]` |
 
-### 7. Configure s3-bucket-config.json
+### 5. Configure s3-bucket-config.json
 
 * s3 is an object storage in AWS cloud. Currently, openidl application is configured to place all the carrier insurance data(for the data call) in this bucket
 * Create s3-bucket-config.json file under server/config
@@ -84,6 +84,17 @@ For development, testing, and debugging purposes, it is very convenient to run t
 * The access key ID and  secret access key are obtained from AWS
 * Currently, the credentials provided by AAIS are used by all the environments including dev, test and prod. In future, it needs to have separate buckets and credentials for each environment.
 * Due to above reasons, this file is not checked in to git. Get this file from admins or get it from the Kuberenetes secrets in analytics node
+### 6. Configure local-kvs-config.json
+
+* Create `local-kvs-config.json` file under server/config
+* Paste the following JSON in 'local-kvs-config.json' file
+    ``` 
+    {
+        "walletType": "couchdb",
+        "url": "http://admin:adminpw@localhost:9984"
+    }
+    ```
+* Application will be using local CouchDB running on port `9984` as user certificate key value store
 
 ### Start the Node.js server
 

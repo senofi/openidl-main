@@ -190,4 +190,6 @@ And remove all the existing docker images by running the following command:
 ```
 $ docker rmi -f $(docker images -aq)
 ```
-After this, you can follow the steps from the beginning of the document, and it should run the Hyperledger Fabric platform with latest images. 
+After this, you can follow the steps from the beginning of the document, and it should run the Hyperledger Fabric platform with latest images.
+
+As for future Hyperledger Fabric versions, it's too early to tell what steps would be necessary to migrate. There's an upcoming v2.4.0-beta planned for Q4 2021 or later, that will implement Fabric Gateway, and may need change in client-level code for interacting with Fabric. When it's released, the first and best place to start on this would be https://hyperledger-fabric.readthedocs.io/ 
