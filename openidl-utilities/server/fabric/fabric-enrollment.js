@@ -23,12 +23,12 @@ const fabricCAUtil = require('../../helper/util.js');
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
 const walletHelper = openidlCommonLib.Wallet;
 const logger = log4js.getLogger('fabric - fabric-enrolment.js');
-const fabric_constants = require('../fabric/config/fabric-config.json')
+const fabric_constants = require('../config/fabric-config.json')
 let isPersistentStore = true;
 logger.level = fabric_constants.logLevel;
 var fabricEnrollment = {};
 fabricEnrollment.init = async (net_config) => {
-    const networkConfig = path.join(__dirname, './config', net_config);
+    const networkConfig = path.join(__dirname, '../config', net_config);
     fabricCAUtil.init(networkConfig);
 }
 
@@ -46,7 +46,7 @@ fabricEnrollment.enrollAdmin = async (adminUser, adminSecret) => {
 
 fabricEnrollment.registerUser = async (user) => {
     //Fetch admin details from config file
-    const adminConfigPath = path.join(__dirname, './config', fabric_constants.adminConfigFile);
+    const adminConfigPath = path.join(__dirname, '../config', fabric_constants.adminConfigFile);
     const adminList = require(adminConfigPath);
     console.log("Admin Details config file >> " + adminList.adminlist.length);
     var adminOrg = user.org;

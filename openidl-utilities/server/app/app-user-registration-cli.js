@@ -14,14 +14,14 @@
  *  limitations under the License.
  */
 
-const config = require('../app/config/app-config');
+const config = require('../config/app-config');
 const appUserRegistration = require('./app-user');
 const selectedOption = process.argv[4];
 const log4js = require('log4js');
 const logger = log4js.getLogger('app - app-user registration');
 logger.level = config.logLevel;
 logger.info("Selected Option >> " + selectedOption);
-const usersConfig = require('../app/config/user-config.json');
+const usersConfig = require('../config/user-config.json');
 logger.info("User Details config file >> " + usersConfig);
 
 async function main() {
