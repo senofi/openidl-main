@@ -50,9 +50,9 @@ install_in_k8s:
 	kubectl create namespace openidl-aais-apps
 	kubectl create namespace openidl-analytics-apps
 	kubectl create namespace openidl-carrier-apps
-	helm install local-aais ./openidl-k8s/openidl-aais-k8s -f ./openidl-k8s/openidl-aais-k8s/global-values.yaml -n openidl-aais-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
-	helm install local-analytics ./openidl-k8s/openidl-analytics-k8s -f ./openidl-k8s/openidl-analytics-k8s/global-values.yaml -n openidl-analytics-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
-	helm install local-carrier ./openidl-k8s/openidl-carrier-k8s -f ./openidl-k8s/openidl-carrier-k8s/global-values.yaml -n openidl-carrier-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-aais ./openidl-k8s -f ./openidl-k8s/global-values-aais.yaml -n openidl-aais-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-analytics ./openidl-k8s -f ./openidl-k8s/global-values-analytics.yaml -n openidl-analytics-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-carrier ./openidl-k8s -f ./openidl-k8s/global-values-carrier.yaml -n openidl-carrier-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
 
 uninstall_from_k8s:
 	helm uninstall local-aais -n openidl-aais-apps 
@@ -63,9 +63,9 @@ reinstall_in_k8s:
 	helm uninstall local-aais -n openidl-aais-apps 
 	helm uninstall local-analytics -n openidl-analytics-apps
 	helm uninstall local-carrier -n openidl-carrier-apps
-	helm install local-aais ./openidl-k8s/openidl-aais-k8s -f ./openidl-k8s/openidl-aais-k8s/global-values.yaml -n openidl-aais-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
-	helm install local-analytics ./openidl-k8s/openidl-analytics-k8s -f ./openidl-k8s/openidl-analytics-k8s/global-values.yaml -n openidl-analytics-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
-	helm install local-carrier ./openidl-k8s/openidl-carrier-k8s -f ./openidl-k8s/openidl-carrier-k8s/global-values.yaml -n openidl-carrier-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-aais ./openidl-k8s -f ./openidl-k8s/global-values-aais.yaml -n openidl-aais-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-analytics ./openidl-k8s -f ./openidl-k8s/global-values-analytics.yaml -n openidl-analytics-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-carrier ./openidl-k8s -f ./openidl-k8s/global-values-carrier.yaml -n openidl-carrier-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
 
 dashboard:
 	echo better to open a separate terminal for this

@@ -11,7 +11,7 @@ image:
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     # tag: latest
-    tag: 0.0.3
+    tag: 0.0.4
 
 imagePullSecrets: []
 nameOverride: ""
@@ -82,23 +82,15 @@ tolerations: []
 affinity: {}
 
 secrets:
-    - name: appid-config
-      file: local-appid-config.json
     - name: cognito-config
       file: local-cognito-config.json
-    - name: certmanager-config
-      file: local-certmanager-config.json
     - name: kvs-config
       file: local-kvs-config.json
     - name: vault-config
       file: local-vault-config.json
-    - name: mongodb-config
-      file: local-mongo-config.json
-    - name: cloudantdb-config
-      file: local-cloudant-config.json
     - name: connectionprofile-config
       file: connection-profile.json
-    - name: channelconfigaais
+    - name: insurance-data-manager-channel-config
       file: channel-config.json
     - name: db-config
       file: local-db-config.json

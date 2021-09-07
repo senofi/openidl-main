@@ -95,8 +95,14 @@ secrets:
     - name: insurance-data-manager-default-config
       file: config/insurance-data-manager-default-config.json
       namespace: default
+    - name: insurance-data-manager-channel-config
+      file: config/insurance-data-manager-channel-config.json
+      namespace: default
     - name: data-call-app-default-config
       file: config/data-call-app-default-config.json
+      namespace: default
+    - name: data-call-app-mappings-config
+      file: config/data-call-app-mappings-config.json
       namespace: default
     - name: data-call-processor-default-config
       file: config/data-call-processor-default-config.json
@@ -104,35 +110,20 @@ secrets:
     - name: data-call-processor-metadata-config
       file: config/data-call-processor-metadata-config.json
       namespace: default
-    - name: data-call-app-mappings-config
-      file: config/data-call-app-mappings-config.json
-      namespace: default
     - name: data-call-processor-mappings-config
       file: config/data-call-processor-mappings-config.json
       namespace: default
     - name: ui-mappings-config
       file: config/ui-mappings-config.json
       namespace: default
-    - name: appid-config
-      file: config/local-appid-config.json
-      namespace: default
     - name: cognito-config
       file: config/local-cognito-config.json
-      namespace: default
-    - name: certmanager-config
-      file: config/local-certmanager-config.json
       namespace: default
     - name: kvs-config
       file: config/local-kvs-config.json
       namespace: default
     - name: vault-config
       file: config/local-vault-config.json
-      namespace: default
-    - name: mongodb-config
-      file: config/local-mongo-config.json
-      namespace: default
-    - name: cloudantdb-config
-      file: config/local-cloudant-config.json
       namespace: default
     - name: connectionprofile-config
       file: config/connection-profile.json
@@ -158,6 +149,33 @@ secrets:
     - name: uniqueidentifiersaais-config
       file: config/unique-identifiers-config.json
       namespace: default
-    - name: nifi-config
-      file: config/nifi-flowconfig.json
-      namespace: nifi
+    - name: data-call-mood-listener-default-config
+      file: config/data-call-mood-listener-default-config.json
+      namespace: default
+    - name: data-call-mood-listener-metadata-config
+      file: config/data-call-mood-listener-metadata-config.json
+      namespace: default
+    - name: data-call-mood-listener-mappings-config
+      file: config/data-call-mood-listener-mappings-config.json
+      namespace: default
+    - name: data-call-mood-listener-channel-config
+      file: config/data-call-mood-listener-channel-config.json
+      namespace: default
+    - name: data-call-mood-listener-target-channel-config
+      file: config/data-call-mood-listener-target-channel-config.json
+      namespace: default
+    - name: transactional-data-event-listener-default-config
+      file: config/transactional-data-event-listener-default-config.json
+      namespace: default
+    - name: transactional-data-event-listener-metadata-config
+      file: config/transactional-data-event-listener-metadata-config.json
+      namespace: default
+    - name: transactional-data-event-listener-mappings-config
+      file: config/transactional-data-event-listener-mappings-config.json
+      namespace: default
+    - name: transactional-data-event-listener-channel-config
+      file: config/transactional-data-event-listener-channel-config.json
+      namespace: default
+    - name: transactional-data-event-listener-target-channel-config
+      file: config/transactional-data-event-listener-target-channel-config.json
+      namespace: default

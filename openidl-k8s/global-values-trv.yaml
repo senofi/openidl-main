@@ -1,0 +1,53 @@
+global:
+  clusterurl: aaistrvdemo.com
+  appsecret: apps-secret
+  configpath: config-trv
+  datacallapp:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: data-call-app-service
+    ingressenabled: false
+    ingresshostname: data-call-app-service.trv.dev.internal.aaistrvdemo.com
+    publicingresshostname: data-call-app-service.trv.dev.aaistrvdemo.com
+  carrierui:
+    install: true
+    servicename: carrier-ui-service
+    port: 8080
+    targetport: 8080
+    ingressenabled: false
+    ingresshostname: openidl.trv.dev.aaistrvdemo.com
+  insurancedatamanager:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: insurance-data-manager-service
+    ingressenabled: false
+    ingresshostname: insurance-data-manager-service.trv.dev.aaistrvdemo.com
+  datacallprocessor:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: data-call-processor-service
+  upload:
+    install: true
+    port: 80
+    targetport: 80
+    servicename: upload-service
+  datacallmoodlistener:
+    install: false
+    port: 8080
+    targetport: 8080
+    servicename: data-call-mood-listener-service
+  transactionaldataeventlistener:
+    install: false
+    port: 8080
+    targetport: 8080
+    servicename: transactional-data-event-listener-service
+  ui:
+    install: false
+    servicename: ui-service
+    port: 8080
+    targetport: 8080
+    ingressenabled: false
+    ingresshostname: openidl.trv.dev.aaistrvdemo.com

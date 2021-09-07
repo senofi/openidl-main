@@ -22,6 +22,6 @@ RUN npm run build:common
 RUN npm run build:$PROJECT
 
 RUN ng config -g cli.warnings.versionMismatch false
-
+RUN rm -rf .npmrc
 EXPOSE 8080
 CMD npm run start:${PROJECT}

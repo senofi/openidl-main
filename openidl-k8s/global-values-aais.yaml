@@ -1,6 +1,7 @@
 global:
   clusterurl: aaisdemo.com
   appsecret: apps-secret
+  configpath: config-aais
   datacallapp:
     install: true
     port: 8080
@@ -28,6 +29,25 @@ global:
     port: 8080
     targetport: 8080
     servicename: data-call-processor-service
-  mongodb:
-    install: true
-    servicename: mongodb-service
+  upload:
+    install: false
+    port: 80
+    targetport: 80
+    servicename: upload-service
+  datacallmoodlistener:
+    install: false
+    port: 8080
+    targetport: 8080
+    servicename: data-call-mood-listener-service
+  transactionaldataeventlistener:
+    install: false
+    port: 8080
+    targetport: 8080
+    servicename: transactional-data-event-listener-service
+  carrierui:
+    install: false
+    servicename: carrier-ui-service
+    port: 8080
+    targetport: 8080
+    ingressenabled: false
+    ingresshostname: openidl.aais.dev.aaisdemo.com
