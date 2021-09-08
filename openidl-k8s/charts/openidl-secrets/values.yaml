@@ -89,9 +89,6 @@ secrets:
     - name: insurance-data-manager-metadata-config
       file: config/insurance-data-manager-metadata-config.json
       namespace: default
-    - name: insurance-data-manager-constant-config
-      file: config/insurance-data-manager-constant-config.js
-      namespace: default
     - name: insurance-data-manager-default-config
       file: config/insurance-data-manager-default-config.json
       namespace: default

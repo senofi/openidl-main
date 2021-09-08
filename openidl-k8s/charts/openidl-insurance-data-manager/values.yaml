@@ -96,8 +96,6 @@ secrets:
       file: local-db-config.json
     - name: email-config
       file: email.json
-    - name: insurance-data-manager-constant-config
-      file: constant.js
     - name: insurance-data-manager-default-config
       file: default.json
     - name: insurance-data-manager-mappings-config

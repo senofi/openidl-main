@@ -4,7 +4,7 @@ export PATH=${PWD}/bin:$PATH
 export GODEBUG=x509ignoreCN=0
 
 # sample command
-#./pre-register-users.sh -N admin -P adminpw -p password -u localhost:7054 -n ca-aais  -c http://admin:adminpw@localhost:9984/wallet/ -o aais.example.com -m aaismsp -U "openidl-aais-insurance-data-manager-ibp-2.0 openidl-aais-data-call-processor-ibp-2.0" -r true -V http://127.0.0.1:8200 -l user-data-call-app -t password -b AAISOrg -q data-call-app -w vault
+#./pre-register-users.sh -N admin -P adminpw -p password -u localhost:7054 -n ca-aais  -c http://admin:adminpw@localhost:9984/wallet/ -o aais -m aaismsp -U "openidl-aais-insurance-data-manager-ibp-2.0 openidl-aais-data-call-processor-ibp-2.0" -r true -V http://127.0.0.1:8200 -l user-data-call-app -t password -b AAISOrg -q data-call-app -w vault
 
 JQ=$(which jq)
 RESULT=$?
@@ -28,17 +28,17 @@ preRegisterUser() {
     fi
 
     export FABRIC_CA_CLIENT_HOME=${PWD}/organizations/peerOrganizations/${ORG}/
-
     # enroll admin
-    fabric-ca-client enroll -u https://${CA_ADMIN_USERNAME}:${CA_ADMIN_PASSWORD}@${CA_URL} --caname ${CA_NAME} --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
+    fabric-ca-client enroll -u https://${CA_ADMIN_USERNAME}:${CA_ADMIN_PASSWORD}@${CA_URL} --caname ${CA_NAME} --tls.certfiles ${PWD}/organizations/fabric-ca/${ORG}/tls-cert.pem
 
     read -r -a USERNAMES <<<"$USERNAMES"
     for user in ${USERNAMES[@]}; do
         # register user
-        fabric-ca-client register --caname ${CA_NAME} --id.name ${user} --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
+        fabric-ca-client register --caname ${CA_NAME} --id.name ${user} --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/${ORG}/tls-cert.pem
         # enroll user
-        fabric-ca-client enroll -u https://${user}:${CA_USER_PASSWORD}@${CA_URL} --caname ${CA_NAME} -M ${FABRIC_CA_CLIENT_HOME}/users/${user}@${ORG}/msp --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
-        cp ${PWD}/organizations/peerOrganizations/${ORG}/msp/config.yaml ${FABRIC_CA_CLIENT_HOME}/users/${user}@${ORG}/msp/config.yaml
+        rm -rf ${FABRIC_CA_CLIENT_HOME}/users/${user}@${ORG}
+        fabric-ca-client enroll -u https://${user}:${CA_USER_PASSWORD}@${CA_URL} --caname ${CA_NAME} -M ${FABRIC_CA_CLIENT_HOME}/users/${user}@${ORG}/msp --tls.certfiles ${PWD}/organizations/fabric-ca/${ORG}/tls-cert.pem
+        # cp ${PWD}/organizations/peerOrganizations/${ORG}/msp/config.yaml ${FABRIC_CA_CLIENT_HOME}/users/${user}@${ORG}/msp/config.yaml
         # prepare signcerts data
         signcerts=$(cat ${FABRIC_CA_CLIENT_HOME}/users/${user}@${ORG}/msp/signcerts/cert.pem)
         signingIdentity="${signcerts//$'\n'/\\\\n}"
