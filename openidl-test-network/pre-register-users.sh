@@ -3,202 +3,150 @@
 export PATH=${PWD}/bin:$PATH
 export GODEBUG=x509ignoreCN=0
 
-# delete wallet store
-curl -X DELETE http://admin:adminpw@localhost:9984/wallet/
+# sample command
+#./pre-register-users.sh -N admin -P adminpw -p password -u localhost:7054 -n ca-aais  -c http://admin:adminpw@localhost:9984/wallet/ -o aais.example.com -m aaismsp -U "openidl-aais-insurance-data-manager-ibp-2.0 openidl-aais-data-call-processor-ibp-2.0" -r true -V http://127.0.0.1:8200 -l user-data-call-app -t password -b AAISOrg -q data-call-app -w vault
 
-# create a wallet in couchdb
-curl -X PUT http://admin:adminpw@localhost:9984/wallet
+JQ=$(which jq)
+RESULT=$?
+if [ $RESULT -ne 0 ]; then
+    echo "Failed to execute jq."
+    exit 1
+fi
+if [ ! -x "${JQ}" ]; then
+    echo "jq not found."
+    exit 1
+fi
 
-export FABRIC_CA_CLIENT_HOME=${PWD}/organizations/peerOrganizations/aais.example.com/
+preRegisterUser() {
 
-# enroll admin
-fabric-ca-client enroll -u https://admin:adminpw@localhost:7054 --caname ca-aais --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
+    if ${RESET_WALLET}; then
+        echo "reset couchdb wallet"
+        # delete wallet store
+        curl -X DELETE ${COUCH_URL}
+        # create a wallet in couchdb
+        curl -X PUT ${COUCH_URL}
+    fi
 
-# register user - openidl-aais-insurance-data-manager-ibp-2.0
-fabric-ca-client register --caname ca-aais --id.name openidl-aais-insurance-data-manager-ibp-2.0 --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
+    export FABRIC_CA_CLIENT_HOME=${PWD}/organizations/peerOrganizations/${ORG}/
 
-# enroll user
-fabric-ca-client enroll -u https://openidl-aais-insurance-data-manager-ibp-2.0:password@localhost:7054 --caname ca-aais -M ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-insurance-data-manager-ibp-2.0@aais.example.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
-cp ${PWD}/organizations/peerOrganizations/aais.example.com/msp/config.yaml ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-insurance-data-manager-ibp-2.0@aais.example.com/msp/config.yaml
+    # enroll admin
+    fabric-ca-client enroll -u https://${CA_ADMIN_USERNAME}:${CA_ADMIN_PASSWORD}@${CA_URL} --caname ${CA_NAME} --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
 
-# export signcerts to couchdb
-signcerts=$(cat ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-insurance-data-manager-ibp-2.0@aais.example.com/msp/signcerts/cert.pem)
-signingIdentity="${signcerts//$'\n'/\\\\n}"
-privKey=$(cat ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-insurance-data-manager-ibp-2.0@aais.example.com/msp/keystore/*)
-signingPrivKey="${privKey//$'\n'/\\\\r\\\\n}"
-initCommand='"{\"credentials\":{\"certificate\":\"signcerts\\n\",\"privateKey\":\"privatekey\\r\\n\"},\"mspId\":\"aaismsp\",\"type\":\"X.509\",\"version\":1}"'
-data="${initCommand/signcerts/$signingIdentity}"
-data="${data/privatekey/$signingPrivKey}"
-signcertsJSON="{\"data\":$data}"
-curl -X PUT http://admin:adminpw@localhost:9984/wallet/"openidl-aais-insurance-data-manager-ibp-2.0" -d "$signcertsJSON"
+    read -r -a USERNAMES <<<"$USERNAMES"
+    for user in ${USERNAMES[@]}; do
+        # register user
+        fabric-ca-client register --caname ${CA_NAME} --id.name ${user} --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
+        # enroll user
+        fabric-ca-client enroll -u https://${user}:${CA_USER_PASSWORD}@${CA_URL} --caname ${CA_NAME} -M ${FABRIC_CA_CLIENT_HOME}/users/${user}@${ORG}/msp --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
+        cp ${PWD}/organizations/peerOrganizations/${ORG}/msp/config.yaml ${FABRIC_CA_CLIENT_HOME}/users/${user}@${ORG}/msp/config.yaml
+        # prepare signcerts data
+        signcerts=$(cat ${FABRIC_CA_CLIENT_HOME}/users/${user}@${ORG}/msp/signcerts/cert.pem)
+        signingIdentity="${signcerts//$'\n'/\\\\n}"
+        privKey=$(cat ${FABRIC_CA_CLIENT_HOME}/users/${user}@${ORG}/msp/keystore/*)
+        signingPrivKey="${privKey//$'\n'/\\\\r\\\\n}"
+        initCommand='"{\"credentials\":{\"certificate\":\"signcerts\\n\",\"privateKey\":\"privatekey\\r\\n\"},\"mspId\":\"MSP\",\"type\":\"X.509\",\"version\":1}"'
+        data="${initCommand/signcerts/$signingIdentity}"
+        data="${data/privatekey/$signingPrivKey}"
+        data="${data/MSP/$MSP}"
+        if [ "$DESTINATION" = "vault" ]; then
+            # login to Vault to get the user token
+            LOGIN_RESPONSE=$(curl \
+                --request POST \
+                --data "{\"password\":\"${VAULT_PASSWORD}\"}" \
+                ${VAULT_URL}/v1/auth/${VAULT_ORG}/login/${VAULT_USER_NAME} --insecure)
 
-# openidl-aais-data-call-app-ibp-2.0
+            RESULT=$?
+            if [ $RESULT -ne 0 ]; then
+                echo "Failed to execute curl."
+                exit 1
+            fi
+            LOGIN_RESPONSE=${LOGIN_RESPONSE}
+            USER_TOKEN=$(echo ${LOGIN_RESPONSE} | ${JQ} ".auth.client_token" | sed "s/\"//g")
+            signcertsJSON="{\"id\":\"$user\",\"data\":$data}"
+            # export to vault
+            curl -H "X-Vault-Token: ${USER_TOKEN}" -H "Content-Type: application/json" -X POST -d "{\"data\":$signcertsJSON}" ${VAULT_URL}/v1/${VAULT_ORG}/data/${APP}/${user}
+        elif [ "$DESTINATION" = "couch" ]; then
+            signcertsJSON="{\"data\":$data}"
+            # export to couch
+            curl -X PUT ${COUCH_URL}"${user}" -d "$signcertsJSON"
+        else
+            echo "The export destination is UNKNOWN."
+        fi
+    done
+}
 
-# register user - openidl-aais-data-call-app-ibp-2.0
-fabric-ca-client register --caname ca-aais --id.name openidl-aais-data-call-app-ibp-2.0 --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
+CA_ADMIN_USERNAME=""
+CA_ADMIN_PASSWORD=""
+CA_USER_PASSWORD=""
+CA_URL=""
+CA_NAME=""
+COUCH_URL=""
+MSP=""
+ORG=""
+RESET_WALLET=false
+VAULT_URL=""
+VAULT_USER_NAME=""
+VAULT_PASSWORD=""
+VAULT_ORG=""
+APP=""
+DESTINATION=""
+declare -a USERNAMES
+while getopts "N:P:p:u:n:c:o:m:U:r:V:l:t:b:q:w:" key; do
+    case ${key} in
+    N)
+        CA_ADMIN_USERNAME=${OPTARG}
+        ;;
+    P)
+        CA_ADMIN_PASSWORD=${OPTARG}
+        ;;
+    p)
+        CA_USER_PASSWORD=${OPTARG}
+        ;;
+    u)
+        CA_URL=${OPTARG}
+        ;;
+    n)
+        CA_NAME=${OPTARG}
+        ;;
+    c)
+        COUCH_URL=${OPTARG}
+        ;;
+    o)
+        ORG=${OPTARG}
+        ;;
+    m)
+        MSP=${OPTARG}
+        ;;
+    U)
+        USERNAMES=("${OPTARG}")
+        ;;
+    r)
+        RESET_WALLET=${OPTARG}
+        ;;
+    V)
+        VAULT_URL=${OPTARG}
+        ;;
+    l)
+        VAULT_USER_NAME=${OPTARG}
+        ;;
+    t)
+        VAULT_PASSWORD=${OPTARG}
+        ;;
+    b)
+        VAULT_ORG=${OPTARG}
+        ;;
+    q)
+        APP=${OPTARG}
+        ;;
+    w)
+        DESTINATION=${OPTARG}
+        ;;
+    \?)
+        echo "Unknown flag: ${key}"
+        ;;
+    esac
+done
 
-# enroll user
-fabric-ca-client enroll -u https://openidl-aais-data-call-app-ibp-2.0:password@localhost:7054 --caname ca-aais -M ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-data-call-app-ibp-2.0@aais.example.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
-cp ${PWD}/organizations/peerOrganizations/aais.example.com/msp/config.yaml ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-data-call-app-ibp-2.0@aais.example.com/msp/config.yaml
+preRegisterUser
 
-# export signcerts to couchdb
-signcerts=$(cat ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-data-call-app-ibp-2.0@aais.example.com/msp/signcerts/cert.pem)
-signingIdentity="${signcerts//$'\n'/\\\\n}"
-privKey=$(cat ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-data-call-app-ibp-2.0@aais.example.com/msp/keystore/*)
-signingPrivKey="${privKey//$'\n'/\\\\r\\\\n}"
-initCommand='"{\"credentials\":{\"certificate\":\"signcerts\\n\",\"privateKey\":\"privatekey\\r\\n\"},\"mspId\":\"aaismsp\",\"type\":\"X.509\",\"version\":1}"'
-data="${initCommand/signcerts/$signingIdentity}"
-data="${data/privatekey/$signingPrivKey}"
-signcertsJSON="{\"data\":$data}"
-curl -X PUT http://admin:adminpw@localhost:9984/wallet/"openidl-aais-data-call-app-ibp-2.0" -d "$signcertsJSON"
-
-# openidl-aais-data-call-processor-ibp-2.0
-
-# register user - openidl-aais-data-call-processor-ibp-2.0
-fabric-ca-client register --caname ca-aais --id.name openidl-aais-data-call-processor-ibp-2.0 --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
-
-# enroll user
-fabric-ca-client enroll -u https://openidl-aais-data-call-processor-ibp-2.0:password@localhost:7054 --caname ca-aais -M ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-data-call-processor-ibp-2.0@aais.example.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/aais/tls-cert.pem
-cp ${PWD}/organizations/peerOrganizations/aais.example.com/msp/config.yaml ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-data-call-processor-ibp-2.0@aais.example.com/msp/config.yaml
-
-# export signcerts to couchdb
-signcerts=$(cat ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-data-call-processor-ibp-2.0@aais.example.com/msp/signcerts/cert.pem)
-signingIdentity="${signcerts//$'\n'/\\\\n}"
-privKey=$(cat ${PWD}/organizations/peerOrganizations/aais.example.com/users/openidl-aais-data-call-processor-ibp-2.0@aais.example.com/msp/keystore/*)
-signingPrivKey="${privKey//$'\n'/\\\\r\\\\n}"
-initCommand='"{\"credentials\":{\"certificate\":\"signcerts\\n\",\"privateKey\":\"privatekey\\r\\n\"},\"mspId\":\"aaismsp\",\"type\":\"X.509\",\"version\":1}"'
-data="${initCommand/signcerts/$signingIdentity}"
-data="${data/privatekey/$signingPrivKey}"
-signcertsJSON="{\"data\":$data}"
-curl -X PUT http://admin:adminpw@localhost:9984/wallet/"openidl-aais-data-call-processor-ibp-2.0" -d "$signcertsJSON"
-
-export FABRIC_CA_CLIENT_HOME=${PWD}/organizations/peerOrganizations/analytics.example.com/
-
-# enroll admin
-fabric-ca-client enroll -u https://admin:adminpw@localhost:8054 --caname ca-analytics --tls.certfiles ${PWD}/organizations/fabric-ca/analytics/tls-cert.pem
-
-# openidl-analytics-data-call-app-ibp-2.0
-
-# register user - openidl-analytics-data-call-app-ibp-2.0
-fabric-ca-client register --caname ca-analytics --id.name openidl-analytics-data-call-app-ibp-2.0 --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/analytics/tls-cert.pem
-
-# enroll user
-fabric-ca-client enroll -u https://openidl-analytics-data-call-app-ibp-2.0:password@localhost:8054 --caname ca-analytics -M ${PWD}/organizations/peerOrganizations/analytics.example.com/users/openidl-analytics-data-call-app-ibp-2.0@analytics.example.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/analytics/tls-cert.pem
-cp ${PWD}/organizations/peerOrganizations/analytics.example.com/msp/config.yaml ${PWD}/organizations/peerOrganizations/analytics.example.com/users/openidl-analytics-data-call-app-ibp-2.0@analytics.example.com/msp/config.yaml
-
-# export signcerts to couchdb
-signcerts=$(cat ${PWD}/organizations/peerOrganizations/analytics.example.com/users/openidl-analytics-data-call-app-ibp-2.0@analytics.example.com/msp/signcerts/cert.pem)
-signingIdentity="${signcerts//$'\n'/\\\\n}"
-privKey=$(cat ${PWD}/organizations/peerOrganizations/analytics.example.com/users/openidl-analytics-data-call-app-ibp-2.0@analytics.example.com/msp/keystore/*)
-signingPrivKey="${privKey//$'\n'/\\\\r\\\\n}"
-initCommand='"{\"credentials\":{\"certificate\":\"signcerts\\n\",\"privateKey\":\"privatekey\\r\\n\"},\"mspId\":\"analyticsmsp\",\"type\":\"X.509\",\"version\":1}"'
-data="${initCommand/signcerts/$signingIdentity}"
-data="${data/privatekey/$signingPrivKey}"
-signcertsJSON="{\"data\":$data}"
-curl -X PUT http://admin:adminpw@localhost:9984/wallet/"openidl-analytics-data-call-app-ibp-2.0" -d "$signcertsJSON"
-
-# openidl-data-call-mood-listener-ibp-2.0
-
-# register user - openidl-data-call-mood-listener-ibp-2.0
-fabric-ca-client register --caname ca-analytics --id.name openidl-data-call-mood-listener-ibp-2.0 --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/analytics/tls-cert.pem
-
-# enroll user
-fabric-ca-client enroll -u https://openidl-data-call-mood-listener-ibp-2.0:password@localhost:8054 --caname ca-analytics -M ${PWD}/organizations/peerOrganizations/analytics.example.com/users/openidl-data-call-mood-listener-ibp-2.0@analytics.example.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/analytics/tls-cert.pem
-cp ${PWD}/organizations/peerOrganizations/analytics.example.com/msp/config.yaml ${PWD}/organizations/peerOrganizations/analytics.example.com/users/openidl-data-call-mood-listener-ibp-2.0@analytics.example.com/msp/config.yaml
-
-# export signcerts to couchdb
-signcerts=$(cat ${PWD}/organizations/peerOrganizations/analytics.example.com/users/openidl-data-call-mood-listener-ibp-2.0@analytics.example.com/msp/signcerts/cert.pem)
-signingIdentity="${signcerts//$'\n'/\\\\n}"
-privKey=$(cat ${PWD}/organizations/peerOrganizations/analytics.example.com/users/openidl-data-call-mood-listener-ibp-2.0@analytics.example.com/msp/keystore/*)
-signingPrivKey="${privKey//$'\n'/\\\\r\\\\n}"
-initCommand='"{\"credentials\":{\"certificate\":\"signcerts\\n\",\"privateKey\":\"privatekey\\r\\n\"},\"mspId\":\"analyticsmsp\",\"type\":\"X.509\",\"version\":1}"'
-data="${initCommand/signcerts/$signingIdentity}"
-data="${data/privatekey/$signingPrivKey}"
-signcertsJSON="{\"data\":$data}"
-curl -X PUT http://admin:adminpw@localhost:9984/wallet/"openidl-data-call-mood-listener-ibp-2.0" -d "$signcertsJSON"
-
-
-# openidl-transactional-data-event-listener-ibp-2.0
-
-# register user - openidl-transactional-data-event-listener-ibp-2.0
-fabric-ca-client register --caname ca-analytics --id.name openidl-transactional-data-event-listener-ibp-2.0 --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/analytics/tls-cert.pem
-
-# enroll user
-fabric-ca-client enroll -u https://openidl-transactional-data-event-listener-ibp-2.0:password@localhost:8054 --caname ca-analytics -M ${PWD}/organizations/peerOrganizations/analytics.example.com/users/openidl-transactional-data-event-listener-ibp-2.0@analytics.example.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/analytics/tls-cert.pem
-cp ${PWD}/organizations/peerOrganizations/analytics.example.com/msp/config.yaml ${PWD}/organizations/peerOrganizations/analytics.example.com/users/openidl-transactional-data-event-listener-ibp-2.0@analytics.example.com/msp/config.yaml
-
-# export signcerts to couchdb
-signcerts=$(cat ${PWD}/organizations/peerOrganizations/analytics.example.com/users/openidl-transactional-data-event-listener-ibp-2.0@analytics.example.com/msp/signcerts/cert.pem)
-signingIdentity="${signcerts//$'\n'/\\\\n}"
-privKey=$(cat ${PWD}/organizations/peerOrganizations/analytics.example.com/users/openidl-transactional-data-event-listener-ibp-2.0@analytics.example.com/msp/keystore/*)
-signingPrivKey="${privKey//$'\n'/\\\\r\\\\n}"
-initCommand='"{\"credentials\":{\"certificate\":\"signcerts\\n\",\"privateKey\":\"privatekey\\r\\n\"},\"mspId\":\"analyticsmsp\",\"type\":\"X.509\",\"version\":1}"'
-data="${initCommand/signcerts/$signingIdentity}"
-data="${data/privatekey/$signingPrivKey}"
-signcertsJSON="{\"data\":$data}"
-curl -X PUT http://admin:adminpw@localhost:9984/wallet/"openidl-transactional-data-event-listener-ibp-2.0" -d "$signcertsJSON"
-
-export FABRIC_CA_CLIENT_HOME=${PWD}/organizations/peerOrganizations/carrier.example.com/
-
-# enroll admin
-fabric-ca-client enroll -u https://admin:adminpw@localhost:10054 --caname ca-carrier --tls.certfiles ${PWD}/organizations/fabric-ca/carrier/tls-cert.pem
-
-# openidl-carrier-data-call-app-ibp-2.0
-
-# register user - openidl-carrier-data-call-app-ibp-2.0
-fabric-ca-client register --caname ca-carrier --id.name openidl-carrier-data-call-app-ibp-2.0 --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/carrier/tls-cert.pem
-
-# enroll user
-fabric-ca-client enroll -u https://openidl-carrier-data-call-app-ibp-2.0:password@localhost:10054 --caname ca-carrier -M ${PWD}/organizations/peerOrganizations/carrier.example.com/users/openidl-carrier-data-call-app-ibp-2.0@carrier.example.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/carrier/tls-cert.pem
-cp ${PWD}/organizations/peerOrganizations/carrier.example.com/msp/config.yaml ${PWD}/organizations/peerOrganizations/carrier.example.com/users/openidl-carrier-data-call-app-ibp-2.0@carrier.example.com/msp/config.yaml
-
-# export signcerts to couchdb
-signcerts=$(cat ${PWD}/organizations/peerOrganizations/carrier.example.com/users/openidl-carrier-data-call-app-ibp-2.0@carrier.example.com/msp/signcerts/cert.pem)
-signingIdentity="${signcerts//$'\n'/\\\\n}"
-privKey=$(cat ${PWD}/organizations/peerOrganizations/carrier.example.com/users/openidl-carrier-data-call-app-ibp-2.0@carrier.example.com/msp/keystore/*)
-signingPrivKey="${privKey//$'\n'/\\\\r\\\\n}"
-initCommand='"{\"credentials\":{\"certificate\":\"signcerts\\n\",\"privateKey\":\"privatekey\\r\\n\"},\"mspId\":\"carriermsp\",\"type\":\"X.509\",\"version\":1}"'
-data="${initCommand/signcerts/$signingIdentity}"
-data="${data/privatekey/$signingPrivKey}"
-signcertsJSON="{\"data\":$data}"
-curl -X PUT http://admin:adminpw@localhost:9984/wallet/"openidl-carrier-data-call-app-ibp-2.0" -d "$signcertsJSON"
-
-# openidl-carrier-data-call-processor-ibp-2.0
-
-# register user - openidl-carrier-data-call-processor-ibp-2.0
-fabric-ca-client register --caname ca-carrier --id.name openidl-carrier-data-call-processor-ibp-2.0 --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/carrier/tls-cert.pem
-
-# enroll user
-fabric-ca-client enroll -u https://openidl-carrier-data-call-processor-ibp-2.0:password@localhost:10054 --caname ca-carrier -M ${PWD}/organizations/peerOrganizations/carrier.example.com/users/openidl-carrier-data-call-processor-ibp-2.0@carrier.example.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/carrier/tls-cert.pem
-cp ${PWD}/organizations/peerOrganizations/carrier.example.com/msp/config.yaml ${PWD}/organizations/peerOrganizations/carrier.example.com/users/openidl-carrier-data-call-processor-ibp-2.0@carrier.example.com/msp/config.yaml
-
-# export signcerts to couchdb
-signcerts=$(cat ${PWD}/organizations/peerOrganizations/carrier.example.com/users/openidl-carrier-data-call-processor-ibp-2.0@carrier.example.com/msp/signcerts/cert.pem)
-signingIdentity="${signcerts//$'\n'/\\\\n}"
-privKey=$(cat ${PWD}/organizations/peerOrganizations/carrier.example.com/users/openidl-carrier-data-call-processor-ibp-2.0@carrier.example.com/msp/keystore/*)
-signingPrivKey="${privKey//$'\n'/\\\\r\\\\n}"
-initCommand='"{\"credentials\":{\"certificate\":\"signcerts\\n\",\"privateKey\":\"privatekey\\r\\n\"},\"mspId\":\"carriermsp\",\"type\":\"X.509\",\"version\":1}"'
-data="${initCommand/signcerts/$signingIdentity}"
-data="${data/privatekey/$signingPrivKey}"
-signcertsJSON="{\"data\":$data}"
-curl -X PUT http://admin:adminpw@localhost:9984/wallet/"openidl-carrier-data-call-processor-ibp-2.0" -d "$signcertsJSON"
-
-# openidl-carrier-insurance-data-manager-ibp-2.0
-
-# register user - openidl-carrier-insurance-data-manager-ibp-2.0
-fabric-ca-client register --caname ca-carrier --id.name openidl-carrier-insurance-data-manager-ibp-2.0 --id.secret password --id.type client --id.attrs 'orgType=advisory:ecert' --tls.certfiles ${PWD}/organizations/fabric-ca/carrier/tls-cert.pem
-
-# enroll user
-fabric-ca-client enroll -u https://openidl-carrier-insurance-data-manager-ibp-2.0:password@localhost:10054 --caname ca-carrier -M ${PWD}/organizations/peerOrganizations/carrier.example.com/users/openidl-carrier-insurance-data-manager-ibp-2.0@carrier.example.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/carrier/tls-cert.pem
-cp ${PWD}/organizations/peerOrganizations/carrier.example.com/msp/config.yaml ${PWD}/organizations/peerOrganizations/carrier.example.com/users/openidl-carrier-insurance-data-manager-ibp-2.0@carrier.example.com/msp/config.yaml
-
-# export signcerts to couchdb
-signcerts=$(cat ${PWD}/organizations/peerOrganizations/carrier.example.com/users/openidl-carrier-insurance-data-manager-ibp-2.0@carrier.example.com/msp/signcerts/cert.pem)
-signingIdentity="${signcerts//$'\n'/\\\\n}"
-privKey=$(cat ${PWD}/organizations/peerOrganizations/carrier.example.com/users/openidl-carrier-insurance-data-manager-ibp-2.0@carrier.example.com/msp/keystore/*)
-signingPrivKey="${privKey//$'\n'/\\\\r\\\\n}"
-initCommand='"{\"credentials\":{\"certificate\":\"signcerts\\n\",\"privateKey\":\"privatekey\\r\\n\"},\"mspId\":\"carriermsp\",\"type\":\"X.509\",\"version\":1}"'
-data="${initCommand/signcerts/$signingIdentity}"
-data="${data/privatekey/$signingPrivKey}"
-signcertsJSON="{\"data\":$data}"
-curl -X PUT http://admin:adminpw@localhost:9984/wallet/"openidl-carrier-insurance-data-manager-ibp-2.0" -d "$signcertsJSON"
+exit 0
