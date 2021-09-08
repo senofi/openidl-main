@@ -16,7 +16,7 @@
 	}
 
 	.logo {
-		height: 40px;
+		height: 50px;
 		cursor: pointer;
 	}
 
@@ -25,12 +25,12 @@
 	}
 
 	.divider {
+		display: inline-block;
 		border-left: 2px solid $primary-dark;
 		height: 30px;
 		vertical-align: top;
-		display: inline-block;
-		margin-top: 10px;
-		margin: 0 0.3rem;
+		margin: 0 0.6rem;
+		margin-top: 15px;
 
 		&.small {
 			height: 24px;
