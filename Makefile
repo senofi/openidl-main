@@ -79,10 +79,10 @@ build_all_images:
 	docker build ./openidl-transactional-data-event-listener -t openidl/transactional-data-event-listener
 	docker build ./openidl-ui-workspace -t openidl/ui --build-arg PROJECT=aais
 	docker build ./openidl-ui-workspace -t openidl/carrier-ui --build-arg PROJECT=carrier
-	(cd ./openidl-upload && npm run build && cd .. && docker build ./openidl-upload -t openidl/upload)
+	docker build ./openidl-utilities -t openidl/utilities
 
 delete_all_images:
-	docker rmi openidl/ui openidl/data-call-app openidl/data-call-processor openidl/data-call-mood-listener openidl/transactional-data-event-listener openidl/insurance-data-manager openidl/carrier-ui openidl/upload
+	docker rmi openidl/ui openidl/data-call-app openidl/data-call-processor openidl/data-call-mood-listener openidl/transactional-data-event-listener openidl/insurance-data-manager openidl/carrier-ui openidl/upload openidl/utilities
 
 build_insurance_data_manager:
 	docker build ./openidl-insurance-data-manager -t openidl/insurance-data-manager
@@ -107,6 +107,9 @@ build_carrier_ui:
 
 build_upload:
 	(cd ./openidl-upload && npm run build && cd .. && docker build ./openidl-upload -t openidl/upload)
+
+build_utilities:
+	docker build ./openidl-utilities -t openidl/utilities
 
 run_ui:
 	minikube service ui-service  -n openidl-aais-apps 
@@ -134,6 +137,15 @@ run_carrier_insurance_data_manager:
 
 run_upload:
 	minikube service upload-service -n openidl-carrier-apps
+
+run_utilities:
+	minikube service utilities-service  -n openidl-aais-apps 
+
+run_carrier_utilities:
+	minikube service utilities-service  -n openidl-carrier-apps 
+
+run_analytics_utilities:
+	minikube service utilities-service  -n openidl-analytics-apps 
 
 # The ingress targets are not necessary if the ingress addon can be applied successfully
 docker_save_ingress:

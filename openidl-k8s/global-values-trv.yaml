@@ -10,6 +10,14 @@ global:
     ingressenabled: false
     ingresshostname: data-call-app-service.trv.dev.internal.aaistrvdemo.com
     publicingresshostname: data-call-app-service.trv.dev.aaistrvdemo.com
+  utilities:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: utilities-service
+    ingressenabled: false
+    ingresshostname: utilities-service.trv.dev.internal.aaistrvdemo.com
+    publicingresshostname: utilities-service.trv.dev.aaistrvdemo.com
   carrierui:
     install: true
     servicename: carrier-ui-service

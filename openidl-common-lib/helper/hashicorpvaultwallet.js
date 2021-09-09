@@ -18,15 +18,11 @@ const AWS = require('aws-sdk');
  * @class
  */
 class HashiCorpVault {
+	constructor(vaultConfig) {
+        this.vaultConfig = vaultConfig;
+    }
 
-	/**
-	 * Creates an instance of the HashiCorpVault
-	 */
-	constructor() {
-
-	}
-
-	async loadoptions(options) {
+	static async loadoptions(options) {
 		logger.info("in loadoptions");
 		// configure aws
 		AWS.config.update(options);
@@ -58,8 +54,7 @@ class HashiCorpVault {
 		// if (!vaultConfig.vaultCA) {
 		// 	throw new Error('No vaultCA given');
 		// }
-
-		this.vaultConfig = vaultConfig;
+		return new HashiCorpVault(vaultConfig);
 	}
 
 	async get(label) {
@@ -87,7 +82,7 @@ class HashiCorpVault {
 				identity = data.data.data;
 			} catch (err) {
 				//404 error in case secret does not exist
-			}	
+			}
 			return label === id ? JSON.parse(identity) : undefined;
 		} catch (e) {
 			console.error(e);
@@ -114,7 +109,7 @@ class HashiCorpVault {
 			nodeVault.token = result.auth.client_token;
 			const data = JSON.stringify(identity);
 
-			await nodeVault.write(`${this.vaultConfig.vaultPath}/${name}`, { "data": { "id": name, "data": data }})
+			await nodeVault.write(`${this.vaultConfig.vaultPath}/${name}`, { "data": { "id": name, "data": data } })
 				.then(console.log("successfully import the secret"))
 				.catch(console.error);
 		} catch (err) {

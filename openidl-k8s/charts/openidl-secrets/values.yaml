@@ -176,3 +176,18 @@ secrets:
     - name: transactional-data-event-listener-target-channel-config
       file: config/transactional-data-event-listener-target-channel-config.json
       namespace: default
+    - name: cognito-admin-config
+      file: config/local-cognito-admin-config.json
+      namespace: default
+    - name: utilities-fabric-config
+      file: config/utilities-fabric-config.json
+      namespace: default
+    - name: utilities-admin-config
+      file: config/utilities-admin-config.json
+      namespace: default
+    - name: utilities-mappings-config
+      file: config/utilities-mappings-config.json
+      namespace: default
+    - name: utilities-default-config
+      file: config/default-config.json
+      namespace: default

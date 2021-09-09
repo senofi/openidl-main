@@ -10,6 +10,14 @@ global:
     ingressenabled: false
     ingresshostname: data-call-app-service.analytics.dev.internal.aaisanalyticsdemo.com
     publicingresshostname: data-call-app-service.analytics.dev.aaisanalyticsdemo.com
+  utilities:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: utilities-service
+    ingressenabled: false
+    ingresshostname: utilities-service.analytics.dev.internal.aaisanalyticsdemo.com
+    publicingresshostname: utilities-service.analytics.dev.aaisanalyticsdemo.com
   ui:
     install: true
     servicename: ui-service
