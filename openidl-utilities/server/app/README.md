@@ -25,7 +25,7 @@ https://aws.amazon.com/cognito/getting-started/).
         "region":"*****************************"
     }
     ```
-5. Create `local-cognito-admin-config.json` under `server/app/config` folder. Paste the following JSON. Getting the `accessKeyId` and `secretAccessKey` from AWS is beyond the scope of this document. (for further details, please see AWS's [documentation](
+5. Create `local-cognito-admin-config.json` under `server/config` folder. Paste the following JSON. Getting the `accessKeyId` and `secretAccessKey` from AWS is beyond the scope of this document. (for further details, please see AWS's [documentation](
 https://aws.amazon.com/premiumsupport/knowledge-center/create-access-key/)).
     ```
     {
@@ -34,6 +34,29 @@ https://aws.amazon.com/premiumsupport/knowledge-center/create-access-key/)).
         "region": "*****************************"
     }
     ```
+
+ 6. Create `local-kvs-config.json` file under `server/config`
+Paste the following JSON in `local-kvs-config.json` file
+    ``` 
+    {
+        "walletType": "couchdb",
+        "url": "http://admin:adminpw@localhost:9984"
+    }
+    ```
+* Application will be using local CouchDB running on port `9984` as user certificate key value store
+
+7. . Configure local-db-config.json
+
+Edit `local-db-config.json` file under `server/config`
+Paste the following JSON in `local-db-config.json` file
+    ``` 
+    {
+        "persistentStore": "mongo",
+        "mongodb": "openidl-offchain-db",
+        "simpleURI": "mongodb://localhost:27017"
+    }
+    ```
+* Application will be using local MongoDB running on port `27017` as the persistent data store
 
 ## Creating users using IBM App ID Service
 
