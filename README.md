@@ -101,7 +101,17 @@ $ sudo apt-get install build-essential
 For mac
 ```
  brew install make
- ```
+```
+
+### Install JQ
+If `jq` is not installed, for Ubuntu:
+```
+$ sudo apt-get install jq
+```
+For mac
+```
+ brew install jq
+```
 
 ## Get Minikube working
 
@@ -172,28 +182,25 @@ this folder is ignored in .gitignore so no secrets get checked in to git.
 
 the helm chart uses the following mapping:
 
-| filename                               | secret name               |
-| -------------------------------------- | ------------------------- |
-| channel-config.json                    | channel-config            |
-| connection-profile.json                | connection-profile        |
-| local-db-config.json                   | local-db-config           |
-| default.json                           | default-config            |
-| email.json                             | email-config              |
-| listener-channel-config.json           | listener-channel-config   |
-| local-cognito-config.json              | local-cognito-config      |
-| local-kvs-config.json                  | local-kvs-config          |
-| flowconfig.json                        | nifi-flowconfig           |
-| s3-bucket-config.json                  | s3-bucket-config          |
-| target-channel-identifiers-config.json | target-channel-config     |
-| unique-identifiers-config.json         | unique-identifiers-config |
-|   local-cognito-config.json      |  cognito-config | 
-|  local-vault-config.json  | vault-config   |
-|  mappings.json  | data-call-app-mappings-config   |
-|  utilities-fabric-config.json  |  utilities-fabric-config  |
-|   utilities-admin-config.json | utilities-admin-config   |
-|  local-cognito-admin-config.json  | cognito-admin-config   |
-|||
-
+| filename                               | secret name                      |
+| -------------------------------------- | -------------------------        |
+| channel-config.json                    | channel-config                   |
+| connection-profile.json                | connection-profile               |
+| local-db-config.json                   | local-db-config                  |
+| default.json                           | default-config                   |
+| email.json                             | email-config                     |
+| listener-channel-config.json           | listener-channel-config          |
+| local-cognito-config.json              | local-cognito-config             |
+| local-kvs-config.json                  | local-kvs-config                 |
+| flowconfig.json                        | nifi-flowconfig                  |
+| s3-bucket-config.json                  | s3-bucket-config                 |
+| target-channel-identifiers-config.json | target-channel-config            |
+| unique-identifiers-config.json         | unique-identifiers-config        |
+| local-vault-config.json                | vault-config                     |
+| mappings.json                          | data-call-app-mappings-config    |
+| utilities-fabric-config.json           | utilities-fabric-config          |
+| utilities-admin-config.json            | utilities-admin-config           |
+| local-cognito-admin-config.json        | cognito-admin-config             |
 
 Look to each project specific helm chart to see what configs are used.
 
