@@ -3,32 +3,6 @@
 #./pull-vault-config.sh -U user-data-call-app -P password -a data-call-app -o AAISOrg -c ./configs
 #
 
-declare -r configs=(
-  ["0"]="channel-config"
-  ["1"]="connection-profile"
-  ["2"]="data-call-app-default-config"
-  ["3"]="data-call-app-mappings-config"
-  ["4"]="data-call-processor-default-config"
-  ["5"]="data-call-processor-mappings-config"
-  ["6"]="data-call-processor-metadata-config"
-  ["7"]="default-config"
-  ["8"]="email-config"
-  ["9"]="insurance-data-manager-channel-config"
-  ["10"]="insurance-data-manager-default-config"
-  ["11"]="insurance-data-manager-mappings-config"
-  ["12"]="insurance-data-manager-metadata-config"
-  ["13"]="listener-channel-config"
-  ["14"]="local-cognito-config"
-  ["15"]="local-db-config"
-  ["16"]="local-kvs-config"
-  ["17"]="mappings-config"
-  ["18"]="s3-bucket-config"
-  ["19"]="target-channel-config"
-  ["20"]="ui-mappings-config"
-  ["21"]="unique-identifiers-config"
-  ["22"]="utilities-admin-json"
-)
-
 JQ=$(which jq)
 RESULT=$?
 if [ $RESULT -ne 0 ]; then
@@ -85,11 +59,19 @@ pullVaultConfig() {
   echo "Token is ${USER_TOKEN}"
 
   echo "Pull all configs"
-  for config in "${!configs[@]}"; do
+
+  vaultData="$(curl --header "X-Vault-Token: ${USER_TOKEN}" --request GET ${VAULT_URL}/v1/${ORG}/metadata/${APP}/?list=true)"
+  configKeys=$(echo $vaultData | $JQ ".data.keys[]")
+
+  echo $vaultData | $JQ -c '.data.keys[]' | while read config; do
+    config=$(echo "$config" | cut -d'"' -f 2)
+
+    echo ${VAULT_URL}/v1/${ORG}/data/${APP}/${config}
+
     HTTP_STATUS=$(curl \
       --header "X-Vault-Token: ${USER_TOKEN}" \
       --request GET \
-      ${VAULT_URL}/v1/${ORG}/data/${APP}/${configs[${config}]})
+      ${VAULT_URL}/v1/${ORG}/data/${APP}/${config})
     RESULT=$?
     if [ $RESULT -ne 0 ]; then
       echo "Failed to execute curl command."
@@ -104,7 +86,7 @@ pullVaultConfig() {
     fi
 
     #Write config files
-    echo "${CONFIG_DATA}" >${CONFIG_PATH}/${configs[${config}]}.json
+    echo "${CONFIG_DATA}" >${CONFIG_PATH}/${config}.json
   done
 
   echo "All configs downloaded completed."

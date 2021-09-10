@@ -4,32 +4,6 @@
 #./add-vault-config.sh -U user-data-call-app -P password -a data-call-app -o AAISOrg -c ../../openidl-k8s/charts/openidl-secrets/config
 #
 
-declare -r configs=(
-  ["0"]="channel-config"
-  ["1"]="connection-profile"
-  ["2"]="data-call-app-default-config"
-  ["3"]="data-call-app-mappings-config"
-  ["4"]="data-call-processor-default-config"
-  ["5"]="data-call-processor-mappings-config"
-  ["6"]="data-call-processor-metadata-config"
-  ["7"]="default-config"
-  ["8"]="email-config"
-  ["9"]="insurance-data-manager-channel-config"
-  ["10"]="insurance-data-manager-default-config"
-  ["11"]="insurance-data-manager-mappings-config"
-  ["12"]="insurance-data-manager-metadata-config"
-  ["13"]="listener-channel-config"
-  ["14"]="local-cognito-config"
-  ["15"]="local-db-config"
-  ["16"]="local-kvs-config"
-  ["17"]="mappings-config"
-  ["18"]="s3-bucket-config"
-  ["19"]="target-channel-config"
-  ["20"]="ui-mappings-config"
-  ["21"]="unique-identifiers-config"
-  ["22"]="utilities-admin-json"
-)
-
 JQ=$(which jq)
 RESULT=$?
 if [ $RESULT -ne 0 ]; then
@@ -71,6 +45,14 @@ checkOptions() {
 addVaultConfig() {
   echo "Entering add vault config script"
 
+  configs=()
+  # prepare configs array
+  for file in ${CONFIG_PATH}/*; do
+    f=$(echo "${file##*/}")
+    fileName=$(echo $f | cut -d'.' -f 1) #file has extension, it return only filename
+    configs+=($fileName)
+  done
+
   echo "Login to add configuration files"
   LOGIN_RESPONSE=$(curl \
     --request POST \
@@ -86,19 +68,18 @@ addVaultConfig() {
   USER_TOKEN=$(echo ${LOGIN_RESPONSE} | ${JQ} ".auth.client_token" | sed "s/\"//g")
   echo "USER_TOKEN is ${USER_TOKEN}"
 
-  for config in "${!configs[@]}"; do
-    signcerts=$(cat ${CONFIG_PATH}/${configs[$config]}.json)
+  for config in "${configs[@]}"; do
+    signcerts=$(cat ${CONFIG_PATH}/${config}.json)
     echo ${signcerts}
 
     JSON_DATA_PAYLOAD="{\"data\":${signcerts}}"
-
     echo "JSON_DATA_PAYLOAD=${JSON_DATA_PAYLOAD}"
     echo "Add data to vault for ORG=${ORG}, COMPONENT=${APP}"
     HTTP_STATUS=$(curl \
       --header "X-Vault-Token: ${USER_TOKEN}" \
       --request POST \
       --data "${JSON_DATA_PAYLOAD}" \
-      ${VAULT_URL}/v1/${ORG}/data/${APP}/${configs[$config]} --insecure -s -o /dev/null -w "%{http_code}")
+      ${VAULT_URL}/v1/${ORG}/data/${APP}/$config --insecure -s -o /dev/null -w "%{http_code}")
     RESULT=$?
     if [ $RESULT -ne 0 ]; then
       echo "Failed to execute curl."
