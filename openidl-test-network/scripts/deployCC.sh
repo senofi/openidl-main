@@ -60,6 +60,9 @@ if [ "$CC_SRC_LANGUAGE" = "go" ]; then
 
   infoln "Vendoring Go dependencies at $CC_SRC_PATH"
   pushd $CC_SRC_PATH
+  go mod init main
+  go mod tidy
+  GO111MODULE=on go mod vendor
   popd
   successln "Finished vendoring Go dependencies"
 
