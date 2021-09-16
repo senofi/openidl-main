@@ -1,7 +1,7 @@
 #!/bin/bash
 #set -x
 #
-#./add-vault-user.sh -t s.NChugw1IiynKI3q6Zb674U4N -U user-data-call-app -P password -a data-call-app -o AAISOrg -e '"create","update","read"'
+#./add-vault-user.sh -t s.NChugw1IiynKI3q6Zb674U4N -U user-data-call-app -P password -a data-call-app -o AAISOrg -e '"create","update","read","list"'
 #
 
 checkOptions() {
@@ -80,7 +80,7 @@ addUser() {
   PERMISSIONS=$(echo $PERMISSIONS | sed 's/\"/\\\"/g')
   cat >${POLICY_FILE} <<EOF
         {
-            "policy": "path \"${ORG}/data/${APP}/*\" { capabilities = [ ${PERMISSIONS} ]}"
+            "policy": "path \"${ORG}/data/${APP}/*\" { capabilities = [ ${PERMISSIONS} ]} path \"${ORG}/metadata/${APP}/*\" { capabilities = [ ${PERMISSIONS} ]}"
         }
 EOF
   echo "Add policy"
