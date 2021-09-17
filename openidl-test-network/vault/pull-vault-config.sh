@@ -60,7 +60,7 @@ pullVaultConfig() {
 
   echo "Pull all configs"
 
-  vaultData="$(curl --header "X-Vault-Token: ${USER_TOKEN}" --request GET ${VAULT_URL}/v1/${ORG}/metadata/${APP}/?list=true)"
+  vaultData="$(curl --header "X-Vault-Token: ${USER_TOKEN}" --request GET ${VAULT_URL}/v1/${ORG}/data/${APP}/?list=true)"
 
   echo $vaultData | $JQ -c '.data.keys[]' | while read config; do
     config=$(echo "$config" | cut -d'"' -f 2)
