@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
 	@Input() fieldChanged;
 	@Output() navigate = new EventEmitter();
 	appConst;
+	roleIcon;
 	role;
 	orgLogo;
 	org;
@@ -46,6 +47,7 @@ export class HeaderComponent implements OnInit {
 		this.org = this.storageService.getItem('org');
 		this.appConst = appConst[this.role];
 		this.orgLogo = this.appConst.org[this.org];
+		this.roleIcon = appConst.roles[this.role];
 
 		if (environment.RESET_WORLD_STATE === 'true') {
 			this.isResetWorldState = true;
