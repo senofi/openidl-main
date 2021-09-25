@@ -11,7 +11,7 @@ image:
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     # tag: latest
-    tag: 0.0.3
+    tag: 0.0.5
 
 imagePullSecrets: []
 nameOverride: ""
@@ -94,16 +94,10 @@ secrets:
       file: metadata.json
     - name: data-call-processor-mappings-config
       file: mappings.json
-    - name: certmanager-config
-      file: local-certmanager-config.json
     - name: kvs-config
       file: local-kvs-config.json
     - name: vault-config
       file: local-vault-config.json
-    - name: mongodb-config
-      file: local-mongo-config.json
-    - name: cloudantdb-config
-      file: local-cloudant-config.json
     - name: connectionprofile-config
       file: connection-profile.json
     - name: db-config

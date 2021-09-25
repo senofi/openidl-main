@@ -1,0 +1,61 @@
+global:
+  clusterurl: aaisdemo.com
+  appsecret: apps-secret
+  configpath: config-aais
+  datacallapp:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: data-call-app-service
+    ingressenabled: false
+    ingresshostname: data-call-app-service.aais.dev.internal.aaisdemo.com
+    publicingresshostname: data-call-app-service.aais.dev.aaisdemo.com
+  utilities:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: utilities-service
+    ingressenabled: false
+    ingresshostname: utilities-service.aais.dev.internal.aaisdemo.com
+    publicingresshostname: utilities-service.aais.dev.aaisdemo.com
+  ui:
+    install: true
+    servicename: ui-service
+    port: 8080
+    targetport: 8080
+    ingressenabled: false
+    ingresshostname: openidl.aais.dev.aaisdemo.com
+  insurancedatamanager:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: insurance-data-manager-service
+    ingressenabled: false
+    ingresshostname: insurance-data-manager-service.aais.dev.aaisdemo.com
+  datacallprocessor:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: data-call-processor-service
+  upload:
+    install: false
+    port: 80
+    targetport: 80
+    servicename: upload-service
+  datacallmoodlistener:
+    install: false
+    port: 8080
+    targetport: 8080
+    servicename: data-call-mood-listener-service
+  transactionaldataeventlistener:
+    install: false
+    port: 8080
+    targetport: 8080
+    servicename: transactional-data-event-listener-service
+  carrierui:
+    install: false
+    servicename: carrier-ui-service
+    port: 8080
+    targetport: 8080
+    ingressenabled: false
+    ingresshostname: openidl.aais.dev.aaisdemo.com

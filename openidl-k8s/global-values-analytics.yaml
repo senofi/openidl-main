@@ -1,0 +1,61 @@
+global:
+  clusterurl: aaisanalyticsdemo.com
+  appsecret: apps-secret
+  configpath: config-analytics
+  datacallapp:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: data-call-app-service
+    ingressenabled: false
+    ingresshostname: data-call-app-service.analytics.dev.internal.aaisanalyticsdemo.com
+    publicingresshostname: data-call-app-service.analytics.dev.aaisanalyticsdemo.com
+  utilities:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: utilities-service
+    ingressenabled: false
+    ingresshostname: utilities-service.analytics.dev.internal.aaisanalyticsdemo.com
+    publicingresshostname: utilities-service.analytics.dev.aaisanalyticsdemo.com
+  ui:
+    install: true
+    servicename: ui-service
+    port: 8080
+    targetport: 8080
+    ingressenabled: false
+    ingresshostname: openidl.analytics.dev.aaisanalyticsdemo.com
+  datacallmoodlistener:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: data-call-mood-listener-service
+  transactionaldataeventlistener:
+    install: true
+    port: 8080
+    targetport: 8080
+    servicename: transactional-data-event-listener-service
+  datacallprocessor:
+    install: false
+    port: 8080
+    targetport: 8080
+    servicename: data-call-processor-service
+  insurancedatamanager:
+    install: false
+    port: 8080
+    targetport: 8080
+    servicename: insurance-data-manager-service
+    ingressenabled: false
+    ingresshostname: insurance-data-manager-service.analytics.dev.aaisanalyticsdemo.com
+  upload:
+    install: false
+    port: 80
+    targetport: 80
+    servicename: upload-service
+  carrierui:
+    install: false
+    servicename: carrier-ui-service
+    port: 8080
+    targetport: 8080
+    ingressenabled: false
+    ingresshostname: openidl.analytics.dev.aaisanalyticsdemo.com

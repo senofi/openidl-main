@@ -5,11 +5,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
+const fs = require('fs');
 const log4js = require('log4js');
 const logger = log4js.getLogger('helpers - hashicorpvaultwallet');
 logger.level = process.env.LOG_LEVEL || 'debug';
-
+const AWS = require('aws-sdk');
 
 /**
  * This class defines an implementation of an Identity wallet that persists
@@ -18,38 +18,43 @@ logger.level = process.env.LOG_LEVEL || 'debug';
  * @class
  */
 class HashiCorpVault {
+	constructor(vaultConfig) {
+        this.vaultConfig = vaultConfig;
+    }
 
-	/**
-	 * Creates an instance of the HashiCorpVault
-	 */
-	constructor() {
-	}
-
-	async loadoptions(options) {
+	static async loadoptions(options) {
 		logger.info("in loadoptions");
-		if (!options) {
-			throw new Error('No options given');
+		// configure aws
+		AWS.config.update(options);
+		// initialize aws secret manager
+		const awsSecretManager = new AWS.SecretsManager();
+		// get vault credentials from aws secret manager
+		const vaultCredentials = await awsSecretManager.getSecretValue({ SecretId: options.secretName || 'hv-credential' }).promise();
+		// parse vault configuration
+		const vaultConfig = JSON.parse(vaultCredentials.SecretString);
+
+		if (!vaultConfig) {
+			throw new Error('No vaultConfig given');
 		}
-		if (!options.url) {
+		if (!vaultConfig.url) {
 			throw new Error('No url given');
 		}
-		if (!options.apiVersion) {
+		if (!vaultConfig.apiVersion) {
 			throw new Error('No apiVersion given');
 		}
-		if (!options.roleId) {
-			throw new Error('No roleId given');
-		}
-		if (!options.secretId) {
-			throw new Error('No secretId given');
-		}
-		if (!options.vaultPath) {
+		if (!vaultConfig.vaultPath) {
 			throw new Error('No vaultPath given');
 		}
-		options.vault = require("node-vault")({
-			apiVersion: options.apiVersion,
-			endpoint: options.url
-		});
-		this.options = options;
+		if (!vaultConfig.username) {
+			throw new Error('No username given');
+		}
+		if (!vaultConfig.password) {
+			throw new Error('No password given');
+		}
+		// if (!vaultConfig.vaultCA) {
+		// 	throw new Error('No vaultCA given');
+		// }
+		return new HashiCorpVault(vaultConfig);
 	}
 
 	async get(label) {
@@ -57,22 +62,27 @@ class HashiCorpVault {
 		try {
 			let id;
 			let identity;
-			const result = await this.options.vault.approleLogin({
-				role_id: this.options.roleId,
-				secret_id: this.options.secretId,
+			const nodeVault = require("node-vault")({
+				apiVersion: this.vaultConfig.apiVersion,
+				endpoint: this.vaultConfig.url,
+				// requestOptions: {
+				//     ca: fs.readFileSync(vaultConfig.vaultCA)
+				// }
 			});
-			this.options.vault.token = result.auth.client_token; // Add token to vault object for subsequent requests.
+			// login to vault to retrieve the auth token
+			const result = await nodeVault.userpassLogin({
+				"username": this.vaultConfig.username,
+				"password": this.vaultConfig.password,
+				"mount_point": this.vaultConfig.orgName
+			});
+			nodeVault.token = result.auth.client_token; // Add token to vault object for subsequent requests.
 			try {
-				const { data } = await this.options.vault.read(`${this.options.vaultPath}/${label}`);
+				const { data } = await nodeVault.read(`${this.vaultConfig.vaultPath}/${label}`);
 				id = data.data.id;
 				identity = data.data.data;
-				console.log({
-					id,
-					identity,
-				});
 			} catch (err) {
 				//404 error in case secret does not exist
-			}	
+			}
 			return label === id ? JSON.parse(identity) : undefined;
 		} catch (e) {
 			console.error(e);
@@ -83,14 +93,23 @@ class HashiCorpVault {
 	async put(name, identity) {
 		logger.info("in put");
 		try {
-			const result = await this.options.vault.approleLogin({
-				role_id: this.options.roleId,
-				secret_id: this.options.secretId,
+			const nodeVault = require("node-vault")({
+				apiVersion: this.vaultConfig.apiVersion,
+				endpoint: this.vaultConfig.url,
+				// requestOptions: {
+				//     ca: fs.readFileSync(vaultConfig.vaultCA)
+				// }
 			});
-			this.options.vault.token = result.auth.client_token;
+			// login to vault to retrieve the auth token
+			const result = await nodeVault.userpassLogin({
+				"username": this.vaultConfig.username,
+				"password": this.vaultConfig.password,
+				"mount_point": this.vaultConfig.orgName
+			});
+			nodeVault.token = result.auth.client_token;
 			const data = JSON.stringify(identity);
 
-			await this.options.vault.write(`${this.options.vaultPath}/${name}`, { "data": { "id": name, "data": data }})
+			await nodeVault.write(`${this.vaultConfig.vaultPath}/${name}`, { "data": { "id": name, "data": data } })
 				.then(console.log("successfully import the secret"))
 				.catch(console.error);
 		} catch (err) {
@@ -98,4 +117,5 @@ class HashiCorpVault {
 		}
 	}
 }
+
 module.exports.HashiCorpVault = HashiCorpVault;

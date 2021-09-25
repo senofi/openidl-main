@@ -50,9 +50,9 @@ install_in_k8s:
 	kubectl create namespace openidl-aais-apps
 	kubectl create namespace openidl-analytics-apps
 	kubectl create namespace openidl-carrier-apps
-	helm install local-aais ./openidl-k8s/openidl-aais-k8s -f ./openidl-k8s/openidl-aais-k8s/global-values.yaml -n openidl-aais-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
-	helm install local-analytics ./openidl-k8s/openidl-analytics-k8s -f ./openidl-k8s/openidl-analytics-k8s/global-values.yaml -n openidl-analytics-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
-	helm install local-carrier ./openidl-k8s/openidl-carrier-k8s -f ./openidl-k8s/openidl-carrier-k8s/global-values.yaml -n openidl-carrier-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-aais ./openidl-k8s -f ./openidl-k8s/global-values-aais.yaml -n openidl-aais-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-analytics ./openidl-k8s -f ./openidl-k8s/global-values-analytics.yaml -n openidl-analytics-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-carrier ./openidl-k8s -f ./openidl-k8s/global-values-carrier.yaml -n openidl-carrier-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
 
 uninstall_from_k8s:
 	helm uninstall local-aais -n openidl-aais-apps 
@@ -63,9 +63,21 @@ reinstall_in_k8s:
 	helm uninstall local-aais -n openidl-aais-apps 
 	helm uninstall local-analytics -n openidl-analytics-apps
 	helm uninstall local-carrier -n openidl-carrier-apps
-	helm install local-aais ./openidl-k8s/openidl-aais-k8s -f ./openidl-k8s/openidl-aais-k8s/global-values.yaml -n openidl-aais-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
-	helm install local-analytics ./openidl-k8s/openidl-analytics-k8s -f ./openidl-k8s/openidl-analytics-k8s/global-values.yaml -n openidl-analytics-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
-	helm install local-carrier ./openidl-k8s/openidl-carrier-k8s -f ./openidl-k8s/openidl-carrier-k8s/global-values.yaml -n openidl-carrier-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-aais ./openidl-k8s -f ./openidl-k8s/global-values-aais.yaml -n openidl-aais-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-analytics ./openidl-k8s -f ./openidl-k8s/global-values-analytics.yaml -n openidl-analytics-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+	helm install local-carrier ./openidl-k8s -f ./openidl-k8s/global-values-carrier.yaml -n openidl-carrier-apps --set global.minikubehostip=$(MINIKUBE_HOST_IP)
+
+reinstall_in_k8s_aais_dev:
+	helm uninstall dev-aais -n openidl 
+	helm install dev-aais ./openidl-k8s -f ./openidl-k8s/global-values-aais.yaml -n openidl --set global.datacallapp.ingressenabled=true --set global.utilities.ingressenabled=true --set global.ui.ingressenabled=true --set global.insurancedatamanager.ingressenabled=true --set global.configpath=config-aais-dev
+
+reinstall_in_k8s_analytics_dev:
+	helm uninstall dev-analytics -n openidl 
+	helm install dev-analytics ./openidl-k8s -f ./openidl-k8s/global-values-analytics.yaml -n openidl --set global.datacallapp.ingressenabled=true --set global.utilities.ingressenabled=true  --set global.ui.ingressenabled=true --set global.configpath=config-analytics-dev
+
+reinstall_in_k8s_carrier_dev:
+	helm uninstall dev-carrier -n openidl 
+	helm install dev-carrier ./openidl-k8s -f ./openidl-k8s/global-values-carrier.yaml -n openidl --set global.datacallapp.ingressenabled=true --set global.utilities.ingressenabled=true --set global.carrierui.ingressenabled=true --set global.insurancedatamanager.ingressenabled=true --set global.configpath=config-carrier-dev
 
 dashboard:
 	echo better to open a separate terminal for this
@@ -79,10 +91,10 @@ build_all_images:
 	docker build ./openidl-transactional-data-event-listener -t openidl/transactional-data-event-listener
 	docker build ./openidl-ui-workspace -t openidl/ui --build-arg PROJECT=aais
 	docker build ./openidl-ui-workspace -t openidl/carrier-ui --build-arg PROJECT=carrier
-	(cd ./openidl-upload && npm run build && cd .. && docker build ./openidl-upload -t openidl/upload)
+	docker build ./openidl-utilities -t openidl/utilities
 
 delete_all_images:
-	docker rmi openidl/ui openidl/data-call-app openidl/data-call-processor openidl/data-call-mood-listener openidl/transactional-data-event-listener openidl/insurance-data-manager openidl/carrier-ui openidl/upload
+	docker rmi openidl/ui openidl/data-call-app openidl/data-call-processor openidl/data-call-mood-listener openidl/transactional-data-event-listener openidl/insurance-data-manager openidl/carrier-ui openidl/upload openidl/utilities
 
 build_insurance_data_manager:
 	docker build ./openidl-insurance-data-manager -t openidl/insurance-data-manager
@@ -107,6 +119,9 @@ build_carrier_ui:
 
 build_upload:
 	(cd ./openidl-upload && npm run build && cd .. && docker build ./openidl-upload -t openidl/upload)
+
+build_utilities:
+	docker build ./openidl-utilities -t openidl/utilities
 
 run_ui:
 	minikube service ui-service  -n openidl-aais-apps 
@@ -134,6 +149,15 @@ run_carrier_insurance_data_manager:
 
 run_upload:
 	minikube service upload-service -n openidl-carrier-apps
+
+run_utilities:
+	minikube service utilities-service  -n openidl-aais-apps 
+
+run_carrier_utilities:
+	minikube service utilities-service  -n openidl-carrier-apps 
+
+run_analytics_utilities:
+	minikube service utilities-service  -n openidl-analytics-apps 
 
 # The ingress targets are not necessary if the ingress addon can be applied successfully
 docker_save_ingress:

@@ -31,5 +31,12 @@
 # deploy 'openidl-cc-aais-carriers' chaincode on 'analytics-carrier'
 ./network.sh deployCC -c analytics-carrier -ccn openidl-cc-aais-carriers -ccp ../openidl-chaincode/chaincode/openidl -ccl go -cci Init -ccsp true -cccg ../openidl-chaincode/chaincode/openidl/collection-config-analytics-carrier.json
 
-# pre-register users on certificate authority
-./pre-register-users.sh
+# pre-register users on certificate authority (couchdb)
+./pre-register-users.sh -N admin -P adminpw -p password -u localhost:7054 -n ca-aais  -c http://admin:adminpw@localhost:9984/wallet/ -o aais -m aaismsp -U "openidl-aais-insurance-data-manager-ibp-2.0 openidl-aais-data-call-app-ibp-2.0 openidl-aais-data-call-processor-ibp-2.0" -r true -w couch
+./pre-register-users.sh -N admin -P adminpw -p password -u localhost:8054 -n ca-analytics  -c http://admin:adminpw@localhost:9984/wallet/ -o analytics -m analyticsmsp -U "openidl-analytics-data-call-app-ibp-2.0 openidl-data-call-mood-listener-ibp-2.0 openidl-transactional-data-event-listener-ibp-2.0" -r false -w couch
+./pre-register-users.sh -N admin -P adminpw -p password -u localhost:10054 -n ca-carrier  -c http://admin:adminpw@localhost:9984/wallet/ -o carrier -m carriermsp -U "openidl-carrier-data-call-app-ibp-2.0 openidl-carrier-data-call-processor-ibp-2.0 openidl-carrier-insurance-data-manager-ibp-2.0" -r false -w couch
+
+# # pre-register users on certificate authority (vault)
+# ./pre-register-users.sh -N admin -P adminpw -p password -u localhost:7054 -n ca-aais  -o aais -m aaismsp -U "openidl-aais-insurance-data-manager-ibp-2.0 openidl-aais-data-call-app-ibp-2.0 openidl-aais-data-call-processor-ibp-2.0" -V http://127.0.0.1:8200 -l aais -t password -b aais -q fabric-kvs -w vault
+# ./pre-register-users.sh -N admin -P adminpw -p password -u localhost:8054 -n ca-analytics  -o analytics -m analyticsmsp -U "openidl-analytics-data-call-app-ibp-2.0 openidl-data-call-mood-listener-ibp-2.0 openidl-transactional-data-event-listener-ibp-2.0" -V http://127.0.0.1:8200 -l analytics -t password -b analytics -q fabric-kvs -w vault
+# ./pre-register-users.sh -N admin -P adminpw -p password -u localhost:10054 -n ca-carrier -o carrier -m carriermsp -U "openidl-carrier-data-call-app-ibp-2.0 openidl-carrier-data-call-processor-ibp-2.0 openidl-carrier-insurance-data-manager-ibp-2.0" -V http://127.0.0.1:8200 -l carrier -t password -b carrier -q fabric-kvs -w vault

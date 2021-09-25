@@ -18,7 +18,7 @@
 
 
 const log4js = require('log4js');
-const fabric_config = require('../fabric/config/fabric-config');
+const fabric_config = require('../config/fabric-config');
 const logger = log4js.getLogger('controllers - fabric-user-controller');
 const fabricUserEnrollment = require('../fabric/fabric-enrollment');
 const fabricEnrollmentAPI = {};

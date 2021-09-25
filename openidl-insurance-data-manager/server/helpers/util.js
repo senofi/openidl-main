@@ -17,7 +17,7 @@
 
 const log4js = require('log4js');
 const config = require('config');
-const messageObject = require('../config/constant')
+const messageObject = require('./constant')
 
 //vv
 // const metaData = require('../config/metadata.json');

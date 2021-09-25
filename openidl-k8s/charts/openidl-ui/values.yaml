@@ -5,13 +5,13 @@
 replicaCount: 1
 
 image:
-    # repository: ghcr.io/openidl-org/openidl-ui
     # repository: openidl/ui
+    # repository: ghcr.io/openidl-org/openidl-ui
     repository: ghcr.io/openidl-org/ui
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     # tag: latest
-    tag: 0.0.3
+    tag: 0.0.5
 
 imagePullSecrets: []
 nameOverride: ""
@@ -87,8 +87,6 @@ tolerations: []
 affinity: {}
 
 secrets:
-    - name: appid-config
-      file: local-appid-config.json
     - name: cognito-config
       file: local-cognito-config.json
     - name: ui-mappings-config

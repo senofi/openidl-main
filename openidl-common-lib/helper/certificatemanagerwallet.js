@@ -27,13 +27,12 @@ class CertificatemanagerWallet {
 	 * @param {WalletMixin} mixin
 	 * @memberof CertificatemanagerWallet
 	 */
-	constructor() {
-		this.CMOptions = {};
+	constructor(options) {
+		this.CMOptions = options;
 	}
 
-	async loadoptions(options) {
-		this.options = options;
-		Object.assign(this.CMOptions, this.options);
+	static async loadoptions(options) {
+		return new CertificatemanagerWallet(options);
 	}
 
 	//list all certificates from repository and then retrives the certificate id based on the label

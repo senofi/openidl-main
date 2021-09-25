@@ -34,5 +34,15 @@ spec:
                 name: {{ .Values.global.datacallapp.servicename }}
                 port: 
                   number: {{ .Values.global.datacallapp.port }}
+    - host: {{ .Values.global.datacallapp.publicingresshostname }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.global.datacallapp.servicename }}
+                port: 
+                  number: {{ .Values.global.datacallapp.port }}
 {{- end }}
 {{- end }}

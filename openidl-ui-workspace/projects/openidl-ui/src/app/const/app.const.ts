@@ -14,25 +14,30 @@ export const appConst = {
       'texas doi': '../../assets/images/reg-texas-doi.png',
     },
 
-    shouldCreateDatacall: true
-  },
-  statagent: {
-    org: {
-      '12345': '../../assets/images/openidl-header-logo1.png' //stat-agent orgId changes
-    },
-    shouldCreateDatacall: false
-  },
-  carrier: {
-    org: {
-      '12345': '../../assets/images/car-hartford.png',
-      '54321': '../../assets/images/car-faircover.png',
-      '76543': '../../assets/images/lazarus_logo.png'
-    },
-    shouldCreateDatacall: false
-  },
-  status: {
-    DRAFT: 'DRAFT',
-    ISSUED: 'ISSUED',
-    CANCELLED: 'CANCELLED'
-  }
+		shouldCreateDatacall: true
+	},
+	statagent: {
+		org: {
+			'12345': '../../assets/images/openidl-header-logo1.png' //stat-agent orgId changes
+		},
+		shouldCreateDatacall: false
+	},
+	carrier: {
+		org: {
+			'12345': '../../assets/images/car-hartford.png',
+			'54321': '../../assets/images/car-faircover.png',
+			'76543': '../../assets/images/lazarus_logo.png'
+		},
+		shouldCreateDatacall: false
+	},
+	roles: {
+		carrier: '../../assets/images/carrier.png',
+		regulator: '../../assets/images/regulator.png',
+		statagent: '../../assets/images/stat-agent.png'
+	},
+	status: {
+		DRAFT: 'DRAFT',
+		ISSUED: 'ISSUED',
+		CANCELLED: 'CANCELLED'
+	}
 };

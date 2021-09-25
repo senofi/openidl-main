@@ -18,12 +18,12 @@ For development, testing, and debugging purposes, it is very convenient to run t
 ### 1. Configure connection-profile.json
 * Run the `./start.sh` script in the `openidl-test-network` folder.
 * This will launch a Hyperledger Fabric Network with 3 Organizations (AAIS, Analytics & Carrier).
-* Create `connection-profile.json` file under `server/fabric/config`.
+* Create `connection-profile.json` file under `server/config`.
 * Copy the contents from `openidl-test-network/organizations/peerOrganizations/aais.example.com/connection-aais.json` to connection-profile.json.
 * Replace `host.minikube.internal` with `localhost` in `connection-profile.json`.
 
 ### 2. Configure admin-config.json
-* Create `admin-config.json` file under `server/fabric/config`.
+* Create `admin-config.json` file under `server/config`.
 * Paste the following JSON
     ```
     {
@@ -37,8 +37,18 @@ For development, testing, and debugging purposes, it is very convenient to run t
     }
     ```
 * Replace `user` and `secret` Org's Fabric CA Admin Username and Secret. This will be `admin` & `adminpw` if you are using local blockchain network.
+### 3. Configure fabric-config.json
+* Create `fabric-config.json` file under `server/config`.
+* Paste the following JSON
+```
+{
+    "logLevel": "debug",
+    "connectionProfile": "connection-profile.json",
+    "adminConfigFile": "admin-config.json"
+}
+```
 
-### 3. Configure the identity provider (Cognito / IBM App ID)
+### 4. Configure the identity provider (Cognito / IBM App ID)
 Application currently supports both AWS Cognito and IBM App ID. You can go with either one of the providers.
 
 ##### a. Configure local-cognito-config.json - AWS Cognito Identity Provider
@@ -87,7 +97,7 @@ Application currently supports both AWS Cognito and IBM App ID. You can go with 
     }
     ```
 
-### 3. Configure Key Value Store (CouchDB / HashiCorp Vault / IBM Certificate Manager)
+### 5. Configure Key Value Store (CouchDB / HashiCorp Vault / IBM Certificate Manager)
 Application currently supports CouchDB, HashiCorp Vault & IBM Certificate Manager as the Key Value Stores. You can go with either one of the providers.
 
 ##### a. Configure local-kvs-config.json - CouchDB
@@ -138,7 +148,7 @@ You can access the OpenAPI (aka Swagger) documentation locally at http://localho
         "users": [
             {
                 "org": "aais",
-                "user": "openidl-aais-data-call-processor-ibp-2.0",
+                "user": "openidl-aais-data-call-processor-ibp-2.1",
                 "pw": "password",
                 "affiliation": "aais",
                 "role": "client",
@@ -160,7 +170,8 @@ You can access the OpenAPI (aka Swagger) documentation locally at http://localho
         "users": [
             {
                 "org": "aais",
-                "user": "openidl-aais-data-call-processor-ibp-2.0",
+                "user": "openidl-aais-data-call-processor-ibp-2.1",
+                "pw": "password",
                 "affiliation": "aais",
                 "role": "client",
                 "attrs": [
