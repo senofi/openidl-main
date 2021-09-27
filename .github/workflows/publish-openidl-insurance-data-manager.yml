@@ -2,7 +2,7 @@ name: Publish openIDL insurance-data-manager
 on:
   push:
     branches:
-      - 'git-actions-helm'
+      - 'cognito-fabric-node14-helm'
     paths:
       - 'openidl-insurance-data-manager/**'
 

@@ -19,7 +19,7 @@ name: Deploy openIDL dev-aais
 on:
   push:
     branches:
-      - 'git-actions-helm'
+      - 'cognito-fabric-node14-helm'
     paths:
       - 'openidl-k8s/global-values-dev-aais.yaml'
 

@@ -2,7 +2,7 @@ name: Publish openIDL transactional-data-event-listener
 on:
   push:
     branches:
-      - 'git-actions-helm'
+      - 'cognito-fabric-node14-helm'
     paths:
       - 'openidl-transactional-data-event-listener/**'
 
