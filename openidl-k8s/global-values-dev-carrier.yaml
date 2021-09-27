@@ -25,7 +25,7 @@ global:
     image:
       repository: ghcr.io/openidl-org/openidl-utilities
       pullPolicy: IfNotPresent
-      tag: 6-git-actions-helm-8f37194-091420211946
+      tag: 10-cognito-fabric-node14-helm-f71cd72-092720211722
   carrierui:
     install: true
     servicename: carrier-ui-service
