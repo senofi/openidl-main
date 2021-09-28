@@ -49,8 +49,8 @@ spec:
         # for regular deployment
         # image: aais:1
         # for local development against minikube registry
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}      
+        image: {{ .Values.global.datacallmoodlistener.image.repository | default .Values.image.repository }}:{{ .Values.global.datacallmoodlistener.image.tag | default .Values.image.tag }}
+        imagePullPolicy: {{ .Values.global.datacallmoodlistener.image.pullPolicy | default .Values.image.pullPolicy }}      
         ports:
         - containerPort: {{ .Values.global.datacallmoodlistener.port }}
         volumeMounts:
