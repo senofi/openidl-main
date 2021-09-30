@@ -26,7 +26,15 @@ All API request is first sent to express js server and then internally forwarded
 
 All commands must be executed from inside the `openidl-ui-workspace` folder.
 
+NOTE: when testing as multiple users, use the firefox browser with the Multi-Account Containers plugin
+
+Before doing anything, update .npmrc file with your github token
+
 ## How to debug openidl-ui locally?
+
+Then run `npm install`
+
+Be sure to provide all the necessary configuration files in the server/config directory. These can be retrieved from kubernetes secrets.
 
 Execute the following commands.
 
