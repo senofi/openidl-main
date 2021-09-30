@@ -9,6 +9,11 @@ export const appConst = {
 		},
 		shouldCreateDatacall: false
 	},
+	roles: {
+		carrier: '../../assets/images/carrier.png',
+		regulator: '../../assets/images/regulator.png',
+		statagent: '../../assets/images/stat-agent.png'
+	},
 	status: {
 		DRAFT: 'DRAFT',
 		ISSUED: 'ISSUED',

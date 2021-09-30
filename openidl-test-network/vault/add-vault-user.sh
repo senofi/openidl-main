@@ -1,7 +1,7 @@
 #!/bin/bash
 #set -x
 #
-#./add-vault-user.sh -t s.NChugw1IiynKI3q6Zb674U4N -U user-data-call-app -P password -a data-call-app -o AAISOrg -e '"create","update","read","list"'
+#./add-vault-user.sh -t s.NChugw1IiynKI3q6Zb674U4N -U user-data-call-app -P password -a data-call-app -o AAISOrg -e '"create","update","read"'
 #
 
 checkOptions() {
@@ -21,8 +21,8 @@ checkOptions() {
     echo "PASSWORD_TO_BE_CREATED is not defined."
     exit 1
   fi
-  if [ -z "${APP}" ]; then
-    echo "APP is not defined."
+  if [ -z "${APP_NAME}" ]; then
+    echo "APP_NAME is not defined."
     exit 1
   fi
   if [ -z "${ORG}" ]; then
@@ -54,22 +54,22 @@ addUser() {
     exit 1
   fi
 
-  echo "Enable path for storing config data"
-  HTTP_STATUS=$(curl --header "X-Vault-Token: ${USER_TOKEN}" \
-    --request POST \
-    --data '{"type":"kv","options":{"version":2},"generate_signing_key":true}' \
-    ${VAULT_URL}/v1/sys/mounts/${ORG} --insecure -s -o /dev/null -w "%{http_code}")
-  RESULT=$?
-  if [ $RESULT -ne 0 ]; then
-    echo "Failed to execute curl."
-    exit 1
+  # echo "Enable path for storing config data"
+  # HTTP_STATUS=$(curl --header "X-Vault-Token: ${USER_TOKEN}" \
+  #   --request POST \
+  #   --data '{"type":"kv","options":{"version":2},"generate_signing_key":true}' \
+  #   ${VAULT_URL}/v1/sys/mounts/${ORG} --insecure -s -o /dev/null -w "%{http_code}")
+  # RESULT=$?
+  # if [ $RESULT -ne 0 ]; then
+  #   echo "Failed to execute curl."
+  #   exit 1
+  # fi
+  # HTTP_STATUS=${HTTP_STATUS}
+  # if [ "${HTTP_STATUS}" != "204" ]; then
+  #   echo "Error in Invoking Vault with status ${HTTP_STATUS}."
+  #   exit 1
   fi
-  HTTP_STATUS=${HTTP_STATUS}
-  if [ "${HTTP_STATUS}" != "204" ]; then
-    echo "Error in Invoking Vault with status ${HTTP_STATUS}."
-    exit 1
-  fi
-
+  
   POLICY_FILE=$(mktemp).json
   RESULT=$?
   if [ $RESULT -ne 0 ]; then
@@ -80,7 +80,7 @@ addUser() {
   PERMISSIONS=$(echo $PERMISSIONS | sed 's/\"/\\\"/g')
   cat >${POLICY_FILE} <<EOF
         {
-            "policy": "path \"${ORG}/data/${APP}/*\" { capabilities = [ ${PERMISSIONS} ]} path \"${ORG}/metadata/${APP}/*\" { capabilities = [ ${PERMISSIONS} ]}"
+            "policy": "path \"${ORG}/data/${APP_NAME}/*\" { capabilities = [ ${PERMISSIONS} ]}"
         }
 EOF
   echo "Add policy"
@@ -144,7 +144,7 @@ ORG=AAISOrg
 USER_TOKEN=""
 USER_TO_BE_CREATED=""
 PASSWORD_TO_BE_CREATED=""
-APP=""
+APP_NAME=""
 while getopts "V:t:U:P:a:o:e:" key; do
   case ${key} in
   V)
@@ -160,7 +160,7 @@ while getopts "V:t:U:P:a:o:e:" key; do
     PASSWORD_TO_BE_CREATED=${OPTARG}
     ;;
   a)
-    APP=${OPTARG}
+    APP_NAME=${OPTARG}
     ;;
   o)
     ORG=${OPTARG}
