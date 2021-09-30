@@ -25,9 +25,9 @@ make enable_ingress
 echo "================================================="
 echo "Copy hyperledger fabric local test network connection profile"
 echo "================================================="
-cp -R ./openidl-test-network/organizations/peerOrganizations/aais.example.com/connection-aais.json ./openidl-k8s/charts/openidl-secrets/config-aais/connection-profile.json
-cp -R ./openidl-test-network/organizations/peerOrganizations/carrier.example.com/connection-carrier.json ./openidl-k8s/charts/openidl-secrets/config-carrier/connection-profile.json 
-cp -R ./openidl-test-network/organizations/peerOrganizations/analytics.example.com/connection-analytics.json ./openidl-k8s/charts/openidl-secrets/config-analytics/connection-profile.json 
+cp -R ./openidl-test-network/organizations/peerOrganizations/aais.example.com/connection-aais.json ./openidl-k8s/charts/openidl-secrets/config-local-aais/connection-profile.json
+cp -R ./openidl-test-network/organizations/peerOrganizations/carrier.example.com/connection-carrier.json ./openidl-k8s/charts/openidl-secrets/config-local-carrier/connection-profile.json 
+cp -R ./openidl-test-network/organizations/peerOrganizations/analytics.example.com/connection-analytics.json ./openidl-k8s/charts/openidl-secrets/config-local-analytics/connection-profile.json 
 
 echo "================================================="
 echo "Install application helm charts"

@@ -9,8 +9,6 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: openidl-data-call-mood-listener
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  NPM_TOKEN: $${{ secrets.ACCESS_TOKEN }}
 
 defaults:
   run:
@@ -45,7 +43,7 @@ jobs:
       - name: Prepare .npmrc
         id: npmrc
         run: |
-          sed -i 's|${GITHUB_TOKEN}|${{ secrets.ACCESS_TOKEN }}|' ./.npmrc
+          sed -i 's|${GITHUB_TOKEN}|${{ secrets.GITHUB_TOKEN }}|' ./.npmrc
 
       - name: Get Current Date and Time
         id: datetime

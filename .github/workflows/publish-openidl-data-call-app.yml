@@ -9,8 +9,6 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: openidl-data-call-app
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  NPM_TOKEN: $${{ secrets.ACCESS_TOKEN }}
 
 defaults:
   run:
@@ -24,6 +22,7 @@ jobs:
     permissions:
       packages: write
       contents: read
+
     steps:
       - name: Check out the Repository
         uses: actions/checkout@v2
