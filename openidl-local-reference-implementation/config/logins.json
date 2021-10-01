@@ -1,0 +1,14 @@
+{
+    "statAgent": {
+        "username": "kens@aaisonline.com",
+        "password": "Kens@blockchain"
+    },
+    "regulator": {
+        "username": "regulator@aaisonline.com",
+        "password": "Regulator@blockchain"
+    },
+    "carrier": {
+        "username": "carrier1@aaisonline.com",
+        "password": "Carrier1@blockchain"
+    }
+}
