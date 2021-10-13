@@ -10,6 +10,8 @@ use this project to run the services for loading samples etc
 
 ## Setup
 
+change directory to the openidl-local-reference-implementation folder `cd openidl-local-reference-implementation`
+
 install the javascript client `npm install @kubernetes/client-node`
 
 install node fetch with `npm install node-fetch@2`
@@ -18,13 +20,23 @@ start the proxy to the minikube `kubectl proxy --port=9090 &`
 
 the kubernetes api reference is here: https://kubernetes.io/docs/reference/
 
+### setup for cognito
+
+-   create a user pool and starting user per the document: `Local Reference Implementation.docx`
+
 update the cognito config files to point to your cognito
+
+copy the config-secrets-template.json file to the .gitignore d file config-secrets.json in the config directory
+
+fill out the values in that file
 
 update the logins.json to point to your users in cognito
 
-run `./copy-config-files.sh`
+run `make copy_config_files`
 
-go to `../openidl-k8s` and start the reference implementation system with ./systemup.sh
+run `make apply_secrets`
+
+go to `../` and start the reference implementation system with `./systemup.sh`
 
 ## Set environment
 
