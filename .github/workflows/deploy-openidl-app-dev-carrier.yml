@@ -21,7 +21,7 @@ on:
     branches:
       - 'cognito-fabric-node14-helm'
     paths:
-      - 'openidl-k8s/global-values-dev-carrier.yaml'
+      - 'openidl-k8s/global-values-dev-trv.yaml'
 
 defaults:
   run:
@@ -45,6 +45,7 @@ jobs:
         role-external-id: ${{ secrets.eks_external_id }}
         role-duration-seconds: 3600 # session valid for 30 minutes
         role-session-name: git-actions
+        role-skip-session-tagging: true
 
     - name: Checkout Code
       uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f

@@ -7,7 +7,7 @@ on:
       - 'openidl-transactional-data-event-listener/**'
 
 env:
-  REGISTRY: ghcr.io
+  REGISTRY: ghcr.io/${{ github.repository }}
   IMAGE_NAME: openidl-transactional-data-event-listener
 
 defaults:
@@ -61,7 +61,7 @@ jobs:
           context: openidl-transactional-data-event-listener
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
-            ${{ env.REGISTRY }}/openidl-org/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/openidl-org/${{ env.IMAGE_NAME }}:${{ github.run_number }}-${{ env.BRANCH }}-${{ env.COMMIT_ID }}-${{ env.BUILD_DATETIME }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}-${{ env.BRANCH }}-${{ env.COMMIT_ID }}-${{ env.BUILD_DATETIME }}
 
 

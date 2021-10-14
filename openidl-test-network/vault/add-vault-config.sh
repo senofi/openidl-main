@@ -85,8 +85,8 @@ addVaultConfig() {
       exit 1
     fi
     echo "HTTP_STATUS=${HTTP_STATUS}"
-    if [ "${HTTP_STATUS}" != "204" ]; then
-      echo "API call didn't return 204."
+    if [ "${HTTP_STATUS}" != "200" ]; then
+      echo "API call didn't return 200."
       exit 1
     fi
   done
