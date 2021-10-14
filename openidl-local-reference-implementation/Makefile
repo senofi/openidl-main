@@ -4,6 +4,10 @@ copy_config_files:
 apply_secrets:
 	node apply-secrets.js
 	
+copy_secrets:
+	./copy-config-files.sh
+	node apply-secrets.js
+
 set_environment:
 	node set-environment.js
 	
@@ -18,6 +22,6 @@ load_extraction_patterns:
 
 bootstrap:
 	node load-insurance-data.js
-	node load-extraction-pattnerns.js
+	node load-extraction-patterns.js
 	node load-data-calls.js
 

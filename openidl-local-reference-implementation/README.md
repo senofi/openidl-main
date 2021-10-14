@@ -22,6 +22,8 @@ the kubernetes api reference is here: https://kubernetes.io/docs/reference/
 
 ### setup for cognito
 
+-   login as the root user in your account and create an access key and secret
+    -   put these credentials into the config-secrets.json in the step below
 -   create a user pool and starting user per the document: `Local Reference Implementation.docx`
 
 update the cognito config files to point to your cognito

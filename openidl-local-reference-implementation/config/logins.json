@@ -1,14 +1,14 @@
 {
     "statAgent": {
-        "username": "kens@aaisonline.com",
-        "password": "Kens@blockchain"
+        "username": "stat-agent@openidl.org",
+        "password": "StatAgent@blockchain"
     },
     "regulator": {
-        "username": "regulator@aaisonline.com",
+        "username": "regulator@openidl.org",
         "password": "Regulator@blockchain"
     },
     "carrier": {
-        "username": "carrier1@aaisonline.com",
-        "password": "Carrier1@blockchain"
+        "username": "carrier@openidl.org",
+        "password": "Carrier@blockchain"
     }
 }
