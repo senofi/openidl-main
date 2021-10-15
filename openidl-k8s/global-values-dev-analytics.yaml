@@ -8,8 +8,8 @@ global:
     targetport: 8080
     servicename: data-call-app-service
     ingressenabled: false
-    ingresshostname: data-call-app-service.analytics.dev.internal.aaisanalyticsdemo.com
-    publicingresshostname: data-call-app-service.analytics.dev.aaisanalyticsdemo.com
+    ingresshostname: data-call-app-service.dev.analytics.internal.techiething.com
+    publicingresshostname: data-call-app-service.dev.analytics.techiething.com
     image:
       repository: ghcr.io/openidl-org/openidl-data-call-app
       pullPolicy: IfNotPresent
@@ -20,8 +20,8 @@ global:
     targetport: 8080
     servicename: utilities-service
     ingressenabled: false
-    ingresshostname: utilities-service.analytics.dev.internal.aaisanalyticsdemo.com
-    publicingresshostname: utilities-service.analytics.dev.aaisanalyticsdemo.com
+    ingresshostname: utilities-service.dev.analytics.internal.techiething.com
+    publicingresshostname: utilities-service.dev.analytics.techiething.com
     image:
       repository: ghcr.io/openidl-org/openidl-utilities
       pullPolicy: IfNotPresent
@@ -32,7 +32,7 @@ global:
     port: 8080
     targetport: 8080
     ingressenabled: false
-    ingresshostname: openidl.analytics.dev.aaisanalyticsdemo.com
+    ingresshostname: openidl.dev.analytics.techiething.com
     image:
       repository: ghcr.io/openidl-org/openidl-ui
       pullPolicy: IfNotPresent
@@ -70,7 +70,7 @@ global:
     targetport: 8080
     servicename: insurance-data-manager-service
     ingressenabled: false
-    ingresshostname: insurance-data-manager-service.analytics.dev.aaisanalyticsdemo.com
+    ingresshostname: insurance-data-manager-service.dev.analytics.techiething.com
     image:
       repository: ghcr.io/openidl-org/openidl-insurance-data-manager
       pullPolicy: IfNotPresent
@@ -90,7 +90,7 @@ global:
     port: 8080
     targetport: 8080
     ingressenabled: false
-    ingresshostname: openidl.analytics.dev.aaisanalyticsdemo.com
+    ingresshostname: openidl.dev.analytics.techiething.com
     image:
       repository: ghcr.io/openidl-org/openidl-carrier-ui
       pullPolicy: IfNotPresent
