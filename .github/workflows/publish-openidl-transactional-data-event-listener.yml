@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - 'cognito-fabric-node14-helm'
+      - 'develop'
     paths:
       - 'openidl-transactional-data-event-listener/**'
 
