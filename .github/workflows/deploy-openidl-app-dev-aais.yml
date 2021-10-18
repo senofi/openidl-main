@@ -61,4 +61,7 @@ jobs:
         aws eks update-kubeconfig --region ${{ secrets.aws_region }} --name ${{ secrets.app_cluster_name }}
     - name: Deploy openIDL app using helm
       run: |
-        helm upgrade --install dev-aais ./openidl-k8s -f ./openidl-k8s/global-values-dev-aais.yaml -n openidl --set global.datacallapp.ingressenabled=true --set global.utilities.ingressenabled=true --set global.ui.ingressenabled=true --set global.insurancedatamanager.ingressenabled=true --set global.secrets.install=false
+        helm upgrade --install dev-aais ./openidl-k8s -f ./openidl-k8s/global-values-dev-aais.yaml -n openidl \
+          --set global.datacallapp.ingressenabled=true --set global.utilities.ingressenabled=true \
+          --set global.ui.ingressenabled=true --set global.insurancedatamanager.ingressenabled=true \
+          --set global.secrets.install=false
