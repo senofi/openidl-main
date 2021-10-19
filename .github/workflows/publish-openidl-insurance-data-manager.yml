@@ -2,10 +2,11 @@ name: Publish openIDL insurance-data-manager
 on:
   push:
     branches:
-      - 'cognito-fabric-node14-helm'
       - 'develop'
     paths:
       - 'openidl-insurance-data-manager/**'
+
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io/${{ github.repository }}
