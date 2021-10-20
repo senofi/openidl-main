@@ -18,10 +18,6 @@ checkOptions() {
     echo "SECRET_ID is not defined"
     exit 1
   fi
-  if [ -z "${APP_NAME}" ]; then
-    echo "APP_NAME is not defined"
-    exit 1
-  fi
   if [ -z "${CONFIG_PATH}" ]; then
     echo "CONFIG_PATH is not defined"
     exit 1
@@ -58,7 +54,7 @@ fi
 echo "AWS credentials exporting as ENV variables are successful"
 rm -f /tmp/secrets.env
 echo "Retrieve data from vault"
-./vault/pull-vault-config.sh -V ${url} -U ${username} -P ${password} -a ${APP_NAME} -o ${orgName} -c ${CONFIG_PATH} > pull-vault-config.log
+./vault/pull-vault-config.sh -V ${url} -U ${username} -P ${password} -a ${vaultPath} -o ${orgName} -c ${CONFIG_PATH} > pull-vault-config.log
 result=$?
 if [ $result -ne 0 ]; then
 	echo "Failed to retrieve data from VAULT"
@@ -74,9 +70,6 @@ while getopts "s:a:c:r:" key; do
     ;;
   s)
     SECRET_ID=${OPTARG}
-    ;;
-  a)
-    APP_NAME=${OPTARG}
     ;;
   c)
     CONFIG_PATH=${OPTARG}

@@ -5,12 +5,12 @@
 # Note: All these prereqs are provisioned part of AWS resources provisioning part of gitactions+terraform deployment. 
 # It is required to inspect the AWS resources and gather the information to setup and enable this gitactions. 
 # Setup the following secrets in github as environment secrets under environment named "dev-analytics"
-# 1. eks_admin_access_key 
-# 2. eks_admin_secret_key 
-# 3. eks_sm_region 
-# 4. eks_external_id 
-# 5. eks_cluster_name 
-# 6. eks_admin_role
+#1. gitactions_user_access_key
+#2. gitactions_user_secret_key
+#3. gitactions_eksadm_role
+#4. gitactions_external_id
+#5. aws_region
+#6. app_cluster_name
 
 #Authors: Rajesh Sanjeevi & Sandeep Pulluru 
 #Version: v1.0 
@@ -19,9 +19,11 @@ name: Deploy openIDL dev-analytics
 on:
   push:
     branches:
-      - 'cognito-fabric-node14-helm'
+      - 'develop'
     paths:
       - 'openidl-k8s/global-values-dev-analytics.yaml'
+
+  workflow_dispatch:
 
 defaults:
   run:
@@ -38,13 +40,13 @@ jobs:
     - name: Configure AWS CLI with credentials
       uses: aws-actions/configure-aws-credentials@230d25f14e841bc8e06b5f4ff89ccd6989fc1d71
       with:
-        aws-access-key-id: ${{ secrets.eks_admin_access_key }}
-        aws-secret-access-key: ${{ secrets.eks_admin_secret_key }}
-        aws-region: ${{ secrets.eks_sm_region }}
-        role-to-assume: ${{ secrets.eks_admin_role }}
-        role-external-id: ${{ secrets.eks_external_id }}
+        aws-access-key-id: ${{ secrets.gitactions_user_access_key }}
+        aws-secret-access-key: ${{ secrets.gitactions_user_secret_key }}
+        aws-region: ${{ secrets.aws_region }}
+        role-to-assume: ${{ secrets.gitactions_eksadm_role }}
+        role-external-id: ${{ secrets.gitactions_external_id }}
         role-duration-seconds: 3600 # session valid for 30 minutes
-        role-session-name: git-actions 
+        role-session-name: git-actions
         role-skip-session-tagging: true
 
     - name: Checkout Code
@@ -57,7 +59,9 @@ jobs:
 
     - name: Setup kube-config
       run: |
-        aws eks update-kubeconfig --region ${{ secrets.eks_sm_region }} --name ${{ secrets.eks_cluster_name }}
+        aws eks update-kubeconfig --region ${{ secrets.aws_region }} --name ${{ secrets.app_cluster_name }}
     - name: Deploy openIDL app using helm
       run: |
-        helm upgrade --install dev-analytics ./openidl-k8s -f ./openidl-k8s/global-values-dev-analytics.yaml -n openidl --set global.datacallapp.ingressenabled=true --set global.utilities.ingressenabled=true  --set global.ui.ingressenabled=true --set global.secrets.install=false
+        helm upgrade --recreate-pods --install dev-analytics ./openidl-k8s -f ./openidl-k8s/global-values-dev-analytics.yaml \
+          -n openidl --set global.datacallapp.ingressenabled=true --set global.utilities.ingressenabled=true \
+          --set global.ui.ingressenabled=true --set global.secrets.install=false

@@ -2,9 +2,11 @@ name: Publish openIDL utilities
 on:
   push:
     branches:
-      - 'cognito-fabric-node14-helm'
+      - 'develop'
     paths:
       - 'openidl-utilities/**'
+
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io/${{ github.repository }}

@@ -1,5 +1,5 @@
 global:
-  clusterurl: aaiscarrierdemo.com
+  clusterurl: carrierdemo.com
   appsecret: apps-secret
   configpath: config-local-carrier
   datacallapp:
@@ -8,8 +8,8 @@ global:
     targetport: 8080
     servicename: data-call-app-service
     ingressenabled: false
-    ingresshostname: data-call-app-service.carrier.dev.internal.aaiscarrierdemo.com
-    publicingresshostname: data-call-app-service.carrier.dev.aaiscarrierdemo.com
+    ingresshostname: data-call-app-service.dev.trv.internal.techiething.com
+    publicingresshostname: data-call-app-service.dev.trv.techiething.com
     image:
       repository: ghcr.io/openidl-org/openidl-data-call-app
       pullPolicy: IfNotPresent
@@ -20,8 +20,8 @@ global:
     targetport: 8080
     servicename: utilities-service
     ingressenabled: false
-    ingresshostname: utilities-service.carrier.dev.internal.aaiscarrierdemo.com
-    publicingresshostname: utilities-service.carrier.dev.aaiscarrierdemo.com
+    ingresshostname: utilities-service.dev.trv.internal.techiething.com
+    publicingresshostname: utilities-service.dev.trv.techiething.com
     image:
       repository: ghcr.io/openidl-org/openidl-utilities
       pullPolicy: IfNotPresent
@@ -32,18 +32,18 @@ global:
     port: 8080
     targetport: 8080
     ingressenabled: false
-    ingresshostname: openidl.carrier.dev.aaiscarrierdemo.com
+    ingresshostname: openidl.dev.trv.techiething.com
     image:
       repository: ghcr.io/openidl-org/openidl-carrier-ui
       pullPolicy: IfNotPresent
-      tag: 1-git-actions-helm-3b27ace-091420211922
+      tag: 9-cognito-fabric-node14-helm-f84a367-093020211950
   insurancedatamanager:
     install: true
     port: 8080
     targetport: 8080
     servicename: insurance-data-manager-service
     ingressenabled: false
-    ingresshostname: insurance-data-manager-service.carrier.dev.aaiscarrierdemo.com
+    ingresshostname: insurance-data-manager-service.dev.trv.techiething.com
     image:
       repository: ghcr.io/openidl-org/openidl-insurance-data-manager
       pullPolicy: IfNotPresent
@@ -90,7 +90,7 @@ global:
     port: 8080
     targetport: 8080
     ingressenabled: false
-    ingresshostname: openidl.carrier.dev.aaiscarrierdemo.com
+    ingresshostname: openidl.dev.trv.techiething.com
     image:
       repository: ghcr.io/openidl-org/openidl-ui
       pullPolicy: IfNotPresent

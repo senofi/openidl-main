@@ -81,6 +81,7 @@ addUser() {
   cat >${POLICY_FILE} <<EOF
         {
             "policy": "path \"${ORG}/data/${APP_NAME}/*\" { capabilities = [ ${PERMISSIONS} ]}"
+            "policy": "path \"${ORG}/metadata/${APP_NAME}/*\" { capabilities = [ ${PERMISSIONS} ]}"
         }
 EOF
   echo "Add policy"
