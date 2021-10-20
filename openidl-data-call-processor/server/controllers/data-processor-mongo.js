@@ -2,11 +2,9 @@ const log4js = require('log4js');
 const config = require('../config/default.json');
 const logger = log4js.getLogger('data-processor-Mongo');
 logger.level = config.logLevel;
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
 const sleep = require('sleep');
 const sizeof = require('object-sizeof');
-const openidlCommonLib = require('openidl-common-lib');
+const openidlCommonLib = require('@openidl-org/openidl-common-lib');
 
 let InstanceFactory = require('../middleware/instance-factory');
 
@@ -44,7 +42,7 @@ class DataProcessorMongo {
     }
     //1. JIRA#-104
     // Fix for Jira88 & Jira 104
-   async processRecords(reduceCollectionName, extractionPattern,
+    async processRecords(reduceCollectionName, extractionPattern,
         premiumFromDate,
         premiumToDate,
         lossFromDate,
@@ -79,7 +77,7 @@ class DataProcessorMongo {
                     logger.info('Successfully inserted chunkIDs into extract_pattern_migration collection -  ' + distinctChunkid)
                     logger.info("Payload structure is " + JSON.stringify(payload))
                     logger.debug("  processRecrods dbManager=" + this.dbManager)
-                    await this.PDCS3Buckettransfer(payload,this.dbManager, this.targetChannelTransaction);
+                    await this.PDCS3Buckettransfer(payload, this.dbManager, this.targetChannelTransaction);
                     logger.info("Completed.......................................")
                 } else {
                     logger.error('Failed to insert the chunkIDs into extract_pattern_migration collection -  ' + distinctChunkid)
@@ -124,7 +122,7 @@ class DataProcessorMongo {
     }
 
     // Fix for Jira - 104  --- Venkatfix
-    async PDCS3Buckettransfer(jsonDocument,dbManager,target) {
+    async PDCS3Buckettransfer(jsonDocument, dbManager, target) {
         try {
             logger.debug("processedInsuranceDataNew has started with " + jsonDocument.carrierid);
             logger.debug("Sleeping for  " + config.savePDCDelay + " seconds");
@@ -137,24 +135,24 @@ class DataProcessorMongo {
                 transferDocuments = [];
                 logger.debug("item.pdcstatus        " + item.pdcstatus)
                 logger.debug("jsonDocument.collectionname        " + jsonDocument.collectionname)
-                
+
                 // PDC Update
-                if (item.pdcstatus === "YettoProcess" ||  item.pdcstatus === "Failed" ) {
+                if (item.pdcstatus === "YettoProcess" || item.pdcstatus === "Failed") {
                     index++;
                     logger.info("Current Process is PDC Bucket update of Chunkid is " + item.chunkid)
                     logger.debug(" PDCS3 dbManager=" + dbManager)
-                    transferDocuments = await this.getInsuranceDataNew(item.chunkid, jsonDocument.collectionname,dbManager);
+                    transferDocuments = await this.getInsuranceDataNew(item.chunkid, jsonDocument.collectionname, dbManager);
                     logger.info("this.mongorecords " + JSON.stringify(transferDocuments))
                     try {
                         // PDC Service 
-                        await this.saveInsuranceRecordNew(jsonDocument.carrierid, transferDocuments, index, jsonDocument.datacallid, jsonDocument.versionid,target)
+                        await this.saveInsuranceRecordNew(jsonDocument.carrierid, transferDocuments, index, jsonDocument.datacallid, jsonDocument.versionid, target)
                         item.pdcstatus = "Completed"
                         item.pdccomments = item.pdccomments + " Executed at - " + new Date().toISOString() + " | ";
                     } catch (ex) {
                         pdcFailureStatus = true;
                         item.pdcstatus = "Failed"
-                        item.pdccomments = item.pdccomments + " Failed at  - " + new Date().toISOString()  + " | ";
-                       
+                        item.pdccomments = item.pdccomments + " Failed at  - " + new Date().toISOString() + " | ";
+
                         logger.error(ex)
                         logger.error("Failed to insert PDC for chunkid " + item.chunkid)
                     }
@@ -165,17 +163,17 @@ class DataProcessorMongo {
 
 
                 // Update S3 Bucket
-                if (item.s3status === "YettoProcess" || item.s3status === "Failed" ) {
-                    if(item.pdcstatus === "Completed"){
+                if (item.s3status === "YettoProcess" || item.s3status === "Failed") {
+                    if (item.pdcstatus === "Completed") {
                         index++;
                         logger.info("Current Process is S3 Bucket update of Chunkid is " + item.chunkid)
-                        if (transferDocuments.length == 0) transferDocuments = await this.getInsuranceDataNew(item.chunkid, jsonDocument.collectionname,dbManager);
+                        if (transferDocuments.length == 0) transferDocuments = await this.getInsuranceDataNew(item.chunkid, jsonDocument.collectionname, dbManager);
                         logger.info("this.mongorecords " + JSON.stringify(transferDocuments))
                         try {
                             // PDC Service 
                             let factoryObject = new InstanceFactory();
                             let targetObject = await factoryObject.getInstance(config.insuranceDataStorageEnv);
-    
+
                             var insuranceData = new Object();
                             let id = jsonDocument.carrierid + '-' + jsonDocument.datacallid + '-' + jsonDocument.versionid + '-' + item.chunkid
                             //check whether record already exist with this '_id'
@@ -191,7 +189,7 @@ class DataProcessorMongo {
                             }
                             insuranceData._id = id;
                             insuranceData.records = transferDocuments;
-    
+
                             try {
                                 await targetObject.saveTransactionalData(insuranceData);
                                 item.s3status = "Completed"
@@ -204,15 +202,15 @@ class DataProcessorMongo {
                                 logger.error('failed to save transactional data for', insuranceData._id)
                                 logger.error('error during saveTransactionalData onerror ' + err)
                             }
-    
+
                             insuranceData = null
                             factoryObject = null
-    
+
                         } catch (ex) {
-        
+
                             S3FailureStatus = true;
                             item.s3status = "Failed"
-               
+
                             item.s3comments = item.s3comments + " Failed at - " + new Date().toISOString() + " | ";
                             logger.error(ex)
                             logger.error("Failed to insert PDC for chunkid " + item.chunkid)
@@ -221,15 +219,15 @@ class DataProcessorMongo {
                         logger.debug("PDC transaction has to be taken care first before exection of S3 bucket")
                         S3FailureStatus = true;
                     }
-                  
+
                 } else {
                     logger.info("PDC transfer of ChunkID " + item.chunkid + " is already processed ")
                 }
 
                 logger.debug("*****   PDC & S3 Status Update of Chunk -- Start *****************")
-                logger.debug("Chunk ID Value    : " +  item.chunkid)
-                logger.debug("PDC Status        : " +  item.pdcstatus)
-                logger.debug("S3 Bucket Status  : " +  item.s3status)
+                logger.debug("Chunk ID Value    : " + item.chunkid)
+                logger.debug("PDC Status        : " + item.pdcstatus)
+                logger.debug("S3 Bucket Status  : " + item.s3status)
                 logger.debug("*****   PDC & S3 Status Update of Chunk-- End *******************")
 
             }
@@ -247,7 +245,7 @@ class DataProcessorMongo {
                 logger.error("Failed to update PDC & S3 update into extract_pattern_migration collection failed " + ex)
             }
 
-          //  Update Consent status into Blockchain
+            //  Update Consent status into Blockchain
             if (jsonDocument.overallStatus === "Completed") {
                 let payload = {
                     dataCallID: jsonDocument.datacallid,
@@ -270,7 +268,7 @@ class DataProcessorMongo {
             throw error
         }
     }
- 
+
 
 
 
@@ -308,7 +306,7 @@ class DataProcessorMongo {
         return extractionChunks
     }
     // Fix for Jira - 104  -- Venkat fix
-   async saveInsuranceRecordNew(carrierId, records, pageNumber, datacallid, versionid,target) {
+    async saveInsuranceRecordNew(carrierId, records, pageNumber, datacallid, versionid, target) {
         try {
             let insuranceObject = {
                 pageNumber: pageNumber,
@@ -367,7 +365,7 @@ class DataProcessorMongo {
     }
 
     // Fix for Jira - 104  --- Venkatfix
-    async getInsuranceDataNew(chunkID, collectionName,dbManager) {
+    async getInsuranceDataNew(chunkID, collectionName, dbManager) {
         try {
             logger.debug("In getInsuranceData");
             logger.debug(" dbManager is " + dbManager)
@@ -406,7 +404,7 @@ class DataProcessorMongo {
             logger.info("In  MapReduceCollection   " + carrierId + " START_TIME = " + new Date().toISOString());
             let DBManagerFactory = openidlCommonLib.DBManagerFactory;
             let dbManagerFactoryObject = new DBManagerFactory();
-            this.dbManager = await dbManagerFactoryObject.getInstance();
+            this.dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
             let DBName = config.insuranceDB + "_" + carrierId;
             logger.debug("DBName>>>> " + DBName);
             // Fix for Jira88

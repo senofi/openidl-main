@@ -26,12 +26,20 @@ All API request is first sent to express js server and then internally forwarded
 
 All commands must be executed from inside the `openidl-ui-workspace` folder.
 
+NOTE: when testing as multiple users, use the firefox browser with the Multi-Account Containers plugin
+
+Before doing anything, update .npmrc file with your github token
+
 ## How to debug openidl-ui locally?
+
+Then run `npm install`
+
+Be sure to provide all the necessary configuration files in the server/config directory. These can be retrieved from kubernetes secrets.
 
 Execute the following commands.
 
 1. Execute `npm run watch` command to run `openidl-common-ui` Angular Library in watch mode. Angular will detect any code changes and rebuild it while debugging.
-2. Execute `npm run start:aais` command to launch an express server on `8080` port. If you want to use different port number then update port # in `openidl-ui-workspace\projects\openidl-ui\server\config\port-config.json` file.
+2. Execute `npm run start:aais` command to launch an express server on `8080` port. If you want to use different port number then update port # in `openidl-ui-workspace\projects\openidl-ui\server\config\mappings.json` file.
     > If you are updating the port # from 8080 to something else then you need to update same port # in `openidl-ui-workspace\proxy.conf.json` file as well. Angular uses this file to proxy all API calls from 4200 to 8080.
 3. Execute `npm run serve:aais` command to launch `openidl-ui` on port `4200` port.
 
@@ -40,7 +48,7 @@ Execute the following commands.
 Execute the following commands.
 
 1. Execute `npm run watch` command to run `openidl-common-ui` Angular Library in watch mode. Angular will detect any code changes and rebuild it while debugging.
-2. Execute `npm run start:carrier` command to launch an express server on `8080` port. If you want to use different port number then update port # in `openidl-ui-workspace\projects\openidl-carrier-ui\server\config\port-config.json` file.
+2. Execute `npm run start:carrier` command to launch an express server on `8080` port. If you want to use different port number then update port # in `openidl-ui-workspace\projects\openidl-carrier-ui\server\config\mappings.json` file.
     > If you are updating the port # from 8080 to something else then you need to update same port # in `openidl-ui-workspace\proxy.conf.json` file as well. Angular uses this file to proxy all API calls from 4200 to 8080.
 3. Execute `npm run serve:carrier` command to launch `openidl-carrier-ui` on port `4200` port.
 

@@ -10,7 +10,6 @@ spec:
   ports:
     - port: {{ .Values.global.datacallapp.port }}
       targetPort: {{ .Values.global.datacallapp.targetport }}
-      nodePort: {{ .Values.global.datacallapp.nodeport }}
       protocol: TCP
       name: http
   selector:

@@ -3,18 +3,18 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
- 
+
 
 const log4js = require('log4js');
-const config = require('config');
 const {
     Gateway
 } = require('fabric-network');
+const { BlockDecoder } = require('fabric-common');
 
 const walletHelper = require('./wallet');
 
 const logger = log4js.getLogger('helper -transaction ');
-logger.level = config.logLevel;
+logger.level = process.env.LOG_LEVEL || 'debug';
 
 const MESSAGE_CONFIG = require('./config/ibp-messages-config.js');
 
@@ -34,30 +34,6 @@ class transaction {
     }
     static initWallet(options) {
         walletHelper.init(options);
-    }
-
-    async initEventHub() {
-        logger.debug('init event hub');
-        const idExists = await walletHelper.identityExists(this.user);
-        if (!idExists) {
-            throw new Error("Invalid Identity, no certificate found in certificate store");
-        }
-        // gateway and contract connection
-        logger.debug('channel:' + this.channelName);
-        logger.debug('user:' + this.user);
-        await this.gateway.connect(this.ccp, {
-            identity: this.user,
-            wallet: walletHelper.getWallet(),
-        });
-        const network = await this.gateway.getNetwork(this.channelName);
-        const channel = network.getChannel();
-        const peerMap = network.getPeerMap();
-        const peer = peerMap.get(this.orgMSPId);
-        this.eventHub = channel.newChannelEventHub(peer);
-        //  finally { //TODO need to discuss 
-        //   this.gateway.disconnect();
-        // }
-
     }
 
     /**
@@ -155,7 +131,7 @@ class transaction {
             this.gateway.disconnect();
         }
     };
-    async transientTransaction(functionName, parameters, pageNumber, retryCountPending, ) {
+    async transientTransaction(functionName, parameters, pageNumber, retryCountPending,) {
         logger.debug('inside transaction.transientTransaction() functionName...' + functionName);
         logger.debug('inside transaction.transientTransaction() parameters...');
         try {
@@ -186,9 +162,6 @@ class transaction {
     getChannelName() {
         return this.channelName;
     }
-    // getEventHub() { //TODO handle null condition
-    //   return this.eventHub;
-    // }
 
     async getBlockDetails(retryCountPending) {
         logger.debug('get block details');
@@ -205,17 +178,24 @@ class transaction {
                 discovery: { enabled: true, asLocalhost: false }
             });
             const network = await this.gateway.getNetwork(this.channelName);
-            const channel = network.getChannel();
-            const queryInfo = await channel.queryInfo();
+            const blockHeight = network.discoveryService.discoveryResults.peers_by_org[this.orgMSPId].peers[0].ledgerHeight.low;
             logger.debug('height');
-            logger.debug(queryInfo.height);
-            const blockHeight = queryInfo.height.low;
+            logger.debug(blockHeight);
+            const contract = network.getContract('qscc');
             const promiseArray = [];
             for (let index = blockHeight - 5; index < blockHeight; index++) {
-                promiseArray.push(channel.queryBlock(index));
+                promiseArray.push(contract.evaluateTransaction(
+                    'GetBlockByNumber',
+                    this.channelName,
+                    String(index)
+                ));
             }
             const blockData = await Promise.all(promiseArray);
-            return blockData.map(block => block.header.data_hash);
+            return blockData.map(block => 
+                { 
+                    const blockData = BlockDecoder.decode(block);
+                    return blockData.header.data_hash.toString('hex') 
+                });
         } catch (err) {
             logger.error('getBlockDetails error ' + err);
             return this.getBlockDetails(this.handleError(err, retryCountPending));
@@ -238,11 +218,10 @@ class transaction {
                 discovery: { enabled: true, asLocalhost: false }
             });
             const network = await this.gateway.getNetwork(this.channelName);
-            const channel = network.getChannel();
-            const queryInfo = await channel.queryInfo();
+            const height = network.discoveryService.discoveryResults.peers_by_org[this.orgMSPId].peers[0].ledgerHeight.low;
             logger.debug('height');
-            logger.debug(queryInfo.height);
-            return queryInfo.height;
+            logger.debug(height);
+            return height;
         } catch (err) {
             logger.error('getBlockHeight error ' + err);
             return this.getBlockHeight(this.handleError(err, retryCountPending));
@@ -265,8 +244,13 @@ class transaction {
                 discovery: { enabled: true, asLocalhost: false }
             });
             const network = await this.gateway.getNetwork(this.channelName);
-            const channel = network.getChannel();
-            const blockData = await channel.queryBlock(blockNumber);
+            const contract = network.getContract('qscc');
+            const resultByte = await contract.evaluateTransaction(
+                'GetBlockByNumber',
+                this.channelName,
+                String(blockNumber)
+            );
+            const blockData = BlockDecoder.decode(resultByte);
             logger.debug('getBlockDataByBlockNumber method exit');
             return blockData;
         } catch (err) {

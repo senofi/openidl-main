@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/hyperledger/fabric/core/chaincode/shim"
-	pb "github.com/hyperledger/fabric/protos/peer"
+	"github.com/hyperledger/fabric-chaincode-go/shim"
+	pb "github.com/hyperledger/fabric-protos-go/peer"
+	logger "github.com/sirupsen/logrus"
 )
 
-func (this *openIDLCC) ResetWorldState(stub shim.ChaincodeStubInterface) pb.Response {
+func (this *SmartContract) ResetWorldState(stub shim.ChaincodeStubInterface) pb.Response {
 	logger.Debug("ResetWorldState: enter")
 	defer logger.Debug("ResetWorldState: exit")
 

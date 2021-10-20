@@ -6,10 +6,12 @@ replicaCount: 1
 
 image:
     # repository: openidl/data-call-processor
-    repository: ghcr.io/openidl-org/openidl-data-call-processor
+    # repository: ghcr.io/openidl-org/openidl-data-call-processor
+    repository: ghcr.io/openidl-org/data-call-processor
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: latest
+    # tag: latest
+    tag: 0.0.5
 
 imagePullSecrets: []
 nameOverride: ""
@@ -47,7 +49,8 @@ service:
 ingress:
     enabled: false
     annotations:
-        { kubernetes.io/ingress.class: "public-iks-k8s-nginx" }
+        { kubernetes.io/ingress.class: "haproxy" }
+        # { kubernetes.io/ingress.class: "public-iks-k8s-nginx" }
         # kubernetes.io/ingress.class: nginx
         # kubernetes.io/tls-acme: "true"
     hosts:
@@ -91,16 +94,14 @@ secrets:
       file: metadata.json
     - name: data-call-processor-mappings-config
       file: mappings.json
-    - name: certmanager-config
-      file: local-certmanager-config.json
-    - name: mongodb-config
-      file: local-mongo-config.json
-    - name: cloudantdb-config
-      file: local-cloudant-config.json
+    - name: kvs-config
+      file: local-kvs-config.json
+    - name: vault-config
+      file: local-vault-config.json
     - name: connectionprofile-config
       file: connection-profile.json
     - name: db-config
-      file: DBConfig.json
+      file: local-db-config.json
     - name: email-config
       file: email.json
     - name: listenerchannelaais-config

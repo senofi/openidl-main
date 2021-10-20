@@ -6,8 +6,15 @@ node_modules/**
 #credentials
 server/config/local-cloudant-config.json
 server/config/local-certmanager-config.json
+server/config/local-kvs-config.json
 server/config/connection-profile.json
 server/config/unique-identifiers-config.json
+server/config/email.json
+server/config/local-mongo-config.json
+server/config/local-vault-config.json
+server/config/local-certmanager-config.json
+server/config/off-chain-db-credentials.json
+server/config/s3-bucket-config.json
 .nyc_output
 
 

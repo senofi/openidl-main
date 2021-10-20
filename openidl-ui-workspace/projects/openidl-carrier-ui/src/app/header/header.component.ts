@@ -17,6 +17,7 @@ export class HeaderComponent implements OnInit {
 	appConst;
 	role;
 	orgLogo;
+	roleIcon;
 	org;
 	isSpinner: Boolean = false;
 
@@ -31,6 +32,7 @@ export class HeaderComponent implements OnInit {
 		this.org = this.storageService.getItem('org');
 		this.appConst = appConst[this.role];
 		this.orgLogo = this.appConst.org[this.org];
+		this.roleIcon = appConst.roles[this.role];
 	}
 
 	ngOnInit() {}

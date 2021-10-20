@@ -70,26 +70,40 @@ cloud is in (ibm, aws, local)
 envt is in (stage, test, dev, prod)
 node is in (aais, analytics, carrier)
 
--   the helm charts will look in the openidl-k8s/charts/openidl-secrets/config directory for the files to load into mounts in the image
-    -   this folder is ignored in .gitignore so no secrets get checked in to git.
--   the helm chart uses the following mapping:
+the helm charts will look in the following directories for the files to load into mounts in the image
 
-| filename                               | secret name               |
-| -------------------------------------- | ------------------------- |
-| channel-config.json                    | channel-config            |
-| connection-profile.json                | connection-profile        |
-| DBConfig.json                          | db-config                 |
-| default.json                           | default-config            |
-| email.json                             | email-config              |
-| listener-channel-config.json           | listener-channel-config   |
-| local-appid-config.json                | local-appid-config        |
-| local-certmanager-config.json          | local-certmanager-config  |
-| local-cloudant-config.json             | local-cloudant-config     |
-| local-mongo-config.json                | local-mongo-config        |
-| flowconfig.json                        | nifi-flowconfig           |
-| s3-bucket-config.json                  | s3-bucket-config          |
-| target-channel-identifiers-config.json | target-channel-config     |
-| unique-identifiers-config.json         | unique-identifiers-config |
+-   openidl-k8s/charts/openidl-secrets/config-aais
+-   openidl-k8s/charts/openidl-secrets/config-analytics
+-   openidl-k8s/charts/openidl-secrets/config-carrier
+
+this folder is ignored in .gitignore so no secrets get checked in to git.
+
+the helm chart uses the following mapping:
+
+| filename                               | secret name                   |
+| -------------------------------------- | ----------------------------- |
+| channel-config.json                    | channel-config                |
+| connection-profile.json                | connection-profile            |
+| local-db-config.json                   | db-config                     |
+| default.json                           | default-config                |
+| email.json                             | email-config                  |
+| listener-channel-config.json           | listener-channel-config       |
+| local-cognito-config.json              | local-cognito-config          |
+| local-certmanager-config.json          | local-certmanager-config      |
+| local-kvs-config.json                  | local-kvs-config              |
+| local-cloudant-config.json             | local-cloudant-config         |
+| local-mongo-config.json                | local-mongo-config            |
+| flowconfig.json                        | nifi-flowconfig               |
+| s3-bucket-config.json                  | s3-bucket-config              |
+| target-channel-identifiers-config.json | target-channel-config         |
+| unique-identifiers-config.json         | unique-identifiers-config     |
+| local-cognito-config.json              | cognito-config                |
+| local-vault-config.json                | vault-config                  |
+| mappings.json                          | data-call-app-mappings-config |
+| utilities-fabric-config.json           | utilities-fabric-config       |
+| utilities-admin-config.json            | utilities-admin-config        |
+| local-cognito-admin-config.json        | cognito-admin-config          |
+|                                        |                               |
 
 Look to each project specific helm chart to see what configs are used.
 

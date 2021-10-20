@@ -7,33 +7,56 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/hyperledger/fabric/core/chaincode/shim"
-	pb "github.com/hyperledger/fabric/protos/peer"
+	"github.com/hyperledger/fabric-contract-api-go/contractapi"
+
+	"github.com/hyperledger/fabric-chaincode-go/shim"
+	pb "github.com/hyperledger/fabric-protos-go/peer"
+	logger "github.com/sirupsen/logrus"
 	//"strconv"
 )
+
+// SmartContract provides functions for managing an Asset
+type SmartContract struct {
+}
 
 // openIDLCC is a chaincode component that supports the main operations for the openIDL network
 type openIDLCC struct {
 	carriers map[string]Carrier
 }
 
-var logger = shim.NewLogger("openIDLCC_Logger")
 var crossInvocationChannels Channels
+
+// InitLedger adds a base set of assets to the ledger
+func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
+	logger.Info("Initledger: enter")
+	defer logger.Debug("InitLedger: exit")
+
+	var logLevelConfig = os.Getenv(LOGGING_LEVEL)
+	if logLevelConfig != "" {
+		// logger.SetLevel(logLevelConfig)
+		/*temporary*/
+		logger.SetLevel(logger.DebugLevel)
+	} else {
+		logger.SetLevel(logger.DebugLevel)
+	}
+	return nil
+}
 
 // Init is called during chaincode instantiation to initialize any
 // data. Note that chaincode upgrade also calls this function to reset
 // or to migrate data, so be careful to avoid a scenario where you
 // inadvertently clobber your ledger's data!
-func (this *openIDLCC) Init(stub shim.ChaincodeStubInterface) pb.Response {
-	logger.Debug("Init: enter")
+func (s *SmartContract) Init(stub shim.ChaincodeStubInterface) pb.Response {
+	logger.Info("Init: enter")
 	defer logger.Debug("Init: exit")
 
 	var logLevelConfig = os.Getenv(LOGGING_LEVEL)
 	if logLevelConfig != "" {
-		logLevel, _ := shim.LogLevel(logLevelConfig)
-		logger.SetLevel(logLevel)
+		// logger.SetLevel(logLevelConfig)
+		/*temporary*/
+		logger.SetLevel(logger.DebugLevel)
 	} else {
-		logger.SetLevel(shim.LogInfo)
+		logger.SetLevel(logger.DebugLevel)
 	}
 
 	/*init_args := stub.GetStringArgs()
@@ -51,8 +74,9 @@ func (this *openIDLCC) Init(stub shim.ChaincodeStubInterface) pb.Response {
 // Invoke is called per transaction on the chaincode. Each transaction is
 // either a 'get' or a 'set' on the asset created by Init function. The 'set'
 // method may create a new asset by specifying a new key-value pair.
-func (this *openIDLCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
-	logger.Debug("Invoke: enter")
+//func (s *SmartContract) Invoke2(ctx contractapi.TransactionContextInterface, id string) error {
+func (this *SmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
+	logger.Info("Invoke: enter")
 	defer logger.Debug("Invoke: exit")
 	//function and parameters
 	function, args := stub.GetFunctionAndParameters()
@@ -171,15 +195,26 @@ func (this *openIDLCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 }
 
 // Ping simply returns a string as a way to validate that the chaincode component is up and running.
-func (this *openIDLCC) Ping(stub shim.ChaincodeStubInterface) pb.Response {
+func (s *SmartContract) Ping(stub shim.ChaincodeStubInterface) pb.Response {
 	logger.Debug("Ping: enter")
 	defer logger.Debug("Ping: exit")
 	return shim.Success([]byte("Ping OK"))
 }
 
 func main() {
-	err := shim.Start(new(openIDLCC))
-	if err != nil {
-		logger.Error("Error starting openIDLCC: %s", err)
+	// err := shim.Start(new(openIDLCC))
+	// if err != nil {
+	// 	logger.Error("Error starting openIDLCC: %s", err)
+	// }
+	// assetChaincode, err := contractapi.NewChaincode(&SmartContract{})
+	// if err != nil {
+	// 	logger.Panicf("Error creating asset-transfer-basic chaincode: %v", err)
+	// }
+
+	// if err := assetChaincode.Start(); err != nil {
+	// 	logger.Panicf("Error starting asset-transfer-basic chaincode: %v", err)
+	// }
+	if err := shim.Start(new(SmartContract)); err != nil {
+		fmt.Printf("Error starting chaincode: %s", err)
 	}
 }

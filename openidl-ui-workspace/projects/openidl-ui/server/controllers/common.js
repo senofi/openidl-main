@@ -1,9 +1,7 @@
 'use strict';
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
 const request = require('request');
-const config = require('../config/config');
 const log4js = require('log4js');
 const openidlCommonApp = require('../../../openidl-common-ui/server/index');
 const util = openidlCommonApp.Util;
@@ -11,10 +9,12 @@ const util = openidlCommonApp.Util;
 const common = {};
 
 const logger = log4js.getLogger('Common controller');
-// logger.setLevel(config.logLevel);
-logger.level = config.logLevel;
+logger.level = process.env.LOG_LEVEL;
 
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: true
+}));
 
 common.getQueryString = (queryObj) => {
     var keys = Object.keys(queryObj);
@@ -43,7 +43,7 @@ common.getSearchDataCalls = (req, res) => {
 common.handleRequest = (req, res, url) => {
     logger.debug('Inside handle request');
     var options = {
-        url: config.DATA_CALL_APP_URL + url,
+        url: process.env.DATA_CALL_APP_URL + url,
         method: req.method,
         headers: {
             'content-type': req.headers['content-type'],
@@ -89,7 +89,7 @@ common.handleLogOutRequest = (req, res, url) => {
     logger.debug("Handling Logging Request");
     logger.debug(req.body);
     var options = {
-        url: config.DATA_CALL_APP_URL + url,
+        url: process.env.DATA_CALL_APP_URL + url,
         method: req.method,
         headers: {
             'content-type': req.headers['content-type']

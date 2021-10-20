@@ -2,18 +2,23 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const NODE_ENV = process.env.NODE_ENV;
+const NODE_ENV = process.env.NODE_ENV || 'qa';
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const session = require('express-session');
 const cors = require('cors');
-const config = require('config');
 const log4js = require('log4js');
 const noCache = require('nocache')
-const openidlCommonApp = require('../../openidl-common-ui/server/index');
+const openidlCommonLib = require('@openidl-org/openidl-common-lib');
+if (NODE_ENV === 'development') {
+  openidlCommonLib.EnvConfig.init('/projects/openidl-carrier-ui/server/config');
+} else {
+  openidlCommonLib.EnvConfig.init();
+};
+global.fetch = require('node-fetch');
 
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init("/projects/openidl-carrier-ui/server/config/mappings.json");
+const idpCredentials = JSON.parse(process.env.IDP_CONFIG);;
+const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials);
 
 app.use(cors());
 app.use(express.json());
@@ -24,18 +29,9 @@ app.use(express.urlencoded({
  * Set up logging
  */
 const logger = log4js.getLogger('server');
-logger.level = config.logLevel || "debug";
+logger.level = process.env.LOG_LEVEL;
 
 logger.debug('setting up app: registering routes, middleware...');
-
-logger.info('credential info');
-logger.info(IBMCloudEnv.getDictionary('appid-credentials'));
-
-const userAuthHandler = openidlCommonApp.UserAuthHandler;
-userAuthHandler.init(IBMCloudEnv.getDictionary('appid-credentials'));
-
-const apiAuthHandler = openidlCommonApp.ApiAuthHandler;
-apiAuthHandler.init(IBMCloudEnv.getDictionary('appid-credentials'));
 
 /**
  * middleware for authentication
@@ -46,7 +42,6 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(noCache());
 app.enable("trust proxy");
-app.use(userAuthHandler.configureSSL);
 // TODO Undable to move passport related stuff to middleware need expert help
 // TODO discuss on standard session maintaince approach from Node.js for production
 app.use(session({
@@ -55,35 +50,10 @@ app.use(session({
   saveUninitialized: true
 }));
 logger.debug('setting up app: initializing passport');
-const passport = userAuthHandler.getPassport();
+const passport = authHandler.getPassport();
 app.use(passport.initialize());
 app.use(passport.session());
-let webAppStrategy = userAuthHandler.getUserAuthStrategy();
-passport.use(webAppStrategy);
-
-// Passport session persistance
-passport.serializeUser(function (user, cb) {
-  cb(null, user);
-});
-
-passport.deserializeUser(function (obj, cb) {
-  cb(null, obj);
-});
-
-const apiPassport = apiAuthHandler.getPassport();
-app.use(apiPassport.initialize());
-app.use(apiPassport.session());
-let apiAppStrategy = apiAuthHandler.getAPIStrategy();
-apiPassport.use(apiAppStrategy);
-
-// Passport session persistance
-apiPassport.serializeUser(function (user, cb) {
-  cb(null, user);
-});
-
-apiPassport.deserializeUser(function (obj, cb) {
-  cb(null, obj);
-});
+authHandler.setStrategy(passport);
 
 
 if (NODE_ENV === 'production') {
@@ -109,7 +79,7 @@ if (NODE_ENV === 'production' || NODE_ENV === 'qa') {
 
 app.use('/', routes)
 
-var portNumber = IBMCloudEnv.getString("portnumber");
+var portNumber = process.env.PORT;
 app.listen(portNumber, function () {
   console.log('App started listening at ', portNumber);
 });

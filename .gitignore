@@ -3,12 +3,13 @@ openidl-mapper/referenceJson.json
 openidl-mapper/referenceJson2.json
 **/node_modules
 openidl-mapper/schema/Hack_openIDL_Tier3.json
-openidl-insurance-data-manager/server/config/*.json
 openidl-secrets-manager/config/*.json
-hosts input.txt
-hosts update.txt
-hosts updated.txt
+hosts-input.txt
+hosts-update.txt
+hosts-updated.txt
 openidl-common-ui/dist/
+**/vendor
+systemup.log
 openidl-ui/server/config/local-appid-config.json
 openidl-common-ui/package-lock.json
 openidl-ui/package-lock.json
@@ -18,3 +19,6 @@ openidl-ui-workspace/package-lock.json
 openidl-ui-workspace/projects/openidl-carrier-ui/server/config/local-appid-config.json
 openidl-ui-workspace/projects/openidl-ui/server/config/local-appid-config.json
 **/*for testing*.*
+openidl-local-reference-implementation/config/config.json
+**/npmls.txt
+openidl-local-reference-implementation/config/config.json

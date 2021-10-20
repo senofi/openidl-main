@@ -16,27 +16,25 @@
 const dateMoment = require("moment")
 const log4js = require('log4js');
 const config = require('config');
-const dbconfig = require('../config/DBConfig');
 const logger = log4js.getLogger('Controller - eventfunction');
 const identifiers = require('../config/unique-identifiers-config.json').identifiers;
 const designDocument = require('./design-document');
 logger.level = config.logLevel;
 const targetChannelConfig = require('../config/target-channel-config');
 const networkConfig = require('../config/connection-profile.json');
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
 const Processor = require('./processor');
 const {
     Transaction
-} = require('openidl-common-lib');
+} = require('@openidl-org/openidl-common-lib');
 
 var eventFunction = {};
 
- eventFunction.ConsentedEvent = async function processConsentEvent(payload, blockNumber) {
+eventFunction.ConsentedEvent = async function processConsentEvent(payload, blockNumber) {
     let updateConsentStatus;
     try {
         logger.info('process ConsentEvent function entry');
         if (payload) {
+            const dbconfig = JSON.parse(process.env.OFF_CHAIN_DB_CONFIG);
             payload = JSON.parse(payload.toString('utf8'));
             logger.info(' processConsentEvent block number ==>' + blockNumber);
             let args = {
@@ -178,15 +176,16 @@ var eventFunction = {};
 }
 
 eventFunction.ExtractionPatternSpecified = async function processExtractionPatternSpecified(payload, blockNumber) {
-         // Jira - AAISPROD-14 changes
-      let processor = new Processor();
-      let  extractionPattern;
+    // Jira - AAISPROD-14 changes
+    let processor = new Processor();
+    let extractionPattern;
     try {
         logger.info('ExtractionPattern function entry');
         let targetChannelTransaction = await eventFunction.getChannelInstance();
         if (payload.toString('utf8')) {
             payload = JSON.parse(payload.toString('utf8'));
             logger.debug(' ExtractionPattern block number ==> ' + blockNumber);
+            const dbconfig = JSON.parse(process.env.OFF_CHAIN_DB_CONFIG);
             let getDataCallArgs = {
                 dataCallID: payload.dataCallId,
                 dataCallVersion: payload.dataCallVersion,
@@ -229,7 +228,7 @@ eventFunction.ExtractionPatternSpecified = async function processExtractionPatte
                                 logger.info('Starting the dataProcessor');
                                 extractionPattern = JSON.parse(extractionPattern);
                                 var viewName = "";
-                               
+
                                 logger.debug("<<<  queryResponse[i].consent.carrierID  >>>" + queryResponse[i].consent.carrierID);
                                 logger.debug(payload.dataCallId);
                                 let dataProcessor = await processor.getProcessorInstance(payload.dataCallId, payload.dataCallVersion, queryResponse[i].consent.carrierID, extractionPattern, targetChannelTransaction, viewName);
@@ -265,14 +264,14 @@ eventFunction.getDataProcessorObject = async function getDataProcessorObject(dat
     return startDataProcessor;
 }
 eventFunction.getChannelInstance = async function getChannelInstance() {
-    Transaction.initWallet(IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'));
+    Transaction.initWallet(JSON.parse(process.env.KVS_CONFIG));
     let targetChannelTransaction = new Transaction(targetChannelConfig.users[0].org, targetChannelConfig.users[0].user, targetChannelConfig.targetChannels[0].channelName, targetChannelConfig.targetChannels[0].chaincodeName, targetChannelConfig.users[0].mspId);
     targetChannelTransaction.init(networkConfig);
     return targetChannelTransaction;
 }
 
 eventFunction.getDefaultChannelTransaction = async function getChannelInstance() {
-    Transaction.initWallet(IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'));
+    Transaction.initWallet(JSON.parse(process.env.KVS_CONFIG));
     let DefaultChannelTransaction = new Transaction(targetChannelConfig.users[0].org, targetChannelConfig.users[0].user, targetChannelConfig.targetChannels[1].channelName, targetChannelConfig.targetChannels[1].chaincodeName, targetChannelConfig.users[0].mspId);
     DefaultChannelTransaction.init(networkConfig);
     return DefaultChannelTransaction;

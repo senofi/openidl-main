@@ -16,18 +16,16 @@
  *  limitations under the License.
  */
 
- 
+
 const log4js = require('log4js');
 const config = require('config');
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
 const insuranceManagerDB = config.targetDB;
-const openidlCommonLib = require('openidl-common-lib');
+const openidlCommonLib = require('@openidl-org/openidl-common-lib');
 const DBManagerFactory = openidlCommonLib.DBManagerFactory;
 const dbManagerFactoryObject = new DBManagerFactory();
 const transactionFactory = require('../helpers/transaction-factory');
 const util = require('../helpers/util');
-const messageObject = require('../config/constant')
+const messageObject = require('../helpers/constant')
 const crypto = require('crypto');
 const emailHander = require('../middlewares/sendemail');
 const emailData = require('../config/email.json').Config;
@@ -37,7 +35,7 @@ const emailData = require('../config/email.json').Config;
  * Set up logging
  */
 const logger = log4js.getLogger('store insurance data');
-logger.setLevel(config.logLevel);
+logger.level = config.logLevel;
 let mongoDBCollectionName;
 let maxIteration = 4;
 let currentIteration = 0;
@@ -148,7 +146,7 @@ insuranceDataHandler.insertBulkDocuments = async (insuranceDataArray) => {
         // 500 to nifi
         logger.info("Either document fetch failure from collection for hash or documents are inserted partially. Hence data is deleted from HDS");
 
-         return await util.apiResponse(
+        return await util.apiResponse(
           messageObject.Message.failureStatusCode,
           messageObject.Message.failure,
           "Either document fetch failure from collection for hash or documents are inserted partially. Hence data is deleted from HDS",
@@ -452,7 +450,7 @@ insuranceDataHandler.saveBulkDocuments = async (batchId, chunkId, carrierId, ins
 insuranceDataHandler.dbConnection = () => {
   try {
     logger.info("Connecting to the database")
-    let dbManager = dbManagerFactoryObject.getInstance();
+    let dbManager = dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
     if (dbManager) {
       logger.info("Database is connected successfully")
       //return null
@@ -554,7 +552,7 @@ insuranceDataHandler.deleteDocuments = async (batchId, chunkId, carrierId, colle
 
   return new Promise(function (resolve, reject) {
     logger.debug("deleteDocuments execution START_TIME is " + chunkId + " " + new Date().toISOString());
-    dbManagerFactoryObject.getInstance().then((dbManager) => {
+    dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG)).then((dbManager) => {
       let mongoDBCollectionName;
       if (collectionType == messageObject.Message.hdsAlias) mongoDBCollectionName = insuranceManagerDB + "_" + carrierId;
       else mongoDBCollectionName = insuranceManagerDB + "_" + collectionType + "_" + carrierId;
@@ -584,7 +582,7 @@ insuranceDataHandler.saveBulkInsuranceErrorData = async (insuranceDataArray) => 
   logger.debug("Inside saveBulkInsuranceErrorData method......");
   return new Promise(function (resolve, reject) {
     logger.debug("saveBulkInsuranceErrorData execution START_TIME is " + new Date().toISOString());
-    dbManagerFactoryObject.getInstance().then((dbManager) => {
+    dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG)).then((dbManager) => {
       let mongoDBCollectionName = insuranceManagerDB + "_" + "err_" + payload._id.split("-")[0]; // I think carrierid
       dbManager.bulkDataInsert(insuranceDataArray, mongoDBCollectionName).then((mongoResultSet) => {
         logger.debug("saveBulkInsuranceErrorData execution END_TIME is " + new Date().toISOString());
@@ -601,7 +599,7 @@ insuranceDataHandler.deleteBulkInsuranceData = async (totalDeleteRecords, batchI
   logger.debug("Inside deleteBulkInsuranceData method......");
   return new Promise(function (resolve, reject) {
     logger.debug("deleteBulkInsuranceData execution START_TIME is " + new Date().toISOString());
-    dbManagerFactoryObject.getInstance().then((dbManager) => {
+    dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG)).then((dbManager) => {
       let mongoDBCollectionName = insuranceManagerDB + "_" + payload._id.split("-")[0];
       dbManager.bulkDataDelete(totalDeleteRecords, batchID, chunkID, mongoDBCollectionName).then((mongoResultSet) => {
         logger.debug("deleteBulkInsuranceData execution END_TIME is " + new Date().toISOString());
@@ -619,7 +617,7 @@ insuranceDataHandler.saveInsuranceData = async (payload) => {
   logger.debug("Inside save insurance data");
   //logger.info("Start Save Insurance Data :- for carrier id-batch id" + payload._id + " Size of the payload = " + sizeof(payload) + "START_TIME = " + new Date().toISOString());
   return new Promise(function (resolve, reject) {
-    dbManagerFactoryObject.getInstance().then((dbManager) => {
+    dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG)).then((dbManager) => {
       let carrierInsuranceManagerDB = insuranceManagerDB + "_" + payload._id.split("-")[0];
       dbManager.insert(payload, carrierInsuranceManagerDB).then((data) => {
         logger.debug('Document saved successfully');
@@ -635,7 +633,7 @@ insuranceDataHandler.saveInsuranceData = async (payload) => {
 };
 insuranceDataHandler.getInsuranceData = async (id) => {
   logger.debug("inside get insurance data");
-  const dbManager = await dbManagerFactoryObject.getInstance();
+  const dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
   let carrierInsuranceManagerDB = insuranceManagerDB + "_" + id.split("-")[0];
   return new Promise(function (resolve, reject) {
     dbManager.get(id, carrierInsuranceManagerDB).then((data) => {

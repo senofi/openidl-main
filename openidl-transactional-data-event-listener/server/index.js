@@ -14,14 +14,15 @@
  *  limitations under the License.
  */
 
- 
+
 const express = require('express');
 const log4js = require('log4js');
 const config = require('config');
-const openidlCommonLib = require('openidl-common-lib');
+const openidlCommonLib = require('@openidl-org/openidl-common-lib');
+openidlCommonLib.EnvConfig.init();
+
 const EventListener = openidlCommonLib.EventListener;
 const walletHelper = openidlCommonLib.Wallet;
-const IBMCloudEnv = require('ibm-cloud-env');
 const channelConfig = require('./config/listener-channel-config.json');
 const networkConfig = require('./config/connection-profile.json');
 const mainEvent = require('./event/event-handler');
@@ -58,7 +59,7 @@ app.listen(port, () => {
 });
 
 async function init() {
-    let dbManager = await dbManagerFactoryObject.getInstance();
+    let dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
     let listenerConfig = {};
     let listernerChannels = new Array();
     for (let index = 0; index < channelConfig.listenerChannels.length; index++) {
@@ -82,7 +83,7 @@ async function init() {
 
     }
     listenerConfig['listenerChannels'] = listernerChannels;
-    walletHelper.init(IBMCloudEnv.getDictionary('IBM-certificate-manager-credentials'));
+    await walletHelper.init(JSON.parse(process.env.KVS_CONFIG));
     let idExists = await walletHelper.identityExists(channelConfig.identity.user);
     if (!idExists) {
         throw new Error("Invalid Identity, no certificate found in certificate store");
@@ -98,7 +99,7 @@ async function init() {
 
 
     try {
-        await EventListener.init(networkConfig, listenerConfig, dbManager);
+        await EventListener.init(networkConfig, listenerConfig, dbManager, config.targetDB);
         await EventListener.processInvoke();
     } catch (err) {
         logger.error('eventHandler init error' + err);

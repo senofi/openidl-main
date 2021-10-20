@@ -1,31 +1,27 @@
 'use strict';
 const log4js = require('log4js');
-const config = require('config');
 
-const IBMCloudEnv = require('ibm-cloud-env');
-IBMCloudEnv.init();
 const FabricHelperTransaction = require('../helper/fabriclistenerhelper');
-const eventListenersDB = require('../../../server/config/default.json').targetDB;
 const logger = log4js.getLogger('event - eventHandler');
-logger.level = config.logLevel;
+logger.level = process.env.LOG_LEVEL || 'debug';
 
 const EventListener = {};
 let mainHandlerStartedMap = new Map();
 let carrierChannelTransactionMap = new Map();
-let registerBlockMap = new Map();
 
 const {
     Gateway
 } = require('fabric-network');
 
 
-EventListener.init = async (networkConfig, listenerConfig, blockManagementDB) => {
+EventListener.init = async (networkConfig, listenerConfig, blockManagementDB, eventListenersDB) => {
     const method = 'init';
     logger.debug('in %s', method);
     this.listenerConfig = listenerConfig
     this.listenerChannels = listenerConfig.listenerChannels;
     this.networkConfig = networkConfig;
     this.blockManagementDB = blockManagementDB;
+    this.eventListenersDB = eventListenersDB;
     this.applicationName = listenerConfig.applicationName;
     this.wallet = listenerConfig.identity.wallet;
     this.orgName = networkConfig.client.organization;
@@ -34,22 +30,21 @@ EventListener.init = async (networkConfig, listenerConfig, blockManagementDB) =>
     this.orgMSPId = networkConfig.client.organization;
     this.mspid = networkConfig.organizations[this.orgName].mspid;
     this.peer = networkConfig.organizations[this.orgName].peers[0];
+    this.isLocalHost = networkConfig.peers[this.peer].url.indexOf('localhost') > -1;
+    this.eventListener = async (event) => {
+        try {
+            await processInvokeHandler(event.blockData)
+        } catch (error) {
+            await errorBlockEventHandler(error)
+        }
+    };
 
     for (let index = 0; index < this.listenerChannels.length; index++) {
         const channel = this.listenerChannels[index];
         logger.info("Channel is " + channel);
-        const channelTransaction = new FabricHelperTransaction(this.org, this.user, channel.channelName, this.mspId, this.wallet, this.peer);
+        const channelTransaction = new FabricHelperTransaction(this.org, this.user, channel.channelName, this.mspid, this.wallet, this.peer, this.isLocalHost);
         channelTransaction.init(this.networkConfig);
         logger.info("network config is " + this.networkConfig);
-        let isChannelInitalized = false;
-        while (!isChannelInitalized) {
-            try {
-                await channelTransaction.initEventHub();
-                isChannelInitalized = true;
-            } catch (err) {
-                logger.error('initEventHub errored out for user:' + this.user + " and channel:" + channel.channelName + " Error is " + err);
-            }
-        }
         carrierChannelTransactionMap.set(channel.channelName, channelTransaction);
         mainHandlerStartedMap.set(channel.channelName, false);
     }
@@ -67,9 +62,9 @@ EventListener.processInvoke = async () => {
             await mainHandler(channel.channelName);
             logger.debug("AFTER MAINHANDLER()");
             let blockHeight = 0;
-            logger.debug("BLOCK HEIGHT BFORE " + blockHeight );
+            logger.debug("BLOCK HEIGHT BFORE " + blockHeight);
             blockHeight = await carrierChannelTransactionMap.get(channel.channelName).getBlockHeight();
-            logger.debug("BLOCK HEIGHT AFTER " + blockHeight );
+            logger.debug("BLOCK HEIGHT AFTER " + blockHeight);
             await registerBlockEventListener(channel.channelName, blockHeight - 1);
             logger.debug("processInvoke channel done:" + channel.channelName);
         }
@@ -80,8 +75,9 @@ EventListener.processInvoke = async () => {
 };
 
 const mainHandler = async (channelName) => {
-    
     try {
+        // adding sleep to wait for the transaction to be committed
+        await sleep(5000);
         logger.debug('eventHandler mainHandler method entry for channel ' + channelName);
         const blockInfo = await getBlockInfoFromCloudant(this.applicationName + "-" + channelName);
 
@@ -109,7 +105,7 @@ const getBlockInfoFromCloudant = async (channelId) => {
     logger.info("getting data" + this.blockManagementDB);
     try {
         return new Promise((resolve, reject) => {
-            this.blockManagementDB.get(channelId, eventListenersDB).then((data) => {
+            this.blockManagementDB.get(channelId, this.eventListenersDB).then((data) => {
                 resolve(data);
             });
         });
@@ -126,12 +122,12 @@ const loopHandler = async (blockNumber, channelName) => {
         //get the block height from network
         let blockHeight = await carrierChannelTransactionMap.get(channelName).getBlockHeight();
         console.log("THE BLOCK HEIGHT FROM NETWORK IN LOOPHANDLER IS ", blockHeight);
-        while (blockNumber <  blockHeight) {
-                blockData = await carrierChannelTransactionMap.get(channelName).getBlockDataByBlockNumber(blockNumber);
-                if(blockData !== null){
-                    await eventVerificationHandler(blockData);
-                    blockNumber++;
-                }
+        while (blockNumber < blockHeight) {
+            blockData = await carrierChannelTransactionMap.get(channelName).getBlockDataByBlockNumber(blockNumber);
+            if (blockData !== null) {
+                await eventVerificationHandler(blockData);
+                blockNumber++;
+            }
         }
 
     } catch (error) {
@@ -150,14 +146,12 @@ const registerBlockEventListener = async (channelName, blockNumber) => {
     logger.debug('registerBlockEventListener :start block ' + blockNumber);
     logger.debug('registerBlockEventListener :channelName ' + channelName);
     let options = {
-        startBlock: blockNumber,
-        unregister: false,
-        disconnect: false
+        startBlock: blockNumber
     };
-    registerBlockMap.set(channelName, carrierChannelTransactionMap.get(channelName).eventHub.registerBlockEvent(processInvokeHandler, errorBlockEventHandler, options));
+
+    const channelTransaction = carrierChannelTransactionMap.get(channelName)
+    await channelTransaction.registerBlockEventListener(channelName, this.eventListener, options);
     logger.debug('registerBlockEventListener :registerBlockMap ' + channelName);
-    await carrierChannelTransactionMap.get(channelName).eventHub.connect(true);
-    logger.debug('registerBlockEventListener :connect ' + channelName);
 
 };
 
@@ -213,8 +207,8 @@ const errorBlockEventHandler = async (err) => {
         let channel = this.listenerChannels[index];
         let channelName = channel.channelName;
         logger.debug("setting up channel:" + channelName);
-        carrierChannelTransactionMap.get(channelName).eventHub.unregisterBlockEvent(registerBlockMap.get(channelName));
-        await carrierChannelTransactionMap.get(channelName).eventHub.disconnect();
+        const channelTransaction = carrierChannelTransactionMap.get(channelName);
+        await channelTransaction.removeBlockEventListener(channelName, this.eventListener);
         logger.debug("setting up channel done:" + channelName);
     }
     //Reinitialse and invoke process
@@ -229,13 +223,13 @@ const errorBlockEventHandler = async (err) => {
 const updateBlockNumberInDatabase = async (blockNumber, id) => {
     return new Promise((resolve, reject) => {
         logger.info('updateBlockNumberInDatabase function entry ' + blockNumber, id);
-        this.blockManagementDB.get(id, eventListenersDB).then((blockInfo) => {
+        this.blockManagementDB.get(id, this.eventListenersDB).then((blockInfo) => {
             if (!blockInfo) {
                 blockInfo = {};
                 blockInfo._id = id;
             }
-            blockInfo.blockNumber = blockNumber;
-            this.blockManagementDB.insert(blockInfo, eventListenersDB).then((data) => {
+            blockInfo.blockNumber = blockNumber.low;
+            this.blockManagementDB.insert(blockInfo, this.eventListenersDB).then((data) => {
                 logger.info('block number update to db done ' + blockNumber);
                 resolve();
             }).catch((err) => {
@@ -257,5 +251,9 @@ EventListener.getCarriersInstance = async (channelName) => {
     return carrierChannelTransactionMap.get(channelName);
 
 };
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 module.exports = EventListener;

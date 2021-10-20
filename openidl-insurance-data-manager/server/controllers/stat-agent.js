@@ -25,8 +25,8 @@ const logger = log4js.getLogger('stat-agent');
 const crypto = require('crypto');
 const uuidv1 = require('uuid/v1');
 const insuranceDataHandler = require('../middlewares/insurance-data-handler');
-logger.setLevel(config.logLevel);
-const messageObject = require('../config/constant')
+logger.level = config.logLevel;
+const messageObject = require('../helpers/constant')
 const sortJsonArray = require('sort-json-array');
 
 

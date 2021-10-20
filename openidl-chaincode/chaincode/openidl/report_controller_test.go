@@ -3,11 +3,15 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"github.com/stretchr/testify/assert"
 	"reflect"
+
+	"github.com/hyperledger/fabric-chaincode-go/shim"
+	"github.com/stretchr/testify/assert"
+
 	//"strconv"
 	"testing"
+
+	logger "github.com/sirupsen/logrus"
 )
 
 // here we are implementing basic testing for the function ListReportsByCriteria
