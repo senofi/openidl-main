@@ -65,3 +65,11 @@ this will load some sample data calls
 run `node load-extraction-patterns.js`
 
 this will load some sample extraction patterns
+
+## Run the applications
+
+go up to the base directory and run the make commands from there:
+
+`make run_ui to open the aais ui`
+`make run_analytics_ui to run analytics ui`
+`make run_carrier_ui to run carrier ui`
