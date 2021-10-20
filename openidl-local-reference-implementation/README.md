@@ -34,9 +34,7 @@ fill out the values in that file
 
 update the logins.json to point to your users in cognito
 
-run `make copy_config_files`
-
-run `make apply_secrets`
+run `make copy_secrets`
 
 go to `../` and start the reference implementation system with `./systemup.sh`
 
@@ -44,25 +42,25 @@ go to `../` and start the reference implementation system with `./systemup.sh`
 
 everytime you rebuild the minikube and reset the internals do this
 
-then run `node set-environment.js`
+then run `make set_environment`
 
 this will create the config.json file in the config directory used by other scripts in this project
 
-## Load Insurance Data
+## Bootstrap the data
 
-run `node load-insurance-data.js`
+to add initial data, run `make bootstrap`
+
+these con be don individually with the following
+
+run `make load_insurance_data`
 
 this will load data into the data store setup for the system
 
-## load data calls
-
-run `node load-data-calls.js`
+run `make load_data_calls`
 
 this will load some sample data calls
 
-## load extraction patterns
-
-run `node load-extraction-patterns.js`
+run `make load_extraction_patterns`
 
 this will load some sample extraction patterns
 
