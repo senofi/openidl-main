@@ -8,7 +8,7 @@ global:
         targetport: 8080
         servicename: data-call-app-service
         ingressenabled: false
-        ingresshostname: data-call-app-service.dev.internal.openidl.aaisdirect.com
+        ingresshostname: data-call-app-service.dev.openidl.internal.aaisdirect.com
         publicingresshostname: data-call-app-service.dev.openidl.aaisdirect.com
         image:
             repository: ghcr.io/openidl-org/openidl-data-call-app
@@ -20,7 +20,7 @@ global:
         targetport: 8080
         servicename: utilities-service
         ingressenabled: false
-        ingresshostname: utilities-service.dev.internal.openidl.aaisdirect.com
+        ingresshostname: utilities-service.dev.openidl.internal.aaisdirect.com
         publicingresshostname: utilities-service.dev.openidl.aaisdirect.com
         image:
             repository: ghcr.io/openidl-org/openidl-utilities
