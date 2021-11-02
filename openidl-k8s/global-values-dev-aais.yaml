@@ -20,8 +20,8 @@ global:
         targetport: 8080
         servicename: utilities-service
         ingressenabled: false
-        ingresshostname: utilities-service.dev.aais.internal.openidl.aaisdirect.com
-        publicingresshostname: utilities-service.dev.aais.openidl.aaisdirect.com
+        ingresshostname: utilities-service.dev.internal.openidl.aaisdirect.com
+        publicingresshostname: utilities-service.dev.openidl.aaisdirect.com
         image:
             repository: ghcr.io/openidl-org/openidl-utilities
             pullPolicy: IfNotPresent
