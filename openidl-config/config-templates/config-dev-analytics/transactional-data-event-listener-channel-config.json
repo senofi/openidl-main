@@ -1,0 +1,25 @@
+{
+    "listenerChannels": [
+        {
+            "channelName": "${ANALYTICS_ORGNAME}-${AAIS_ORGNAME}",
+            "events": [
+                {
+                    "TransactionalDataAvailable": "processTransactionalDataAvailableEvent"
+                }
+            ]
+        },
+        {
+            "channelName": "${ANALYTICS_ORGNAME}-${CARRIER_ORGNAME}",
+            "events": [
+                {
+                    "TransactionalDataAvailable": "processTransactionalDataAvailableEvent"
+                }
+            ]
+        }
+    ],
+    "identity": {
+        "user": "openidl-${ANALYTICS_ORGNAME}-transactional-data-event-listener-ibp-2.0",
+        "wallet": "&wallet"
+    },
+    "applicationName": "openidl-transactional-data-event-listener"
+}
