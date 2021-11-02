@@ -8,7 +8,7 @@
 		"env": "PORT"
 	},
 	"data-call-app-url": {
-		"value": "http://data-call-app-service.${DEV}.${CARRIER_ORGNAME}.internal.${DOMAIN}.com/openidl/api",
+		"value": "http://data-call-app-service.${DEV}.${SUBDOMAIN}.internal.${DOMAIN}.com/openidl/api",
 		"env": "DATA_CALL_APP_URL"
 	},
 	"log-level": {
