@@ -6,3 +6,4 @@ console.log('applying secrets for ' + nodeType)
 const secrets = require('./' + nodeType + '-dev-config-secrets.json')
 
 valueReplacer.replaceVariablesInFolder('./config/config-dev-' + nodeType, secrets)
+valueReplacer.validateNoVariablesRemainInFolder('./config/config-dev-' + nodeType, secrets)

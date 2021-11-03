@@ -1,5 +1,5 @@
 {
-    "name": "test-network-${ANALYTICS_ORGNAME_SHORT}",
+    "name": "test-network-${ANALYTICS_ORGNAME}",
     "version": "1.0.0",
     "isLocal": true,
     "client": {
@@ -16,16 +16,16 @@
         "${ANALYTICS_ORGNAME}": {
             "mspid": "${ANALYTICS_ORGNAME}MSP",
             "peers": [
-                "peer0.${ANALYTICS_ORGNAME_SHORT}-net.${ANALYTICS_ORGNAME_SHORT}.${ENV}.${ANALYTICS_ORGNAME_SHORT}.${DOMAIN}.com"
+                "peer0.${ANALYTICS_ORGNAME}-net.${ANALYTICS_ORGNAME}.${ENV}.${SUBDOMAIN}.${DOMAIN}.com"
             ],
             "certificateAuthorities": [
-                "ca.${ANALYTICS_ORGNAME_SHORT}-net.${ANALYTICS_ORGNAME_SHORT}.${ENV}.${ANALYTICS_ORGNAME_SHORT}.${DOMAIN}.com"
+                "ca.${ANALYTICS_ORGNAME}-net.${ANALYTICS_ORGNAME}.${ENV}.${SUBDOMAIN}.${DOMAIN}.com"
             ]
         }
     },
     "peers": {
-        "peer0.${ANALYTICS_ORGNAME}-net.${ANALYTICS_ORGNAME}.${ENV}.${ANALYTICS_ORGNAME}.${DOMAIN}.com": {
-            "url": "grpcs://peer0.${ANALYTICS_ORGNAME_SHORT}-net.${ANALYTICS_ORGNAME_SHORT}.${ENV}.${ANALYTICS_ORGNAME_SHORT}.${DOMAIN}.com:8443",
+        "peer0.${ANALYTICS_ORGNAME}-net.${ANALYTICS_ORGNAME}.${ENV}.${SUBDOMAIN}.${DOMAIN}.com": {
+            "url": "grpcs://peer0.${ANALYTICS_ORGNAME}-net.${ANALYTICS_ORGNAME}.${ENV}.${SUBDOMAIN}.${DOMAIN}.com:8443",
             "tlsCACerts": {
                 "pem": "${TLS_CERT}"
             },
@@ -35,15 +35,15 @@
                 "grpc.http2.keepalive_timeout": 18000,
                 "grpc.keepalive_timeout_ms": 180000,
                 "grpc-wait-for-ready-timeout": 30000,
-                "ssl-target-name-override": "peer0.${ANALYTICS_ORGNAME_SHORT}-net.${ANALYTICS_ORGNAME_SHORT}.${ENV}.${ANALYTICS_ORGNAME}.${DOMAIN_SHORT}.com",
-                "hostnameOverride": "peer0.${ANALYTICS_ORGNAME_SHORT}-net.${ANALYTICS_ORGNAME_SHORT}.${ENV}.${ANALYTICS_ORGNAME_SHORT}.${DOMAIN}.com"
+                "ssl-target-name-override": "peer0.${ANALYTICS_ORGNAME}-net.${ANALYTICS_ORGNAME}.${ENV}.${SUBDOMAIN}.${DOMAIN}.com",
+                "hostnameOverride": "peer0.${ANALYTICS_ORGNAME}-net.${ANALYTICS_ORGNAME}.${ENV}.${SUBDOMAIN}.${DOMAIN}.com"
             }
         }
     },
     "certificateAuthorities": {
-        "ca.${ANALYTICS_ORGNAME}-net.${ANALYTICS_ORGNAME}.${ENV}.${ANALYTICS_ORGNAME}.${DOMAIN}.com": {
-            "url": "https://ca.${ANALYTICS_ORGNAME_SHORT}-net.${ANALYTICS_ORGNAME_SHORT}.${ENV}.${ANALYTICS_ORGNAME_SHORT}.${DOMAIN}.com:8443",
-            "caName": "ca.${ANALYTICS_ORGNAME_SHORT}-net",
+        "ca.${ANALYTICS_ORGNAME}-net.${ANALYTICS_ORGNAME}.${ENV}.${SUBDOMAIN}.${DOMAIN}.com": {
+            "url": "https://ca.${ANALYTICS_ORGNAME}-net.${ANALYTICS_ORGNAME}.${ENV}.${SUBDOMAIN}.${DOMAIN}.com:8443",
+            "caName": "ca.${ANALYTICS_ORGNAME}-net",
             "tlsCACerts": {
                 "pem": [
                     "${TLS_CERT}"
