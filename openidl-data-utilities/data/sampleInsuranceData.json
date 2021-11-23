@@ -1,0 +1,18 @@
+[
+    {
+        "zipcode": "11111",
+        "premium": 100
+    },
+    {
+        "zipcode": "11111",
+        "premium": 200
+    },
+    {
+        "zipcode": "11111",
+        "premium": 300
+    },
+    {
+        "zipcode": "11112",
+        "premium": 100
+    }
+]
