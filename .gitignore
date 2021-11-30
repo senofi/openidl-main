@@ -28,3 +28,6 @@ openidl-config/config/*
 openidl-config/ubuntu.yml
 openidl-config/analytics-dev-config-secrets.json
 ca.pem
+openidl-data-utilities/config/config.json
+openidl-data-utilities/config/logins.json
+openidl-data-utilities/output/output.csv
