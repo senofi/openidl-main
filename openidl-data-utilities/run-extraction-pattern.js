@@ -1,9 +1,10 @@
 const fs = require('fs')
-const ExtractionPatternManager = require('./service/extraction-pattern-manager')
-const ExtractionPatternProcessor = require('./service/extraction-pattern-processor')
-const MongoDBManager = require('./service/mongo-database-manager')
-const ep = require('./test/extractionPatterns/Trivial_01_ExtractionPattern');
+const ExtractionPatternManager = require('../openidl-extraction-pattern-developer/service/extraction-pattern-manager')
+const ExtractionPatternProcessor = require('../openidl-extraction-pattern-developer/service/extraction-pattern-processor')
+const MongoDBManager = require('../openidl-extraction-pattern-developer/service/mongo-database-manager')
+const ep = require('./extractionPatterns/Trivial_01_ExtractionPattern');
 const Parser = require('json2csv')
+const config = require('./config/config.json')
 
 function convertToCSV(json) {
     let rows = []
@@ -36,20 +37,20 @@ async function processExtractionPattern() {
     // let collectionName = 'insurance_trx_db_HIG'
     // let reductionName = collectionName + '_' + 'covid_19' + '_1'
     let local = true
-    let dbUrl = 'mongodb://localhost:27018'
-    let dbName = 'extraction-test'
-    let collectionName = 'hds-data'
-    let reductionName = 'extracted-data'
+    let dbUrl = `mongodb://${config.carrier.mongo.user}:${config.carrier.mongo.token}@localhost:28017 /openidl-offchain-db?authSource=openidl-offchain-db`
+    let dbName = config.dbName
+    let collectionName = config.collectionName
+    let reductionName = config.reductionName
     var manager = new ExtractionPatternManager()
     var processor
     var map = ep.map
     var reduce = ep.reduce
-    var extractionPattern = manager.createExtractionPattern("Trivial_01", "Trivial_01", "Trivial Extraction Pattern", "AL", "Personal Auto", map, reduce, "0.1", "2022-01-30T18:30:00Z", "2023-01-30T18:30:00Z", "2022-01-30T18:30:00Z", "2023-01-30T18:30:00Z", "2022-01-30T18:30:00Z", "2023-01-30T18:30:00Z", "kens@aaisonline.com")
+    let metadata = ep.metadata
+    var extractionPattern = manager.createExtractionPattern(metadata.id, metadata.name, metadata.description, metadata.jurisdiction, metadata.insurance, map, reduce, metadata.version, metadata.effectiveDate, metadata.expirationDate, metadata.premiumFromDate, metadata.premiumToDate, metadata.lossFromDate, metadata.lossToDate, metadata.userId)
     var dbManager = new MongoDBManager({ url: dbUrl })
     if (!dbManager) {
         throw 'No DB Manager'
     }
-    console.log(typeof dbManager)
     const extractionPatternProcessor = new ExtractionPatternProcessor(dbManager, dbName, collectionName, reductionName)
 
     await dbManager.connect()
@@ -57,7 +58,7 @@ async function processExtractionPattern() {
 
     await extractionPatternProcessor.processExtractionPattern(extractionPattern)
     console.log(extractionPattern)
-    manager.writeExtractionPatternToFile(extractionPattern, 'Trivial01_ExtractionPattern.json')
+    // manager.writeExtractionPatternToFile(extractionPattern, 'Trivial01_ExtractionPattern.json')
 
 }
 
