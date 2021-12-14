@@ -12,7 +12,7 @@
             ]
         },
         {
-            "channelName": "analytics-carrier",
+            "channelName": "${ANALYTICS_ORGNAME_SHORT}-carrier",
             "events": [
                 {
                     "ConsentedEvent": "ConsentedEvent"

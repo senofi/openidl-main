@@ -26,3 +26,5 @@ openidl-config/aais-dev-config-secrets.json
 openidl-config/config/*
 !openidl-config/config/placeholder.txt
 openidl-config/ubuntu.yml
+openidl-config/analytics-dev-config-secrets.json
+ca.pem

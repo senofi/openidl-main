@@ -1,5 +1,5 @@
 {
-    "name": "test-network-${CARRIER_ORGNAME_SHORT}",
+    "name": "test-network-${CARRIER_ORGNAME}",
     "version": "1.0.0",
     "isLocal": true,
     "client": {

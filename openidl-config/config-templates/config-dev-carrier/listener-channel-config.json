@@ -1,7 +1,7 @@
 {
     "listenerChannels": [
         {
-            "channelName": "${ANALYTICS_ORGNAME}-${CARRIER_ORGNAME}",
+            "channelName": "${ANALYTICS_ORGNAME_SHORT}-${CARRIER_ORGNAME_SHORT}",
             "events": [
                 {
                     "ConsentedEvent": "ConsentedEvent"

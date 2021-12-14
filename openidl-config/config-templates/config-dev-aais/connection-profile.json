@@ -1,5 +1,5 @@
 {
-    "name": "test-network-${AAIS_ORGNAME_SHORT}",
+    "name": "test-network-${AAIS_ORGNAME}",
     "version": "1.0.0",
     "isLocal": true,
     "client": {
@@ -13,7 +13,7 @@
         }
     },
     "organizations": {
-        "${AAIS_ORGNAME_SHORT}": {
+        "${AAIS_ORGNAME}": {
             "mspid": "${AAIS_ORGNAME}MSP",
             "peers": [
                 "peer0.${AAIS_ORGNAME_SHORT}-net.${AAIS_ORGNAME_SHORT}.${ENV}.${SUBDOMAIN}.${DOMAIN}.com"

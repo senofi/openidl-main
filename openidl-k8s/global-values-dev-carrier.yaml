@@ -8,8 +8,8 @@ global:
     targetport: 8080
     servicename: data-call-app-service
     ingressenabled: false
-    ingresshostname: data-call-app-service.dev.trv.internal.techiething.com
-    publicingresshostname: data-call-app-service.dev.trv.techiething.com
+    ingresshostname: data-call-app-service.dev.carrier.internal.openidl.aaisdirect.com
+    publicingresshostname: data-call-app-service.dev.carrier.openidl.aaisdirect.com
     image:
       repository: ghcr.io/openidl-org/openidl-data-call-app
       pullPolicy: IfNotPresent
@@ -20,8 +20,8 @@ global:
     targetport: 8080
     servicename: utilities-service
     ingressenabled: false
-    ingresshostname: utilities-service.dev.trv.internal.techiething.com
-    publicingresshostname: utilities-service.dev.trv.techiething.com
+    ingresshostname: utilities-service.dev.carrier.internal.openidl.aaisdirect.com
+    publicingresshostname: utilities-service.dev.carrier.openidl.aaisdirect.com
     image:
       repository: ghcr.io/openidl-org/openidl-utilities
       pullPolicy: IfNotPresent
@@ -32,7 +32,7 @@ global:
     port: 8080
     targetport: 8080
     ingressenabled: false
-    ingresshostname: openidl.dev.trv.techiething.com
+    ingresshostname: openidl.dev.carrier.openidl.aaisdirect.com
     image:
       repository: ghcr.io/openidl-org/openidl-carrier-ui
       pullPolicy: IfNotPresent
@@ -43,7 +43,7 @@ global:
     targetport: 8080
     servicename: insurance-data-manager-service
     ingressenabled: false
-    ingresshostname: insurance-data-manager-service.dev.trv.techiething.com
+    ingresshostname: insurance-data-manager-service.dev.carrier.openidl.aaisdirect.com
     image:
       repository: ghcr.io/openidl-org/openidl-insurance-data-manager
       pullPolicy: IfNotPresent
@@ -90,7 +90,7 @@ global:
     port: 8080
     targetport: 8080
     ingressenabled: false
-    ingresshostname: openidl.dev.trv.techiething.com
+    ingresshostname: openidl.dev.carrier.openidl.aaisdirect.com
     image:
       repository: ghcr.io/openidl-org/openidl-ui
       pullPolicy: IfNotPresent
