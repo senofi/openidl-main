@@ -39,7 +39,7 @@ for (let channelIndex = 0; channelIndex < targetChannelConfig.targetChannels.len
 }
 var eventFunction = {};
 // Changed event name to disable event listener
-eventFunction.TransactionalDataAvailable_disable = async function processTransactionalDataAvailableEvent(payload, blockNumber) {
+eventFunction.TransactionalDataAvailable = async function processTransactionalDataAvailableEvent(payload, blockNumber) {
     try {
         logger.info('processTransactionalDataAvailableEvent function entry');
         if (payload) {
