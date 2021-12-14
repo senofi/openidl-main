@@ -12,7 +12,7 @@
     "users": [
         {
             "org": "${CARRIER_ORGNAME}",
-            "user": "openidl-${AAIS_ORGNAME}-data-call-app-ibp-2.0",
+            "user": "openidl-${CARRIER_ORGNAME}-data-call-app-ibp-2.0",
             "mspId": "${CARRIER_ORGNAME}MSP"
         }
     ],

@@ -12,7 +12,7 @@
     "users": [
         {
             "org": "${ANALYTICS_ORGNAME}",
-            "user": "openidl-${AAIS_ORGNAME}-data-call-app-ibp-2.0",
+            "user": "openidl-${ANALYTICS_ORGNAME}-data-call-app-ibp-2.0",
             "mspId": "${ANALYTICS_ORGNAME}MSP"
         }
     ],
