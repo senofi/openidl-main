@@ -1,11 +1,22 @@
+// this module tests and existing extraction pattern in it's json format
+// use it to test extraction patterns downloaded from the UI
+
 const fs = require('fs')
 const ExtractionPatternManager = require('../openidl-extraction-pattern-developer/service/extraction-pattern-manager')
 const ExtractionPatternProcessor = require('../openidl-extraction-pattern-developer/service/extraction-pattern-processor')
 const MongoDBManager = require('../openidl-extraction-pattern-developer/service/mongo-database-manager')
-const config = require('./config/config.json')
-const dcConfig1 = config.dataCalls.personalAutoStatsAlabama;
-const dcConfig2 = config.dataCalls.allPremiumsAlabama;
+// const ep = require('./extractionPatterns/PA_Statistical_Reporting_ExtractionPattern');
 const Parser = require('json2csv')
+const config = require('./config/config.json')
+
+let ep = JSON.parse(fs.readFileSync(config.extractionPatternPath + config.extractonPatternName + '.json'))
+let map = new Function(extractCode(ep.viewDefinition.map))
+let reduce = new Function('key', 'value', extractCode(ep.viewDefinition.reduce))
+
+function extractCode(functionString) {
+    let resultString = functionString.substring(functionString.indexOf('{') + 1).trim() // remove open '{'
+    return resultString.substring(0, resultString.length - 1) // remove end '}'
+}
 
 function convertToCSV(json) {
     let rows = []
@@ -32,9 +43,8 @@ function convertToCSV(json) {
     return csv
 }
 
-async function processExtractionPattern(dcConfig) {
+async function processExtractionPattern() {
 
-    const ep = require('./extractionPatterns/' + dcConfig.extractionPatternName);
     // let dbName = 'openidl-offchain-db'
     // let collectionName = 'insurance_trx_db_HIG'
     // let reductionName = collectionName + '_' + 'covid_19' + '_1'
@@ -42,14 +52,9 @@ async function processExtractionPattern(dcConfig) {
     let dbUrl = `mongodb://${config.carrier.mongo.user}:${config.carrier.mongo.token}@localhost:28017 /openidl-offchain-db?authSource=openidl-offchain-db`
     let dbName = config.dbName
     let collectionName = config.collectionName
-    let reductionName = dcConfig.reductionName
+    let reductionName = config.reductionName
     var manager = new ExtractionPatternManager()
-    var processor
-    var map = ep.map
-    var reduce = ep.reduce
-    let metadata = ep.metadata
-    var extractionPattern = manager.createExtractionPattern(metadata.id, metadata.name, metadata.description, metadata.jurisdiction, metadata.insurance, map, reduce, metadata.version, metadata.effectiveDate, metadata.expirationDate, metadata.premiumFromDate, metadata.premiumToDate, metadata.lossFromDate, metadata.lossToDate, metadata.userId)
-    manager.writeExtractionPatternToFile(extractionPattern, config.extractionPatternPath + dcConfig.extractionPatternName + '.json')
+    // var extractionPattern = manager.createExtractionPattern(ep.extractionPatternID, ep.extractionPatternName, ep.description, ep.jurisdiction, ep.insurance, map, reduce, ep.version, ep.effectiveStartTs, ep.effectiveEndTs, ep.premiumFromDate, ep.premiumToDate, ep.lossFromDate, ep.lossToDate, ep.updatedBy)
     var dbManager = new MongoDBManager({ url: dbUrl })
     if (!dbManager) {
         throw 'No DB Manager'
@@ -59,18 +64,16 @@ async function processExtractionPattern(dcConfig) {
     await dbManager.connect()
     await dbManager.useDatabase(dbName).catch((err) => { throw err })
 
-    await extractionPatternProcessor.processExtractionPattern(extractionPattern)
-    console.log(extractionPattern)
+    await extractionPatternProcessor.processExtractionPattern(ep)
+    console.log(ep)
+    // manager.writeExtractionPatternToFile(extractionPattern, 'Trivial01_ExtractionPattern.json')
 
 }
 
 let startTime, endTime;
 startTime = new Date();
-let commandArgs = process.argv.slice(2)
 
-let dcConfig = config.dataCalls[commandArgs[0]]
-
-processExtractionPattern(dcConfig).then(() => {
+processExtractionPattern().then(() => {
     console.log('Done...')
     endTime = new Date();
     let timeDiff = endTime - startTime;
@@ -79,3 +82,5 @@ processExtractionPattern(dcConfig).then(() => {
     console.log(`Elapsed time: ${seconds} seconds`)
     process.exit(0)
 })
+
+// console.log(extractCode("function map() {\n    let key = this.zipCode\n    var result = {\n        \"key\": { \"zipcode\": key },\n        \"value\": {\n            \"premium\": this.premium.amount ? parseFloat(this.premium.amount) : 0,\n            \"carrierId\": this.carrierId\n        }\n    }\n    emit(\n        result.key, result.value,\n    )\n}"))

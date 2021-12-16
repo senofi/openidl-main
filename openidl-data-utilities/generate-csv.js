@@ -3,6 +3,7 @@ const mongoDBManagerInstance = require('mongodb').MongoClient;
 const Parser = require('json2csv')
 const fs = require('fs')
 const config = require('./config/config.json')
+const convertToCSV = require('./csv-utilities').convertToCSV
 
 async function initializeDBConnection() {
     connectionURL = `mongodb://${config.carrier.mongo.user}:${config.carrier.mongo.token}@localhost:28017 /openidl-offchain-db?authSource=openidl-offchain-db`
@@ -50,33 +51,6 @@ async function generateCSV(dbName, collectionName, outputFileName, useLocal) {
     } catch (err) {
         throw err;
     }
-}
-
-function convertToCSV(json) {
-    let rows = []
-    for (let item of json) {
-        let row = {}
-        for (let field in item['_id']) {
-            row[field] = item['_id'][field]
-        }
-        for (let field in item.value) {
-            row[field] = item.value[field]
-        }
-        rows.push(row)
-    }
-    console.log('rows ' + rows.length)
-    const fields = Object.keys(rows[0])
-    console.log('fields ' + fields.length)
-    const opts = { fields }
-
-    let csv = null
-    try {
-        const parser = new Parser.Parser(opts)
-        csv = parser.parse(rows)
-    } catch (err) {
-        console.error(err);
-    }
-    return csv
 }
 
 // let dbName = "covid-report";
