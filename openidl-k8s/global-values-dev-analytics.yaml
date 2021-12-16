@@ -52,9 +52,9 @@ global:
         targetport: 8080
         servicename: transactional-data-event-listener-service
         image:
-            repository: ghcr.io/openidl-org/openidl-transactional-data-event-listener
+            repository: ghcr.io/openidl-org/openidl-main/openidl-transactional-data-event-listener
             pullPolicy: IfNotPresent
-            tag: 5-cognito-fabric-node14-helm-f84a367-093020211950
+            tag: 6-develop-364421a-121420211700
     datacallprocessor:
         install: false
         port: 8080
