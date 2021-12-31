@@ -38,9 +38,9 @@ func setupMultiChannelTest() {
 
 //  registerCrossChanelChaincode Register a chaincode on channel that should be called from another channel
 func registerCrossChanelChaincode() {
-	carrierStub.MockStub.MockPeerChaincode("openidl-chaincode/defaultchannel", defaultStub.MockStub)
-	mutlicarrierStub.MockStub.MockPeerChaincode("openidl-chaincode/defaultchannel", defaultStub.MockStub)
-	mutlicarrierStub.MockStub.MockPeerChaincode("openidl-chaincode/aais-carrier1", carrierStub.MockStub)
+	carrierStub.MockStub.MockPeerChaincode("openidl-chaincode/defaultchannel", defaultStub.MockStub, "defaultchannel")
+	mutlicarrierStub.MockStub.MockPeerChaincode("openidl-chaincode/defaultchannel", defaultStub.MockStub, "defaultchannel")
+	mutlicarrierStub.MockStub.MockPeerChaincode("openidl-chaincode/aais-carrier1", carrierStub.MockStub, "aais-carrier1")
 }
 
 // Intiailze the Invoke Function with argutems for cross-channel Invoke
@@ -51,6 +51,7 @@ func initializeCrossChannelInvoke(channelStub *CouchDBMockStub, ccfunction strin
 
 // callCreateDatacall Common function to createDatacall on a channel used by various other test functions
 func callCreateDatacall(t *testing.T, channelStub *CouchDBMockStub, datacallJson string) {
+	fmt.Println("inside callCreateDatacall")
 	datacallResponse := checkInvoke(t, defaultStub, "CreateDataCall", []byte(CREATE_DATA_CALL_FOR_UPDATE_JSON))
 	if datacallResponse.Status != shim.OK {
 		fmt.Println("createDatacall: Datacall Creation Failed: ", string(datacallResponse.Message))

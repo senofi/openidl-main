@@ -83,6 +83,7 @@ func (this *SmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 
 	hasAccess, err := checkAccessForOrg(stub, function)
 
+	logger.Info("---ddd--- after checjaccess")
 	if err != nil {
 		logger.Error(err)
 		return shim.Error(err.Error())
@@ -92,7 +93,7 @@ func (this *SmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 		return shim.Error(errors.New(errStr).Error())
 	}
 
-	logger.Debug("Invoke: function: ", function)
+	logger.Info("Invoke: function: ", function)
 
 	switch function {
 	case "Ping":
@@ -127,6 +128,8 @@ func (this *SmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 		return this.ListConsentsByDataCall(stub, args[0])
 	case "GetConsentsByDataCall":
 		return this.GetConsentsByDataCall(stub, args[0])
+	case "GetHashById":
+		return this.GetHashById(stub, args[0])
 	case "GetConsentByDataCallAndOrganization":
 		return this.GetConsentByDataCallAndOrganization(stub, args)
 	case "ListLikesByDataCall":

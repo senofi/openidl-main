@@ -12,7 +12,7 @@ import (
 )
 
 func (this *SmartContract) SaveInsuranceDataHash(stub shim.ChaincodeStubInterface, args string) pb.Response {
-	logger.Debug("SaveInsuranceDataHash: enter")
+	logger.Info("SaveInsuranceDataHash: enter")
 	defer logger.Debug("SaveInsuranceDataHash: exit")
 	var insurance InsuranceDataHash
 
@@ -21,6 +21,7 @@ func (this *SmartContract) SaveInsuranceDataHash(stub shim.ChaincodeStubInterfac
 		logger.Error("SaveInsuranceDataHash: Error during json.Unmarshal: ", err)
 		return shim.Error(errors.New("SaveInsuranceDataHash: Error during json.Unmarshal").Error())
 	}
+	logger.Info("---ddd--- insurance:", insurance)
 	if insurance.BatchId == "" {
 		return shim.Error("BatchId should not be Empty")
 	} else if insurance.Hash == "" {
@@ -80,13 +81,14 @@ func (this *SmartContract) GetHashById(stub shim.ChaincodeStubInterface, args st
 
 //this function puts the Insurance data extracted based on extraction pattern into private data collection
 func (this *SmartContract) SaveInsuranceData(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	logger.Debug("SaveInsuranceData: enter")
-	defer logger.Debug("SaveInsuranceData: exit")
+	logger.Info("SaveInsuranceData: enter")
+	defer logger.Info("SaveInsuranceData: exit")
 	var insurance InsuranceData
 	transientMapKey := INSURANCE_TRANSACTIONAL_RECORD_PREFIX
 
 	//getting trnasientMap data (using INSURANCE_TRANSACTIONAL_RECORD_PREFIX as key)
 	InsuranceDataTransMap, err := stub.GetTransient()
+	logger.Info("---ddd---insurancedataTransMap: ", InsuranceDataTransMap)
 	if err != nil {
 		return shim.Error("SaveInsuranceData: Error getting InsuranceDataTransMap: " + err.Error())
 	}

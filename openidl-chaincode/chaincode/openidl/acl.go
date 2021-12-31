@@ -21,6 +21,7 @@ func checkAccessForOrg(stub shim.ChaincodeStubInterface, function string) (bool,
 		return false, errors.New(errStr)
 	}
 
+	logger.Info(fmt.Sprintf("---ok 1----"))
 	if !ok {
 		errStr := fmt.Sprintf("checkAccessForOrg: The client identity does not possess the attribute for %v", ATTRIBUTE_NAME)
 		logger.Error(errStr)
@@ -40,8 +41,11 @@ func checkAccessForOrg(stub shim.ChaincodeStubInterface, function string) (bool,
 			"UpdateReport":            {ADVISORY_ORGANISATION_TYPE},
 		}
 
+	logger.Info(fmt.Sprintf("---ok 2----"))
 	value, ok := accessControlMap[function]
+	logger.Info(fmt.Sprintf("---ok 3----"))
 	if ok {
+		logger.Info(fmt.Sprintf("---ok ----"))
 		return contains(value, organisationType), nil
 
 	} else {
