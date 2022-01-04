@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/hyperledger/fabric-chaincode-go/shim"
+	"github.com/hyperledger/fabric-protos-go/msp"
 	"github.com/stretchr/testify/assert"
 
 	//"strconv"
@@ -26,6 +28,12 @@ func Test_CreateReport_Should_Create_New_Report(t *testing.T) {
 	fmt.Println("Test_CreateReport_Should_Create_New_Report")
 	scc := new(SmartContract)
 	stub := NewCouchDBMockStub("OpenIDLMockStub", scc)
+	sid := &msp.SerializedIdentity{Mspid: "aaismsp", IdBytes: idbytes}
+	b, err := proto.Marshal(sid)
+	if err != nil {
+		t.FailNow()
+	}
+	stub.Creator = b
 
 	//test for CreateReport
 	//Step-1: For ERROR- Check whether it returns error for empty ID
@@ -69,6 +77,12 @@ func Test_UpdateReport_Should_Update_Report(t *testing.T) {
 	fmt.Println("Test_UpdateReport_Should_Update_Report")
 	scc := new(SmartContract)
 	stub := NewCouchDBMockStub("OpenIDLMockStub", scc)
+	sid := &msp.SerializedIdentity{Mspid: "aaismsp", IdBytes: idbytes}
+	b, err := proto.Marshal(sid)
+	if err != nil {
+		t.FailNow()
+	}
+	stub.Creator = b
 
 	//Step-1: For ERROR- Check whether it returns error for empty ID
 	res_err_updateReport := checkInvoke_forError(t, stub, "UpdateReport", []byte(UPDATE_REPORT_EMPTY_ID_JSON))
@@ -114,6 +128,13 @@ func Test_ListReportsByCriteria_Should_Return_List_Of_Reports(t *testing.T) {
 	fmt.Println("Test_ListReportsByCriteria_Should_Return_List_Of_Reports")
 	scc := new(SmartContract)
 	stub := NewCouchDBMockStub("OpenIDLMockStub", scc)
+	sid := &msp.SerializedIdentity{Mspid: "aaismsp", IdBytes: idbytes}
+	b, err := proto.Marshal(sid)
+	if err != nil {
+		t.FailNow()
+	}
+	stub.Creator = b
+
 	//Step-1: For ERROR- Check whether it returns error for empty ID
 	res_err_listByCriteria := checkInvoke_forError(t, stub, "ListReportsByCriteria", []byte(CREATE_REPORT_EMPTY_ID_JSON))
 	var err_message_listByCriteria = res_err_listByCriteria.Message
