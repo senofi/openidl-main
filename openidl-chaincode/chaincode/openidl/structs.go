@@ -62,6 +62,7 @@ const (
 const (
 	DEFAULT_CHANNEL        = "defaultchannel"
 	DEFAULT_CHAINCODE_NAME = "openidl-cc-default"
+	// DEFAULT_CHAINCODE_NAME = "openidl-chaincode/defaultchannel"
 	LOGGING_LEVEL          = "LOGGING_LEVEL"
 )
 

@@ -83,7 +83,6 @@ func (this *SmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 
 	hasAccess, err := checkAccessForOrg(stub, function)
 
-	logger.Info("---ddd--- after checjaccess")
 	if err != nil {
 		logger.Error(err)
 		return shim.Error(err.Error())

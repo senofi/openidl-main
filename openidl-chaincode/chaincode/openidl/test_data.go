@@ -35,7 +35,8 @@ const (
 	CONSENT_TEST_DATA_MULTICARRIERs                      = `{"datacallID":"Data_Call_123","dataCallVersion":"1","carrierID":"12345","carrierName":"Hypermutual","createdTs":"2018-11-13T18:30:00.000Z","createdBy":"abc"}`
 	CONSENT_TEST_DATA_WITH_DELTA                         = `{"datacallID":"Data_Call_123","dataCallVersion":"1","carrierID":"12345","carrierName":"Hypermutual","createdTs":"2018-11-13T18:30:00.000Z","createdBy":"abc","delta":1}`
 	LIST_CONSENT_CRITERIA_JSON                           = `{"consent": {"datacallID": "Data_Call_123","dataCallVersion": "1", "carrierID":"12345"}, "channelIDs":["aais-carrier1"]}`
-	LIST_LIKE_CRITERIA_JSON                              = `{"like": {"datacallID": "Data_Call_123","dataCallVersion": "1", "OrganizationID":"12345"}, "channelIDs":["aais-carrier1"]}`
+	GET_LIKE_CRITERIA_JSON                              = `{"like": {"datacallID": "Data_Call_123","dataCallVersion": "1", "OrganizationID":"12345"}, "channelIDs":["aais-carrier1"]}`
+	LIST_LIKE_CRITERIA_JSON                              = `{"datacallID": "Data_Call_123","dataCallVersion": "1", "channelList":[{"channelName":"aais-carrier1", "chaincodeName": "openidl-cc-default"}]}`
 	CREATE_DATACALL_LOG_ENTRY                            = `{"dataCallID":"Data_Call_1","dataCallVersion":"1","actionID":"DATA_CALL_ISSUED","action":"Issued","actionTs":"2018-11-01T18:30:00.000Z","updatedBy":"user@aaisonline.com"}`
 	SAVE_INSURANCE_HASH_EMPTY_ID_JSON                    = `{"batchId":"","hash":"test"}`
 	SAVE_INSURANCE_HASH_VALID_JSON                       = `{"batchId":"Insurance-batch-1", "chunkId":"chunk1", "hash":"test","carrierId":"12345"}`

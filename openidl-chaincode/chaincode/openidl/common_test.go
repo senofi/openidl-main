@@ -39,9 +39,9 @@ func setupMultiChannelTest() {
 
 //  registerCrossChanelChaincode Register a chaincode on channel that should be called from another channel
 func registerCrossChanelChaincode() {
-	carrierStub.MockStub.MockPeerChaincode("openidl-chaincode/defaultchannel", defaultStub.MockStub, "defaultchannel")
-	mutlicarrierStub.MockStub.MockPeerChaincode("openidl-chaincode/defaultchannel", defaultStub.MockStub, "defaultchannel")
-	mutlicarrierStub.MockStub.MockPeerChaincode("openidl-chaincode/aais-carrier1", carrierStub.MockStub, "aais-carrier1")
+	carrierStub.MockStub.MockPeerChaincode("openidl-cc-default", defaultStub.MockStub, "defaultchannel")
+	mutlicarrierStub.MockStub.MockPeerChaincode("openidl-cc-default", defaultStub.MockStub, "defaultchannel")
+	mutlicarrierStub.MockStub.MockPeerChaincode("openidl-cc-default", carrierStub.MockStub, "aais-carrier1")
 }
 
 // Intiailze the Invoke Function with argutems for cross-channel Invoke
