@@ -10,7 +10,7 @@ import (
 	"github.com/hyperledger/fabric-chaincode-go/shim"
 	pb "github.com/hyperledger/fabric-protos-go/peer"
 	"github.com/stretchr/testify/assert"
-	logger "github.com/sirupsen/logrus"
+	// logger "github.com/sirupsen/logrus"
 )
 
 // callToggleLike Common test function to create like on channel and to be used for all test cases
