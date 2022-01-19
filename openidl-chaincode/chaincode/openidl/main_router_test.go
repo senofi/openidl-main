@@ -79,6 +79,8 @@ func (this *openIDLTestCC) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 		return this.ListLikesByDataCall(stub, args[0])
 	} else if function == "GetLikesByDataCall" {
 		return this.GetLikesByDataCall(stub, args[0])
+	} else if function == "GetConsentsByDataCall" {
+		return this.GetConsentsByDataCall(stub, args[0])
 	} else if function == "GetLikeByDataCallAndOrganization" {
 		return this.GetLikeByDataCallAndOrganization(stub, args)
 	} else if function == "SaveAndIssueDataCall" {

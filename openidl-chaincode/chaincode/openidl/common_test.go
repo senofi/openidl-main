@@ -34,6 +34,7 @@ func setupMultiChannelTest() {
 	initializeCrossChannelInvoke(defaultStub, "GetDataCallByIdAndVersion", GET_DATA_CALL_BY_ID_AND_VERSION_VALID_JSON)
 	initializeCrossChannelInvoke(carrierStub, "ListLikesByDataCall", LIST_LIKE_CRITERIA_JSON)
 	initializeCrossChannelInvoke(carrierStub, "ListConsentsByDataCall", LIST_CONSENT_CRITERIA_JSON)
+	// initializeCrossChannelInvoke(carrierStub, "GetConsentsByDataCall", LIST_CONSENT_CRITERIA_NEW_JSON)
 
 }
 
