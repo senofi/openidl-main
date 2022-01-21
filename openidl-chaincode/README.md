@@ -14,7 +14,6 @@ The following are the main entities (aka structures) defined in the `openIDLCC` 
 1. Consent
 
 ## Compiling and running test cases locally
-Note: This is not working at this moment.
 ### Platform
 It is strongly recommended to use **macOS** or a **Linux** flavor (such as Ubuntu) for compiling and testing the chaincode components. 
 
@@ -46,25 +45,10 @@ $ go build
 
 After compiling the chaincode, you should see an executable file named `openidl` in the `chaincode/openidl` sub-folder.
 
-4) To run the automated test cases for the chaincode, execute `go test` in the `chaincode/openidl` sub-folder. All tests should succeed; you should see a `PASS ok` message near the end of the output, similar to the following:
+4) To run the automated test cases for the chaincode, execute `go test *.go` in the `chaincode/openidl` sub-folder. All tests should succeed; you should see a `ok` message as the output, similar to the following:
 
 ```
-$ go test
-Test_CreateConsent_Should_Create_A_Consent_When_Consent_Does_Not_Exist
-2018-12-05 08:39:25.317 EST [openIDLCC_Logger] Info -> INFO 001 ListConsentsByDataCall: Key  [Consent_Key_ Data_Call_123 1]
-2018-12-05 08:39:25.317 EST [mock] HasNext -> ERRO 002 HasNext() couldn't get Current
-2018-12-05 08:39:25.317 EST [openIDLCC_Logger] Info -> INFO 003 ListConsentsByDataCall: Likes fetched for current channel, moving on to other channels
-2018-12-05 08:39:25.317 EST [openIDLCC_Logger] Info -> INFO 004 InvokeChaincodeOnChannel: currentChannelID >  aais-carriers
-2018-12-05 08:39:25.317 EST [openIDLCC_Logger] Info -> INFO 005 ListConsentsByDataCall: Key  [Consent_Key_ Data_Call_123 1]
-2018-12-05 08:39:25.318 EST [mock] HasNext -> ERRO 006 HasNext() couldn't get Current
-2018-12-05 08:39:25.318 EST [mock] HasNext -> ERRO 007 HasNext() couldn't get Current
-2018-12-05 08:39:25.318 EST [openIDLCC_Logger] Info -> INFO 008 ListConsentsByDataCall: No Consent found on current channel, proceed to next channel 
-2018-12-05 08:39:25.318 EST [openIDLCC_Logger] Info -> INFO 009 InvokeChaincodeOnChannel: currentChannelID >  aais-carrier1
+$ go test  *.go
+ok  	command-line-arguments	0.032s
 
-...
-
-Test_ListReportsByCriteria_Should_Return_List_Of_Reports
-2018-12-05 08:39:25.323 EST [openIDLCC_Logger] Error -> ERRO 05d DataCallID is empty!!
-err_message_getDataCallVersions > ListReportsByCriteria: failed to get list of Reports: not implementedPASS
-ok  	_/Users/olivieri/git/openIDL-release2/openidl-chaincode/chaincode/openidl	0.060s
 ```

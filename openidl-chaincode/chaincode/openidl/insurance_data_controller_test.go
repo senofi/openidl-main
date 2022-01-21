@@ -68,55 +68,43 @@ func Test_SaveInsuranceHash_Should_Save_Insurance_Data_Hash(t *testing.T) {
 //This function tests whether it returns 200 for Success.
 //This function tests whether it stores insurance data.
 //TODO setup transient map in CC properly
-// func Test_SaveInsuranceData_Should_Save_Insurance_Data(t *testing.T) {
-// 	fmt.Println("Test_SaveInsuranceData_Should_Save_Insurance_Data")
-// 	scc := new(SmartContract)
-// 	stub := NewCouchDBMockStub("OpenIDLMockStub", scc)
+func Test_SaveInsuranceData_Should_Save_Insurance_Data(t *testing.T) {
+	fmt.Println("Test_SaveInsuranceData_Should_Save_Insurance_Data")
+	scc := new(SmartContract)
+	stub := NewCouchDBMockStub("OpenIDLMockStub", scc)
 
-// 	sid := &msp.SerializedIdentity{Mspid: "aaismsp", IdBytes: idbytes}
-// 	b, err := proto.Marshal(sid)
-// 	if err != nil {
-// 		t.FailNow()
-// 	}
+	sid := &msp.SerializedIdentity{Mspid: "aaismsp", IdBytes: idbytes}
+	b, err := proto.Marshal(sid)
+	if err != nil {
+		t.FailNow()
+	}
 
-// 	stub.Creator = b
-// 	//test for SaveInsuranceData
-// 	//Step-1: For ERROR- Check whether it returns error for empty ID
-// 	res_err_saveData := checkInvoke_forError(t, stub, "SaveInsuranceData", []byte(SAVE_INSURANCE_DATA_EMPTY_CARRIER_ID_JSON))
-// 	var err_message_for_saveData = res_err_saveData.Message
-// 	if res_err_saveData.Status != shim.OK {
-// 		assert.Equal(t, "CarrierId should not be Empty", err_message_for_saveData, "Test_SaveInsuranceData: For Empty Id")
-// 	} else {
-// 		t.FailNow()
-// 	}
+	stub.Creator = b
+	stub.MockTransactionStart("100")
+	m := make(map[string][]byte)
+	m[INSURANCE_TRANSACTIONAL_RECORD_PREFIX] = []byte(SAVE_INSURANCE_DATA_EMPTY_CARRIER_ID_JSON)
 
-// 	//Step-2: For SUCCESS- Check whether it returns 200
-// 	// res_saveData := checkInvoke(t, stub, "SaveInsuranceData", []byte(SAVE_INSURANCE_DATA_VALID_JSON))
-// 	// if res_saveData.Status != shim.OK {
-// 	// 	logger.Error("SaveInsuranceData failed with message res.Message: ", string(res_saveData.Message))
-// 	// 	fmt.Println("SaveInsuranceData failed with message res.Message: ", string(res_saveData.Message))
-// 	// 	t.FailNow()
-// 	// }
-// 	// var saveData_returnCode = int(res_saveData.Status)
-// 	// assert.Equal(t, 200, saveData_returnCode, "Test_SaveInsuranceData: Function's success, status code 200.")
+	stub.SetTransient(m)
+	//test for SaveInsuranceData
+	//Step-1: For ERROR- Check whether it returns error for empty ID
+	res_err_saveData := checkInvoke_forError(t, stub, "SaveInsuranceData", []byte(SAVE_INSURANCE_DATA_EMPTY_CARRIER_ID_JSON))
+	var err_message_for_saveData = res_err_saveData.Message
+	if res_err_saveData.Status != shim.OK {
+		assert.Equal(t, "CarrierId should not be Empty", err_message_for_saveData, "Test_SaveInsuranceData: For Empty Id")
+	} else {
+		t.FailNow()
+	}
 
-// 	//Step-3: For SUCCESS- Check whether input object matches output object
-// 	// res_getHashById := checkInvoke(t, stub, "SaveInsuranceData", []byte(SAVE_INSURANCE_HASH_VALID_JSON))
-// 	// var input_saveInsuranceData InsuranceData
-// 	// json.Unmarshal([]byte(SAVE_INSURANCE_DATA_VALID_JSON), &input_saveInsuranceData)
-// 	// pageNumberAsString := strconv.Itoa(input_saveInsuranceData.PageNumber)
-// 	// var output_saveInsuranceData InsuranceData
-// 	// namespace := INSURANCE_TRANSACTIONAL_RECORD_PREFIX
-// 	// key, _ := stub.CreateCompositeKey(namespace, []string{input_saveInsuranceData.DataCallId, input_saveInsuranceData.DataCallVersion, input_saveInsuranceData.CarrierId, pageNumberAsString})
-// 	// res_insuranceData, err := stub.GetPrivateData(PRIVATE_DATA_COLLECTION_PDC, key)
-// 	// if err != nil {
-// 	// 	logger.Error("Test_SaveInsuranceData: Failed to get Insurance Data for key", key)
-// 	// 	t.FailNow()
-// 	// }
-// 	// err_saveInsuranceData := json.Unmarshal(res_insuranceData, &output_saveInsuranceData)
-// 	// if err_saveInsuranceData != nil {
-// 	// 	logger.Error("Test_SaveInsuranceData: Error during json.Unmarshal : ", err_saveInsuranceData)
-// 	// 	t.FailNow()
-// 	// }
-// 	// assert.True(t, reflect.DeepEqual(input_saveInsuranceData, output_saveInsuranceData))
-// }
+	// Step-2: For SUCCESS- Check whether it returns 200
+	m[INSURANCE_TRANSACTIONAL_RECORD_PREFIX] = []byte(SAVE_INSURANCE_DATA_VALID_JSON)
+	stub.SetTransient(m)
+	res_saveData := checkInvoke(t, stub, "SaveInsuranceData", []byte(SAVE_INSURANCE_DATA_VALID_JSON))
+	if res_saveData.Status != shim.OK {
+		logger.Error("SaveInsuranceData failed with message res.Message: ", string(res_saveData.Message))
+		fmt.Println("SaveInsuranceData failed with message res.Message: ", string(res_saveData.Message))
+		t.FailNow()
+	}
+	var saveData_returnCode = int(res_saveData.Status)
+	assert.Equal(t, 200, saveData_returnCode, "Test_SaveInsuranceData: Function's success, status code 200.")
+
+}
