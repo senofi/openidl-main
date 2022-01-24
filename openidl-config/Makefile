@@ -24,4 +24,5 @@ copy_carrier_secrets:
 	./copy-config-files-carrier-dev.sh
 	node apply-secrets.js carrier
 
-
+generate_config_files:
+	python3 generate-configs.py

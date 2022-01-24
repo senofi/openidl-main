@@ -31,3 +31,4 @@ ca.pem
 openidl-data-utilities/config/config.json
 openidl-data-utilities/config/logins.json
 openidl-data-utilities/output/output.csv
+openidl-config/openidl-configurations/config/carrier-config.json
