@@ -68,6 +68,11 @@ preRegisterUser() {
         elif [ "$DESTINATION" = "couch" ]; then
             signcertsJSON="{\"data\":$data}"
             # export to couch
+	    echo "---ddd--- putting in couch  "
+	    echo "---ddd--- user $user  "
+	    echo "---ddd--- data $data  "
+	    echo "---ddd--- couchurl $COUCH_URL  "
+
             curl -X PUT ${COUCH_URL}"${user}" -d "$signcertsJSON"
         else
             echo "The export destination is UNKNOWN."
