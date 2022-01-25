@@ -8,7 +8,8 @@
         "lint": "eslint .",
         "lintfix": "eslint --fix .",
         "test": "NODE_CONFIG_DIR=./server/config nyc mocha --timeout 600000 --exit",
-        "dev-test": "cross-env NODE_CONFIG_DIR=./server/config nyc mocha --timeout 600000 --exit"
+        "dev-test": "cross-env NODE_CONFIG_DIR=./server/config nyc mocha --timeout 600000 --exit",
+        "jest": "jest --config ./jest.config.js"
     },
     "dependencies": {
         "@openidl-org/openidl-common-lib": "^0.5.8",
@@ -39,6 +40,7 @@
         "cross-env": "^5.2.0",
         "mocha": "^8.4.0",
         "nodemon": "^2.0.12",
-        "nyc": "15.0.0"
+        "nyc": "15.0.0",
+        "jest": "^27.4.7"
     }
 }
