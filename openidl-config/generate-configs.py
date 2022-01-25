@@ -1,11 +1,24 @@
 # importing the module
 import json
-from jinja2 import Environment, PackageLoader, select_autoescape, Template
+import os
+from jinja2 import Environment, FileSystemLoader, PackageLoader, select_autoescape, Template
 
 env = Environment(
-    loader=PackageLoader("openidl-configurations"),
+    # loader=PackageLoader("./openidl-configurations"),
+    loader=FileSystemLoader('openidl-configurations/templates/'),
     autoescape=select_autoescape()
 )
+
+# setup paths
+
+carrierPath = 'config/carrier'
+k8sPath = 'config/k8s/carrier'
+
+if not os.path.exists(carrierPath):
+    os.makedirs(carrierPath)
+
+if not os.path.exists(k8sPath):
+    os.makedirs(k8sPath)
 
 # reading the data from the file
 with open('openidl-configurations/config/carrier-config.json') as f:

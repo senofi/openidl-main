@@ -1,0 +1,65 @@
+{
+  "$schema": "./carrier-config-schema.json",
+  "organizationName": "org",
+  "organizationIds": [
+    {
+      "name": "orga",
+      "id": "1234"
+    },
+    {
+      "name": "orgb",
+      "id": "1235"
+    }
+  ],
+  "environment": "dev",
+  "support": {
+    "fromAddress": "support@openidl.org",
+    "toAddresses": [
+      "support@aaisonline.com"
+    ]
+  },
+  "dns": {
+    "domain": "caru.aaisdirect.com",
+    "subdomain": "carrier"
+  },
+  "certs": {
+    "tlsCA": "-----BEGIN CERTIFICATE-----\nMIICPjCCAeSgAwIBAgIUcz6JDy8iN/RCIVvQVBOuy9ZvJVowCgYIKoZIzj0EAwIw\nfTELMAkGA1UEBhMCVVMxETAPBgNVBAgMCElsbGlub2lzMREwDwYDVQQHDAhJbGxp\nbm9pczENMAsGA1UECgwEY2FydTE5MDcGA1UEAwwwY2EuY2FydS1uZXQuY2FydS5k\nZXYuY2Fycmllci5jYXJ1LmFhaXNkaXJlY3QuY29tMB4XDTIyMDEyMDE5MjM1M1oX\nDTI0MTEwOTE5MjM1M1owfTELMAkGA1UEBhMCVVMxETAPBgNVBAgMCElsbGlub2lz\nMREwDwYDVQQHDAhJbGxpbm9pczENMAsGA1UECgwEY2FydTE5MDcGA1UEAwwwY2Eu\nY2FydS1uZXQuY2FydS5kZXYuY2Fycmllci5jYXJ1LmFhaXNkaXJlY3QuY29tMFkw\nEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEHv6rJrnfara+h6J6GoPeeSLNFExSQx9n\nSl+NJlAMe1SXSniCiSkcQ/Nti6ZSqxEuQohqAz8RhKUg6gGwqkJKrqNCMEAwDwYD\nVR0TAQH/BAUwAwEB/zAOBgNVHQ8BAf8EBAMCAaYwHQYDVR0OBBYEFPWvwTlcekep\ns1K9t5W/wktmSuTuMAoGCCqGSM49BAMCA0gAMEUCIQDO2UKtLM92xlpUHz4keIdP\ni377mWmIweXPuVwx0FQewAIgNy9RtK3+/FzTGrW0OJiwjrIaCStWWv/TxMYgLW3V\nliU=\n-----END CERTIFICATE-----"
+  },
+  "aws": {
+    "region": "us-east-1",
+    "accessKeyId": "AKIA4TJ7CLGWJVHZQOPN",
+    "secretAccessKey": "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",
+    "cognito": {
+      "applicationId": "5tp3rkj2kbnbpubun2dpfio4u4",
+      "poolId": "us-east-1_ZpvfvNFHq"
+    }
+  },
+  "vault": {
+    "url": "http://vault.dev.carrier.internal.caru.aaisdirect.com",
+    "username": "config-caru-vc0fvds8",
+    "password": "meBLxecXoqT9jp7jyEWsiK2RAC7FNUFGB9AvIox1",
+    "orgName": "config",
+    "vaultPath": "config-caru",
+    "apiVersion": "v1"
+  },
+  "mongo": {
+    "user": "caru-dev-dFxh92vY7DyHihav",
+    "token": "b8EoObq9mJhZ3m9XcoAY74H7V7ReeiYnT770avYM"
+  },
+  "channels": [
+    {
+      "name": "defaultchannel",
+      "isCrossChannel": false,
+      "chaincode": {
+        "name": "openidl-cc-default"
+      }
+    },
+    {
+      "name": "anal-caru",
+      "chaincode": {
+        "name": "openidl-cc-aais-carriers"
+      },
+      "isCrossChannel": true
+    }
+  ]
+}
