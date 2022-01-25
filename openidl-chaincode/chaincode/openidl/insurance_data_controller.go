@@ -12,7 +12,7 @@ import (
 )
 
 func (this *SmartContract) SaveInsuranceDataHash(stub shim.ChaincodeStubInterface, args string) pb.Response {
-	logger.Debug("SaveInsuranceDataHash: enter")
+	logger.Info("SaveInsuranceDataHash: enter")
 	defer logger.Debug("SaveInsuranceDataHash: exit")
 	var insurance InsuranceDataHash
 
@@ -80,8 +80,8 @@ func (this *SmartContract) GetHashById(stub shim.ChaincodeStubInterface, args st
 
 //this function puts the Insurance data extracted based on extraction pattern into private data collection
 func (this *SmartContract) SaveInsuranceData(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	logger.Debug("SaveInsuranceData: enter")
-	defer logger.Debug("SaveInsuranceData: exit")
+	logger.Info("SaveInsuranceData: enter")
+	defer logger.Info("SaveInsuranceData: exit")
 	var insurance InsuranceData
 	transientMapKey := INSURANCE_TRANSACTIONAL_RECORD_PREFIX
 
