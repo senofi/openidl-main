@@ -121,11 +121,22 @@ For mac
 
 [Installation Instructions](https://helm.sh/docs/intro/install/)
 
-## Clone the repository
+## Clone the openidl-main repository
 
 ```
 git clone https://github.com/openidl-org/openidl-main.git
 ```
+
+## Clone the openidl-aais-gitops repository
+
+```
+git clone https://github.com/openidl-carrier1/openidl-aais-gitops.git
+```
+
+## Copy helm charts from openidl-aais-gitops to openidl-main
+Go to openidl-aais-gitops local repository cloned in previous step and copy "openidl-k8s/" to openidl-main repository. 
+
+cp -r ./openidl-aais-gitops/openidl-k8s/ ./openidl-main/
 
 ## Get the Config files
 
