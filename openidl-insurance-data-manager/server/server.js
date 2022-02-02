@@ -76,10 +76,6 @@ const swaggerDocument = yaml.safeLoad(fs.readFileSync(path.join(__dirname, '../p
 app.use(bodyParser.urlencoded({
     extended: true,
 }));
-app.use(bodyParser.json({
-    limit: '50mb'
-}));
-
 
 logger.debug('setting up app: registering routes, middleware...');
 
@@ -103,6 +99,8 @@ logger.debug('setting up app: initializing passport');
 const passport = authHandler.getPassport();
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.json({limit: '500mb'}));
+
 authHandler.setStrategy(passport);
 
 app.enable('trust proxy');
