@@ -41,8 +41,8 @@ common.getSearchDataCalls = (req, res) => {
 
 common.handleRequest = (req, res, url) => {
     logger.debug('Inside handle request');
-     logger.debug("url :", url);
-     logger.debug("DATA_CALL_CARRIER_APP_URL :", process.env.DATA_CALL_APP_URL + url);
+    logger.debug("url :", url);
+    logger.debug("DATA_CALL_CARRIER_APP_URL :", process.env.DATA_CALL_APP_URL + url);
     var options = {
         url: process.env.DATA_CALL_APP_URL + url,
         method: req.method,
@@ -145,6 +145,21 @@ common.getDataCalls = (req, res) => {
     } else {
         common.rejectRequest(req, res, url);
     }
+}
+
+common.getIconBucketUrl = (req, res) => {
+    var url = '/icon-bucket-url';
+
+    logger.debug('Environment Icon Bucket');
+    logger.debug("url :", url);
+    logger.debug("ICON_BUCKET_URL: ", process.env.ICON_BUCKET_URL);
+
+    let jsonRes = {
+        statusCode: 200,
+        success: true,
+        result: process.env.ICON_BUCKET_URL
+    };
+    util.sendResponse(res, jsonRes);
 }
 
 common.getLOBs = (req, res) => {

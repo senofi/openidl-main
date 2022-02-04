@@ -28,6 +28,8 @@ router.route(API_URL + '/list-data-calls-by-criteria').get(authHandler.isLoggedI
  */
 router.route(API_URL + '/search-data-calls').get(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.getSearchDataCalls);
 
+// Get getIconBucketUrl
+router.route(API_URL + '/icon-bucket-url').get(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.getIconBucketUrl);
 
 // Get LOBs
 router.route(API_URL + '/lob').get(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.getLOBs);
