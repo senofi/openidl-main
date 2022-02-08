@@ -20,7 +20,6 @@ export class HeaderComponent implements OnInit {
 	roleIcon;
 	org;
 	isSpinner: Boolean = false;
-
 	isResetBtn: Boolean = false;
 	constructor(
 		private storageService: StorageService,
@@ -31,7 +30,7 @@ export class HeaderComponent implements OnInit {
 		this.role = this.storageService.getItem('role');
 		this.org = this.storageService.getItem('org');
 		this.appConst = appConst[this.role];
-		this.orgLogo = this.appConst.org[this.org];
+		this.orgLogo = this.orgIcon(this.org);
 		this.roleIcon = appConst.roles[this.role];
 	}
 
@@ -81,5 +80,9 @@ export class HeaderComponent implements OnInit {
 				this.isResetBtn = false;
 			}
 		);
+	}
+
+	orgIcon(org) {
+		return this.storageService.getItem('iconBucketUrl') + org + '-logo.png';
 	}
 }
