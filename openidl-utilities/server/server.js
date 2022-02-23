@@ -39,7 +39,12 @@ global.fetch = require('node-fetch');
 app.use(session({
     secret: "123456",
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'lax'
+    } 
 }));
 
 const idpCredentials = JSON.parse(process.env.IDP_CONFIG);
