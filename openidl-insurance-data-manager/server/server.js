@@ -92,7 +92,12 @@ app.enable("trust proxy");
 app.use(session({
     secret: "123456",
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'lax'
+    } 
 }));
 
 logger.debug('setting up app: initializing passport');

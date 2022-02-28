@@ -47,7 +47,12 @@ app.enable("trust proxy");
 app.use(session({
   secret: "123456",
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+      secure: true,
+      httpOnly: true,
+      sameSite: 'lax'
+  } 
 }));
 logger.debug('setting up app: initializing passport');
 const passport = authHandler.getPassport();
@@ -67,7 +72,7 @@ if (NODE_ENV === 'production') {
   app.enable('trust proxy');
 
 }
-
+console.log("----------------app started");
 if (NODE_ENV === 'production' || NODE_ENV === 'qa') {
   app.use(express.static('dist/openidl-carrier-ui'));
 }
