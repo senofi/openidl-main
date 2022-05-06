@@ -13,14 +13,16 @@
   },
   "dependencies": {
     "@cloudant/cloudant": "^3.0.1",
+    "@openidl-org/openidl-common-lib": "^0.5.8",
     "@sendgrid/mail": "^7.2.1",
     "aws-sdk": "2.474.0",
     "config": "^2.0.1",
     "express": "~4.16.0",
     "log4js": "^4.3.2",
-    "object-sizeof": "1.4.0",
     "mongodb": "^3.6.10",
-    "@openidl-org/openidl-common-lib": "^0.5.8"
+    "node-cron": "^3.0.0",
+    "node-schedule": "^2.1.0",
+    "object-sizeof": "1.4.0"
   },
   "engines": {
     "node": "14.17.x",

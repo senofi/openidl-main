@@ -18,7 +18,11 @@
 const express = require('express');
 const log4js = require('log4js');
 const config = require('config');
+const cron = require('node-cron');
+const schedule = require('node-schedule');
+
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
+const cronHandler = require('./cron/cron-handler');
 openidlCommonLib.EnvConfig.init();
 
 const EventListener = openidlCommonLib.EventListener;
@@ -59,7 +63,19 @@ app.listen(port, () => {
 });
 
 async function init() {
-    let dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
+    // cron.schedule('*/4 * * * * *',async () =>  {
+    //     logger.info("cron handler")
+    //     await cronHandler.pollForMaturedDataCall();
+    // });
+    // cron.schedule('*/10 * * * * *', cronHandler.pollForMaturedDataCall);
+    // cron.schedule('*/10 * * * * *', async () => cronHandler.pollForMaturedDataCall());
+    // cron.schedule('*/10 * * * * *', cronHandler.pollForMaturedDataCall);
+
+    // schedule.scheduleJob('*/3 * * * * *', cronHandler.pollForMaturedDataCall);
+    cronHandler.init();
+    const job = schedule.scheduleJob('*/6 * * * * *', async () => await cronHandler.pollForMaturedDataCall());
+    logger.info("job: ", job);
+let dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
     let listenerConfig = {};
     let listernerChannels = new Array();
     for (let index = 0; index < channelConfig.listenerChannels.length; index++) {
