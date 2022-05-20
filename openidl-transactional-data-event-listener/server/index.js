@@ -73,8 +73,7 @@ async function init() {
 
     // schedule.scheduleJob('*/3 * * * * *', cronHandler.pollForMaturedDataCall);
     cronHandler.init();
-    const job = schedule.scheduleJob('*/6 * * * * *', async () => await cronHandler.pollForMaturedDataCall());
-    logger.info("job: ", job);
+    const job = schedule.scheduleJob('*/15 * * * * *', async () => await cronHandler.pollForMaturedDataCall());
 let dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
     let listenerConfig = {};
     let listernerChannels = new Array();

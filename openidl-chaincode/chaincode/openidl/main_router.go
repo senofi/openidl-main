@@ -99,6 +99,8 @@ func (this *SmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 		return this.Ping(stub)
 	case "ListDataCallsByCriteria":
 		return this.ListDataCallsByCriteria(stub, args[0])
+	case "ListMatureDataCalls":
+		return this.ListMatureDataCalls(stub)
 	case "CreateDataCall":
 		return this.CreateDataCall(stub, args[0])
 	case "SaveNewDraft":
