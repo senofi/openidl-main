@@ -14,7 +14,7 @@ AWS.config.update({
 });
 class S3BucketManager {
     constructor() { }
-        async getAccessParams() {
+    async getAccessParams() {
         const sts = new AWS.STS({
             //region: 'us-east-2',
             accessKeyId: bucketConfig.accessKeyId,
@@ -34,28 +34,51 @@ class S3BucketManager {
         return accessparams;
     }
 
-async getTransactionalDataByDatacall(dataCallId) {
-    logger.debug("Inside getTransactionalDataByDataCall");
-    const accessParams = await this.getAccessParams();
-    logger.debug("accessparams: ", accessParams);
-    let bucket = new AWS.S3(accessParams);
-    let getObjectParam = { Bucket: bucketConfig.bucketName, Prefix: dataCallId };
-    const data = await bucket.listObjects(getObjectParam).promise();
-    console.log("getobject data is - " + JSON.stringify(data))
-    console.log("getobject body is - " + JSON.stringify(JSON.parse(data.Body), null, 2))
-    return data
-}
+    async getTransactionalDataByDatacall(dataCallId) {
+        logger.info("Inside getTransactionalDataByDataCall, datacallId is ", dataCallId);
+        const accessParams = await this.getAccessParams();
+        logger.debug("accessparams: ", accessParams);
+        let bucket = new AWS.S3(accessParams);
+        let getObjectParam = { Bucket: bucketConfig.bucketName, Prefix: dataCallId };
+        try {
+            const data = await bucket.listObjects(getObjectParam).promise();
+            console.log("getobject data is - " + JSON.stringify(data))
+            return data
+        } catch (err) {
+            logger.error(err)
+        }
+    }
+    async getData(id) {
+        logger.info("Inside getData, id is ", id);
+        const accessParams = await this.getAccessParams();
+        logger.debug("accessparams: ", accessParams);
+        let bucket = new AWS.S3(accessParams);
+        let getObjectParam = { Bucket: bucketConfig.bucketName, Key: id };
+        try {
+            const data = await bucket.getObject(getObjectParam).promise();
+            console.log("getobject data is - " + JSON.stringify(data))
+            console.log("getobject body is - " + JSON.stringify(JSON.parse(data.Body), null, 2))
+            return data
+        } catch (err) {
+            logger.error(err)
+        }
+    }
 
-async getTransactionalData(id) {
+
+    async getTransactionalData(id) {
         logger.debug("Inside getTransactionalData");
         const accessParams = await this.getAccessParams();
         logger.debug("accessparams: ", accessParams);
         let bucket = new AWS.S3(accessParams);
         let getObjectParam = { Bucket: bucketConfig.bucketName, Key: id };
+        try {
             const data = await bucket.getObject(getObjectParam).promise();
             console.log("getobject data is - " + JSON.stringify(data))
             console.log("getobject body is - " + JSON.stringify(JSON.parse(data.Body), null, 2))
             return data.VersionId
+        } catch (err) {
+            logger.error(err)
+        }
     }
     async saveTransactionalData(input) {
         logger.debug('Inside saveTransactionalData');

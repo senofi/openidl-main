@@ -25,46 +25,40 @@ for (let channelIndex = 0; channelIndex < targetChannelConfig.targetChannels.len
 }
 const CronHandler = {};
 CronHandler.init = () => {
-	em.on('triggerEvent', (data) => {
-		 matureEventHandler.handleMatureEvent(data);
-		});
+    em.on('triggerEvent', (data) => {
+        matureEventHandler.handleMatureEvent(data);
+    });
 }
 CronHandler.pollForMaturedDataCall = async () => {
     logger.info("Inside Cron Handler");
-	// em.emit('triggerEvent', "testdata");
-        logger.info('cron handler function entry');
+    // em.emit('triggerEvent', "testdata");
+    logger.info('cron handler function entry');
     try {
 
-            let queryResponse;
-            let defaultChannelTransaction = ChannelTransactionMap.get("defaultchannel");
+        let queryResponse;
+        let defaultChannelTransaction = ChannelTransactionMap.get("defaultchannel");
 
-            logger.info("** Transaction started for ListDataCallsByCriteria at : Start_Time=" + new Date().toISOString());
-            try {
-                queryResponse = await defaultChannelTransaction.executeTransaction('ListMatureDataCalls');
-                queryResponse = JSON.parse(queryResponse.toString('utf8'))
-            } catch (err) {
-                logger.error('failed to get mature datacalls ')
-                logger.error('error during ListDataCallsByCriteria inside onerror ', err)
+        logger.info("** Transaction started for ListDataCallsByCriteria at : Start_Time=" + new Date().toISOString());
+        try {
+            queryResponse = await defaultChannelTransaction.executeTransaction('ListMatureDataCalls');
+            queryResponse = JSON.parse(queryResponse.toString('utf8'))
+        } catch (err) {
+            logger.error('failed to get mature datacalls ')
+            logger.error('error during ListDataCallsByCriteria inside onerror ', err)
+        }
+        logger.debug('pollForMaturedDataCall: ListDataCallsByCriteria submitTransaction complete ');
+        logger.info("** Transaction completed for listMatureDataCalls at : End_Time= " + new Date().toISOString() + " result= " + JSON.stringify(queryResponse));
+
+        //iterate over the results and emit events
+        if (queryResponse.dataCallsList) {
+            for (let i = 0; i < queryResponse.dataCallsList.length; i = i + 1) {
+                logger.info("Found a mature data call!!!");
+                em.emit('triggerEvent', queryResponse.dataCallsList[i]);
             }
-            logger.debug('pollForMaturedDataCall: ListDataCallsByCriteria submitTransaction complete ');
-            logger.info("** Transaction completed for GetInsuranceData at : End_Time= " + new Date().toISOString() +  " result= " + JSON.stringify(queryResponse));
-
-	    //iterate over the results and emit events
-	    for (const i = 0; i < queryResponse.length; i = i+1) {
-		em.emit('triggerEvent', queryResponse[i]);
-		// var end = new Date();
-		// end.setHours(0,0,0,0);
-		// var start = new Date();
-		// start.setDate(end.getDate() - 1); // Yesterday!
-		// start.setHours(0,0,0,0);
-		//     if (queryResponse[i].deadline >= start && queryResponse[i].deadline < end) {
-                //       //emit event
-
-		//     }
-	    }
+        }
 
     } catch (error) {
-        logger.error('processTransactionalDataAvailableEvent submit transaction  onerror:' );
+        logger.error('processTransactionalDataAvailableEvent submit transaction  onerror:');
         logger.error(error);
     }
     return true;

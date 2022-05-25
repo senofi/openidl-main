@@ -78,6 +78,7 @@ eventFunction.TransactionalDataAvailable = async function processTransactionalDa
 
             var insuranceData = new Object();
             let id = data.dataCallId + '-' + data.carrierId + '-' + data.dataCallVersion + '-' + data.pageNumber;
+            logger.info("created id is: ", id)
             //check whether record already exist with this '_id'
             //then get '_rev '
             try {

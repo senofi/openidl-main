@@ -292,8 +292,7 @@ func (this *SmartContract) ListMatureDataCalls(stub shim.ChaincodeStubInterface)
 		}
 		// If mature date in last 24 hours, add them to datacalls
 
-		// startDate := startTime.Truncate(24*time.Hour).AddDate(0, 0, -1)
-		startDate := startTime.Truncate(24*time.Hour).AddDate(0, 0, -2)
+		startDate := startTime.Truncate(24*time.Hour).AddDate(0, 0, -1)
 		endDate := startTime.Truncate(24 * time.Hour)
 		if (dataCall.Deadline.After(startDate) && dataCall.Deadline.Before(endDate)) || dataCall.Deadline.Equal(startTime) {
 			dataCalls = append(dataCalls, dataCall)

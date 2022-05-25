@@ -63,18 +63,11 @@ app.listen(port, () => {
 });
 
 async function init() {
-    // cron.schedule('*/4 * * * * *',async () =>  {
-    //     logger.info("cron handler")
-    //     await cronHandler.pollForMaturedDataCall();
-    // });
-    // cron.schedule('*/10 * * * * *', cronHandler.pollForMaturedDataCall);
-    // cron.schedule('*/10 * * * * *', async () => cronHandler.pollForMaturedDataCall());
-    // cron.schedule('*/10 * * * * *', cronHandler.pollForMaturedDataCall);
-
-    // schedule.scheduleJob('*/3 * * * * *', cronHandler.pollForMaturedDataCall);
     cronHandler.init();
-    const job = schedule.scheduleJob('*/15 * * * * *', async () => await cronHandler.pollForMaturedDataCall());
-let dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
+    const pollIntervalString = config.pollIntervalString;
+    logger.info("poll interval config: ", pollIntervalString);
+    const job = schedule.scheduleJob(pollIntervalString, async () => await cronHandler.pollForMaturedDataCall());
+    let dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
     let listenerConfig = {};
     let listernerChannels = new Array();
     for (let index = 0; index < channelConfig.listenerChannels.length; index++) {

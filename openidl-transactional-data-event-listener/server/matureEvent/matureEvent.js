@@ -9,39 +9,36 @@ const MatureEvent = {}
 MatureEvent.handleMatureEvent = async (data) => {
 	logger.info("in handleMatureEvent", data)
 	//creating instance factory object 
-	//(to use s3Bucket pass "s3Bucket" and for cloudant use "cloudant"
 	let factoryObject = new InstanceFactory();
 	let targetObject = await factoryObject.getInstance(config.insuranceDataStorageEnv);
 
-	for (var i = 0; i <data.length; i = i+1 ) {
-		let allInsuranceData = await targetObject.getTransactionalDataByDatacall(data[i].id);
+	logger.info("Gathering all results");
+	let allInsuranceData = await targetObject.getTransactionalDataByDatacall(data.dataCalls.id);
+	logger.info("allinsurance data: ", allInsuranceData);
+	if (allInsuranceData.Contents.length === 0) {
+		logger.error("Mature data call has no consent!")
+	} else {
 		const resultSet = [];
-		for (let j = 0; j < allInsuranceData.length; j = j+1) {
-                       resultSet.push(allInsuranceData[j].records)
+		for (let j = 0; j < allInsuranceData.Contents.length; j = j + 1) {
+			const data = await targetObject.getData(allInsuranceData.Contents[j].Key)
+			logger.info("s3 single result data is: ", data);
+			logger.info("s3 single result data body is: ", JSON.stringify(JSON.parse(data.Body)));
+			resultSet.push(data.Body)
 		}
-		let id = 'result' + '-' + data[i].id;
+		let id = 'result' + '-' + data.dataCalls.id;
 		var resultData = new Object();
 		resultData._id = id;
 		resultData.records = resultSet;
-
 		try {
 			await targetObject.saveTransactionalData(resultData);
+			//test for if result is saved
+			const readResult = await targetObject.getData(id)
+
 		} catch (err) {
 			logger.error('failed to save result data for', resultData._id)
 			logger.error('error during save resultlData onerror ' + err)
 		}
 		logger.debug('result data saved for id', resultData._id)
-
-	}
-	let id = data.dataCallId + '-' + "result";
-	resultData._id = id;
-	resultData.records = data;
-	try {
-	await targetObject.saveTransactionalData(resultData);
-	logger.debug('transactional data saved for id', resultData._id)
-	} catch (err) {
-	logger.error('failed to save transactional data for', resultData._id)
-	logger.error('error during saveTransactionalData onerror ' + err)
 	}
 }
 
