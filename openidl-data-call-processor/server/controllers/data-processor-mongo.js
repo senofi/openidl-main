@@ -85,22 +85,21 @@ class DataProcessorMongo {
                 }
 
             } else {
-                logger.error('No chunkid found after creation of staging extract collection is (Probably extraction pattern not return any documents)' + reduceCollectionName)
-
-                let payload = {
-                    dataCallID: datacallID,
-                    dataCallVersion: dataCallVersion,
-                    carrierID: this.carrierId,
-                    status: "Completed"
+                logger.info("No distinct chunkId is found")
+                let payload = await this.constructJSONnoChunkId(reduceCollectionName, datacallID, dataCallVersion, this.carrierId)
+                logger.info("Payload structure is " + payload)
+                let result = await this.dbManager.insertChunkID(payload)
+                logger.info("Mongodb executed result is " + result)
+                if (result.status == "success") {
+                    logger.info('Successfully inserted chunkIDs into extract_pattern_migration collection -  ' + distinctChunkid)
+                    logger.info("Payload structure is " + JSON.stringify(payload))
+                    logger.debug("  processRecrods dbManager=" + this.dbManager)
+                    await this.PDCS3Buckettransfer(payload, this.dbManager, this.targetChannelTransaction);
+                    logger.info("Completed.......................................")
+                } else {
+                    logger.error('Failed to insert the chunkIDs into extract_pattern_migration collection -  ' + distinctChunkid)
+                    return false;
                 }
-                try {
-                    await this.targetChannelTransaction.submitTransaction('UpdateConsentStatus', JSON.stringify(payload));
-                } catch (ex) {
-                    logger.error("Failed to update blockchain consent status as Completed")
-                    return false
-                }
-
-                return true;
             }
 
         }
@@ -270,6 +269,34 @@ class DataProcessorMongo {
     }
 
 
+    async constructJSONnoChunkId(collectionName, datacallid, versionid, carrierId) {
+        let chunkRecords = {}
+        let chunkDocuments = [];
+        let extractionChunks;
+        try {
+                chunkRecords["chunkid"] = ""
+                chunkRecords["pdcstatus"] = "YettoProcess"
+                chunkRecords["pdccomments"] = ""
+                chunkRecords["s3status"] = "YettoProcess"
+                chunkRecords["s3comments"] = ""
+                chunkDocuments.push(chunkRecords)
+
+            extractionChunks = {
+                "collectionname": collectionName,
+                "datacallid": datacallid,
+                "versionid": versionid,
+                "carrierid": carrierId,
+                "overallStatus": "Inprogress",
+                "totalchunks": chunkDocuments
+            }
+
+            logger.info("extractionChunks is ************************" + JSON.stringify(extractionChunks))
+        } catch (ex) {
+            logger.info("constructJSON is failed " + ex)
+        }
+
+        return extractionChunks
+    }
 
 
     // Fix for Jira - 104   -- Venkat fix
@@ -405,7 +432,7 @@ class DataProcessorMongo {
             let DBManagerFactory = openidlCommonLib.DBManagerFactory;
             let dbManagerFactoryObject = new DBManagerFactory();
             this.dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
-            let DBName = config.insuranceDB + "_" + carrierId;
+            let DBName = config.insuranceDB + "_aais_" + carrierId;
             logger.debug("DBName>>>> " + DBName);
             // Fix for Jira88
             await this.dbManager.getViewData(carrierId, DBName, reduceCollectionName, extractionPattern,

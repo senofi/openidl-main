@@ -496,6 +496,7 @@ class MongoDBManager {
         logger.info("Map Reduce Mongo");
         logger.info("Extraction Pattern " + JSON.stringify(extractionPattern));
         let map = extractionPattern.viewDefinition.map;
+        logger.info("map: ", JSON.stringify(map));
         let reduce = extractionPattern.viewDefinition.reduce;
         logger.info("reduce " + JSON.stringify(reduce));
         let response;
