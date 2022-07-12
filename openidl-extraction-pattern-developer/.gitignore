@@ -7,3 +7,4 @@ COVID_19_BI_ExtractionPattern.json
 covid-output/**
 server/config/**
 test/data/exported-from-mongodb
+config.json
