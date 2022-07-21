@@ -36,6 +36,16 @@ db.insurance_trx_db_5.find({$and: [{'vin': vin}
 db.insurance_trx_db_5.find({$and: [{'vin': vin}
 , {'effectiveDate': { $lte: queryDate}},{"expirationDate": {$gte: queryDate}} ]})
 
+
+db.version() //5.09
+//, https://www.mongodb.com/docs/manual/core/map-reduce/
+
+
+
+
+
+
+
 let vins = ["12345678901234567",
     "12345678901234568",
     "12345678901234569",
@@ -49,6 +59,3 @@ db.version() //5.09
 //mapreduce deprecated in version 5, https://www.mongodb.com/docs/manual/core/map-reduce/
 
 
-//map reduce
-use('openidl-offchain-db');
-db.insurance_trx_db_5.mapreduce(emit (this.vin, this.effectiveDate, this.expirationDate))
