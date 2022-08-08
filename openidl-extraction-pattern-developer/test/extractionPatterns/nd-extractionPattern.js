@@ -5,17 +5,17 @@
  let vins = require("../data/vins.json")
 
  function map() {
-    let queryDate = "2022-06-15"
-    if (this.effectiveDate <= queryDate && this.expirationDate >= queryDate){
+    let queryMonth = "2022-06"
+    if (transactionMonth == queryMonth){
         emit(
-            this.vin, this.expirationDate
+            this.vinHash, this.transactionMonth
         )
     }
 }
 function reduce(key, value) {
     //return {"key": key, "value": value};
 
-    return {"vin": key, "expiration": value[0]}
+    return {"vinHash": key, "expiration": value[0]}
 }
 
 exports.map = map

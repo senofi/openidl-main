@@ -2,26 +2,20 @@
  * Sample file with map and reduce functions used to create an extraction pattern.
  */
 
+ let vins = require("../data/vins.json")
 
  function map() {
-    let vin = this.vin
-
-    var result = {
-        "key": { "vin": vin},
-        "value": {
-            "chunkId": this.chunkId,
-            "effectiveDate": this.effectiveDate,
-            "expirationDate": this.expirationDate
-        }
+    let queryDate = "2022-06-15"
+    if (this.effectiveDate <= queryDate && this.expirationDate >= queryDate){
+        emit(
+            this.vin, this.expirationDate
+        )
     }
-
-    emit(
-        1,2
-    )
-
 }
 function reduce(key, value) {
-    return {"key": key, "value": value};
+    //return {"key": key, "value": value};
+
+    return {"vin": key, "expiration": value[0]}
 }
 
 exports.map = map
