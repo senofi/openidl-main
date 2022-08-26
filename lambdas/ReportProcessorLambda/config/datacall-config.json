@@ -1,0 +1,7 @@
+{
+  "username": "${USER_NAME}",
+  "password": "${PASSWORD}",
+  "loginURL": "${LOGIN_URL}",
+  "getDatacallURL": "${GET_DATACALL_URL}",
+  "updateDatacallURL":"${UPDATE_DATACALL_URL}" 
+}

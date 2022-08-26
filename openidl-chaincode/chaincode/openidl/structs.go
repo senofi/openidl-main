@@ -42,6 +42,7 @@ const (
 	LATEST_VERSION                              = "latest"
 	STATUS_DRAFT                                = "DRAFT"
 	STATUS_ISSUED                               = "ISSUED"
+	STATUS_MATURED                              = "MATURED"
 	STATUS_ABANDONED                            = "ABANDONED"
 	STATUS_CANCELLED                            = "CANCELLED"
 	STATUS_CANDIDATE                            = "CANDIDATE"
@@ -226,6 +227,8 @@ type DataCall struct {
 	Description            string    `json:"description"`
 	Purpose                string    `json:"purpose"`
 	LineOfBusiness         string    `json:"lineOfBusiness"`
+	TransactionMonth       string    `json:"transactionMonth"`
+	ReportURL              string    `json:"reportUrl,omitempty"`
 	Deadline               timestamp `json:"deadline,omitempty"`
 	PremiumFromDate        timestamp `json:"premiumFromDate,omitempty"`
 	PremiumToDate          timestamp `json:"premiumToDate,omitempty"`

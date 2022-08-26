@@ -1,0 +1,18 @@
+{
+  "name": "reportprocessor",
+  "version": "1.0.0",
+  "main": "report.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "aws-sdk": "^2.1199.0",
+    "csvjson": "^5.1.0",
+    "csvtojson": "^2.0.10",
+    "loglevel": "^1.8.0",
+    "mongodb": "^4.9.0"
+  }
+}

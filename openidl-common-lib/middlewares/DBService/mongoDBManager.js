@@ -430,6 +430,21 @@ class MongoDBManager {
         });
     }
 
+    async getFilteredData(DBCollection, transactionMonth) {
+        logger.info('Inside mongodb get', id);
+        return new Promise(function (resolve, reject) {
+            mongodb.collection(DBCollection)
+                .find({ transactionMonth: transactionMonth })
+                .toArray(function (err, results) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(results[0]);
+                    }
+                });
+        });
+    }
+
 
     async getDocument(batchId, DBCollection) {
         logger.info('Inside mongodb get', batchId);
