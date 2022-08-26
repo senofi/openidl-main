@@ -292,8 +292,12 @@ func (this *SmartContract) ListMatureDataCalls(stub shim.ChaincodeStubInterface)
 		}
 		// If mature date in last 24 hours, add them to datacalls
 
-		startDate := startTime.Truncate(24*time.Hour).AddDate(0, 0, -1)
-		endDate := startTime.Truncate(24 * time.Hour)
+		// startDate := startTime.Truncate(24*time.Hour).AddDate(0, 0, -1)
+		// endDate := startTime.Truncate(24 * time.Hour)
+		//testcode start
+		startDate := startTime.Truncate(24*time.Hour).AddDate(0, 0, -2)
+		endDate := startTime.Truncate(24*time.Hour).AddDate(0, 0, 1)
+		// testcode end
 		if (dataCall.Deadline.After(startDate) && dataCall.Deadline.Before(endDate)) || dataCall.Deadline.Equal(startTime) {
 			dataCalls = append(dataCalls, dataCall)
 		}
@@ -655,6 +659,8 @@ func (this *SmartContract) UpdateDataCall(stub shim.ChaincodeStubInterface, args
 			prevDataCall.IsLocked = true
 		}
 		prevDataCall.ForumURL = dataCall.ForumURL
+		prevDataCall.TransactionMonth = dataCall.TransactionMonth
+		prevDataCall.ReportURL = dataCall.ReportURL
 
 	} else if prevDataCall.Status == STATUS_ISSUED {
 		if prevDataCall.ProposedDeliveryDate != dataCall.ProposedDeliveryDate {
@@ -666,6 +672,8 @@ func (this *SmartContract) UpdateDataCall(stub shim.ChaincodeStubInterface, args
 		}
 		prevDataCall.ProposedDeliveryDate = dataCall.ProposedDeliveryDate
 		prevDataCall.ForumURL = dataCall.ForumURL
+		prevDataCall.TransactionMonth = dataCall.TransactionMonth
+		prevDataCall.ReportURL = dataCall.ReportURL
 		prevDataCall.ExtractionPatternID = dataCall.ExtractionPatternID
 		prevDataCall.ExtractionPatternTs = dataCall.ExtractionPatternTs
 		prevDataCall.IsLocked = true

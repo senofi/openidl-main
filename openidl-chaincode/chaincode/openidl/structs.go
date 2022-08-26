@@ -31,17 +31,18 @@ const (
 	INSURANCE_TRANSACTIONAL_RECORD_PREFIX       = "transactional-data-"
 	INSURANCE_HASH_PREFIX                       = "hash-evidence-"
 	DATA_CALL_PREFIX                            = "DataCall_Key_"
-	DATA_CALLCOUNT_PREFIX                            = "DataCallCount_Key_"
+	DATA_CALLCOUNT_PREFIX                       = "DataCallCount_Key_"
 	CARRIER_PREFIX                              = "Carrier_Key_"
 	CONSENT_PREFIX                              = "Consent_Key_"
 	CONSENT_DOCUMENT_TYPE                       = "Consent_Document_"
 	REPORT_PREFIX                               = "Report_Key_"
 	DOCUMENT_TYPE                               = "DataCall_Document"
-	DOCUMENTCOUNT_TYPE                               = "DataCall_DocumentCount"
+	DOCUMENTCOUNT_TYPE                          = "DataCall_DocumentCount"
 	REPORT_DOCUMENT_TYPE                        = "Report_Document_"
 	LATEST_VERSION                              = "latest"
 	STATUS_DRAFT                                = "DRAFT"
 	STATUS_ISSUED                               = "ISSUED"
+	STATUS_MATURED                              = "MATURED"
 	STATUS_ABANDONED                            = "ABANDONED"
 	STATUS_CANCELLED                            = "CANCELLED"
 	STATUS_CANDIDATE                            = "CANDIDATE"
@@ -63,7 +64,7 @@ const (
 	DEFAULT_CHANNEL        = "defaultchannel"
 	DEFAULT_CHAINCODE_NAME = "openidl-cc-default"
 	// DEFAULT_CHAINCODE_NAME = "openidl-chaincode/defaultchannel"
-	LOGGING_LEVEL          = "LOGGING_LEVEL"
+	LOGGING_LEVEL = "LOGGING_LEVEL"
 )
 
 //channel and chaincode map for cross-channel query
@@ -107,7 +108,7 @@ type InsuranceData struct {
 type InsuranceDataHash struct {
 	BatchId   string    `json:"batchId"`
 	CarrierId string    `json:"carrierId"`
-	ChunkId	  string    `json:"chunkId"`
+	ChunkId   string    `json:"chunkId"`
 	Hash      string    `json:"hash"`
 	CreatedTs timestamp `json:"createdTs"`
 }
@@ -176,10 +177,10 @@ type ExtPattern struct {
 		Map    string `json:"map"`
 		Reduce string `json:"reduce"`
 	} `json:"viewDefinition"`
-	PremiumFromDate      string   `json:"premiumFromdate"`
-    LossFromDate         string   `json:"lossFromdate"`
-    Jurisdiction         string   `json:"jurisdication"`
-    Insurance        string   `json:"insurance"`
+	PremiumFromDate  string    `json:"premiumFromdate"`
+	LossFromDate     string    `json:"lossFromdate"`
+	Jurisdiction     string    `json:"jurisdication"`
+	Insurance        string    `json:"insurance"`
 	DbType           string    `json:"dbType"`
 	Version          string    `json:"version"`
 	IsActive         bool      `json:"isActive"`
@@ -208,7 +209,6 @@ type DataCallExtended struct {
 	NoOfLikes    int      `json:"NoOfLikes"`
 }
 
-
 // Carrier object
 type Carrier struct {
 	ID   string `json:"id"`
@@ -227,6 +227,8 @@ type DataCall struct {
 	Description            string    `json:"description"`
 	Purpose                string    `json:"purpose"`
 	LineOfBusiness         string    `json:"lineOfBusiness"`
+	TransactionMonth       string    `json:"transactionMonth"`
+	ReportURL              string    `json:"reportUrl,omitempty"`
 	Deadline               timestamp `json:"deadline,omitempty"`
 	PremiumFromDate        timestamp `json:"premiumFromDate,omitempty"`
 	PremiumToDate          timestamp `json:"premiumToDate,omitempty"`
@@ -251,11 +253,11 @@ type DataCall struct {
 
 // DataCallCount object
 type DataCallCount struct {
-	ID                     string    `json:"id"`
-	Version                string    `json:"version"`
-	ISSUED                 int		 `json:"issued"`
-	DRAFT                  int		 `json:"draft"`
-	CANCELLED              int		 `json:"cancelled"`
+	ID        string `json:"id"`
+	Version   string `json:"version"`
+	ISSUED    int    `json:"issued"`
+	DRAFT     int    `json:"draft"`
+	CANCELLED int    `json:"cancelled"`
 }
 
 // SearchCriteria Struct for ListDataCallsByCriteria
@@ -288,8 +290,8 @@ type GetDataCallCount struct {
 }
 
 type ToggleDataCallCount struct {
-	OriginalStatus      string `json:"originalStatus"`
-	NewStatus 			string `json:"newStatus"`
+	OriginalStatus string `json:"originalStatus"`
+	NewStatus      string `json:"newStatus"`
 }
 
 //Struct for GetReportById
@@ -373,14 +375,14 @@ type Consent struct {
 	//CarrierName     string `json:"carrierName"`
 	CreatedTs timestamp `json:"createdTs"`
 	CreatedBy string    `json:"createdBy"`
-	Status   string `json:"status"`
+	Status    string    `json:"status"`
 }
 
 type UpdateConsentStatus struct {
 	DataCallID      string `json:"dataCallID"`
 	DataCallVersion string `json:"dataCallVersion"`
-	CarrierID		string `json:"carrierID"`
-	Status  		string `json:"status"`
+	CarrierID       string `json:"carrierID"`
+	Status          string `json:"status"`
 }
 
 type ConsentCountEntry struct {
