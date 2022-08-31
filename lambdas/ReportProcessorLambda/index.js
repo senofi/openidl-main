@@ -1,11 +1,15 @@
-console.log('Loading function');
-
 const aws = require('aws-sdk');
+const config = require('config');
+const logger = require('loglevel');
+logger.setLevel(config.get('loglevel'));
+const s3Config = require('./config/s3-bucket-config.json');
 const ReportProcessor = require('./reportProcessor');
 const getDataCall = require('./dataCallCRUD').getDatacall;
 const updateDataCall = require('./dataCallCRUD').updateDatacall;
+const getReport = require('./datacallCRUD').getReport;
+const postReport = require('./datacallCRUD').postReport;
 
-const s3 = new aws.S3({ apiVersion: '2006-03-01' });
+const s3 = new aws.S3({ apiVersion: config.get(s3ApiVersion) });
 
 
 exports.handler = async (event, context) => {
@@ -19,41 +23,35 @@ exports.handler = async (event, context) => {
         Key: key,
     };
     try {
-        // 1. Get the datacall id from key name
-        // 2. Read the data call and get transaction month, to be used in filtering DMV data
-        
-        console.log("bucket name: ", bucket)
-        console.log("key name: ", key)
+        logger.debug("bucket name: ", bucket)
+        logger.debug("key name: ", key)
         const datacallId = key.substring(key.indexOf("-")+1, key.length);
-        console.log("datacall Id: ", datacallId)
         const getDatacallResult = await getDataCall(datacallId);
         const datacalls = JSON.parse(getDatacallResult.result);
         const datacall = datacalls[0];
-        console.log('datacall found:  ', typeof datacall, ", " , JSON.stringify(datacall, null, 2));
         const transactionMonth = datacall.transactionMonth;
-        console.log("transactionMonth: ", transactionMonth)
+        logger.info("Datacall fetched from Blockchain with id: ", datacallId)
         const rp = new ReportProcessor;
         const resultData = await rp.readResult(key);
-        console.log("---------readResult Done, ", JSON.stringify(resultData))
         const dmvData = await rp.readDMVData(transactionMonth);
-        console.log("---------readDMVData Done, ", JSON.stringify(dmvData))
+        logger.info("Data reading Done from DMV data and result")
         const reportContent = await rp.createReportContent(resultData, JSON.parse(JSON.stringify (dmvData)));
-        console.log("---------createReportContent Done ", JSON.stringify(reportContent))
         await rp.publishCSV(reportContent, datacallId);
-        console.log("---------publishCSV Done")
         await rp.getCSV("report-" + datacallId + ".csv");
-        console.log("---------getCSV Done")
-        datacall.reportUrl = s3Config.urlPrefix + s3Config.bucketName + "/report-" + datacallId + ".csv";
-        console.log("report url is: ", datacall.reportUrl)
-        await updateDataCall(JSON.stringify(datacall));
-        console.log("---------updateDtacall done, ")
-        const getDatacallResult1 = await getDataCall(datacallId);
-        console.log("---------getDatacall done, ", getDatacallResult1)
+        const reportUrl = "" + s3Config.urlPrefix + s3Config.bucketName + "/report-" + datacallId + ".csv";
+        const report = {
+            "datacallID": datacallId,
+            "dataCallVersion": datacall.version,
+            "hash": "examplehash123",
+            "url": reportUrl,
+            "createdTs": new Date().toISOString(),
+            "createdBy": datacallConfig.username
+            }; 
+        await postReport(JSON.stringify(report));
+        logger.info("Reort published in CSV and Blockchain updated")
         return ;
     } catch (err) {
-        console.log(err);
-        const message = `Error!! getting object ${key} from bucket ${bucket}. Make sure they exist and your bucket is in the same region as this function.`;
-        console.log(message);
-        throw new Error(message);
+        logger.error("Error in report processor!", err)
+        throw new Error(err);
     }
 };
