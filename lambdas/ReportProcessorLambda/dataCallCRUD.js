@@ -1,15 +1,14 @@
 const fetch = require('node-fetch');
+const defaultconfig = require('config');
+const  logger  = require('loglevel');
+logger.setLevel(defaultconfig.get('loglevel'));
 const fs = require('fs')
 const config = require('./config/datacall-config.json')
 
 
 async function login(baseURL, username, password) {
-    console.log("Inside login")
-    console.log("baseURL: ", baseURL)
-    console.log("user: ", username)
-    console.log("pass: ", password)
+    logger.debug("Inside login")
     try {
-        // console.log("About to send fetch from " + fullUrl)
         let response = await fetch(baseURL, {
             method: "POST",
             headers: {
@@ -18,25 +17,21 @@ async function login(baseURL, username, password) {
             },
             body: JSON.stringify({ "username": username, "password": password }),
         });
-        // console.log("Back from fetch")
         if (response.status !== 200) {
-            console.log(response)
-            if (response.status !== 504) {
-                process.exit(0)
-            }
+            throw new Error("Error response from Server: ", response.status)
         }
         result = await response.json()
         let userToken = result.result.userToken
         return userToken
     } catch (error) {
-        console.log("Error with login " + error);
+        logger.error("Error with login: " + error);
         return;
     }
 }
 async function callAPI(apiUrl, method, payload, token) {
     try {
-        console.log("Calling API with URL: ", apiUrl)
-				const apiFields = {
+        logger.debug("Calling API with URL: ", apiUrl)
+        const apiFields = {
             method: method,
             headers: {
                 Accept: "application/json",
@@ -44,39 +39,62 @@ async function callAPI(apiUrl, method, payload, token) {
                 authorization: "Bearer " + token,
             }
         }
-				if (method != "GET" && payload != "") {
-					apiFields.body = payload;
-				}
+        if (method != "GET" && payload != "") {
+            apiFields.body = payload;
+        }
+
         let response = await fetch(apiUrl, apiFields);
-				const data = await response.json();
+        const data = await response.json();
         if (response.status !== 200) {
-					console.log("Error! ", response.status)
-						return data;
-					}
-				return data
+            throw new Error("Error response from Server: " + JSON.stringify(data.message))
+        }
+        return data
     } catch (error) {
-        console.log("Error  " + error);
-        return;
+        logger.error("Error in calling API  " + error);
     }
 }
 
 module.exports.getDatacall = async function (datacallId) {
-    console.log("Inside getDatacall")
-    let URL = config.loginURL 
-    console.log(`Logging in`)
+    logger.debug("Inside getDatacall")
+    let URL = config.loginURL
     let userToken = await login(URL, config.username, config.password)
-		payload = "";
-		URL = config.getDatacallURL + datacallId
+    payload = "";
+    URL = config.getDatacallURL + datacallId
     const datacall = await callAPI(URL, "GET", payload, userToken);
-		return datacall;
+    return datacall;
 }
 
 module.exports.updateDatacall = async function (datacall) {
-    console.log("Inside updateDatacall")
-    let URL = config.loginURL 
-    console.log(`Logging in`)
+    logger.debug("Inside updateDatacall")
+    let URL = config.loginURL
     let userToken = await login(URL, config.username, config.password)
-		payload = datacall;
-		URL = config.updateDatacallURL
+    payload = datacall;
+    URL = config.updateDatacallURL
     await callAPI(URL, "PUT", payload, userToken)
+}
+
+
+
+module.exports.postReport = async function (report) {
+    logger.debug("Inside addreport")
+    logger.info("------payload: ", JSON.stringify(report, 0, 2))
+    let URL = config.loginURL
+    let userToken = await login(URL, config.username, config.password)
+    payload = report;
+    URL = config.postReportURL
+    await callAPI(URL, "POST", payload, userToken)
+}
+
+module.exports.getReport = async function (datacallId, version) {
+    logger.debug("Inside getReport")
+    let URL = config.loginURL
+    let userToken = await login(URL, config.username, config.password)
+    payload = "";
+    URL = config.getReportURL 
+        + new URLSearchParams({
+            dataCallId: datacallId,
+            dataCallVersion: version
+            })
+    const datacall = await callAPI(URL, "GET", payload, userToken);
+    return datacall;
 }
