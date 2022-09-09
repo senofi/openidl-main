@@ -40,7 +40,7 @@ logger.level = config.logLevel;
  * Add routes
  */
 router.use('/health', authHandler.validateToken, health);
-router.use('/ping', authHandler.validateToken, ping);
+router.use('/ping', ping);
 router.use('/insurance-data', authHandler.validateToken, statAgentController.insuranceData);
 router.use('/ins-data-hash', authHandler.validateToken, statAgentController.saveInsuranceDataHash);
 router.use('/ins-data-hds', authHandler.validateToken, statAgentController.saveInsuranceDataHDS);
@@ -54,5 +54,6 @@ router.use('/sendemail', authHandler.validateToken, emailController.sendEmail);
  * hash value into blockchain
  */
 router.use('/load-insurance-data', authHandler.validateToken, statAgentController.loadInsuranceData);
+router.route('/get-insurance-data-by-criteria').get( authHandler.validateToken, statAgentController.getInsuranceData);
 
 module.exports = router;
