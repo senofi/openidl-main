@@ -83,6 +83,37 @@ paths:
       security:
       - bearerAuth: []
 
+  "/openidl/api/get-insurance-data-by-criteria":
+    get:
+      tags:
+        - Stores Insurance data into HDS and  Hash value into Blockchain
+      description: Stores Insurance data into HDS, the respective stored data into Blockchain as hash.
+      summary: Stores Insurance data into HDS, the respective stored data into Blockchain as hash.
+      parameters:
+        - name: organizationId
+          in: query
+          description: Organization Id
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: transactionMonth
+          in: query
+          description: Transaction Month
+          required: true
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Read insurance data successfully'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/postResponse'
+
+        required: true
+
   "/openidl/api/sendemail":
     post:
       tags:
