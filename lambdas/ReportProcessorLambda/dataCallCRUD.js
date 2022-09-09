@@ -77,7 +77,6 @@ module.exports.updateDatacall = async function (datacall) {
 
 module.exports.postReport = async function (report) {
     logger.debug("Inside addreport")
-    logger.info("------payload: ", JSON.stringify(report, 0, 2))
     let URL = config.loginURL
     let userToken = await login(URL, config.username, config.password)
     payload = report;
@@ -97,4 +96,18 @@ module.exports.getReport = async function (datacallId, version) {
             })
     const datacall = await callAPI(URL, "GET", payload, userToken);
     return datacall;
+}
+
+module.exports.getDMVData = async function (organizationId, transactionMonth) {
+    logger.debug("Inside getDMVData")
+    let URL = config.loginURL
+    let userToken = await login(URL, config.username, config.password)
+    payload = "";
+    URL = config.getDMVDataURL 
+        + new URLSearchParams({
+            organizationId: organizationId,
+            transactionMonth: transactionMonth
+            })
+    const dmvData = await callAPI(URL, "GET", payload, userToken);
+    return dmvData;
 }

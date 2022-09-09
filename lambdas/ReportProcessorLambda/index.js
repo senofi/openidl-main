@@ -8,6 +8,7 @@ const getDataCall = require('./dataCallCRUD').getDatacall;
 const updateDataCall = require('./dataCallCRUD').updateDatacall;
 const getReport = require('./datacallCRUD').getReport;
 const postReport = require('./datacallCRUD').postReport;
+const getDMVData = require('./datacallCRUD').getDMVData;
 
 const s3 = new aws.S3({ apiVersion: config.get(s3ApiVersion) });
 
@@ -26,15 +27,16 @@ exports.handler = async (event, context) => {
         logger.debug("bucket name: ", bucket)
         logger.debug("key name: ", key)
         const datacallId = key.substring(key.indexOf("-")+1, key.length);
+        logger.debug("Datacall Id: ", datacallId);
         const getDatacallResult = await getDataCall(datacallId);
         const datacalls = JSON.parse(getDatacallResult.result);
         const datacall = datacalls[0];
         const transactionMonth = datacall.transactionMonth;
-        logger.info("Datacall fetched from Blockchain with id: ", datacallId)
+        logger.debug("Datacall fetched from Blockchain with id: ", datacallId)
         const rp = new ReportProcessor;
         const resultData = await rp.readResult(key);
-        const dmvData = await rp.readDMVData(transactionMonth);
-        logger.info("Data reading Done from DMV data and result")
+        const dmvData = await getDMVData(config.get("DMVOrganizationId"), transactionMonth);
+        logger.debug("Data reading Done from DMV data and result")
         const reportContent = await rp.createReportContent(resultData, JSON.parse(JSON.stringify (dmvData)));
         await rp.publishCSV(reportContent, datacallId);
         await rp.getCSV("report-" + datacallId + ".csv");
@@ -48,7 +50,7 @@ exports.handler = async (event, context) => {
             "createdBy": datacallConfig.username
             }; 
         await postReport(JSON.stringify(report));
-        logger.info("Reort published in CSV and Blockchain updated")
+        logger.info("Report published in CSV and Blockchain updated")
         return ;
     } catch (err) {
         logger.error("Error in report processor!", err)

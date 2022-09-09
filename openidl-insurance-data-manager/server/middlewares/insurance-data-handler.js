@@ -76,12 +76,11 @@ insuranceDataHandler.getFilteredDocuments = async (query) => {
   try {
   let connectionManager = await insuranceDataHandler.dbConnection();
 
+  const DMVCollectionName = "" + insuranceManagerDB + "_" + query.organizationId
+  logger.debug("DMV Collection name: ", DMVCollectionName); 
   if (connectionManager != null) {
-    if (!config.DMVCollectionName) {
-      throw new Error("Cannot find DMV collection name")
-    }
     mongoExecResult = await connectionManager.getFilteredDocuments( 
-      config.DMVCollectionName,
+      DMVCollectionName,
       query);
     return mongoExecResult;
   } else {
