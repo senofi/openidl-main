@@ -228,7 +228,6 @@ type DataCall struct {
 	Purpose                string    `json:"purpose"`
 	LineOfBusiness         string    `json:"lineOfBusiness"`
 	TransactionMonth       string    `json:"transactionMonth"`
-	ReportURL              string    `json:"reportUrl,omitempty"`
 	Deadline               timestamp `json:"deadline,omitempty"`
 	PremiumFromDate        timestamp `json:"premiumFromDate,omitempty"`
 	PremiumToDate          timestamp `json:"premiumToDate,omitempty"`
