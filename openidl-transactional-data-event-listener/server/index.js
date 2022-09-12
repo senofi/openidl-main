@@ -18,7 +18,11 @@
 const express = require('express');
 const log4js = require('log4js');
 const config = require('config');
+const cron = require('node-cron');
+const schedule = require('node-schedule');
+
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
+const cronHandler = require('./cron/cron-handler');
 openidlCommonLib.EnvConfig.init();
 
 const EventListener = openidlCommonLib.EventListener;
@@ -59,6 +63,11 @@ app.listen(port, () => {
 });
 
 async function init() {
+    cronHandler.init();
+    const pollIntervalString = config.pollIntervalString;
+    logger.info("poll interval config: ", pollIntervalString);
+    const job = schedule.scheduleJob(pollIntervalString, async () => await cronHandler.pollForMaturedDataCall());
+    logger.info("job scheduling done  ", job);
     let dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
     let listenerConfig = {};
     let listernerChannels = new Array();
