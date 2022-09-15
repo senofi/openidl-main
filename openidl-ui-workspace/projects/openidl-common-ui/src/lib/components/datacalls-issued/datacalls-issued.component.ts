@@ -791,10 +791,10 @@ export class DatacallsIssuedComponent implements OnInit {
 		if (!/^(http:|https:)/i.test(extURL)) {
 			extURL = 'http://' + extURL;
 		}
-		window.open(
-			extURL,
-			'_blank' // <- This is what makes it open in a new window.
-		);
+		let newWindow = window.open();
+		// This will protect the app from being abused from 'reverse tabnabbing'.
+		newWindow.opener = null;
+		newWindow.location = extURL;
 	}
 
 	getExtractionPattern() {
