@@ -249,6 +249,127 @@ func (this *SmartContract) ListDataCallsByCriteria(stub shim.ChaincodeStubInterf
 
 }
 
+// ListMatureDataCalls retrives all data calls that has matured in last 24 hours.
+// using the specified criteria. If version = all, it returns all data calls with their versions as individual items in list.
+// Success {byte[]}: byte[]
+// Error   {json}:{"message":"....","errorCode":"Sys_Err/Bus_Err"}
+func (this *SmartContract) ListMatureDataCalls(stub shim.ChaincodeStubInterface) pb.Response {
+	logger.Debug("ListMatureDataCalls: enter")
+	defer logger.Debug("ListMatureDataCalls: exit")
+	status := STATUS_ISSUED
+	var queryStr string
+	queryStr = fmt.Sprintf("{\"selector\":{\"_id\":{\"$regex\":\"%s\"},\"status\":\"%s\"},\"use_index\":[\"deadline\", \"deadlineIndex\"],\"sort\":[{\"deadline\": \"desc\"}]}", DATA_CALL_PREFIX, status)
+
+	var dataCalls []DataCall
+	startTime := time.Now()
+	resultsIterator, err := stub.GetQueryResult(queryStr)
+	elapsedTime := time.Since(startTime)
+	logger.Info("Time consumed to get Data Calls", elapsedTime)
+	defer resultsIterator.Close()
+	if err != nil {
+		logger.Error("Failed to get state for all the data calls")
+		return shim.Error("Failed to get state for all the data calls")
+	}
+
+	if !resultsIterator.HasNext() {
+		dataCallsAsByte, _ := json.Marshal(dataCalls)
+		logger.Debug("ListDataCallsByCriteria: dataCallsAsByte", dataCallsAsByte)
+		//return shim.Error(errors.New("ListDataCallsByCriteria :DataCall not found ").Error())
+		return shim.Success(dataCallsAsByte)
+	}
+
+	for resultsIterator.HasNext() {
+		dataCallAsBytes, err := resultsIterator.Next()
+		if err != nil {
+			logger.Error("Failed to iterate data call")
+			return shim.Error("Failed to iterate data call")
+		}
+
+		var dataCall DataCall
+		err = json.Unmarshal([]byte(dataCallAsBytes.GetValue()), &dataCall)
+		if err != nil {
+			return shim.Error("Failed to unmarshal data call: " + err.Error())
+		}
+		// If mature date in last 24 hours, add them to datacalls
+
+		startDate := startTime.Truncate(24*time.Hour).AddDate(0, 0, -1)
+		endDate := startTime.Truncate(24 * time.Hour)
+		if (dataCall.Deadline.After(startDate) && dataCall.Deadline.Before(endDate)) || dataCall.Deadline.Equal(startTime) {
+			dataCalls = append(dataCalls, dataCall)
+		}
+	}
+
+	var dataCallList DataCallList
+
+	//getting the count
+	getDataCallCount := GetDataCallCount{"123456", "1"}
+	datacallIssueLogAsBytes, _ := json.Marshal(getDataCallCount)
+	dataCallCountAsBytes := this.GetDataCallCount(stub, string(datacallIssueLogAsBytes))
+	var dataCallCount DataCallCount
+	err = json.Unmarshal(dataCallCountAsBytes.Payload, &dataCallCount)
+	logger.Info("The retrieved data is ", dataCallCount)
+
+	if status == STATUS_ISSUED {
+		dataCallList.TotalNoOfRecords = dataCallCount.ISSUED
+	} else if status == STATUS_DRAFT {
+		dataCallList.TotalNoOfRecords = dataCallCount.DRAFT
+	} else if status == STATUS_CANCELLED {
+		dataCallList.TotalNoOfRecords = dataCallCount.CANCELLED
+	}
+
+	var IdAndVersionMap map[string]string
+	IdAndVersionMap = make(map[string]string)
+	var dataCallIDs []string
+	var dataCallVersions []string
+	for dataCallIndex := 0; dataCallIndex < len(dataCalls); dataCallIndex++ {
+		if dataCallIndex == 0 {
+			IdAndVersionMap[dataCalls[dataCallIndex].ID] = dataCalls[dataCallIndex].Version
+			dataCallIDs = append(dataCallIDs, `"`+dataCalls[dataCallIndex].ID+`"`)
+			dataCallVersions = append(dataCallVersions, `"`+dataCalls[dataCallIndex].Version+`"`)
+		} else {
+			IdAndVersionMap[dataCalls[dataCallIndex].ID] = dataCalls[dataCallIndex].Version
+			dataCallIDs = append(dataCallIDs, `,`+`"`+dataCalls[dataCallIndex].ID+`"`)
+			dataCallVersions = append(dataCallVersions, `,`+`"`+dataCalls[dataCallIndex].Version+`"`)
+		}
+	}
+
+	startTimeForAll := time.Now()
+	/*
+		//get ConsentCount map
+		startTimeForConsent := time.Now()
+		consentCounts := GetConsentsCount(stub, dataCallIDs)
+		elapsedTimeForConsent := time.Since(startTimeForConsent)
+		logger.Info("Time consumed for consent", elapsedTimeForConsent)
+
+		startTimeForLike := time.Now()
+		likeCounts := GetLikesCount(stub, dataCallIDs, IdAndVersionMap)
+		elapsedTimeForLike := time.Since(startTimeForLike)
+		logger.Info("Time consumed for Like", elapsedTimeForLike)
+	*/
+
+	startTimeForReport := time.Now()
+	latestReports := GetLatestaReport(stub, dataCallIDs, dataCallVersions)
+	elapsedTimeForReport := time.Since(startTimeForReport)
+	logger.Info("Time consumed for Report", elapsedTimeForReport)
+
+	elapsedTimeForAll := time.Since(startTimeForAll)
+	logger.Info("Time consumed for all", elapsedTimeForAll)
+	logger.Info("Final ===========", elapsedTime)
+	for dataCallIndex := 0; dataCallIndex < len(dataCalls); dataCallIndex++ {
+		var dataCallExtended DataCallExtended
+		dataCallExtended.DataCall = dataCalls[dataCallIndex]
+		dataCallExtended.Reports = append(dataCallExtended.Reports, latestReports[dataCalls[dataCallIndex].ID])
+		//dataCallExtended.NoOfConsents = consentCounts[paginatedDataCalls[dataCallIndex].ID]
+		//dataCallExtended.NoOfLikes = likeCounts[paginatedDataCalls[dataCallIndex].ID]
+		dataCallList.DataCalls = append(dataCallList.DataCalls, dataCallExtended)
+
+	}
+
+	dataCallsAsByte, _ := json.Marshal(dataCallList)
+	return shim.Success(dataCallsAsByte)
+
+}
+
 //helper function for pagination
 func paginate(dataCall []DataCall, startIndex int, pageSize int) []DataCall {
 	if startIndex == 0 {
