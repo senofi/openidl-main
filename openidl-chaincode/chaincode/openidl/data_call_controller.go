@@ -253,9 +253,21 @@ func (this *SmartContract) ListDataCallsByCriteria(stub shim.ChaincodeStubInterf
 // using the specified criteria. If version = all, it returns all data calls with their versions as individual items in list.
 // Success {byte[]}: byte[]
 // Error   {json}:{"message":"....","errorCode":"Sys_Err/Bus_Err"}
-func (this *SmartContract) ListMatureDataCalls(stub shim.ChaincodeStubInterface) pb.Response {
+func (this *SmartContract) ListMatureDataCalls(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("ListMatureDataCalls: enter")
 	defer logger.Debug("ListMatureDataCalls: exit")
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments!!")
+	}
+	var deadlineWindow DeadlineWindow
+	err := json.Unmarshal([]byte(args), &deadlineWindow)
+	if err != nil {
+		logger.Error("ListMatureDataCalls: Error during json.Unmarshal: ", err)
+		return shim.Error(errors.New("ListMatureDataCalls: Error during json.Unmarshal").Error())
+	}
+	logger.Debug("ListDataCallsByCriteria: Unmarshalled object ", deadlineWindow)
+	startDate := deadlineWindow.StartDate
+	endDate := deadlineWindow.EndTime
 	status := STATUS_ISSUED
 	var queryStr string
 	queryStr = fmt.Sprintf("{\"selector\":{\"_id\":{\"$regex\":\"%s\"},\"status\":\"%s\"},\"use_index\":[\"deadline\", \"deadlineIndex\"],\"sort\":[{\"deadline\": \"desc\"}]}", DATA_CALL_PREFIX, status)
@@ -292,8 +304,8 @@ func (this *SmartContract) ListMatureDataCalls(stub shim.ChaincodeStubInterface)
 		}
 		// If mature date in last 24 hours, add them to datacalls
 
-		startDate := startTime.Truncate(24*time.Hour).AddDate(0, 0, -1)
-		endDate := startTime.Truncate(24 * time.Hour)
+		// startDate := startTime.Truncate(24*time.Hour).AddDate(0, 0, -1)
+		// endDate := startTime.Truncate(24 * time.Hour)
 		if (dataCall.Deadline.After(startDate) && dataCall.Deadline.Before(endDate)) || dataCall.Deadline.Equal(startTime) {
 			dataCalls = append(dataCalls, dataCall)
 		}

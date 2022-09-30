@@ -1,11 +1,10 @@
 'use strict';
 const log4js = require('log4js');
-const config = require('config');
 const logger = log4js.getLogger('cron');
 const { EventEmitter } = require("events");
 const em = new EventEmitter();
 const matureEventHandler = require('../matureEvent/matureEvent');
-logger.level = config.logLevel;
+const config = require("../config/default.json");
 
 const targetChannelConfig = require('../config/target-channel-config');
 const kvsConfig = require('../config/local-kvs-config.json');
@@ -30,7 +29,7 @@ CronHandler.init = () => {
         matureEventHandler.handleMatureEvent(data);
     });
 }
-CronHandler.pollForMaturedDataCall = async () => {
+CronHandler.pollForMaturedDataCall = async (deadlineWindow) => {
     logger.info("Inside Cron Handler");
     // em.emit('triggerEvent', "testdata");
     logger.info('cron handler function entry');
@@ -40,8 +39,24 @@ CronHandler.pollForMaturedDataCall = async () => {
         let defaultChannelTransaction = ChannelTransactionMap.get("defaultchannel");
 
         logger.info("** Transaction started for ListDataCallsByCriteria at : Start_Time=" + new Date().toISOString());
+        
+        if (!deadlineWindow || !deadlineWindow.startDate || !deadlineWindow.endDate)  {
+            logger.debug("Constructing Dweadline window...")
+            const startTime = new Date()
+            const endTime = new Date()
+            logger.info("--- pollintervalindays: ", config.pollIntervalInDays);
+            startTime.setDate(startTime.getDate() - parseInt(config.pollIntervalInDays));
+            startTime.setHours(0, 0, 0, 0)
+            endTime.setHours(0, 0, 0, 0)
+
+            deadlineWindow = {};
+            deadlineWindow.startDate = startTime.toISOString();
+            deadlineWindow.endDate = endTime.toISOString();
+        }
+        logger.info("Deadline window is ", JSON.stringify(deadlineWindow, null, 2))
         try {
-            queryResponse = await defaultChannelTransaction.executeTransaction('ListMatureDataCalls');
+            queryResponse = await defaultChannelTransaction.executeTransaction(
+                'ListMatureDataCalls', JSON.stringify(deadlineWindow));
             queryResponse = JSON.parse(queryResponse.toString('utf8'))
         } catch (err) {
             logger.error('failed to get mature datacalls ')

@@ -20,6 +20,9 @@ const log4js = require('log4js');
 const config = require('config');
 const cron = require('node-cron');
 const schedule = require('node-schedule');
+var bodyParser = require('body-parser')
+var jsonParser = bodyParser.json()
+
 
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
 const cronHandler = require('./cron/cron-handler');
@@ -51,6 +54,15 @@ app.use(function (req, res, next) {
 app.get('/health', (req, res) => {
     res.json({
         'message': 'Data call trasactional event listener is alive.'
+    });
+})
+
+app.post('/start-consent-processing', jsonParser, async (req, res) => {
+    logger.info("Starting Manual Consent Processing")
+    logger.info("request.body: ", req.body)
+    await cronHandler.pollForMaturedDataCall(req.body)
+    res.json({
+        'message': 'Done'
     });
 })
 
