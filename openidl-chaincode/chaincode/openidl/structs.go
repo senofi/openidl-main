@@ -268,8 +268,8 @@ type SearchCriteria struct {
 
 // DeadlineWindow Struct for ListMatureDataCall
 type DeadlineWindow struct {
-	StartTime timestamp `json:"startTime"`
-	EndTime   timestamp `json:"endTime"`
+	StartTime time.Time `json:"startTime"`
+	EndTime   time.Time `json:"endTime"`
 }
 
 // SearchCriteria Struct for GetDataCallVersionsById

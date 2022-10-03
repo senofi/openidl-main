@@ -266,7 +266,7 @@ func (this *SmartContract) ListMatureDataCalls(stub shim.ChaincodeStubInterface,
 		return shim.Error(errors.New("ListMatureDataCalls: Error during json.Unmarshal").Error())
 	}
 	logger.Debug("ListDataCallsByCriteria: Unmarshalled object ", deadlineWindow)
-	startDate := deadlineWindow.StartDate
+	startDate := deadlineWindow.StartTime
 	endDate := deadlineWindow.EndTime
 	status := STATUS_ISSUED
 	var queryStr string
