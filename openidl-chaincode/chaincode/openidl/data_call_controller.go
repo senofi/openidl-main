@@ -256,8 +256,10 @@ func (this *SmartContract) ListDataCallsByCriteria(stub shim.ChaincodeStubInterf
 func (this *SmartContract) ListMatureDataCalls(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("ListMatureDataCalls: enter")
 	defer logger.Debug("ListMatureDataCalls: exit")
-	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments!!")
+	logger.Debug("ListDataCallsByCriteria: arg object ", args)
+	if len(args) < 1 {
+
+		return shim.Error("Incorrect number of arguments!!" + args)
 	}
 	var deadlineWindow DeadlineWindow
 	err := json.Unmarshal([]byte(args), &deadlineWindow)
@@ -306,7 +308,7 @@ func (this *SmartContract) ListMatureDataCalls(stub shim.ChaincodeStubInterface,
 
 		// startDate := startTime.Truncate(24*time.Hour).AddDate(0, 0, -1)
 		// endDate := startTime.Truncate(24 * time.Hour)
-		if (dataCall.Deadline.After(startDate) && dataCall.Deadline.Before(endDate)) || dataCall.Deadline.Equal(startTime) {
+		if (dataCall.Deadline.After(startDate) && dataCall.Deadline.Before(endDate)) || dataCall.Deadline.Equal(startDate) {
 			dataCalls = append(dataCalls, dataCall)
 		}
 	}
