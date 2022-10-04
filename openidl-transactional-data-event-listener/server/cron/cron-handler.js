@@ -40,8 +40,8 @@ CronHandler.pollForMaturedDataCall = async (deadlineWindow) => {
 
         logger.info("** Transaction started for ListDataCallsByCriteria at : Start_Time=" + new Date().toISOString());
         
-        if (!deadlineWindow || !deadlineWindow.startDate || !deadlineWindow.endDate)  {
-            logger.debug("Constructing Dweadline window...")
+        if (!deadlineWindow || !deadlineWindow.startTime || !deadlineWindow.endTime)  {
+            logger.debug("Constructing Deadline window...")
             const startTime = new Date()
             const endTime = new Date()
             logger.info("--- pollintervalindays: ", config.pollIntervalInDays);
@@ -50,8 +50,8 @@ CronHandler.pollForMaturedDataCall = async (deadlineWindow) => {
             endTime.setHours(0, 0, 0, 0)
 
             deadlineWindow = {};
-            deadlineWindow.startDate = startTime.toISOString();
-            deadlineWindow.endDate = endTime.toISOString();
+            deadlineWindow.startTime = startTime.toISOString();
+            deadlineWindow.endTime = endTime.toISOString();
         }
         logger.info("Deadline window is ", JSON.stringify(deadlineWindow, null, 2))
         try {
@@ -66,7 +66,7 @@ CronHandler.pollForMaturedDataCall = async (deadlineWindow) => {
         logger.info("** Transaction completed for listMatureDataCalls at : End_Time= " + new Date().toISOString() + " result= " + JSON.stringify(queryResponse));
 
         //iterate over the results and emit events
-        if (queryResponse.dataCallsList) {
+        if (queryResponse && queryResponse.dataCallsList) {
             for (let i = 0; i < queryResponse.dataCallsList.length; i = i + 1) {
                 logger.info("Found a mature data call!!!");
                 em.emit('triggerEvent', queryResponse.dataCallsList[i]);

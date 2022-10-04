@@ -267,9 +267,9 @@ func (this *SmartContract) ListMatureDataCalls(stub shim.ChaincodeStubInterface,
 		logger.Error("ListMatureDataCalls: Error during json.Unmarshal: ", err)
 		return shim.Error(errors.New("ListMatureDataCalls: Error during json.Unmarshal").Error())
 	}
-	logger.Debug("ListDataCallsByCriteria: Unmarshalled object ", deadlineWindow)
-	startDate := deadlineWindow.StartTime
-	endDate := deadlineWindow.EndTime
+	logger.Debug("ListMatureDataCalls: Unmarshalled object ", deadlineWindow)
+	// startDate := deadlineWindow.StartTime
+	// endDate := deadlineWindow.EndTime
 	status := STATUS_ISSUED
 	var queryStr string
 	queryStr = fmt.Sprintf("{\"selector\":{\"_id\":{\"$regex\":\"%s\"},\"status\":\"%s\"},\"use_index\":[\"deadline\", \"deadlineIndex\"],\"sort\":[{\"deadline\": \"desc\"}]}", DATA_CALL_PREFIX, status)
@@ -287,7 +287,7 @@ func (this *SmartContract) ListMatureDataCalls(stub shim.ChaincodeStubInterface,
 
 	if !resultsIterator.HasNext() {
 		dataCallsAsByte, _ := json.Marshal(dataCalls)
-		logger.Debug("ListDataCallsByCriteria: dataCallsAsByte", dataCallsAsByte)
+		logger.Debug("ListMatureDatacalls: dataCallsAsByte", dataCallsAsByte)
 		//return shim.Error(errors.New("ListDataCallsByCriteria :DataCall not found ").Error())
 		return shim.Success(dataCallsAsByte)
 	}
@@ -308,7 +308,7 @@ func (this *SmartContract) ListMatureDataCalls(stub shim.ChaincodeStubInterface,
 
 		// startDate := startTime.Truncate(24*time.Hour).AddDate(0, 0, -1)
 		// endDate := startTime.Truncate(24 * time.Hour)
-		if (dataCall.Deadline.After(startDate) && dataCall.Deadline.Before(endDate)) || dataCall.Deadline.Equal(startDate) {
+		if (dataCall.Deadline.After(deadlineWindow.startTime) && dataCall.Deadline.Before(deadlineWindow.endTime)) || dataCall.Deadline.Equal(deadlineWindow.startTime) {
 			dataCalls = append(dataCalls, dataCall)
 		}
 	}
