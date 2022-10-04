@@ -6,11 +6,11 @@ const s3Config = require('./config/s3-bucket-config.json');
 const ReportProcessor = require('./reportProcessor');
 const getDataCall = require('./dataCallCRUD').getDatacall;
 const updateDataCall = require('./dataCallCRUD').updateDatacall;
-const getReport = require('./datacallCRUD').getReport;
-const postReport = require('./datacallCRUD').postReport;
-const getDMVData = require('./datacallCRUD').getDMVData;
+const getReport = require('./dataCallCRUD').getReport;
+const postReport = require('./dataCallCRUD').postReport;
+const getDMVData = require('./dataCallCRUD').getDMVData;
 
-const s3 = new aws.S3({ apiVersion: config.get(s3ApiVersion) });
+const s3 = new aws.S3({ apiVersion: config.get('s3ApiVersion') });
 
 
 exports.handler = async (event, context) => {

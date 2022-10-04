@@ -2,7 +2,6 @@ const fetch = require('node-fetch');
 const defaultconfig = require('config');
 const  logger  = require('loglevel');
 logger.setLevel(defaultconfig.get('loglevel'));
-const fs = require('fs')
 const config = require('./config/datacall-config.json')
 
 
