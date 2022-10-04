@@ -2,10 +2,6 @@ const config = require('config');
 const  logger  = require('loglevel');
 logger.setLevel(config.get('loglevel'));
 const S3BucketManager = require('./aws-module.js');
-const mongoConfig = require('config/mongoconfig.json');
-const s3Config = require('./config/s3-bucket-config.json');
-const MongoClient = require('mongodb').MongoClient;
-const client = new MongoClient(mongoConfig.simpleUri);
 class ReportProcessor {
 	async readResult(key) {
 		const s3b = new S3BucketManager();
@@ -15,32 +11,6 @@ class ReportProcessor {
 			return JSON.parse(data.Body);
 		} catch (err) {
 			logger.error("Error in reading result: ", err)
-		}
-	}
-	async readDMVData(transactionMonth) {
-		try {
-			const db = client.db(mongoConfig.mongodb);
-			const coll = db.collection(mongoConfig.collection)
-			const query = { TransactionMonth: transactionMonth };
-			const options = {
-				// sort matched documents in descending order by rating
-				// sort: { "_id": -1 },
-				// Include only some fields in the returned document
-				projection: { _id: 0, VinHash: 1, VIN: 1 },
-			};
-			const cursor = coll.find(query, options);
-
-			if ((await cursor.count()) === 0) {
-				throw new Error("No DMV documents found!");
-			}
-			const result = await cursor.toArray();
-			return result;
-
-		} catch (err) {
-			logger.error("Error during Read DMV data", err)
-		}
-		finally {
-			await client.close();
 		}
 	}
 
