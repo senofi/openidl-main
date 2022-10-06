@@ -34,7 +34,12 @@ export class FormComponent implements OnInit, OnDestroy {
 	public lossdateRange: Date[];
 	public deadline: any;
 	public dataCallObject = {};
-	LOBs = [{value: 'Personal Auto'}]; // Set default to 'Personal Auto'
+	LOBs = [
+		{
+			code: 'Auto: Personal',
+			value: 'Auto: Personal'
+		}
+	]; // Set default to 'Auto: Personal'
 
 	// Models for reactive form
 	name: any;
