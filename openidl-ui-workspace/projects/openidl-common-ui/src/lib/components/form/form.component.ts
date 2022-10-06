@@ -34,7 +34,12 @@ export class FormComponent implements OnInit, OnDestroy {
 	public lossdateRange: Date[];
 	public deadline: any;
 	public dataCallObject = {};
-	LOBs = [];
+	LOBs = [
+		{
+			code: 'Auto: Personal',
+			value: 'Auto: Personal'
+		}
+	]; // Set default to 'Auto: Personal'
 
 	// Models for reactive form
 	name: any;
@@ -64,6 +69,10 @@ export class FormComponent implements OnInit, OnDestroy {
 	isSuccess: Boolean = false;
 	isSmallSpinner: boolean = false;
 
+	// Hide form elements that are not required in the view.
+	// TODO: May completely remove in future or add them back to view.
+	hideFormElement = false;
+
 	constructor(
 		private formBuilder: FormBuilder,
 		private dataService: DataService,
@@ -78,7 +87,16 @@ export class FormComponent implements OnInit, OnDestroy {
 		if (jurisdiction) {
 			this.jurisdiction = jurisdiction;
 		} else {
-			this.jurisdiction = 'Ohio';
+			this.dataService.getData('/jurisdiction').subscribe(
+				(response) => {
+					this.jurisdiction = response;
+					this.storageService.setItem('jurisdiction', response);
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
+			// this.jurisdiction = 'North Dakota';
 		}
 		// Fetch the data and show in case of cloned data call
 		if (this.isClone) {
@@ -140,7 +158,7 @@ export class FormComponent implements OnInit, OnDestroy {
 				deadline: ['', [Validators.required]],
 				purpose: ['', [Validators.required]],
 				isShowParticipants: [true],
-				lineOfBusiness: ['', [Validators.required]],
+				lineOfBusiness: [this.LOBs[0].value, [Validators.required]],
 				detailedCriteria: ['', [Validators.required]],
 				intentToPublish: [true],
 				eligibilityRequirement: ['', [Validators.required]],
@@ -176,7 +194,7 @@ export class FormComponent implements OnInit, OnDestroy {
 			(response) => {
 				this.isSmallSpinner = false;
 				this.setFormControlDisabled('lineOfBusiness', false);
-				let lob = JSON.parse(response);
+				const lob = JSON.parse(response);
 				this.LOBs = lob.lob;
 				// Cache LOBs once received
 				sessionStorage.setItem('LOBs', JSON.stringify(this.LOBs));
