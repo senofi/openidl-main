@@ -308,7 +308,7 @@ func (this *SmartContract) ListMatureDataCalls(stub shim.ChaincodeStubInterface,
 
 		// startDate := startTime.Truncate(24*time.Hour).AddDate(0, 0, -1)
 		// endDate := startTime.Truncate(24 * time.Hour)
-		if (dataCall.Deadline.After(deadlineWindow.startTime) && dataCall.Deadline.Before(deadlineWindow.endTime)) || dataCall.Deadline.Equal(deadlineWindow.startTime) {
+		if (dataCall.Deadline.After(deadlineWindow.StartTime) && dataCall.Deadline.Before(deadlineWindow.EndTime)) || dataCall.Deadline.Equal(deadlineWindow.StartTime) {
 			dataCalls = append(dataCalls, dataCall)
 		}
 	}
