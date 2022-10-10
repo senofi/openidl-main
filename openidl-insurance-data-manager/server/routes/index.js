@@ -40,7 +40,7 @@ logger.level = config.logLevel;
  * Add routes
  */
 router.use('/health', authHandler.validateToken, health);
-router.use('/ping', ping);
+router.use('/ping', authHandler.validateToken, ping);
 router.use('/insurance-data', authHandler.validateToken, statAgentController.insuranceData);
 router.use('/ins-data-hash', authHandler.validateToken, statAgentController.saveInsuranceDataHash);
 router.use('/ins-data-hds', authHandler.validateToken, statAgentController.saveInsuranceDataHDS);
