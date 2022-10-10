@@ -669,6 +669,7 @@ func (this *SmartContract) UpdateDataCall(stub shim.ChaincodeStubInterface, args
 			prevDataCall.IsLocked = true
 		}
 		prevDataCall.ForumURL = dataCall.ForumURL
+		prevDataCall.TransactionMonth = dataCall.TransactionMonth
 
 	} else if prevDataCall.Status == STATUS_ISSUED {
 		if prevDataCall.ProposedDeliveryDate != dataCall.ProposedDeliveryDate {
@@ -680,6 +681,7 @@ func (this *SmartContract) UpdateDataCall(stub shim.ChaincodeStubInterface, args
 		}
 		prevDataCall.ProposedDeliveryDate = dataCall.ProposedDeliveryDate
 		prevDataCall.ForumURL = dataCall.ForumURL
+		prevDataCall.TransactionMonth = dataCall.TransactionMonth
 		prevDataCall.ExtractionPatternID = dataCall.ExtractionPatternID
 		prevDataCall.ExtractionPatternTs = dataCall.ExtractionPatternTs
 		prevDataCall.IsLocked = true
