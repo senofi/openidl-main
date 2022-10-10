@@ -12,6 +12,7 @@ const networkConfig = require('../config/connection-profile.json');
 const {
     Transaction
 } = require('@openidl-org/openidl-common-lib');
+let pollIntervalInDays = "1";
 let ChannelTransactionMap = new Map();
 logger.level = config.logLevel;
 Transaction.initWallet(kvsConfig);
@@ -45,7 +46,10 @@ CronHandler.pollForMaturedDataCall = async (deadlineWindow) => {
             const startTime = new Date()
             const endTime = new Date()
             logger.info("--- pollintervalindays: ", config.pollIntervalInDays);
-            startTime.setDate(startTime.getDate() - parseInt(config.pollIntervalInDays));
+            if (config.pollIntervalInDays) {
+                pollIntervalInDays = config.pollIntervalInDays
+            }
+            startTime.setDate(startTime.getDate() - parseInt(pollIntervalInDays));
             startTime.setHours(0, 0, 0, 0)
             endTime.setHours(0, 0, 0, 0)
 
