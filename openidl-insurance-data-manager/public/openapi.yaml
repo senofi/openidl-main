@@ -86,9 +86,9 @@ paths:
   "/openidl/api/get-insurance-data-by-criteria":
     get:
       tags:
-        - Stores Insurance data into HDS and  Hash value into Blockchain
-      description: Stores Insurance data into HDS, the respective stored data into Blockchain as hash.
-      summary: Stores Insurance data into HDS, the respective stored data into Blockchain as hash.
+        - Gets Insurance data from HDS
+      description: Gets Insurance data from HDS
+      summary: Gets Insurance data from HDS
       parameters:
         - name: organizationId
           in: query
@@ -106,13 +106,14 @@ paths:
             type: string
       responses:
         '200':
-          description: 'Read insurance data successfully'
+          description: 'Read HDS data Successfully'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/postResponse'
+                $ref: '#/components/schemas/readResponse'
 
-        required: true
+      security:
+      - bearerAuth: []
 
   "/openidl/api/sendemail":
     post:
@@ -251,6 +252,15 @@ components:
       items:
         type: object
         
+    "readResponse":
+      type: object
+      description: This represents read response format
+      properties:
+        success:
+          type: string
+          example: "true"
+        result:
+          $ref: '#/components/schemas/record'          
                               
     
                
