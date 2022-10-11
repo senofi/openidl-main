@@ -23,6 +23,7 @@ jobs:
           echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
           echo "@openidl-org:registry=https://npm.pkg.github.com" >> .npmrc
           echo "always-auth=true" >> .npmrc
+          cat .npmrc
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
