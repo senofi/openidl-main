@@ -147,32 +147,16 @@
 					</p>
 				</div>
 				<div class="col readonly">
-					<div *ngIf="hasDeliveryDate">
-						<h4>Proposed Delivery Date</h4>
+					<div class="col readonly">
+						<h4>Transaction Month</h4>
 						<p>
-							<button
-								*ngIf="isStatAgent"
-								mat-mini-fab
-								color="primary"
-								(click)="deliveryDateEdit()"
-								matTooltip="Edit delivery date"
-								matTooltipPosition="above"
-								aria-label="Edit delivery date"
-							>
-								<mat-icon>edit</mat-icon>
-							</button>
-							<span [class.delivery-date]="isStatAgent">
-								{{
-									draft.proposedDeliveryDate
-										| date: 'MM/dd/yyyy '
-								}}
-							</span>
+							<span>{{ getTransactionMonth() }}</span>
 						</p>
 					</div>
 				</div>
 			</div>
 
-			<div class="row" *ngIf="hasForumUrl || hasPattern">
+			<div class="row">
 				<div class="col readonly" *ngIf="hasForumUrl">
 					<h4>Forum URL</h4>
 					<p>
@@ -199,7 +183,7 @@
 						</button>
 					</p>
 				</div>
-				<div class="col readonly" *ngIf="hasPattern; else emptyColumn">
+				<div class="col readonly" *ngIf="hasPattern">
 					<h4>Extraction Pattern</h4>
 					<p>
 						<button
@@ -214,13 +198,26 @@
 						</span>
 					</p>
 				</div>
-				<ng-template #emptyColumn>
-					<div class="col readonly"></div>
-				</ng-template>
-				<div class="col readonly">
-					<h4>Transaction Month</h4>
+				<div class="col readonly" *ngIf="hasDeliveryDate">
+					<h4>Proposed Delivery Date</h4>
 					<p>
-						<span>{{ getTransactionMonth() }}</span>
+						<button
+							*ngIf="isStatAgent"
+							mat-mini-fab
+							color="primary"
+							(click)="deliveryDateEdit()"
+							matTooltip="Edit delivery date"
+							matTooltipPosition="above"
+							aria-label="Edit delivery date"
+						>
+							<mat-icon>edit</mat-icon>
+						</button>
+						<span [class.delivery-date]="isStatAgent">
+							{{
+								draft.proposedDeliveryDate
+									| date: 'MM/dd/yyyy '
+							}}
+						</span>
 					</p>
 				</div>
 			</div>
