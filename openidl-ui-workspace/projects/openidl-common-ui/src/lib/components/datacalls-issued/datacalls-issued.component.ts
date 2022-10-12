@@ -43,7 +43,7 @@ export class DatacallsIssuedComponent implements OnInit {
 		premiumFromDate: '',
 		premiumToDate: '',
 		deadline: '',
-		transactionMonth: moment(),
+		transactionMonth: '',
 		intentToPublish: true,
 		isShowParticipants: '',
 		purpose: '',
@@ -176,7 +176,10 @@ export class DatacallsIssuedComponent implements OnInit {
 	} // init ends
 
 	getTransactionMonth() {
-		return this.draft.transactionMonth.format('YYYY/MM');
+		if (this.draft.transactionMonth) {
+			return new Date(this.draft.transactionMonth).toLocaleDateString('en-US', {year: 'numeric', month: '2-digit'});
+		}
+		return '-NA-';
 	}
 
 	setControlsState() {

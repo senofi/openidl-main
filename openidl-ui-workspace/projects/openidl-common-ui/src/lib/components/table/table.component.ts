@@ -497,7 +497,10 @@ export class TableComponent implements OnInit, AfterViewInit {
 	}
 
 	getTransactionMonth(row) {
-		return row.transactionMonth.format('YYYY/MM');
+		if (row.transactionMonth) {
+			return new Date(row.transactionMonth).toLocaleDateString('en-US', {year: 'numeric', month: '2-digit'});
+		}
+		return '-NA-';
 	}
 }
 
