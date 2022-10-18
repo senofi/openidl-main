@@ -432,7 +432,7 @@ class DataProcessorMongo {
             let DBManagerFactory = openidlCommonLib.DBManagerFactory;
             let dbManagerFactoryObject = new DBManagerFactory();
             this.dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
-            let DBName = config.insuranceDB + "_aais_" + carrierId;
+            let DBName = config.insuranceDB + "_" + carrierId;
             logger.debug("DBName>>>> " + DBName);
             // Fix for Jira88
             await this.dbManager.getViewData(carrierId, DBName, reduceCollectionName, extractionPattern,
