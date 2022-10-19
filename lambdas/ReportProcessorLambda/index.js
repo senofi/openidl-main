@@ -5,8 +5,6 @@ logger.setLevel(config.get('loglevel'));
 const s3Config = require('./config/s3-bucket-config.json');
 const ReportProcessor = require('./reportProcessor');
 const getDataCall = require('./dataCallCRUD').getDatacall;
-const updateDataCall = require('./dataCallCRUD').updateDatacall;
-const getReport = require('./dataCallCRUD').getReport;
 const postReport = require('./dataCallCRUD').postReport;
 const getDMVData = require('./dataCallCRUD').getDMVData;
 
