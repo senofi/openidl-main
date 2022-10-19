@@ -10,9 +10,6 @@ const getReport = require('./dataCallCRUD').getReport;
 const postReport = require('./dataCallCRUD').postReport;
 const getDMVData = require('./dataCallCRUD').getDMVData;
 
-const s3 = new aws.S3({ apiVersion: config.get('s3ApiVersion') });
-
-
 exports.handler = async (event, context) => {
     //console.log('Received event:', JSON.stringify(event, null, 2));
 
@@ -34,7 +31,8 @@ exports.handler = async (event, context) => {
         const transactionMonth = datacall.transactionMonth;
         logger.debug("Datacall fetched from Blockchain with id: ", datacallId)
         const rp = new ReportProcessor;
-        const resultData = await rp.readResult(key);
+        const resultData = await rp.readResult(params);
+        logger.debug("Result data is: ", JSON.stringify(resultData, null, 2))
         const dmvData = await getDMVData(config.get("DMVOrganizationId"), transactionMonth);
         logger.debug("Data reading Done from DMV data and result")
         const reportContent = await rp.createReportContent(resultData, JSON.parse(JSON.stringify (dmvData)));

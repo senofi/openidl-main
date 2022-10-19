@@ -3,11 +3,11 @@ const  logger  = require('loglevel');
 logger.setLevel(config.get('loglevel'));
 const S3BucketManager = require('./aws-module.js');
 class ReportProcessor {
-	async readResult(key) {
+	async readResult(params) {
 		const s3b = new S3BucketManager();
 		let data;
 		try {
-			data = await s3b.getTransactionalData(key);
+			data = await s3b.getTransactionalData(params);
 			return JSON.parse(data.Body);
 		} catch (err) {
 			logger.error("Error in reading result: ", err)
