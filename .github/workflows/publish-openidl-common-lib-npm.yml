@@ -4,6 +4,9 @@ on:
     branches:
       - openidl-nd-poc-main       
       - develop
+    paths:
+      - 'openidl-common-lib/**'
+  
   workflow_dispatch:
 
 jobs:
