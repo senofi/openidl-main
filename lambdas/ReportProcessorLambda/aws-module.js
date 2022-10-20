@@ -8,36 +8,13 @@ logger.setLevel(config.get('loglevel'));
 
 //configuring the AWS environment
 AWS.config.update({
-    accessKeyId: bucketConfig.accessKeyId,
-    secretAccessKey: bucketConfig.secretAccessKey
+    region: process.env.REGION
 });
 class S3BucketManager {
     constructor() { }
-    async getAccessParams() {
-        const sts = new AWS.STS({
-            region: 'us-east-2',
-            accessKeyId: bucketConfig.accessKeyId,
-            secretAccessKey: bucketConfig.secretAccessKey
-
-        });
-        const params = bucketConfig.roleParams;
-
-        const accessParamInfo = await sts.assumeRole(params).promise();
-        logger.debug('Changed Credentials');
-
-        const accessparams = {
-            accessKeyId: accessParamInfo.Credentials.AccessKeyId,
-            secretAccessKey: accessParamInfo.Credentials.SecretAccessKey,
-            sessionToken: accessParamInfo.Credentials.SessionToken,
-            region: 'us-east-2'
-        };
-        return accessparams;
-    }
-
     async saveTransactionalData(input) {
         logger.debug('Inside saveTransactionalData');
-        const accessparams = await this.getAccessParams();
-        let bucket = new AWS.S3(accessparams);
+        let bucket = new AWS.S3();
         logger.debug(" saveObjectParam bucket: " + bucketConfig.bucketName + " key: " + input._id)
         let insertObjectParam = { Bucket: bucketConfig.bucketName, Key: input._id, Body: JSON.stringify(input.records) };
         try {
@@ -48,12 +25,10 @@ class S3BucketManager {
         }
     }
 
-
-    async getTransactionalData(id) {
+    async getTransactionalData(getObjectParam) {
         logger.debug("Inside getTransactionalData");
-        const accessParams = await this.getAccessParams();
-        let bucket = new AWS.S3(accessParams);
-        let getObjectParam = { Bucket: bucketConfig.bucketName, Key: id };
+        let bucket = new AWS.S3();
+        logger.info("Params: ", getObjectParam)
         try {
             const data = await bucket.getObject(getObjectParam).promise();
             return data
@@ -62,9 +37,8 @@ class S3BucketManager {
         }
     }
     async getCSV(id) {
-        logger.debug("Inside getTransactionalData");
-        const accessParams = await this.getAccessParams();
-        let bucket = new AWS.S3(accessParams);
+        logger.debug("Inside getCSV");
+        let bucket = new AWS.S3();
         let getObjectParam = { Bucket: bucketConfig.bucketName, Key: id };
         try {
             const data = bucket.getObject(getObjectParam).createReadStream();
@@ -78,8 +52,7 @@ class S3BucketManager {
         try {
             const csvData = csvjson.toCSV(data, { headers: 'key' });
             logger.debug("Inside uploadCSV");
-            const accessParams = await this.getAccessParams();
-            let bucket = new AWS.S3(accessParams);
+            let bucket = new AWS.S3();
             const params = {
                 Bucket: bucketConfig.bucketName, // your bucket name
                 Key: "report-" + datacallId + ".csv",

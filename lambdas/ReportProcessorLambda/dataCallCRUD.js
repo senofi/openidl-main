@@ -21,6 +21,7 @@ async function login(baseURL, username, password) {
         }
         result = await response.json()
         let userToken = result.result.userToken
+        logger.debug("Login done")
         return userToken
     } catch (error) {
         logger.error("Error with login: " + error);
@@ -47,6 +48,7 @@ async function callAPI(apiUrl, method, payload, token) {
         if (response.status !== 200) {
             throw new Error("Error response from Server: " + JSON.stringify(data.message))
         }
+        logger.debug("CallAPI done")
         return data
     } catch (error) {
         logger.error("Error in calling API  " + error);
@@ -60,6 +62,7 @@ module.exports.getDatacall = async function (datacallId) {
     payload = "";
     URL = config.getDatacallURL + datacallId
     const datacall = await callAPI(URL, "GET", payload, userToken);
+    logger.debug("getDatacall done")
     return datacall;
 }
 
@@ -70,17 +73,20 @@ module.exports.updateDatacall = async function (datacall) {
     payload = datacall;
     URL = config.updateDatacallURL
     await callAPI(URL, "PUT", payload, userToken)
+    logger.debug("updateDatacall done")
 }
 
 
 
 module.exports.postReport = async function (report) {
-    logger.debug("Inside addreport")
+    logger.debug("Inside postreport")
     let URL = config.loginURL
     let userToken = await login(URL, config.username, config.password)
     payload = report;
     URL = config.postReportURL
+    logger.debug("URL for postReport: ", URL)
     await callAPI(URL, "POST", payload, userToken)
+    logger.debug("postReport done")
 }
 
 module.exports.getReport = async function (datacallId, version) {
@@ -93,7 +99,9 @@ module.exports.getReport = async function (datacallId, version) {
             dataCallId: datacallId,
             dataCallVersion: version
             })
+    logger.debug("URL for getReport: ", URL)
     const datacall = await callAPI(URL, "GET", payload, userToken);
+    logger.debug("getReport done")
     return datacall;
 }
 
@@ -107,6 +115,8 @@ module.exports.getDMVData = async function (organizationId, transactionMonth) {
             organizationId: organizationId,
             transactionMonth: transactionMonth
             })
+    logger.debug("URL for getDMVData: ", URL)
     const dmvData = await callAPI(URL, "GET", payload, userToken);
+    logger.debug("getDMVData done")
     return dmvData;
 }
