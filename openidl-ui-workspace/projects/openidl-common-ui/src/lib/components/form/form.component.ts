@@ -329,7 +329,7 @@ export class FormComponent implements OnInit, OnDestroy {
 			status: status,
 			isShowParticipants: value.isShowParticipants,
 			deadline: value.deadline,
-			transactionMonth: value.transactionMonth
+			transactionMonth: this.getTransactionMonth(value.transactionMonth)
 		};
 
 		console.log('Trimmed data', this.dataCallObject);
@@ -354,6 +354,17 @@ export class FormComponent implements OnInit, OnDestroy {
 			}
 		);
 	}
+
+	// Format the transaction month to YYYY-MM before sending to backend
+	getTransactionMonth(transactionMonth) {
+		if (transactionMonth) {
+			const year = new Date(transactionMonth).toLocaleDateString('en-US', {year: 'numeric'});
+			const month = new Date(transactionMonth).toLocaleDateString('en-US', {month: '2-digit'});
+			return (year + '-' + month);
+		}
+		return '-NA-';
+	}
+
 
 	// Show the modal according to success, error or info using the child modal component's open modal method
 	showModal() {

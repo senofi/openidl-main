@@ -177,7 +177,9 @@ export class DatacallsIssuedComponent implements OnInit {
 
 	getTransactionMonth() {
 		if (this.draft.transactionMonth) {
-			return new Date(this.draft.transactionMonth).toLocaleDateString('en-US', {year: 'numeric', month: '2-digit'});
+			const year = new Date(this.draft.transactionMonth).toLocaleDateString('en-US', {year: 'numeric'});
+			const month = new Date(this.draft.transactionMonth).toLocaleDateString('en-US', {month: '2-digit'});
+			return (year + '-' + month);
 		}
 		return '-NA-';
 	}

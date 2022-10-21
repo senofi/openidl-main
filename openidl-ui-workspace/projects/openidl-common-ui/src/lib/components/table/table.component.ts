@@ -498,8 +498,9 @@ export class TableComponent implements OnInit, AfterViewInit {
 
 	getTransactionMonth(row) {
 		if (row.transactionMonth) {
-			return new Date(row.transactionMonth).toLocaleDateString('en-US', {year: 'numeric', month: '2-digit'});
-		}
+			const year = new Date(row.transactionMonth).toLocaleDateString('en-US', {year: 'numeric'});
+			const month = new Date(row.transactionMonth).toLocaleDateString('en-US', {month: '2-digit'});
+			return (year + '-' + month);		}
 		return '-NA-';
 	}
 }
