@@ -34,8 +34,14 @@ exports.handler = async (event, context) => {
         const rp = new ReportProcessor;
         const resultData = await rp.readResult(params);
         logger.debug("Result data is: ", JSON.stringify(resultData, null, 2))
+        if (!resultData) {
+            throw new Error("Result dataset Empty!");
+        }
         const dmvData = await getDMVData(config.get("DMVOrganizationId"), transactionMonth);
         logger.debug("dmvData is: ", JSON.stringify(dmvData, null, 2))
+        if (!dmvData || !dmvData.result || dmvData.result.length === 0) {
+            throw new Error("DMV Dataset Empty!");
+        }
         logger.debug("Data reading Done from DMV data and result")
         const reportContent = await rp.createReportContent(resultData, JSON.parse(JSON.stringify (dmvData)));
         logger.debug("reportContent is: ", JSON.stringify(reportContent, null, 2))

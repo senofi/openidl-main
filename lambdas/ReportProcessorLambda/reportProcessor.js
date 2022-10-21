@@ -8,7 +8,10 @@ class ReportProcessor {
 		let data;
 		try {
 			data = await s3b.getTransactionalData(params);
-			return JSON.parse(data.Body);
+			data = JSON.parse(data.Body);
+      const buff = Buffer.from(data[0].data);
+			const dataString = buff.toString();
+			return JSON.parse(dataString);
 		} catch (err) {
 			logger.error("Error in reading result: ", err)
 		}
