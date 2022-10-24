@@ -543,7 +543,7 @@
 											color="primary"
 											(click)="toggleAction()"
 											[class.spinner]="isSmallSpinner"
-											[disabled]="isSmallSpinner"
+											[disabled]="isSmallSpinner || isStatAgent"
 											[matTooltip]="buttonText"
 										>
 											<mat-icon *ngIf="isLike">

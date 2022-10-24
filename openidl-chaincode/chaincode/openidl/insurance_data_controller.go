@@ -94,6 +94,7 @@ func (this *SmartContract) SaveInsuranceData(stub shim.ChaincodeStubInterface, a
 		return shim.Error("SaveInsuranceData: Invalid key in the transient map")
 	}
 	err = json.Unmarshal([]byte(InsuranceDataTransMap[transientMapKey]), &insurance)
+	logger.Info("SaveInsuranceData: got transient map")
 
 	if err != nil {
 		logger.Error("SaveInsuranceData: Error during json.Unmarshal: ", err)
@@ -112,6 +113,7 @@ func (this *SmartContract) SaveInsuranceData(stub shim.ChaincodeStubInterface, a
 		return shim.Error("PageNumber should not be Empty")
 	}
 
+	logger.Info("SaveInsuranceData: all necessary params found")
 	//Identify the pdc name based on channelName
 	channelName := stub.GetChannelID()
 	private_data_collection := getPDCNameByChannelName(channelName)
@@ -122,6 +124,7 @@ func (this *SmartContract) SaveInsuranceData(stub shim.ChaincodeStubInterface, a
 	insuranceDataAsBytes, _ := json.Marshal(insurance)
 	err = stub.PutPrivateData(private_data_collection, key, insuranceDataAsBytes)
 
+	logger.Info("SaveInsuranceData: put private data done")
 	if err != nil {
 		logger.Error("Error commiting pdc data:", err)
 		return shim.Error("SaveInsuranceData: Error committing data for key: " + key)
@@ -138,6 +141,7 @@ func (this *SmartContract) SaveInsuranceData(stub shim.ChaincodeStubInterface, a
 
 	auditRecordAsBytes, _ := json.Marshal(auditRecord)
 	err = stub.PutState(auditRecordKey, auditRecordAsBytes)
+	logger.Info("SaveInsuranceData: put audit key done")
 
 	if err != nil {
 		return shim.Error("SaveInsuranceData: Creating Audit Record: Error committing data for key: " + auditRecordKey)
@@ -152,8 +156,12 @@ func (this *SmartContract) SaveInsuranceData(stub shim.ChaincodeStubInterface, a
 	eventPayload.PageNumber = insurance.PageNumber
 
 	eventPayloadAsBytes, _ := json.Marshal(eventPayload)
-	_ = stub.SetEvent(INSURANCE_RECORD_AND_AUDIT_CREATED_EVENT, eventPayloadAsBytes)
+	err = stub.SetEvent(INSURANCE_RECORD_AND_AUDIT_CREATED_EVENT, eventPayloadAsBytes)
+	if err != nil {
+		return shim.Error("SaveInsuranceData: error during creating event")
+	}
 
+	logger.Info("SaveInsuranceData: set event done")
 	return shim.Success(nil)
 }
 
