@@ -22,7 +22,7 @@ class ReportProcessor {
 		for (var i = 0; i < dmvData.length; i = i + 1) {
 			var isInsured = "no";
 			for (var j = 0; j < resultData.length; j = j + 1) {
-				if (dmvData[i].VinHash == resultData[j].VinHash) {
+				if (dmvData[i].VinHash == resultData[j]._id) {
 					isInsured = "yes";
 					break;
 				}
