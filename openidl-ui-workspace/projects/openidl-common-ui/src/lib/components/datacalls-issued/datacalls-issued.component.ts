@@ -175,15 +175,6 @@ export class DatacallsIssuedComponent implements OnInit {
 		this.getReports();
 	} // init ends
 
-	getTransactionMonth() {
-		if (this.draft.transactionMonth) {
-			const year = new Date(this.draft.transactionMonth).toLocaleDateString('en-US', {year: 'numeric'});
-			const month = new Date(this.draft.transactionMonth).toLocaleDateString('en-US', {month: '2-digit'});
-			return (year + '-' + month);
-		}
-		return '-NA-';
-	}
-
 	setControlsState() {
 		if (this.draft.proposedDeliveryDate === this.defaultDate) {
 			this.draft.proposedDeliveryDate = '';

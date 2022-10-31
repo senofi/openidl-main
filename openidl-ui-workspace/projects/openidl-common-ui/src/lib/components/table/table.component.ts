@@ -495,14 +495,6 @@ export class TableComponent implements OnInit, AfterViewInit {
 			this.viewReportEvent.emit(data);
 		}
 	}
-
-	getTransactionMonth(row) {
-		if (row.transactionMonth) {
-			const year = new Date(row.transactionMonth).toLocaleDateString('en-US', {year: 'numeric'});
-			const month = new Date(row.transactionMonth).toLocaleDateString('en-US', {month: '2-digit'});
-			return (year + '-' + month);		}
-		return '-NA-';
-	}
 }
 
 export interface DataTableItem {
