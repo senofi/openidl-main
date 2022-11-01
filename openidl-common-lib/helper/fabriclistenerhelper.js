@@ -157,6 +157,8 @@
              await network.addBlockListener(listener, options);
          } catch (err) {
              logger.error('registerBlockEventListener error ' + err);
+         } finally {
+             this.eventGateway.disconnect();
          }
      }
  
