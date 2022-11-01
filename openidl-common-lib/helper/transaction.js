@@ -295,6 +295,8 @@ class transaction {
         } catch (err) {
             logger.info("Error while upgrading chaincode.......");
             throw new Error(err);
+        } finally {
+            this.gateway.disconnect();
         }
 
     };
@@ -331,6 +333,8 @@ class transaction {
         } catch (err) {
             logger.info("Error while Instantiating chaincode.......");
             throw new Error(err);
+        } finally {
+            this.gateway.disconnect();
         }
 
     };
