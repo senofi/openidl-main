@@ -4,7 +4,6 @@ on:
     branches:
       - openidl-nd-poc-main       
       - develop
-      - cognito_log
     paths:
       - 'openidl-common-lib/**'
   
