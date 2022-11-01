@@ -32,7 +32,7 @@ jobs:
           cd openidl-common-lib/
           VERSION=$(npm version patch)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          #npm publish --registry=https://npm.pkg.github.com/
+          npm publish --registry=https://npm.pkg.github.com/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # push the version changes to GitHub
