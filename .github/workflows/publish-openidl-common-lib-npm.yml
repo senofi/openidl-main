@@ -31,15 +31,16 @@ jobs:
       - name: Publish package on NPM
         run: |
           cd openidl-common-lib/
-          npm version patch
-          #npm publish --registry=https://npm.pkg.github.com/
+          VERSION=$(npm version patch)
+          echo "::set-env name=VERSION::$VERSION"
+          npm publish --registry=https://npm.pkg.github.com/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # push the version changes to GitHub
       - run: |
           git config --global user.name "GitHub CD bot"
           git config --global user.email "github-cd-bot@aaisonline.com"
-          git commit -a -s -m "Publist New Version of openidl-common-lib"
+          git commit -a -s -m "Publish New Version $VERSION of openidl-common-lib"
           git push
         env:
           # The secret is passed automatically. Nothing to configure.
