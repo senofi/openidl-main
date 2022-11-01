@@ -35,10 +35,12 @@ jobs:
           npm publish --registry=https://npm.pkg.github.com/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: git config --global user.name "GitHub CD bot"
-      - run: git config --global user.email "github-cd-bot@aaisonline.com"
       # push the version changes to GitHub
-      - run: git push
+      - run: |
+          git config --global user.name "GitHub CD bot"
+          git config --global user.email "github-cd-bot@aaisonline.com"
+          git commit -a -s -m "Publist New Version of openidl-common-lib"
+          git push
         env:
           # The secret is passed automatically. Nothing to configure.
           github-token: ${{ secrets.GITHUB_TOKEN }}
