@@ -27,7 +27,7 @@
     "@ibm-functions/iam-token-manager": "^1.0.3",
     "@sendgrid/mail": "^7.2.1",
     "fabric-ca-client": "^2.2.3",
-    "fabric-network": "^2.2.5",
+    "fabric-network": "^2.2.3",
     "ibmcloud-appid": "^6.0.0",
     "log4js": "^4.3.2",
     "mongodb": "^3.6.10",
