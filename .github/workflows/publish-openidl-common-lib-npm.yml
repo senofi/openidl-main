@@ -32,7 +32,7 @@ jobs:
         run: |
           cd openidl-common-lib/
           npm version patch
-          npm publish --registry=https://npm.pkg.github.com/
+          #npm publish --registry=https://npm.pkg.github.com/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # push the version changes to GitHub
