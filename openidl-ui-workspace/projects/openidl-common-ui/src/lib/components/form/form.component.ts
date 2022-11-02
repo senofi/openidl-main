@@ -152,7 +152,6 @@ export class FormComponent implements OnInit, OnDestroy {
 					console.log(error);
 				}
 			);
-			// this.jurisdiction = 'North Dakota';
 		}
 		// Fetch the data and show in case of cloned data call
 		if (this.isClone) {

@@ -21,7 +21,7 @@ import { CustomDateFormat, FormComponent } from './components/form/form.componen
 import { TableComponent } from './components/table/table.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { SearchComponent } from './components/search/search.component';
-import { UpdateFormComponent } from './components/update-form/update-form.component';
+import { CustomDateFormat1, UpdateFormComponent } from './components/update-form/update-form.component';
 import { DatacallsIssuedComponent } from './components/datacalls-issued/datacalls-issued.component';
 import { DatacallHistoryComponent } from './components/datacall-history/datacall-history.component';
 import { BlocksHistoryComponent } from './components/blocks-history/blocks-history.component';
@@ -42,7 +42,8 @@ import { UpdateReportComponent } from './components/update-report/update-report.
     BlocksHistoryComponent,
     UpdateReportComponent,
     ReportTableComponent,
-    CustomDateFormat
+    CustomDateFormat,
+    CustomDateFormat1
   ],
   imports: [
     BrowserModule,
