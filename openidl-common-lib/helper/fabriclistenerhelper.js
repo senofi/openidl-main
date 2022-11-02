@@ -23,8 +23,6 @@
          this.user = user;
          this.channelName = channelName;
          this.orgMSPId = orgMSPId;
-         this.gateway = new Gateway();
-         this.eventGateway = new Gateway();
          this.wallet = wallet;
          this.peer = peer;
      }
@@ -61,13 +59,14 @@
  
      async getBlockDetails(retryCountPending) {
          logger.debug('get block details');
-         try {
-             await this.gateway.connect(this.ccp, {
+         const gateway = new Gateway();
+         try{
+             await gateway.connect(this.ccp, {
                  identity: this.user,
                  wallet: this.wallet,
                  discovery: { enabled: true, asLocalhost: false }
              });
-             const network = await this.gateway.getNetwork(this.channelName);
+             const network = await gateway.getNetwork(this.channelName);
              const blockHeight = network.discoveryService.discoveryResults.peers_by_org[this.orgMSPId].peers[0].ledgerHeight.low;
              logger.debug('height');
              logger.debug(blockHeight);
@@ -90,20 +89,21 @@
              logger.error('getBlockDetails error ' + err);
              return this.getBlockDetails(this.handleError(err, retryCountPending));
          } finally {
-             this.gateway.disconnect();
+             gateway.disconnect();
          }
      };
  
      async getBlockHeight(retryCountPending) {
          logger.debug('get block height');
-         try {
+         const gateway = new Gateway();
+         try{
              // gateway and contract connection
-             await this.gateway.connect(this.ccp, {
+             await gateway.connect(this.ccp, {
                  identity: this.user,
                  wallet: this.wallet,
                  discovery: { enabled: true, asLocalhost: false }
              });
-             const network = await this.gateway.getNetwork(this.channelName);
+             const network = await gateway.getNetwork(this.channelName);
              const height = network.discoveryService.discoveryResults.peers_by_org[this.orgMSPId].peers[0].ledgerHeight.low;
              logger.debug('height');
              logger.debug(height);
@@ -112,20 +112,21 @@
              logger.error('getBlockHeight error ' + err);
              return this.getBlockHeight(this.handleError(err, retryCountPending));
          } finally {
-             this.gateway.disconnect();
+             gateway.disconnect();
          }
      }
  
      async getBlockDataByBlockNumber(blockNumber, retryCountPending) {
          logger.debug('getBlockDataByBlockNumber method entry');
-         try {
+         const gateway = new Gateway();
+         try{
              // gateway and contract connection
-             await this.gateway.connect(this.ccp, {
+             await gateway.connect(this.ccp, {
                  identity: this.user,
                  wallet: this.wallet,
                  discovery: { enabled: true, asLocalhost: false }
              });
-             const network = await this.gateway.getNetwork(this.channelName);
+             const network = await gateway.getNetwork(this.channelName);
              const contract = network.getContract('qscc');
              const resultByte = await contract.evaluateTransaction(
                  'GetBlockByNumber',
@@ -139,44 +140,46 @@
              logger.error('getBlockDataByBlockNumber error ' + err);
              return this.getBlockDataByBlockNumber(blockNumber, this.handleError(err, retryCountPending));
          } finally {
-             this.gateway.disconnect();
+             gateway.disconnect();
          }
      }
  
  
      async registerBlockEventListener(channelName, listener, options) {
          logger.debug('registerBlockEventListener method entry');
-         try {
+         const gateway = new Gateway();
+         try{
              // gateway and contract connection
-             await this.eventGateway.connect(this.ccp, {
+             await gateway.connect(this.ccp, {
                  identity: this.user,
                  wallet: this.wallet,
                  discovery: { enabled: true, asLocalhost: false }
              });
-             const network = await this.eventGateway.getNetwork(channelName);
+             const network = await gateway.getNetwork(channelName);
              await network.addBlockListener(listener, options);
          } catch (err) {
              logger.error('registerBlockEventListener error ' + err);
          } finally {
-             this.eventGateway.disconnect();
+             gateway.disconnect();
          }
      }
  
      async removeBlockEventListener(channelName, listener) {
          logger.debug('removeBlockEventListener method entry');
-         try {
+         const gateway = new Gateway();
+         try{
              // gateway and contract connection
-             await this.eventGateway.connect(this.ccp, {
+             await gateway.connect(this.ccp, {
                  identity: this.user,
                  wallet: this.wallet,
                  discovery: { enabled: true, asLocalhost: false }
              });
-             const network = await this.eventGateway.getNetwork(channelName);
+             const network = await gateway.getNetwork(channelName);
              await network.removeBlockListener(listener);
          } catch (err) {
              logger.error('removeBlockEventListener error ' + err);
          } finally {
-             this.eventGateway.disconnect();
+             gateway.disconnect();
          }
      }
  };
