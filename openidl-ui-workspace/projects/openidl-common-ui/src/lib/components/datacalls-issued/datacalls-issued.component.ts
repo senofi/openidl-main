@@ -13,7 +13,6 @@ import { DataService } from '../../services/data.service';
 import { UpdateReportComponent } from '../update-report/update-report.component';
 import { MESSAGE } from '../../config/messageBundle';
 import { DialogService } from '../../services/dialog.service';
-import moment from 'moment';
 
 @Component({
 	selector: 'app-datacalls-issued',
