@@ -4,6 +4,7 @@ on:
     branches:
       - openidl-nd-poc-main       
       - develop
+      - gateway-disconnect
     paths:
       - 'openidl-common-lib/**'
   
