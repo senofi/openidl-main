@@ -447,9 +447,10 @@ class MongoDBManager {
 
     async getFilteredDocuments(DBCollection, query) {
         logger.info('Inside mongodb getFilteredDocuments');
+        const regexString = "^" + query.transactionMonth
         return new Promise(function (resolve, reject) {
             mongodb.collection(DBCollection)
-                .find({ transactionMonth: query.transactionMonth, organizationId: query.organizationId })
+                .find({ TransactionDate: {"$regex": regexString}, organizationID: query.organizationId })
                 .toArray(function (err, results) {
                     if (err) {
                         reject(err);
