@@ -264,7 +264,7 @@ export class UpdateFormComponent implements OnInit {
 					[Validators.required]
 				],
 				transactionMonth: [
-					{ value: moment(), disabled: true },
+					{ value: '', disabled: true },
 					[Validators.required]
 				],
 				purpose: [
@@ -311,7 +311,7 @@ export class UpdateFormComponent implements OnInit {
 				premiumToDate: ['', [Validators.required]],
 				lossFromDate: ['', [Validators.required]],
 				lossToDate: ['', [Validators.required]],
-				transactionMonth: [moment(), [Validators.required]],
+				transactionMonth: [this.model.transactionMonth, [Validators.required]],
 				deadline: ['', [Validators.required]],
 				purpose: ['', [Validators.required]],
 				isShowParticipants: [true],
@@ -362,7 +362,7 @@ export class UpdateFormComponent implements OnInit {
 					[Validators.required]
 				],
 				transactionMonth: [
-					moment(),
+					{ value: '', disabled: true },
 					[Validators.required]
 				],
 				deadline: [
@@ -1019,14 +1019,6 @@ export class UpdateFormComponent implements OnInit {
 		this.dialogService.openModal(this.title, this.message, this.type, true);
 	}
 
-	// enable today and future dates for deadline calender
-	disableOldDates = (d: Date | null): boolean => {
-		const selected = d || new Date();
-		const now = new Date();
-		// display today and future dates
-		return selected.setHours(0, 0, 0, 0) >= now.setHours(0, 0, 0, 0);
-	};
-
 	createDraftCopy(src) {
 		let target = {};
 		for (let prop in src) {
@@ -1199,6 +1191,13 @@ export class UpdateFormComponent implements OnInit {
 		}
 		return '-NA-';
 	}
+
+	disableOldDates = (d: Date | null): boolean => {
+		const selected = (d || new Date());
+		const now = new Date();
+		// display today and future dates
+		return selected >= now;
+	};
 
 	chosenYearHandler(normalizedYear: Moment) {
 		const ctrlValue = this.registerForm.get('transactionMonth').value;
