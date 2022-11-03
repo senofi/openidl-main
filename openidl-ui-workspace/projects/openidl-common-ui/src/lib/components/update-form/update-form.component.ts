@@ -46,7 +46,7 @@ export const YYYYMM_FORMATS1 = {
 };
 
 @Directive({
-	selector: '[dateFormat]',
+	selector: '[dateFormat1]',
 	providers: [
 	  {provide: MAT_DATE_FORMATS, useValue: YYYYMM_FORMATS1},
 	]
