@@ -4,6 +4,7 @@ on:
     branches:
       - openidl-nd-poc-main       
       - develop
+      - npm-error
     paths:
       - 'openidl-common-lib/**'
   
