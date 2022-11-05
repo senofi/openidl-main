@@ -57,7 +57,7 @@ The following configuration files are either to be created or edited(if already 
 
 |   Config File Name      | Configured Value  |  Local Run Value|
 |  --------------------- | ----------------- | --------------- |
-|   `server/config/listener-channel-config.json` | `"listenerChannels": "${LISTENER_CHANNELS_EVENTS}"` | `"listenerChannels": [{"channelName":"analytics-aais","events":[{"ConsentedEvent":"ConsentedEvent"},{"ToggleLikeEvent":"ToggleLikeEvent"}]}]` |
+|   `server/config/listener-channel-config.json` | `"listenerChannels": "${LISTENER_CHANNELS_EVENTS}"` | `"listenerChannels": [{"channelName":"anlytcs-aais","events":[{"ConsentedEvent":"ConsentedEvent"},{"ToggleLikeEvent":"ToggleLikeEvent"}]}]` |
 
 
 ### 4. Configure local-kvs-config.json

@@ -1,7 +1,7 @@
 {
     "listenerChannels": [
         {
-            "channelName": "analytics-aais",
+            "channelName": "anlytcs-aais",
             "events": [
                 {
                     "ConsentedEvent": "ConsentedEvent"

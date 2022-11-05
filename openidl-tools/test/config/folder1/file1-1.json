@@ -5,7 +5,7 @@
             "chaincodeName": "${defaultchannel_chaincode_name}"
         },
         {
-            "channelName": "analytics-aais",
+            "channelName": "anlytcs-aais",
             "chaincodeName": "openidl-cc-aais-carriers"
         }
     ],
@@ -18,11 +18,11 @@
     ],
     "crossChannelQueryParam": [
         {
-            "channelName": "analytics-aais",
+            "channelName": "anlytcs-aais",
             "chaincodeName": "${analyticschannel_chaincode_name}"
         },
         {
-            "channelName": "analytics-carrier",
+            "channelName": "anlytcs-carr1",
             "chaincodeName": "openidl-cc-aais-carriers"
         }
     ]

@@ -134,15 +134,15 @@ In this step, we will create the necessary channels. A participating organizatio
 # create the defaultchannel
 $ ./network.sh createChannel -c defaultchannel -p DefaultChannel
 
-# create the analytics-aais
-$ ./network.sh createChannel -c analytics-aais -p AnalyticsAaisChannel
+# create the anlytcs-aais
+$ ./network.sh createChannel -c anlytcs-aais -p AnalyticsAaisChannel
 
-# create the analytics-carrier
-$ ./network.sh createChannel -c analytics-carrier -p AnalyticsCarrierChannel
+# create the anlytcs-carr1
+$ ./network.sh createChannel -c anlytcs-carr1 -p AnalyticsCarrierChannel
 
 ```
 
-These will create 3 channels, `defaultchannel`, `analytics-aais`, and `analytics-carrier`. The `defaultchannel` will include all three organizations, and other two channels will have organizations corresponding to the channel names.
+These will create 3 channels, `defaultchannel`, `anlytcs-aais`, and `anlytcs-carr1`. The `defaultchannel` will include all three organizations, and other two channels will have organizations corresponding to the channel names.
 
 ### Package and install Smart Contracts (Chaincodes)
 Organizations that want to validate transactions or query the ledger need to install the chaincode on their peers. The Openidl chaincodes are in the `openidl-chaincode` directory.
@@ -162,11 +162,11 @@ In this step, we will deploy the Chaincodes in the corresponding Channels and co
 # deploy 'openidl-cc-default' chaincode on 'defaultchannel'
 $ ./network.sh deployCC -c defaultchannel -ccn openidl-cc-default -ccp ../openidl-chaincode/chaincode/openidl -ccl go -cci Init -ccsp true
 
-# deploy 'openidl-cc-aais-carriers' chaincode on 'analytics-aais'
-$ ./network.sh deployCC -c analytics-aais -ccn openidl-cc-aais-carriers -ccp ../openidl-chaincode/chaincode/openidl -ccl go -cci Init -ccsp true -cccg ../openidl-chaincode/chaincode/openidl/collection-config-analytics-aais.json
+# deploy 'openidl-cc-aais-carriers' chaincode on 'anlytcs-aais'
+$ ./network.sh deployCC -c anlytcs-aais -ccn openidl-cc-aais-carriers -ccp ../openidl-chaincode/chaincode/openidl -ccl go -cci Init -ccsp true -cccg ../openidl-chaincode/chaincode/openidl/collection-config-anlytcs-aais.json
 
-# deploy 'openidl-cc-aais-carriers' chaincode on 'analytics-carrier'
-$ ./network.sh deployCC -c analytics-carrier -ccn openidl-cc-aais-carriers -ccp ../openidl-chaincode/chaincode/openidl -ccl go -cci Init -ccsp true -cccg ../openidl-chaincode/chaincode/openidl/collection-config-analytics-carrier.json
+# deploy 'openidl-cc-aais-carriers' chaincode on 'anlytcs-carr1'
+$ ./network.sh deployCC -c anlytcs-carr1 -ccn openidl-cc-aais-carriers -ccp ../openidl-chaincode/chaincode/openidl -ccl go -cci Init -ccsp true -cccg ../openidl-chaincode/chaincode/openidl/collection-config-anlytcs-carr1.json
 
 ```
 After this step, the Chaincodes will be deployed and ready to process transactions. You can see the new chaincode containers listed in the ```docker ps -a``` command.

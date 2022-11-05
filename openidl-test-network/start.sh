@@ -10,11 +10,11 @@
 # create the defaultchannel
 ./network.sh createChannel -c defaultchannel -p DefaultChannel
 
-# create the analytics-aais
-./network.sh createChannel -c analytics-aais -p AnalyticsAaisChannel
+# create the anlytcs-aais
+./network.sh createChannel -c anlytcs-aais -p AnalyticsAaisChannel
 
-# create the analytics-carrier
-./network.sh createChannel -c analytics-carrier -p AnalyticsCarrierChannel
+# create the anlytcs-carr1
+./network.sh createChannel -c anlytcs-carr1 -p AnalyticsCarrierChannel
 
 # package and install 'openidl-cc-default' chaincode on aais node
 ./network.sh deployCC -ccn openidl-cc-default -ccp ../openidl-chaincode/chaincode/openidl -ccl go -ccsd true
@@ -25,11 +25,11 @@
 # deploy 'openidl-cc-default' chaincode on 'defaultchannel'
 ./network.sh deployCC -c defaultchannel -ccn openidl-cc-default -ccp ../openidl-chaincode/chaincode/openidl -ccl go -cci Init -ccsp true
 
-# deploy 'openidl-cc-aais-carriers' chaincode on 'analytics-aais'
-./network.sh deployCC -c analytics-aais -ccn openidl-cc-aais-carriers -ccp ../openidl-chaincode/chaincode/openidl -ccl go -cci Init -ccsp true -cccg ../openidl-chaincode/chaincode/openidl/collection-config-analytics-aais.json
+# deploy 'openidl-cc-aais-carriers' chaincode on 'anlytcs-aais'
+./network.sh deployCC -c anlytcs-aais -ccn openidl-cc-aais-carriers -ccp ../openidl-chaincode/chaincode/openidl -ccl go -cci Init -ccsp true -cccg ../openidl-chaincode/chaincode/openidl/collection-config-anlytcs-aais.json
 
-# deploy 'openidl-cc-aais-carriers' chaincode on 'analytics-carrier'
-./network.sh deployCC -c analytics-carrier -ccn openidl-cc-aais-carriers -ccp ../openidl-chaincode/chaincode/openidl -ccl go -cci Init -ccsp true -cccg ../openidl-chaincode/chaincode/openidl/collection-config-analytics-carrier.json
+# deploy 'openidl-cc-aais-carriers' chaincode on 'anlytcs-carr1'
+./network.sh deployCC -c anlytcs-carr1 -ccn openidl-cc-aais-carriers -ccp ../openidl-chaincode/chaincode/openidl -ccl go -cci Init -ccsp true -cccg ../openidl-chaincode/chaincode/openidl/collection-config-anlytcs-carr1.json
 
 # pre-register users on certificate authority (couchdb)
 ./pre-register-users.sh -N admin -P adminpw -p password -u localhost:7054 -n ca-aais  -c http://admin:adminpw@localhost:9984/wallet/ -o aais -m aaismsp -U "openidl-aais-insurance-data-manager-ibp-2.0 openidl-aais-data-call-app-ibp-2.0 openidl-aais-data-call-processor-ibp-2.0" -r true -w couch

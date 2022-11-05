@@ -1,7 +1,7 @@
 {
     "listenerChannels": [
         {
-            "channelName": "analytics-aais",
+            "channelName": "anlytcs-aais",
             "events": [
                 {
                     "TransactionalDataAvailable": "processTransactionalDataAvailableEvent"
@@ -9,7 +9,7 @@
             ]
         },
         {
-            "channelName": "analytics-carrier",
+            "channelName": "anlytcs-carr1",
             "events": [
                 {
                     "TransactionalDataAvailable": "processTransactionalDataAvailableEvent"
