@@ -1,7 +1,7 @@
 {
     "listenerChannels": [
         {
-            "channelName": "analytics-carrier",
+            "channelName": "anlytcs-carr1",
             "events": [
                 {
                     "ConsentedEvent": "ConsentedEvent"

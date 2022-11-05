@@ -1,7 +1,7 @@
 {
     "targetChannels": [
         {
-            "channelName": "analytics-aais",
+            "channelName": "anlytcs-aais",
             "chaincodeName": "openidl-cc-aais-carriers"
         },
         {

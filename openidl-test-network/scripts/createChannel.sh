@@ -99,28 +99,28 @@ if [ "$CHANNEL_NAME" = "defaultchannel" ]; then
 	setAnchorPeer analytics
 	infoln "Setting anchor peer for carrier to the defaultchannel..."
 	setAnchorPeer carrier
-elif [ "$CHANNEL_NAME" == "analytics-aais" ]; then
+elif [ "$CHANNEL_NAME" == "anlytcs-aais" ]; then
 	## Create channel
 	infoln "Creating channel ${CHANNEL_NAME}"
 	createChannel aais
 	successln "Channel '$CHANNEL_NAME' created"
-	infoln "Joining aais peer to the analytics-aais..."
+	infoln "Joining aais peer to the anlytcs-aais..."
 	joinChannel aais
-	infoln "Joining analytics peer to the analytics-aais..."
+	infoln "Joining analytics peer to the anlytcs-aais..."
 	joinChannel analytics
 	## Set the anchor peers for each org in the channel
 	infoln "Setting anchor peer for aais to the analyticsaais channel..."
 	setAnchorPeer aais
 	infoln "Setting anchor peer for analytics to the analyticsaais channel..."
 	setAnchorPeer analytics
-elif [ "$CHANNEL_NAME" == "analytics-carrier" ]; then
+elif [ "$CHANNEL_NAME" == "anlytcs-carr1" ]; then
 	## Create channel
 	infoln "Creating channel ${CHANNEL_NAME}"
 	createChannel analytics
 	successln "Channel '$CHANNEL_NAME' created"
-	infoln "Joining analytics peer to the analytics-carrier..."
+	infoln "Joining analytics peer to the anlytcs-carr1..."
 	joinChannel analytics
-	infoln "Joining carrier peer to the analytics-carrier..."
+	infoln "Joining carrier peer to the anlytcs-carr1..."
 	joinChannel carrier
 	## Set the anchor peers for each org in the channel
 	infoln "Setting anchor peer for analytics to the analyticscarrier channel..."

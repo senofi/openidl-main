@@ -58,7 +58,7 @@ For development, testing, and debugging purposes, it is very convenient to run t
 
 |   Config File Name      | Configured Value  |  Local Run Value|
 |  --------------------- | ----------------- | --------------- |
-|   `server/config/listener-channel-config.json` | `"listenerChannels": "${LISTENER_CHANNELS_EVENTS}"` | `"listenerChannels": [{"channelName":"analytics-aais","events":[{"TransactionalDataAvailable":"processTransactionalDataAvailableEvent"}]}]` |
+|   `server/config/listener-channel-config.json` | `"listenerChannels": "${LISTENER_CHANNELS_EVENTS}"` | `"listenerChannels": [{"channelName":"anlytcs-aais","events":[{"TransactionalDataAvailable":"processTransactionalDataAvailableEvent"}]}]` |
 
 ### 4. target-channel-config.json
 
@@ -67,7 +67,7 @@ For development, testing, and debugging purposes, it is very convenient to run t
 
 |   Config File Name      | Configured Value  |  Local Run Value|
 |  --------------------- | ----------------- | --------------- |
-|   `server/config/target-channel-config.json` | `"targetChannels": "${TARGET_CHANNELS}"` | `"targetChannels": [{"channelName":"analytics-aais","chaincodeName":"openidl-cc-aais-carriers"}]` |
+|   `server/config/target-channel-config.json` | `"targetChannels": "${TARGET_CHANNELS}"` | `"targetChannels": [{"channelName":"anlytcs-aais","chaincodeName":"openidl-cc-aais-carriers"}]` |
 
 ### 5. Configure s3-bucket-config.json
 

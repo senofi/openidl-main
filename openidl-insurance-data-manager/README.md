@@ -119,10 +119,10 @@ Application currently supports both AWS Cognito and IBM App ID. You can go with 
 
 |   Config File Name      | Configured Value  |  Local Run Value|
 | --------------------- | ----------------- | --------------- |
-|   `server/config/channel-config.json` | `"channelName": "analytics-${HOST}"` | `"channelName": "analytics-aais"` |
+|   `server/config/channel-config.json` | `"channelName": "analytics-${HOST}"` | `"channelName": "anlytcs-aais"` |
 |  `server/config/channel-config.json` | `"org": "${HOST}msp"` | `"org": "aaismsp"` |
 |   `server/config/channel-config.json` | ` "user": "openidl-${HOST}-insurance-data-manager-ibp-2.0"` | ` "user": "openidl-aais-insurance-data-manager-ibp-2.0"` |
-|   `server/config/channel-config.json` | `"channelName": "analytics-${HOST}"` | `"channelName": "analytics-aais"` |
+|   `server/config/channel-config.json` | `"channelName": "analytics-${HOST}"` | `"channelName": "anlytcs-aais"` |
 |   `server/config/channel-config.json` | ` "mspId": "${HOST}msp"` | ` "mspId": "aaismsp"` |
 
 ### 5. Configure local-kvs-config.json

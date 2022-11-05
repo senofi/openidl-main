@@ -343,7 +343,7 @@ if [ "$CHANNEL_NAME" = "defaultchannel" ]; then
   else
     chaincodeInvokeInit aais
   fi
-elif [ "$CHANNEL_NAME" == "analytics-aais" ]; then
+elif [ "$CHANNEL_NAME" == "anlytcs-aais" ]; then
 
   ## query whether the chaincode is installed
   queryInstalled aais
@@ -371,7 +371,7 @@ elif [ "$CHANNEL_NAME" == "analytics-aais" ]; then
   else
     chaincodeInvokeInit aais analytics
   fi
-elif [ "$CHANNEL_NAME" == "analytics-carrier" ]; then
+elif [ "$CHANNEL_NAME" == "anlytcs-carr1" ]; then
 
   ## query whether the chaincode is installed
   queryInstalled analytics

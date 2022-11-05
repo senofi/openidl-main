@@ -107,7 +107,7 @@ Application currently supports both AWS Cognito and IBM App ID. You can go with 
 
 | Config File Name      | Configured Value  |  Local Run Value|
 | --------------------- | ----------------- | --------------- |
-| `server/config/listener-channel-config.json` | `"channelName": "analytics-${HOST}"` | `"channelName": "analytics-aais"` |
+| `server/config/listener-channel-config.json` | `"channelName": "analytics-${HOST}"` | `"channelName": "anlytcs-aais"` |
 |  `server/config/target-channel-config.json` | `"org": "${HOST}"` | `"org": "aais"` |
 | `server/config/listener-channel-config.json` | ` "user": "openidl-${HOST}-data-call-processor-ibp-2.0","` | ` "user": "openidl-aais-data-call-processor-ibp-2.0","` |
 

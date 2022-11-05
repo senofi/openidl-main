@@ -105,7 +105,7 @@ Application currently supports both AWS Cognito and IBM App ID. You can go with 
 
 |   Config File Name      | Configured Value  |  Local Run Value|
 |  --------------------- | ----------------- | --------------- |
-|   `server/config/channel-config.json` | `"channelName": "analytics-${HOST}"` | `"channelName": "analytics-aais"` |
+|   `server/config/channel-config.json` | `"channelName": "analytics-${HOST}"` | `"channelName": "anlytcs-aais"` |
 |  `server/config/channel-config.json` | `"org": "${HOST}"` | `"org": "aais"` |
 |   `server/config/channel-config.json` | `  "user": "openidl-${HOST}-data-call-app-ibp-2.0"` | ` "user": "openidl-aais-data-call-app-ibp-2.0"` |
 |   `server/config/channel-config.json` | ` "mspId": "${HOST}msp"` | ` "mspId": "aaismsp"` |
@@ -115,11 +115,11 @@ Application currently supports both AWS Cognito and IBM App ID. You can go with 
 
         [
           {
-              "channelName":"analytics-aais",
+              "channelName":"anlytcs-aais",
               "chaincodeName":"openidl-cc-aais-carriers"
           },
           {
-              "channelName":"analytics-carrier",
+              "channelName":"anlytcs-carr1",
               "chaincodeName":"openidl-cc-aais-carriers"
           },
           {
