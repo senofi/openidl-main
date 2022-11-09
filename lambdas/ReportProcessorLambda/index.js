@@ -7,6 +7,7 @@ const ReportProcessor = require('./reportProcessor');
 const getDataCall = require('./dataCallCRUD').getDatacall;
 const postReport = require('./dataCallCRUD').postReport;
 const getDMVData = require('./dataCallCRUD').getDMVData;
+const dataCallConfig = require('./config/datacall-config.json')
 
 exports.handler = async (event, context) => {
     //console.log('Received event:', JSON.stringify(event, null, 2));
