@@ -2,6 +2,7 @@ const aws = require('aws-sdk');
 const config = require('config');
 const logger = require('loglevel');
 logger.setLevel(config.get('loglevel'));
+const datacallConfig = require('./config/datacall-config.json');
 const s3Config = require('./config/s3-bucket-config.json');
 const ReportProcessor = require('./reportProcessor');
 const getDataCall = require('./dataCallCRUD').getDatacall;
@@ -28,15 +29,25 @@ exports.handler = async (event, context) => {
         const datacall = datacalls[0];
         const transactionMonth = datacall.transactionMonth;
         logger.debug("Datacall fetched from Blockchain with id: ", datacallId)
+        logger.debug("datacall is: ", JSON.stringify(datacall, null, 2))
         const rp = new ReportProcessor;
         const resultData = await rp.readResult(params);
         logger.debug("Result data is: ", JSON.stringify(resultData, null, 2))
+        if (!resultData) {
+            throw new Error("Result dataset Empty!");
+        }
         const dmvData = await getDMVData(config.get("DMVOrganizationId"), transactionMonth);
+        logger.debug("dmvData is: ", JSON.stringify(dmvData, null, 2))
+        if (!dmvData || !dmvData.result || dmvData.result.length === 0) {
+            throw new Error("DMV Dataset Empty!");
+        }
         logger.debug("Data reading Done from DMV data and result")
-        const reportContent = await rp.createReportContent(resultData, JSON.parse(JSON.stringify (dmvData)));
+        const reportContent = await rp.createReportContent(resultData, JSON.parse(JSON.stringify (dmvData.result)));
+        logger.debug("reportContent is: ", JSON.stringify(reportContent, null, 2))
         await rp.publishCSV(reportContent, datacallId);
         await rp.getCSV("report-" + datacallId + ".csv");
         const reportUrl = "" + s3Config.urlPrefix + s3Config.bucketName + "/report-" + datacallId + ".csv";
+        logger.debug("reportUrl is: ", JSON.stringify(reportUrl, null, 2))
         const report = {
             "datacallID": datacallId,
             "dataCallVersion": datacall.version,
