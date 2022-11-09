@@ -43,7 +43,7 @@ exports.handler = async (event, context) => {
             "hash": "examplehash123",
             "url": reportUrl,
             "createdTs": new Date().toISOString(),
-            "createdBy": datacallConfig.username
+            "createdBy": dataCallConfig.username
             }; 
         await postReport(JSON.stringify(report));
         logger.info("Report published in CSV and Blockchain updated")
