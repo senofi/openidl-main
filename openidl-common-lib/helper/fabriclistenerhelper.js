@@ -164,19 +164,20 @@
  
      async removeBlockEventListener(channelName, listener) {
          logger.debug('removeBlockEventListener method entry');
+         const gateway = new Gateway();
          try{
              // gateway and contract connection
-             await this.eventGateway.connect(this.ccp, {
+             await gateway.connect(this.ccp, {
                  identity: this.user,
                  wallet: this.wallet,
                  discovery: { enabled: true, asLocalhost: false }
              });
-             const network = await this.eventGateway.getNetwork(channelName);
+             const network = await gateway.getNetwork(channelName);
              await network.removeBlockListener(listener);
          } catch (err) {
              logger.error('removeBlockEventListener error ' + err);
          } finally {
-             this.eventGateway.disconnect();
+             gateway.disconnect();
          }
      }
  };
