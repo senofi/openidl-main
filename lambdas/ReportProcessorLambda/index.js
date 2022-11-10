@@ -8,7 +8,6 @@ const ReportProcessor = require('./reportProcessor');
 const getDataCall = require('./dataCallCRUD').getDatacall;
 const postReport = require('./dataCallCRUD').postReport;
 const getDMVData = require('./dataCallCRUD').getDMVData;
-const dataCallConfig = require('./config/datacall-config.json')
 
 exports.handler = async (event, context) => {
     //console.log('Received event:', JSON.stringify(event, null, 2));
@@ -55,7 +54,7 @@ exports.handler = async (event, context) => {
             "hash": "examplehash123",
             "url": reportUrl,
             "createdTs": new Date().toISOString(),
-            "createdBy": dataCallConfig.username
+            "createdBy": datacallConfig.username
             }; 
         await postReport(JSON.stringify(report));
         logger.info("Report published in CSV and Blockchain updated")
