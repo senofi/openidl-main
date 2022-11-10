@@ -23,6 +23,7 @@
          this.user = user;
          this.channelName = channelName;
          this.orgMSPId = orgMSPId;
+         this.eventGateway = new Gateway();
          this.wallet = wallet;
          this.peer = peer;
      }
@@ -147,20 +148,17 @@
  
      async registerBlockEventListener(channelName, listener, options) {
          logger.debug('registerBlockEventListener method entry');
-         const gateway = new Gateway();
          try{
              // gateway and contract connection
-             await gateway.connect(this.ccp, {
+             await this.eventGateway.connect(this.ccp, {
                  identity: this.user,
                  wallet: this.wallet,
                  discovery: { enabled: true, asLocalhost: false }
              });
-             const network = await gateway.getNetwork(channelName);
+             const network = await this.eventGateway.getNetwork(channelName);
              await network.addBlockListener(listener, options);
          } catch (err) {
              logger.error('registerBlockEventListener error ' + err);
-         } finally {
-             gateway.disconnect();
          }
      }
  
