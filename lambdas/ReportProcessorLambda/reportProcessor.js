@@ -8,7 +8,10 @@ class ReportProcessor {
 		let data;
 		try {
 			data = await s3b.getTransactionalData(params);
-			return JSON.parse(data.Body);
+			data = JSON.parse(data.Body);
+      const buff = Buffer.from(data[0].data);
+			const dataString = buff.toString();
+			return JSON.parse(dataString);
 		} catch (err) {
 			logger.error("Error in reading result: ", err)
 		}
@@ -19,7 +22,7 @@ class ReportProcessor {
 		for (var i = 0; i < dmvData.length; i = i + 1) {
 			var isInsured = "no";
 			for (var j = 0; j < resultData.length; j = j + 1) {
-				if (dmvData[i].VinHash == resultData[j].VinHash) {
+				if (dmvData[i].VINHash == resultData[j]._id) {
 					isInsured = "yes";
 					break;
 				}
