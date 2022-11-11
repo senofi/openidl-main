@@ -35,7 +35,7 @@ export class DataService {
 			headers: new HttpHeaders({
 				'Content-Type': 'application/json',
 
-				// 'Authorization': 'Bearer ' + this.apiToken
+				UserToken: this.apiToken
 			})
 		};
 		this.httpOptionsMultipart = {

@@ -14,7 +14,7 @@ app.use(express.urlencoded({
 
 //module.exports = function(app) {
 // Application Login
-router.route(API_URL + '/login').post(authHandler.authenticate, authHandler.getUserAttributes, authHandler.storeTokenInCookie, commonController.login);
+router.route(API_URL + '/login').post(authHandler.authenticate, authHandler.getUserAttributes, commonController.login);
 // /authHandler.authenticate, authHandler.getUserAttributes, authHandler.storeTokenInCookie,
 
 // Application logout
