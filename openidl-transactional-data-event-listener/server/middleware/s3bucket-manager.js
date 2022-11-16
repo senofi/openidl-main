@@ -37,7 +37,6 @@ class S3BucketManager {
     async getTransactionalDataByDatacall(dataCallId) {
         logger.info("Inside getTransactionalDataByDataCall, datacallId is ", dataCallId);
         const accessParams = await this.getAccessParams();
-        logger.debug("accessparams: ", accessParams);
         let bucket = new AWS.S3(accessParams);
         let getObjectParam = { Bucket: bucketConfig.bucketName, Prefix: dataCallId };
         try {
@@ -51,7 +50,6 @@ class S3BucketManager {
     async getData(id) {
         logger.info("Inside getData, id is ", id);
         const accessParams = await this.getAccessParams();
-        logger.debug("accessparams: ", accessParams);
         let bucket = new AWS.S3(accessParams);
         let getObjectParam = { Bucket: bucketConfig.bucketName, Key: id };
         try {
@@ -68,7 +66,6 @@ class S3BucketManager {
     async getTransactionalData(id) {
         logger.debug("Inside getTransactionalData");
         const accessParams = await this.getAccessParams();
-        logger.debug("accessparams: ", accessParams);
         let bucket = new AWS.S3(accessParams);
         let getObjectParam = { Bucket: bucketConfig.bucketName, Key: id };
         try {
