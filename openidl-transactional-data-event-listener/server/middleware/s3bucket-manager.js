@@ -41,7 +41,6 @@ class S3BucketManager {
         let getObjectParam = { Bucket: bucketConfig.bucketName, Prefix: dataCallId };
         try {
             const data = await bucket.listObjects(getObjectParam).promise();
-            console.log("getobject data is - " + JSON.stringify(data))
             return data
         } catch (err) {
             logger.error(err)
@@ -54,8 +53,6 @@ class S3BucketManager {
         let getObjectParam = { Bucket: bucketConfig.bucketName, Key: id };
         try {
             const data = await bucket.getObject(getObjectParam).promise();
-            console.log("getobject data is - " + JSON.stringify(data))
-            console.log("getobject body is - " + JSON.stringify(JSON.parse(data.Body), null, 2))
             return data
         } catch (err) {
             logger.error(err)
@@ -70,8 +67,6 @@ class S3BucketManager {
         let getObjectParam = { Bucket: bucketConfig.bucketName, Key: id };
         try {
             const data = await bucket.getObject(getObjectParam).promise();
-            console.log("getobject data is - " + JSON.stringify(data))
-            console.log("getobject body is - " + JSON.stringify(JSON.parse(data.Body), null, 2))
             return data.VersionId
         } catch (err) {
             logger.error(err)
