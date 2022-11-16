@@ -53,7 +53,6 @@ class S3BucketManager {
     async getTransactionalData(id) {
         logger.debug("Inside getTransactionalData");
         const accessParams = await this.getAccessParams();
-        logger.debug("accessparams: ", accessParams);
         let bucket = new AWS.S3(accessParams);
         let getObjectParam = { Bucket: bucketConfig.bucketName, Key: id };
         const data = await bucket.getObject(getObjectParam).promise();
