@@ -36,6 +36,28 @@ class S3BucketManager {
             logger.error(err);
         }
     }
+    async getAllObjectsWithPrefix(prefix) {
+        logger.debug("Inside getAllObjectsWithPrefix, prefix: ", prefix);
+        let bucket = new AWS.S3();
+        let listParam = { Bucket: bucketConfig.bucketName,Prefix:prefix };
+        const data = await bucket.listObjectsV2(listParam).promise();
+        logger.debug("listobject data is - " + JSON.stringify(data))
+        return data;
+    }
+    async deleteObject(id) {
+        logger.debug('Inside deleteObject');
+        const deleteObjectParam = { Bucket: bucketConfig.bucketName, Key: id };
+        logger.info("Params: ", deleteObjectParam)
+        let bucket = new AWS.S3();
+        try {
+            const data = await bucket.deleteObject(deleteObjectParam).promise();
+            logger.debug("deleteobject result: " + JSON.stringify(data))
+            logger.debug('Object Deleted Successfully');
+        } catch (err) {
+            logger.error(err);
+        }
+    }
+
     async getCSV(id) {
         logger.debug("Inside getCSV");
         let bucket = new AWS.S3();

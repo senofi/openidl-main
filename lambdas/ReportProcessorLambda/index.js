@@ -58,6 +58,9 @@ exports.handler = async (event, context) => {
             }; 
         await postReport(JSON.stringify(report));
         logger.info("Report published in CSV and Blockchain updated")
+        // Delete result and extraction-pattern-result data
+        await rp.deleteResult(params);
+        await rp.deleteConsentFiles(datacallId);
         return ;
     } catch (err) {
         logger.error("Error in report processor!", err)
