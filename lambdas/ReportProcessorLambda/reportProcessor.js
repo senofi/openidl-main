@@ -37,13 +37,18 @@ class ReportProcessor {
 		  throw new Error("No Consent file to delete!")
 		}
 		logger.info("DeleteConsentFiles: file count is: ". data.Contents.length)
+	  const resKeys = [];
 		for (var i = 0; i< data.Contents.length; i = i+1) {
-			try {
-				await s3b.deleteObject(data.Contents[i].Key);
-			} catch (err) {
-				logger.error("Error in deleting Consent files. ", err) 
-			}
+			const resItem = {Key: data.Contents[i].Key}
+			resKeys.push(resItem)
 		}
+		logger.info("Object keys to be deleted: ", resKeys)
+		try {
+			await s3b.deleteObjects(resKeys);
+		} catch (err) {
+			logger.error("Error in deleting Consent files. ", err) 
+		}
+		
 	}
 
 	async createReportContent(resultData, dmvData) {

@@ -32,7 +32,7 @@ exports.handler = async (event, context) => {
         logger.debug("datacall is: ", JSON.stringify(datacall, null, 2))
         const rp = new ReportProcessor;
         const resultData = await rp.readResult(params);
-        logger.debug("Result data is: ", JSON.stringify(resultData, null, 2))
+        logger.debug("Result data length is: ", (resultData.length))
         if (!resultData) {
             throw new Error("Result dataset Empty!");
         }
