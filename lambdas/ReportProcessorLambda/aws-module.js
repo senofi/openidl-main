@@ -36,6 +36,41 @@ class S3BucketManager {
             logger.error(err);
         }
     }
+    async getAllObjectsWithPrefix(prefix) {
+        logger.debug("Inside getAllObjectsWithPrefix, prefix: ", prefix);
+        let bucket = new AWS.S3();
+        let listParam = { Bucket: bucketConfig.bucketName,Prefix:prefix };
+        const data = await bucket.listObjectsV2(listParam).promise();
+        return data;
+    }
+    async deleteObject(id) {
+        logger.debug('Inside deleteObject');
+        const deleteObjectParam = { Bucket: bucketConfig.bucketName, Key: id };
+        logger.info("Params: ", deleteObjectParam)
+        let bucket = new AWS.S3();
+        try {
+            const data = await bucket.deleteObject(deleteObjectParam).promise();
+            logger.debug("deleteobject result: " + JSON.stringify(data))
+            logger.debug('Object Deleted Successfully');
+        } catch (err) {
+            logger.error(err);
+        }
+    }
+
+    async deleteObjects(keys) {
+        logger.debug('Inside deleteObjects');
+        const deleteObjectsParam = { Bucket: bucketConfig.bucketName, Delete: {Objects: keys} };
+        logger.info("Params: ", deleteObjectsParam)
+        let bucket = new AWS.S3();
+        try {
+            const data = await bucket.deleteObjects(deleteObjectsParam).promise();
+            logger.debug("deleteobjects result: " + JSON.stringify(data))
+            logger.debug('Objects Deleted Successfully');
+        } catch (err) {
+            logger.error(err);
+        }
+    }
+
     async getCSV(id) {
         logger.debug("Inside getCSV");
         let bucket = new AWS.S3();

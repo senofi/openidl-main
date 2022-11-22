@@ -22,6 +22,35 @@ class ReportProcessor {
 		}
 	}
 
+	async deleteResult(params) {
+		const s3b = new S3BucketManager();
+		try {
+			await s3b.deleteObject(params.Key);
+		} catch (err) {
+			logger.error("Error in deleting result: ", err)
+		}
+	}
+	async deleteConsentFiles(datacallId) {
+		const s3b = new S3BucketManager();
+		var data = await s3b.getAllObjectsWithPrefix(datacallId);
+		if (!data.Contents || data.Contents.length < 1) {
+		  throw new Error("No Consent file to delete!")
+		}
+		logger.info("DeleteConsentFiles: file count is: ". data.Contents.length)
+	  const resKeys = [];
+		for (var i = 0; i< data.Contents.length; i = i+1) {
+			const resItem = {Key: data.Contents[i].Key}
+			resKeys.push(resItem)
+		}
+		logger.info("Object keys to be deleted: ", resKeys)
+		try {
+			await s3b.deleteObjects(resKeys);
+		} catch (err) {
+			logger.error("Error in deleting Consent files. ", err) 
+		}
+		
+	}
+
 	async createReportContent(resultData, dmvData) {
 		const reportData = [];
 		for (var i = 0; i < dmvData.length; i = i + 1) {
