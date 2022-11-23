@@ -25,14 +25,14 @@ class ReportProcessor {
 	async deleteResult(params) {
 		const s3b = new S3BucketManager();
 		try {
-			await s3b.deleteObject(params.Key);
+			await s3b.deleteObject(params);
 		} catch (err) {
 			logger.error("Error in deleting result: ", err)
 		}
 	}
-	async deleteConsentFiles(datacallId) {
+	async deleteConsentFiles(params, datacallId) {
 		const s3b = new S3BucketManager();
-		var data = await s3b.getAllObjectsWithPrefix(datacallId);
+		var data = await s3b.getAllObjectsWithPrefix(params, datacallId);
 		if (!data.Contents || data.Contents.length < 1) {
 		  throw new Error("No Consent file to delete!")
 		}
@@ -44,7 +44,7 @@ class ReportProcessor {
 		}
 		logger.info("Object keys to be deleted: ", resKeys)
 		try {
-			await s3b.deleteObjects(resKeys);
+			await s3b.deleteObjects(params, resKeys);
 		} catch (err) {
 			logger.error("Error in deleting Consent files. ", err) 
 		}
