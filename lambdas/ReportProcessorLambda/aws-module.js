@@ -36,16 +36,16 @@ class S3BucketManager {
             logger.error(err);
         }
     }
-    async getAllObjectsWithPrefix(prefix) {
+    async getAllObjectsWithPrefix(params, prefix) {
         logger.debug("Inside getAllObjectsWithPrefix, prefix: ", prefix);
+        logger.debug("Inside getAllObjectsWithPrefix, param: ", params);
         let bucket = new AWS.S3();
-        let listParam = { Bucket: bucketConfig.bucketName,Prefix:prefix };
+        let listParam = { Bucket: params.Bucket, Prefix:prefix };
         const data = await bucket.listObjectsV2(listParam).promise();
         return data;
     }
-    async deleteObject(id) {
+    async deleteObject(deleteObjectParam) {
         logger.debug('Inside deleteObject');
-        const deleteObjectParam = { Bucket: bucketConfig.bucketName, Key: id };
         logger.info("Params: ", deleteObjectParam)
         let bucket = new AWS.S3();
         try {
@@ -57,9 +57,9 @@ class S3BucketManager {
         }
     }
 
-    async deleteObjects(keys) {
+    async deleteObjects(params, keys) {
         logger.debug('Inside deleteObjects');
-        const deleteObjectsParam = { Bucket: bucketConfig.bucketName, Delete: {Objects: keys} };
+        const deleteObjectsParam = { Bucket:  params.Bucket, Delete: {Objects: keys} };
         logger.info("Params: ", deleteObjectsParam)
         let bucket = new AWS.S3();
         try {
