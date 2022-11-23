@@ -41,7 +41,6 @@ class ReportProcessor {
 		if (!data.Contents || data.Contents.length < 1) {
 		  throw new Error("No Consent file to delete!")
 		}
-		logger.info("DeleteConsentFiles: file count is: ". data.Contents.length)
 	  const resKeys = [];
 		for (var i = 0; i< data.Contents.length; i = i+1) {
 			const resItem = {Key: data.Contents[i].Key}
