@@ -32,7 +32,12 @@ class ReportProcessor {
 	}
 	async deleteConsentFiles(params, datacallId) {
 		const s3b = new S3BucketManager();
-		var data = await s3b.getAllObjectsWithPrefix(params, datacallId);
+		let data = {};
+		try {
+			data = await s3b.getAllObjectsWithPrefix(params, datacallId);
+		} catch (err) {
+		  throw new Error("Error in getting all consent files. ", err)
+		}
 		if (!data.Contents || data.Contents.length < 1) {
 		  throw new Error("No Consent file to delete!")
 		}
