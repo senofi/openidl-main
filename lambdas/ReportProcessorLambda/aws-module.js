@@ -41,8 +41,13 @@ class S3BucketManager {
         logger.debug("Inside getAllObjectsWithPrefix, param: ", params);
         let bucket = new AWS.S3();
         let listParam = { Bucket: params.Bucket, Prefix:prefix };
-        const data = await bucket.listObjectsV2(listParam).promise();
-        return data;
+        try {
+          const data = await bucket.listObjectsV2(listParam).promise();
+          logger.debug("Inside getAllObjectsWithPrefix, result data ", data);
+          return data;
+        } catch (err) {
+            logger.error(err);
+        }
     }
     async deleteObject(deleteObjectParam) {
         logger.debug('Inside deleteObject');
