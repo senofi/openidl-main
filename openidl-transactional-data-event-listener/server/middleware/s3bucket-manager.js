@@ -37,12 +37,10 @@ class S3BucketManager {
     async getTransactionalDataByDatacall(dataCallId) {
         logger.info("Inside getTransactionalDataByDataCall, datacallId is ", dataCallId);
         const accessParams = await this.getAccessParams();
-        logger.debug("accessparams: ", accessParams);
         let bucket = new AWS.S3(accessParams);
         let getObjectParam = { Bucket: bucketConfig.bucketName, Prefix: dataCallId };
         try {
             const data = await bucket.listObjects(getObjectParam).promise();
-            console.log("getobject data is - " + JSON.stringify(data))
             return data
         } catch (err) {
             logger.error(err)
@@ -51,13 +49,10 @@ class S3BucketManager {
     async getData(id) {
         logger.info("Inside getData, id is ", id);
         const accessParams = await this.getAccessParams();
-        logger.debug("accessparams: ", accessParams);
         let bucket = new AWS.S3(accessParams);
         let getObjectParam = { Bucket: bucketConfig.bucketName, Key: id };
         try {
             const data = await bucket.getObject(getObjectParam).promise();
-            console.log("getobject data is - " + JSON.stringify(data))
-            console.log("getobject body is - " + JSON.stringify(JSON.parse(data.Body), null, 2))
             return data
         } catch (err) {
             logger.error(err)
@@ -68,13 +63,10 @@ class S3BucketManager {
     async getTransactionalData(id) {
         logger.debug("Inside getTransactionalData");
         const accessParams = await this.getAccessParams();
-        logger.debug("accessparams: ", accessParams);
         let bucket = new AWS.S3(accessParams);
         let getObjectParam = { Bucket: bucketConfig.bucketName, Key: id };
         try {
             const data = await bucket.getObject(getObjectParam).promise();
-            console.log("getobject data is - " + JSON.stringify(data))
-            console.log("getobject body is - " + JSON.stringify(JSON.parse(data.Body), null, 2))
             return data.VersionId
         } catch (err) {
             logger.error(err)

@@ -1,6 +1,6 @@
 {
-  "name": "@rajeshsanjeevi/openidl-common-lib",
-  "version": "0.0.1",
+  "name": "@openidl-org/openidl-common-lib",
+  "version": "0.5.8",
   "private": false,
   "main": "index.js",
   "publishConfig": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rajeshsanjeevi/openidl-main.git",
+    "url": "https://github.com/senofi/openidl-main.git",
     "directory": "openidl-common-lib"
   },
   "engines": {
@@ -47,10 +47,16 @@
     "eslint-plugin-import": "^2.13.0",
     "mocha": "^8.4.0",
     "nodemon": "^2.0.12",
-    "nyc": "15.0.0"
+    "nyc": "15.0.0",
+    "husky": "^4.3.8"
   },
   "resolutions": {
     "fabric-client/**/jsrsasign": "10.2.0",
     "fabric-ca-client/**/jsrsasign": "10.2.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm version --force --no-git-tag-version patch && git add package.json package-lock.json"
+    }
   }
 }

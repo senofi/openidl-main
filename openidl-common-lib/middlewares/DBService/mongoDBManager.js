@@ -430,6 +430,37 @@ class MongoDBManager {
         });
     }
 
+    async getFilteredData(DBCollection, transactionMonth) {
+        logger.info('Inside mongodb get', id);
+        return new Promise(function (resolve, reject) {
+            mongodb.collection(DBCollection)
+                .find({ transactionMonth: transactionMonth })
+                .toArray(function (err, results) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(results[0]);
+                    }
+                });
+        });
+    }
+
+    async getFilteredDocuments(DBCollection, query) {
+        logger.info('Inside mongodb getFilteredDocuments');
+        const regexString = "^" + query.transactionMonth
+        return new Promise(function (resolve, reject) {
+            mongodb.collection(DBCollection)
+                .find({ transactionDate: {"$regex": regexString}, organizationID: query.organizationId })
+                .toArray(function (err, results) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(results);
+                    }
+                });
+        });
+    }
+
 
     async getDocument(batchId, DBCollection) {
         logger.info('Inside mongodb get', batchId);
@@ -496,6 +527,7 @@ class MongoDBManager {
         logger.info("Map Reduce Mongo");
         logger.info("Extraction Pattern " + JSON.stringify(extractionPattern));
         let map = extractionPattern.viewDefinition.map;
+        logger.info("map: ", JSON.stringify(map));
         let reduce = extractionPattern.viewDefinition.reduce;
         logger.info("reduce " + JSON.stringify(reduce));
         let response;
