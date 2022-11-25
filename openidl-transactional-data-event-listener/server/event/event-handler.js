@@ -26,7 +26,7 @@ const targetChannelConfig = require('../config/target-channel-config');
 const networkConfig = require('../config/connection-profile.json');
 const {
     Transaction
-} = require('@openidl-org/openidl-common-lib');
+} = require('@senofi/openidl-common-lib');
 let ChannelTransactionMap = new Map();
 logger.level = config.logLevel;
 
