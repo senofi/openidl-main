@@ -24,7 +24,7 @@ var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 
 
-const openidlCommonLib = require('@openidl-org/openidl-common-lib');
+const openidlCommonLib = require('@senofi/openidl-common-lib');
 const cronHandler = require('./cron/cron-handler');
 openidlCommonLib.EnvConfig.init();
 
