@@ -16,10 +16,10 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://npm.pkg.github.com/'
       - name: Publish package on NPM
-        run: npm publish --access public
         working-directory: openidl-common-lib
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       # push the version changes to GitHub
       # - run: |
       #     git config --global user.name "GitHub CD bot"
