@@ -18,7 +18,7 @@ jobs:
         run: npm install
         working-directory: openidl-mapper
       - name: publish
-        run: npm publish --access public
         working-directory: openidl-mapper
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
