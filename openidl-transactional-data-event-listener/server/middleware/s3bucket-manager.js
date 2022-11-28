@@ -77,7 +77,6 @@ class S3BucketManager {
         const accessparams = await this.getAccessParams();
         let bucket = new AWS.S3(accessparams);
         logger.debug(" saveObjectParam bucket: " + bucketConfig.bucketName + " key: " + input._id)
-        logger.debug("  records: " + JSON.stringify(input.records))
         let insertObjectParam = { Bucket: bucketConfig.bucketName, Key: input._id, Body: JSON.stringify(input.records) };
         try {
             const data = await bucket.putObject(insertObjectParam).promise();
