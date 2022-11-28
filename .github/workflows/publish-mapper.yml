@@ -18,7 +18,9 @@ jobs:
         run: npm install
         working-directory: openidl-mapper
       - name: publish
-        working-directory: openidl-mapper
         uses: JS-DevTools/npm-publish@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: '${{ secrets.GITHUB_TOKEN }}'
+          registry: https://npm.pkg.github.com
+          access: public
+          package: openidl-mapper/package.json
