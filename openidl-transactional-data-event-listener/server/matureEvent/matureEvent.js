@@ -15,15 +15,13 @@ MatureEvent.handleMatureEvent = async (data) => {
         logger.info("targetObject: ", typeof targetObject)
 	logger.info("Gathering all results");
 	let allInsuranceData = await targetObject.getTransactionalDataByDatacall(data.dataCalls.id);
-	logger.info("allinsurance data: ", allInsuranceData);
+	logger.info("all insurance data fetched.");
 	if (allInsuranceData.Contents.length === 0) {
 		logger.error("Mature data call has no consent!")
 	} else {
 		const resultSet = [];
 		for (let j = 0; j < allInsuranceData.Contents.length; j = j + 1) {
 			const data = await targetObject.getData(allInsuranceData.Contents[j].Key)
-			logger.info("s3 single result data is: ", data);
-			logger.info("s3 single result data body is: ", JSON.stringify(JSON.parse(data.Body)));
 			resultSet.push(data.Body)
 		}
 		let id = 'result' + '-' + data.dataCalls.id;
