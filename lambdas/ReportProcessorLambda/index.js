@@ -37,7 +37,6 @@ exports.handler = async (event, context) => {
             throw new Error("Result dataset Empty!");
         }
         const dmvData = await getDMVData(config.get("DMVOrganizationId"), transactionMonth);
-        logger.debug("dmvData is: ", JSON.stringify(dmvData, null, 2))
         if (!dmvData || !dmvData.result || dmvData.result.length === 0) {
             throw new Error("DMV Dataset Empty!");
         }
