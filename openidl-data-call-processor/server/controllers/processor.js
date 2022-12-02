@@ -3,6 +3,7 @@ const config = require('config');
 const logger = log4js.getLogger('Processor');
 logger.level = config.logLevel;
 const mongoDataProcessor = require('./data-processor-mongo');
+const postgresDataProcessor = require('./data-processor-postgres');
 const dataProcessor = require('../controllers/data-processor');
 const openidlCommonLib = require('@senofi/openidl-common-lib');
 let DBManagerFactory = openidlCommonLib.DBManagerFactory;
@@ -28,6 +29,8 @@ class Processor {
             logger.info('Inside getProcessorInstance mongo');
             let startDataProcessor = new mongoDataProcessor(dataCallId, dataCallVersion, carrierID, extractionPattern, targetChannelTransaction, reduceCollectionName);
             return startDataProcessor;
+        } else if (name == "postgres") {
+            return new postgresDataProcessor(dataCallId, dataCallVersion, carrierID, extractionPattern, targetChannelTransaction, reduceCollectionName);
         }
         else {
             //async getProcessorInstance(dataCallId, dataCallVersion, carrierID, extractionPattern, targetChannelTransaction, viewName) {
