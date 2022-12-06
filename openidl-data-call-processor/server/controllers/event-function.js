@@ -34,13 +34,15 @@ eventFunction.ConsentedEvent = async function processConsentEvent(payload, block
     try {
         logger.info('process ConsentEvent function entry');
         if (payload) {
+            logger.info("parsing db config");
             const dbconfig = JSON.parse(process.env.OFF_CHAIN_DB_CONFIG);
+            logger.info("parsing payload");
             payload = JSON.parse(payload.toString('utf8'));
             logger.info(' processConsentEvent block number ==>' + blockNumber);
             let args = {
                 dataCallID: payload.datacallID,
                 dataCallVersion: payload.dataCallVersion,
-                dbType: dbconfig.persistentStore
+                dbType: 'postgres'
             };
             let args2 = {
                 dataCallId: payload.datacallID,
@@ -50,6 +52,7 @@ eventFunction.ConsentedEvent = async function processConsentEvent(payload, block
             let targetChannelTransaction = await eventFunction.getChannelInstance();
             let defaultChannel = await eventFunction.getDefaultChannelTransaction();
 
+            logger.info("Before consent")
 
             // Fix for Jira 104 changes
             try {
@@ -64,11 +67,12 @@ eventFunction.ConsentedEvent = async function processConsentEvent(payload, block
                     await targetChannelTransaction.submitTransaction('UpdateConsentStatus', JSON.stringify(payloadConsent))
                     updateConsentStatus = true;
                 } catch (ex) {
+                    logger.error("Error updating ")
                     updateConsentStatus = false;
                 }
 
                 if (!updateConsentStatus) {
-                    logger.error("Failed to update consent status in the ledger")
+                    logger.error("Failed to update consent status in the ledger: return false")
                     return false
                 }
                 else {
@@ -79,6 +83,7 @@ eventFunction.ConsentedEvent = async function processConsentEvent(payload, block
                     if (checkInsuranceData === 'false') {
                         //retrive jurisdiction and extraction pattern for the corresponding data call and replace the value of state code in extraction pattern
                         let datacallDetails = await defaultChannel.executeTransaction('GetDataCallAndExtractionPattern', JSON.stringify(args));
+                        logger.info("Datacall: " + datacallDetails);
                         datacallDetails = JSON.parse(datacallDetails);
 
                         // Fix for Jira88
@@ -91,7 +96,7 @@ eventFunction.ConsentedEvent = async function processConsentEvent(payload, block
                         // Fix for Jira88
                         try {
                             dataCall = await defaultChannel.executeTransaction('GetDataCallByIdAndVersion', JSON.stringify(agr3));
-                            logger.info('Data call out put is ' + JSON.stringify(dataCall))
+                            logger.info('Data call out put is ' + dataCall)
                             jsonDatacall = JSON.parse(dataCall);
                         } catch (ex) {
                             logger.error('Failed to get datacall details.');
@@ -109,7 +114,7 @@ eventFunction.ConsentedEvent = async function processConsentEvent(payload, block
                             logger.info("jurisdictionDesc" + jurisdictionDesc);
                             let jurisdiction = await eventFunction.fetchStateCodefromDesc(config.enumField, jurisdictionDesc);
                             logger.debug("<<<<<  In ConsentedEvent fetched State as >>>>>>" + jurisdiction);
-                            extractionPattern = JSON.stringify(extractionPattern).replace('#state#', jurisdiction);
+                            extractionPattern = JSON.parse(JSON.stringify(extractionPattern).replace('#state#', jurisdiction));
                             // }
                             logger.info('Starting the dataProcessor');
                             var viewName = "";
@@ -118,7 +123,6 @@ eventFunction.ConsentedEvent = async function processConsentEvent(payload, block
                             let dataProcessor = await processor.getProcessorInstance(payload.datacallID, payload.dataCallVersion, payload.carrierID, extractionPattern, targetChannelTransaction, viewName);
                             var view = await dataProcessor.isView();
                             logger.info('payload.carrierID' + payload.carrierID);
-                            extractionPattern = JSON.parse(extractionPattern);
                             if (view) {
                                 let viewName = await designDocument.updateDesignDocument(extractionPattern, payload.datacallID + '_' + payload.dataCallVersion, payload.carrierID);
                                 dataProcessor.processRecords(viewName);
@@ -137,8 +141,8 @@ eventFunction.ConsentedEvent = async function processConsentEvent(payload, block
                                 logger.info("lossToDate  from Datacall - " + lossToDate)
                                 logger.info("lineOfBusiness  from Datacall - " + jsonDatacall.lineOfBusiness)
                                 logger.info("jurisdiction  from Datacall - " + jsonDatacall.jurisdiction)
-                                logger.info("datacallID  from event pyaload - " + payload.datacallID)
-                                logger.info("dataCallVersion  from event pyaload - " + payload.dataCallVersion)
+                                logger.info("datacallID  from event payload - " + payload.datacallID)
+                                logger.info("dataCallVersion  from event payload - " + payload.dataCallVersion)
 
                                 dataProcessor.processRecords(reduceCollectionName, extractionPattern,
                                     premiumFromDate,
@@ -162,7 +166,7 @@ eventFunction.ConsentedEvent = async function processConsentEvent(payload, block
 
             } catch (ex) {
                 //Yet to implement email functionality
-                logger.error("Failed to update consent status in the ledger" + ex)
+                logger.error("Error while processing request: " + ex)
             }
 
 
@@ -189,7 +193,7 @@ eventFunction.ExtractionPatternSpecified = async function processExtractionPatte
             let getDataCallArgs = {
                 dataCallID: payload.dataCallId,
                 dataCallVersion: payload.dataCallVersion,
-                dbType: dbconfig.persistentStore
+                dbType: 'postgres'
             };
             let args = {};
             args['dataCallID'] = payload.dataCallId;

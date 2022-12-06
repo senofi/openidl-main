@@ -6,28 +6,37 @@ const logger = log4js.getLogger('postgres-db-manager');
 
 logger.level = process.env.LOG_LEVEL || 'debug';
 
-let postgres;
 class PostgresDBManager {
   constructor(dbService) {
-    this.DBService = dbService;
+    this.dbService = dbService;
     this.createView = false;
     this.name = 'postgres';
 
-    postgres = new Pool({
-      host: dbService.connection.postgres.host,
-      user: dbService.user,
-      port: dbService.port,
-      password: dbService.password,
-      max: 5,
+    this.pool = new Pool({
+      host: this.dbService.host,
+      user: this.dbService.username,
+      port: this.dbService.port,
+      database: this.dbService.database,
+      password: this.dbService.password,
+      max: 1,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 2000,
     });
   }
 
   async executeExtractionPattern(extractionPattern) {
-    const result = await postgres.query(extractionPattern)
-      .catch(err => console.error('Error executing query', err.stack));
-    return result;
+    const extractionPatternSql = extractionPattern.viewDefinition.map;
+    logger.debug('Execute extraction pattern: ', extractionPatternSql);
+    logger.debug(`Initialize postgres: ${JSON.stringify(this.dbService)} - ${JSON.stringify(this.pool)}`);
+
+    try {
+      const result = await this.pool.query(extractionPatternSql);
+      logger.debug('Result: ', result);
+      return result;
+    } catch (err) {
+      logger.error('ERROR executing query', err);
+      throw err;
+    }
   }
 }
 module.exports = PostgresDBManager;
