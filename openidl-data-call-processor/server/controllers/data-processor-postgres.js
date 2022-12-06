@@ -2,35 +2,22 @@ const log4js = require('log4js');
 const config = require('../config/default.json');
 const logger = log4js.getLogger('data-processor-postgres');
 logger.level = config.logLevel;
-const sleep = require('sleep');
 const sizeof = require('object-sizeof');
-import { DBManagerFactory } from '@senofi/openidl-common-lib';
+const { DBManagerFactory } = require('@senofi/openidl-common-lib');
 
 let InstanceFactory = require('../middleware/instance-factory');
 
-let emailService = openidlCommonLib.Email;
-const emailkey = require('../config/default.json').send_grid_apikey;
-const emailData = require('../config/email.json').Config;
-
-// Venkat Jira 104
-let pdcFailureStatus;
-let S3FailureStatus;
-let transferDocuments
-
-class DataProcessorMongo {
+class DataProcessorPostgres {
     constructor(id, version, carrierID, exPattern, channel, reduceCollectionName) {
-        logger.debug(" In DataProcessorMongo ");
-        logger.debug("carrierID  " + carrierID);
+        logger.debug("In DataProcessorPostgres - carrierID: {} ", carrierID);
         this.dataCallId = id;
         this.dataCallVersion = version;
         this.carrierId = carrierID;
         this.extractionPattern = exPattern;
         this.skip = 0;
         this.pageNumber = 0;
-        this.stopIteration = false;
         this.targetChannelTransaction = channel;
         this.reduceCollectionName = reduceCollectionName;
-        this.start_Key = null;
         this.value = null;
         this.dbManager = null;
         this.createView = false;
@@ -50,15 +37,19 @@ class DataProcessorMongo {
                          datacallID,
                          dataCallVersion) {
 
-        let dbManager = await new DBManagerFactory().getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
+        logger.info('Process records (postgres)')
+        const options = JSON.parse(process.env.OFF_CHAIN_DB_CONFIG);
+
+        const dbManager = await new DBManagerFactory().getInstance(options, extractionPattern.dbType);
+        logger.info('Db manager:', dbManager);
 
         const result = await dbManager.executeExtractionPattern(extractionPattern);
-
+        logger.info(`Extraction result: ${result}`);
         try {
             await this.pushToPDC(this.carrierId, result.rows, 1, this.dataCallId, 'v1', this.targetChannelTransaction);
             await this.submitTransaction(this.dataCallId, "v1", this.carrierId);
         } catch (err) {
-
+            logger.error("Error while saving data to PDC", err);
         }
     }
 
@@ -79,6 +70,7 @@ class DataProcessorMongo {
     }
 
     async pushToPDC(carrierId, records, pageNumber, datacallid, versionid, target) {
+
         try {
             let insuranceObject = {
                 pageNumber: pageNumber,
@@ -89,7 +81,7 @@ class DataProcessorMongo {
             }
             logger.debug("insuranceObject " + JSON.stringify(insuranceObject))
             if (insuranceObject.records.length === 0) {
-                logger.info('Insurance Records not available in Mongo Database');
+                logger.info('Insurance Records not available in SQL Database');
             } else {
                 let data = JSON.stringify(insuranceObject); // Convert transient data object to JSON string
                 data = new Buffer(data).toString('base64'); // convert the JSON string to base64 encoded string
@@ -107,4 +99,4 @@ class DataProcessorMongo {
     }
 }
 
-module.exports = DataProcessorMongo;
+module.exports = DataProcessorPostgres;
