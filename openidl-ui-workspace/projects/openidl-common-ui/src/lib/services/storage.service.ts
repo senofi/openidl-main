@@ -9,7 +9,11 @@ export class StorageService {
   getItem(key: string) {
     const storedValue = localStorage.getItem(key);
     if (storedValue) {
-      return JSON.parse(storedValue);
+      try {
+        return JSON.parse(storedValue);
+      } catch (err) {
+        // ignore
+      }
     }
     return '';
   }
