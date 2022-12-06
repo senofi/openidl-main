@@ -16,8 +16,7 @@ const {
 
 
 EventListener.init = async (networkConfig, listenerConfig, blockManagementDB, eventListenersDB) => {
-  const method = 'init';
-  logger.debug('in %s', method);
+  logger.debug('in init method');
   this.listenerConfig = listenerConfig;
   this.listenerChannels = listenerConfig.listenerChannels;
   this.networkConfig = networkConfig;

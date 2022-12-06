@@ -20,16 +20,14 @@ class Processor {
     }
     async getProcessorInstance(dataCallId, dataCallVersion, carrierID, extractionPattern, targetChannelTransaction, reduceCollectionName) {
         logger.info('Inside getProcessorInstance');
-        let dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
-        let name = await dbManager.dbName();
-        logger.debug("in getProcessorInstance Database " + name);
-        logger.debug("in getProcessorInstance carrierID " + carrierID);
-        if (name == "mongo") {
-            logger.debug("carrierID: " + carrierID);
+        logger.debug("in getProcessorInstance carrierID " + carrierID + " dbType: " + extractionPattern.dbType);
+        if (extractionPattern.dbType == "mongo") {
+            logger.debug("carrierID++++++++++++++++++++++++++++++++" + carrierID);
             logger.info('Inside getProcessorInstance mongo');
             let startDataProcessor = new mongoDataProcessor(dataCallId, dataCallVersion, carrierID, extractionPattern, targetChannelTransaction, reduceCollectionName);
             return startDataProcessor;
-        } else if (name == "postgres") {
+        } else if (extractionPattern.dbType == "postgres") {
+            logger.info('postgres processor');
             return new postgresDataProcessor(dataCallId, dataCallVersion, carrierID, extractionPattern, targetChannelTransaction, reduceCollectionName);
         }
         else {
