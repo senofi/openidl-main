@@ -43,7 +43,7 @@ class DataProcessorPostgres {
         const dbManager = await new DBManagerFactory().getInstance(options, extractionPattern.dbType);
         logger.info('Db manager:', dbManager);
 
-        const result = await dbManager.executeExtractionPattern(extractionPattern);
+        const result = await this.executeExtractionPattern(extractionPattern, dbManager);
         logger.info(`Extraction result: ${result}`);
         try {
             await this.pushToPDC(this.carrierId, result.rows, 1, this.dataCallId, 'v1', this.targetChannelTransaction);
@@ -97,6 +97,35 @@ class DataProcessorPostgres {
         }
 
     }
+
+    async executeExtractionPattern(extractionPattern, dbManager) {
+        if (extractionPattern.viewDefinition.map) {
+            const mapScript = await this.decodeToAscii(extractionPattern.viewDefinition.map);
+
+            const mapResult = await dbManager.executeSql(mapScript.replaceAll('@comp', this.carrierId));
+            logger.info("Map result: " + mapResult);
+        }
+
+        if (extractionPattern.viewDefinition.reduce) {
+            const reduceScript = await this.decodeToAscii(extractionPattern.viewDefinition.reduce);
+            const result = await dbManager.executeSql(reduceScript.replaceAll('@comp', this.carrierId));
+
+        }
+        if (extractionPattern.viewDefinition.cleanup) {
+            const cleanupScript = await this.decodeToAscii(extractionPattern.viewDefinition.cleanup);
+            await dbManager.executeSql(cleanupScript.replaceAll('@comp', this.carrierId));
+        }
+        return result;
+    }
+
+    async decodeToAscii(base64String) {
+        if (base64String) {
+            const buff = Buffer.from(base64String, 'base64');
+            return buff.toString('ascii');
+        }
+        return '';
+    }
+
 }
 
 module.exports = DataProcessorPostgres;
