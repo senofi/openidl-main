@@ -333,13 +333,17 @@ class DataProcessorMongo {
         return extractionChunks
     }
     // Fix for Jira - 104  -- Venkat fix
-    async saveInsuranceRecordNew(carrierId, records, pageNumber, datacallid, versionid, target) {
+    async saveInsuranceRecordNewSinglePart(
+        carrierId, records, pageNumber, datacallid, versionid, target, sequenceNumber, totalRecordsNum) {
         try {
             let insuranceObject = {
                 pageNumber: pageNumber,
                 dataCallId: datacallid,
                 dataCallVersion: versionid,
                 carrierId: carrierId,
+                sequenceNumber: sequenceNumber,
+                totalRecordsNum: totalRecordsNum,
+                recordsNum: records.length,
                 records: records
             }
             logger.debug("insuranceObject " + JSON.stringify(insuranceObject))
@@ -361,6 +365,49 @@ class DataProcessorMongo {
 
     }
 
+    async saveInsuranceRecordNew(carrierId, records, pageNumber, datacallid, versionid, target) {
+        try{
+            if (!Array.isArray(records)) {
+                const msg = "Extraction pattern result is not array!"
+                logger.error(msg)
+                throw new Error(msg);
+            }
+            if (records.length === 0) {
+                logger.info('Insurance Records not available in Mongo Database');
+            } else {
+                if (!config.PDCMaxSizeInBytes) {
+                    const msg = "PDC max file size not found in config!"
+                    logger.error(msg)
+                    throw new Error(msg);
+
+                }
+                const resArray = [];
+                let sequenceNumber = 1;
+                const totalRecordsNum = records.length;
+
+                for (let i = 0; i < records.length; i = i+1) {
+                    const len = Buffer.byteLength(JSON.stringify(resArray.concat(records[i])));
+                    if (len > config.PDCMaxSizeInBytes) {
+                        //resarray ready to send
+                        await this.saveInsuranceRecordNew(
+                            carrierId, records, pageNumber, datacallid, versionid, target, sequenceNumber, totalRecordsNum)
+                        sequenceNumber = sequenceNumber +1;
+                        resArray.length = 0
+                    }
+                    resArray.push(records[i])
+                    //check if its the last one, if it is send it out
+                    if (i === records.length -1) {
+                        await this.saveInsuranceRecordNew(
+                            carrierId, records, pageNumber, datacallid, versionid, target, sequenceNumber, totalRecordsNum)
+                        sequenceNumber = sequenceNumber +1;
+                        resArray.length = 0
+                    }
+                }
+            }
+        } catch (ex) {
+            throw ex
+        }
+    }
 
     async saveInsuranceRecord(carrierId, records, pageNumber) {
         try {
