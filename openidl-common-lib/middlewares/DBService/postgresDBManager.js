@@ -14,9 +14,9 @@ class PostgresDBManager {
 
     this.pool = new Pool({
       host: this.dbService.host,
-      user: this.dbService.username,
       port: this.dbService.port,
-      database: this.dbService.database,
+      // database: this.dbService.database,
+      user: this.dbService.username,
       password: this.dbService.password,
       max: 1,
       idleTimeoutMillis: 30000,
@@ -24,18 +24,17 @@ class PostgresDBManager {
     });
   }
 
-  async executeExtractionPattern(extractionPattern) {
-    const extractionPatternSql = extractionPattern.viewDefinition.map;
-    logger.debug('Execute extraction pattern: ', extractionPatternSql);
-    logger.debug(`Initialize postgres: ${JSON.stringify(this.dbService)} - ${JSON.stringify(this.pool)}`);
+
+  async executeSql(sqlScript) {
+    logger.debug('Execute SQL: ', sqlScript);
 
     try {
-      const result = await this.pool.query(extractionPatternSql);
-      logger.debug('Result: ', result);
+      const result = await this.pool.query(sqlScript);
+      logger.trace('Result: ', result);
       return result;
     } catch (err) {
       logger.error('ERROR executing query', err);
-      throw err;
+      return false;
     }
   }
 }
