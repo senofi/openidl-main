@@ -389,7 +389,7 @@ class DataProcessorMongo {
                     const len = Buffer.byteLength(JSON.stringify(resArray.concat(records[i])));
                     if (len > config.PDCMaxSizeInBytes) {
                         //resarray ready to send
-                        await this.saveInsuranceRecordNew(
+                        await this.saveInsuranceRecordNewSinglePart(
                             carrierId, records, pageNumber, datacallid, versionid, target, sequenceNumber, totalRecordsNum)
                         sequenceNumber = sequenceNumber +1;
                         resArray.length = 0
@@ -397,7 +397,7 @@ class DataProcessorMongo {
                     resArray.push(records[i])
                     //check if its the last one, if it is send it out
                     if (i === records.length -1) {
-                        await this.saveInsuranceRecordNew(
+                        await this.saveInsuranceRecordNewSinglePart(
                             carrierId, records, pageNumber, datacallid, versionid, target, sequenceNumber, totalRecordsNum)
                         sequenceNumber = sequenceNumber +1;
                         resArray.length = 0

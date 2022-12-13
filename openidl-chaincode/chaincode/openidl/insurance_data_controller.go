@@ -111,6 +111,12 @@ func (this *SmartContract) SaveInsuranceData(stub shim.ChaincodeStubInterface, a
 		return shim.Error("DataCallVersion should not be Empty")
 	} else if pageNumber == 0 {
 		return shim.Error("PageNumber should not be Empty")
+	} else if sequenceNum == 0 {
+		return shim.Error("sequenceNum should not be Empty")
+	} else if recordsNum == 0 {
+		return shim.Error("recordsNum should not be Empty")
+	} else if totalRecordsNum == 0 {
+		return shim.Error("totalRecordsNum should not be Empty")
 	}
 
 	logger.Info("SaveInsuranceData: all necessary params found")
@@ -135,6 +141,7 @@ func (this *SmartContract) SaveInsuranceData(stub shim.ChaincodeStubInterface, a
 	auditRecord.DataCallId = insurance.DataCallId
 	auditRecord.DataCallVersion = insurance.DataCallVersion
 	auditRecord.CarrierId = insurance.CarrierId
+	auditRecord.SequenceNum = insurance.sequenceNum
 
 	namespacePrefixForAudit := AUDIT_INSURANCE_TRANSACTIONAL_RECORD_PREFIX
 	auditRecordKey, _ := stub.CreateCompositeKey(namespacePrefixForAudit, []string{auditRecord.DataCallId, auditRecord.DataCallVersion, auditRecord.CarrierId})
