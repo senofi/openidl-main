@@ -91,6 +91,7 @@ type InsuranceRecordAudit struct {
 	DataCallId      string `json:"dataCallId"`
 	DataCallVersion string `json:"dataCallVersion"`
 	CarrierId       string `json:"carrierId"`
+	SequenceNum     string `json:"sequenceNum"`
 }
 
 //todo--add validation logic to match ext_pattern for value field  ValueValue---Records
@@ -100,6 +101,10 @@ type InsuranceData struct {
 	CarrierId       string        `json:"carrierId"`
 	DataCallId      string        `json:"dataCallId"`
 	DataCallVersion string        `json:"dataCallVersion"`
+	RecordsNum      int           `json:"recordsNum"`
+	TotalRecordsNum int           `json:"totalRecordsNum"`
+	SequenceNum     int           `json:"sequenceNum"`
+	PageNumber      int           `json:"pageNumber"`
 	Records         []interface{} `json:"records"`
 	CreatedTs       timestamp     `json:"createdTs"`
 } //map[string]interface{}
