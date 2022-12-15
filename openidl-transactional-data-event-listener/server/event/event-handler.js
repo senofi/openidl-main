@@ -92,7 +92,7 @@ eventFunction.TransactionalDataAvailable = async function processTransactionalDa
                 logger.error('error during getTransactionalData onerror ' + err)
             }
             insuranceData._id = id;
-            insuranceData.records = queryResponse.records;
+            insuranceData.records = { records: queryResponse.records, recordsNum: payload.recordsNum };
             try {
                 await targetObject.saveTransactionalData(insuranceData);
             } catch (err) {

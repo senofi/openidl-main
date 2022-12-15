@@ -16,6 +16,7 @@
         "@cloudant/cloudant": "^3.0.1",
         "@openidl-org/openidl-common-lib": "^0.5.9",
         "@sendgrid/mail": "^7.2.1",
+        "array-chunk-by-size": "^2.1.1",
         "aws-sdk": "2.474.0",
         "config": "^2.0.1",
         "cron": "^1.8.2",
