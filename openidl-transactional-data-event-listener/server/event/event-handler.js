@@ -52,8 +52,7 @@ eventFunction.TransactionalDataAvailable = async function processTransactionalDa
                 dataCallVersion: payload.dataCallVersion,
                 carrierId: payload.carrierId,
                 channelName: payload.channelName,
-                pageNumber: payload.pageNumber,
-                sequenceNum: payload.sequenceNum
+                pageNumber: payload.pageNumber
             };
             let CarrierChannelTransaction = ChannelTransactionMap.get(data.channelName);
 
@@ -78,7 +77,7 @@ eventFunction.TransactionalDataAvailable = async function processTransactionalDa
             let targetObject = await factoryObject.getInstance(config.insuranceDataStorageEnv);
 
             var insuranceData = new Object();
-            let id = data.dataCallId + '-' + data.carrierId + '-' + data.dataCallVersion + '-' + data.pageNumber + '-' + data.sequenceNum;
+            let id = data.dataCallId + '/' + data.carrierId + '-' + data.dataCallVersion + '-' + data.pageNumber;
             logger.info("created id is: ", id)
             //check whether record already exist with this '_id'
             //then get '_rev '
@@ -92,7 +91,7 @@ eventFunction.TransactionalDataAvailable = async function processTransactionalDa
                 logger.error('error during getTransactionalData onerror ' + err)
             }
             insuranceData._id = id;
-            insuranceData.records = { records: queryResponse.records, recordsNum: payload.recordsNum };
+            insuranceData.records = queryResponse.records;
             try {
                 await targetObject.saveTransactionalData(insuranceData);
             } catch (err) {
