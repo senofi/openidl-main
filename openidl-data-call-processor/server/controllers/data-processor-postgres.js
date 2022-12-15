@@ -101,8 +101,8 @@ class DataProcessorPostgres {
     async executeExtractionPattern(extractionPattern, dbManager) {
         if (extractionPattern.viewDefinition.map) {
             const mapScript = await this.decodeToAscii(extractionPattern.viewDefinition.map);
-
-            const mapResult = await dbManager.executeSql(mapScript.replaceAll('@comp', this.carrierId));
+            logger.debug("Map script:" + typeof mapScript);
+            const mapResult = await dbManager.executeSql(mapScript.replace(/@org/g, this.carrierId));
             logger.info("Map result: " + mapResult);
             if (!mapResult) {
                 logger.warn("Map did not execute successfully");
@@ -111,7 +111,7 @@ class DataProcessorPostgres {
 
         if (extractionPattern.viewDefinition.reduce) {
             const reduceScript = await this.decodeToAscii(extractionPattern.viewDefinition.reduce);
-            const result = await dbManager.executeSql(reduceScript.replaceAll('@comp', this.carrierId));
+            const result = await dbManager.executeSql(reduceScript.replace(/@org/g, this.carrierId));
 
             return result;
         }
