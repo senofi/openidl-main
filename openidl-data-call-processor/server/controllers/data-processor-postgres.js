@@ -45,8 +45,11 @@ class DataProcessorPostgres {
 
         const result = await this.executeExtractionPattern(extractionPattern, dbManager);
         logger.info(`Extraction result: ${result}`);
+        const data = {
+            data: result.rows
+        }
         try {
-            await this.pushToPDC(this.carrierId, result.rows, 1, this.dataCallId, 'v1', this.targetChannelTransaction);
+            await this.pushToPDC(this.carrierId, data, 1, this.dataCallId, 'v1', this.targetChannelTransaction);
             await this.submitTransaction(this.dataCallId, "v1", this.carrierId);
         } catch (err) {
             logger.error("Error while saving data to PDC", err);
