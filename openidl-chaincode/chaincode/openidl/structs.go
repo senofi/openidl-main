@@ -91,15 +91,19 @@ type InsuranceRecordAudit struct {
 	DataCallId      string `json:"dataCallId"`
 	DataCallVersion string `json:"dataCallVersion"`
 	CarrierId       string `json:"carrierId"`
+	SequenceNum     int `json:"sequenceNum"`
 }
 
 //todo--add validation logic to match ext_pattern for value field  ValueValue---Records
 //struct to strore Insurance Data value
 type InsuranceData struct {
-	PageNumber      int           `json:"pageNumber"`
 	CarrierId       string        `json:"carrierId"`
 	DataCallId      string        `json:"dataCallId"`
 	DataCallVersion string        `json:"dataCallVersion"`
+	RecordsNum      int           `json:"recordsNum"`
+	TotalRecordsNum int           `json:"totalRecordsNum"`
+	SequenceNum     int           `json:"sequenceNum"`
+	PageNumber      int           `json:"pageNumber"`
 	Records         []interface{} `json:"records"`
 	CreatedTs       timestamp     `json:"createdTs"`
 } //map[string]interface{}
@@ -126,6 +130,7 @@ type GetInsuranceData struct {
 	StartIndex      int    `json:"startIndex"`
 	PageSize        int    `json:"pageSize"`
 	PageNumber      int    `json:"pageNumber"`
+	SequenceNum     int    `json:"sequenceNum"`
 }
 
 // struct to return as payload, when InsuranceRecord and Audit has been created
@@ -135,6 +140,8 @@ type InsuranceRecordEventPayload struct {
 	DataCallVersion string `json:"dataCallVersion"`
 	CarrierId       string `json:"carrierId"`
 	PageNumber      int    `json:"pageNumber"`
+	RecordsNum      int           `json:"recordsNum"`
+	SequenceNum     int           `json:"sequenceNum"`
 }
 
 //struct to return as ExtractionPattern event payload

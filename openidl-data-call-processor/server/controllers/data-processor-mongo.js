@@ -5,6 +5,7 @@ logger.level = config.logLevel;
 const sleep = require('sleep');
 const sizeof = require('object-sizeof');
 const openidlCommonLib = require('@openidl-org/openidl-common-lib');
+const arrayChunkBySize = require('array-chunk-by-size');
 
 let InstanceFactory = require('../middleware/instance-factory');
 
@@ -141,7 +142,6 @@ class DataProcessorMongo {
                     logger.info("Current Process is PDC Bucket update of Chunkid is " + item.chunkid)
                     logger.debug(" PDCS3 dbManager=" + dbManager)
                     transferDocuments = await this.getInsuranceDataNew(item.chunkid, jsonDocument.collectionname, dbManager);
-                    logger.info("this.mongorecords " + JSON.stringify(transferDocuments))
                     try {
                         // PDC Service 
                         await this.saveInsuranceRecordNew(jsonDocument.carrierid, transferDocuments, index, jsonDocument.datacallid, jsonDocument.versionid, target)
@@ -167,7 +167,6 @@ class DataProcessorMongo {
                         index++;
                         logger.info("Current Process is S3 Bucket update of Chunkid is " + item.chunkid)
                         if (transferDocuments.length == 0) transferDocuments = await this.getInsuranceDataNew(item.chunkid, jsonDocument.collectionname, dbManager);
-                        logger.info("this.mongorecords " + JSON.stringify(transferDocuments))
                         try {
                             // PDC Service 
                             let factoryObject = new InstanceFactory();
@@ -274,12 +273,12 @@ class DataProcessorMongo {
         let chunkDocuments = [];
         let extractionChunks;
         try {
-                chunkRecords["chunkid"] = ""
-                chunkRecords["pdcstatus"] = "YettoProcess"
-                chunkRecords["pdccomments"] = ""
-                chunkRecords["s3status"] = "YettoProcess"
-                chunkRecords["s3comments"] = ""
-                chunkDocuments.push(chunkRecords)
+            chunkRecords["chunkid"] = ""
+            chunkRecords["pdcstatus"] = "YettoProcess"
+            chunkRecords["pdccomments"] = ""
+            chunkRecords["s3status"] = "YettoProcess"
+            chunkRecords["s3comments"] = ""
+            chunkDocuments.push(chunkRecords)
 
             extractionChunks = {
                 "collectionname": collectionName,
@@ -333,16 +332,19 @@ class DataProcessorMongo {
         return extractionChunks
     }
     // Fix for Jira - 104  -- Venkat fix
-    async saveInsuranceRecordNew(carrierId, records, pageNumber, datacallid, versionid, target) {
+    async saveInsuranceRecordNewSinglePart(
+        carrierId, records, pageNumber, datacallid, versionid, target, sequenceNumber, totalRecordsNum) {
         try {
             let insuranceObject = {
                 pageNumber: pageNumber,
                 dataCallId: datacallid,
                 dataCallVersion: versionid,
                 carrierId: carrierId,
+                sequenceNum: sequenceNumber,
+                totalRecordsNum: totalRecordsNum,
+                recordsNum: records.length,
                 records: records
             }
-            logger.debug("insuranceObject " + JSON.stringify(insuranceObject))
             if (insuranceObject.records.length === 0) {
                 logger.info('Insurance Records not available in Mongo Database');
             } else {
@@ -361,6 +363,36 @@ class DataProcessorMongo {
 
     }
 
+    async saveInsuranceRecordNew(carrierId, records, pageNumber, datacallid, versionid, target) {
+        try {
+            if (!Array.isArray(records)) {
+                const msg = "Extraction pattern result is not array!"
+                logger.error(msg)
+                throw new Error(msg);
+            }
+            if (records.length === 0) {
+                logger.info('Insurance Records not available in Mongo Database');
+            } else {
+                if (!config.PDCMaxSizeInBytes) {
+                    const msg = "PDC max file size not found in config!"
+                    logger.error(msg)
+                    throw new Error(msg);
+
+                }
+                const resArray = arrayChunkBySize.chunkArray({ input: records, bytesSize: config.PDCMaxSizeInBytes });;
+                let sequenceNumber = 1;
+                const totalRecordsNum = records.length;
+
+                for (let i = 0; i < resArray.length; i = i + 1) {
+                    await this.saveInsuranceRecordNewSinglePart(
+                        carrierId, resArray[i], pageNumber, datacallid, versionid, target, sequenceNumber, totalRecordsNum)
+                    sequenceNumber = sequenceNumber + 1;
+                }
+            }
+        } catch (ex) {
+            throw ex
+        }
+    }
 
     async saveInsuranceRecord(carrierId, records, pageNumber) {
         try {
