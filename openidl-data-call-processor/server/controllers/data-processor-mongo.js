@@ -54,7 +54,7 @@ class DataProcessorMongo {
         dataCallVersion) {
         // Venkat fix for email
         try {
-            logger.info(" In processRecord>>>> " + extractionPattern.viewDefinition);
+            logger.info(" In processRecord: " + extractionPattern.viewDefinition);
             this.reduceCollectionName = reduceCollectionName;
             // Fix for Jira88
             await this.createMapReduceCollection(this.carrierId, reduceCollectionName, extractionPattern,
@@ -71,12 +71,9 @@ class DataProcessorMongo {
             if (distinctChunkid.length > 0) {
                 logger.info("Length condition is passed")
                 let payload = await this.constructJSON(distinctChunkid, reduceCollectionName, datacallID, dataCallVersion, this.carrierId)
-                logger.info("Payload structure is " + payload)
                 let result = await this.dbManager.insertChunkID(payload)
-                logger.info("Mongodb executed result is " + result)
                 if (result.status == "success") {
                     logger.info('Successfully inserted chunkIDs into extract_pattern_migration collection -  ' + distinctChunkid)
-                    logger.info("Payload structure is " + JSON.stringify(payload))
                     logger.debug("  processRecrods dbManager=" + this.dbManager)
                     await this.PDCS3Buckettransfer(payload, this.dbManager, this.targetChannelTransaction);
                     logger.info("Completed.......................................")
@@ -88,12 +85,9 @@ class DataProcessorMongo {
             } else {
                 logger.info("No distinct chunkId is found")
                 let payload = await this.constructJSONnoChunkId(reduceCollectionName, datacallID, dataCallVersion, this.carrierId)
-                logger.info("Payload structure is " + payload)
                 let result = await this.dbManager.insertChunkID(payload)
-                logger.info("Mongodb executed result is " + result)
                 if (result.status == "success") {
                     logger.info('Successfully inserted chunkIDs into extract_pattern_migration collection -  ' + distinctChunkid)
-                    logger.info("Payload structure is " + JSON.stringify(payload))
                     logger.debug("  processRecrods dbManager=" + this.dbManager)
                     await this.PDCS3Buckettransfer(payload, this.dbManager, this.targetChannelTransaction);
                     logger.info("Completed.......................................")
@@ -429,7 +423,6 @@ class DataProcessorMongo {
             logger.debug("In getInsuranceData");
             logger.debug(" dbManager is " + dbManager)
             let records = await dbManager.getByCarrierIdNew(chunkID, collectionName);
-            logger.debug(" getInsuranceData - records " + records)
             return records;
         }
         catch (ex) {
