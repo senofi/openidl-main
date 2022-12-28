@@ -22,7 +22,7 @@ exports.handler = async (event, context) => {
     try {
         logger.debug("bucket name: ", bucket)
         logger.debug("key name: ", key)
-        const datacallId = key.substring(key.indexOf("-")+1, key.length);
+        const datacallId = key.substring(key.indexOf("-") + 1, key.length);
         logger.debug("Datacall Id: ", datacallId);
         const getDatacallResult = await getDataCall(datacallId);
         const datacalls = JSON.parse(getDatacallResult.result);
@@ -41,7 +41,7 @@ exports.handler = async (event, context) => {
             throw new Error("DMV Dataset Empty!");
         }
         logger.debug("Data reading Done from DMV data and result")
-        const reportContent = await rp.createReportContent(resultData, JSON.parse(JSON.stringify (dmvData.result)));
+        const reportContent = await rp.createReportContent(resultData, JSON.parse(JSON.stringify(dmvData.result)));
         logger.debug("Publishing report")
         await rp.publishCSV(reportContent, datacallId);
         await rp.getCSV("report-" + datacallId + ".csv");
@@ -54,13 +54,13 @@ exports.handler = async (event, context) => {
             "url": reportUrl,
             "createdTs": new Date().toISOString(),
             "createdBy": datacallConfig.username
-            }; 
+        };
         await postReport(JSON.stringify(report));
         logger.info("Report published in CSV and Blockchain updated")
         // Delete result and extraction-pattern-result data
         await rp.deleteResult(params);
         await rp.deleteConsentFiles(params, datacallId);
-        return ;
+        return;
     } catch (err) {
         logger.error("Error in report processor!", err)
         throw new Error(err);
