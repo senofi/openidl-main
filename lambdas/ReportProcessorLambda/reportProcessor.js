@@ -5,11 +5,14 @@ const S3BucketManager = require('./aws-module.js');
 class ReportProcessor {
 	async readResult(params) {
 		const s3b = new S3BucketManager();
-		let data;
 		try {
 			var resArray = []
-			data = await s3b.getTransactionalData(params);
+			let data = await s3b.getTransactionalData(params);
+			logger.info("data from s3: ", data);
 			data = JSON.parse(data.Body);
+			if (!Array.isArray(data)) {
+				data = [data]
+			}
 			for (var i = 0; i < data.length; i = i + 1) {
 				const buff = Buffer.from(data[i].data);
 				const dataString = buff.toString();
@@ -62,7 +65,7 @@ class ReportProcessor {
 		for (let i = 0; i < dmvData.length; i = i + 1) {
 			const row = { "vin": dmvData[i].VIN, "isInsured": "no" };
 			const isDmvDataExists = resultDataSetObject.has(dmvData[i].VINHash);
-			if(isDmvDataExists){
+			if (isDmvDataExists) {
 				row["isInsured"] = "yes";
 			}
 			reportData.push(row);
