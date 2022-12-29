@@ -6,20 +6,10 @@ class ReportProcessor {
 	async readResult(params) {
 		const s3b = new S3BucketManager();
 		try {
-			var resArray = []
 			let data = await s3b.getTransactionalData(params);
 			logger.info("data from s3: ", data);
 			data = JSON.parse(data.Body);
-			if (!Array.isArray(data)) {
-				data = [data]
-			}
-			for (var i = 0; i < data.length; i = i + 1) {
-				const buff = Buffer.from(data[i].data);
-				const dataString = buff.toString();
-				const dataJson = JSON.parse(dataString)
-				resArray = resArray.concat(dataJson)
-			}
-			return resArray;
+			return data;
 		} catch (err) {
 			logger.error("Error in reading result: ", err)
 		}
