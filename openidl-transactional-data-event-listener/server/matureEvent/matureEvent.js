@@ -3,6 +3,7 @@ let InstanceFactory = require('../middleware/instance-factory');
 const log4js = require('log4js');
 const config = require('config');
 const logger = log4js.getLogger('event -eventHandler ');
+const Stream = require('stream');
 const MatureEvent = {}
 MatureEvent.handleMatureEvent = async (data) => {
 	try {
@@ -18,30 +19,42 @@ MatureEvent.handleMatureEvent = async (data) => {
 		if (allInsuranceData.Contents.length === 0) {
 			logger.error("Mature data call has no consent!")
 		} else {
-			let resultSet = [];
-			let totalRecords = 0;
+			const stream = new Stream.PassThrough();
+			let totalRecords = 0, recordsCount = 0;
 			for (let j = 0; j < allInsuranceData.Contents.length; j = j + 1) {
 				const data = await targetObject.getData(allInsuranceData.Contents[j].Key)
 				const parsedData = JSON.parse(data.Body);
-				resultSet = resultSet.concat(parsedData.records);
+				const stringifiedRecords = JSON.stringify(parsedData.records);
+				if (allInsuranceData.Contents.length == 1) {
+					stream.write(stringifiedRecords);
+				} else if (j == 0) {
+					stream.write(stringifiedRecords.substring(0, stringifiedRecords.length - 1));
+				}
+
+				if (j > 0) {
+					if (allInsuranceData.Contents.length - 1 != j) {
+						stream.write(',');
+						stream.write(stringifiedRecords.substring(1, stringifiedRecords.length - 1));
+					} else {
+						stream.write(',');
+						stream.write(stringifiedRecords.substring(1, stringifiedRecords.length));
+					}
+				}
 				totalRecords += parsedData.recordsNum
+				recordsCount += parsedData.records.length;
 			}
-			if (totalRecords != resultSet.length) {
+			stream.end();
+			if (totalRecords != recordsCount) {
 				throw new Error('Error occured while combining data chunks for data call with id: ' + data.dataCalls.id);
 			}
 			let id = 'result' + '-' + data.dataCalls.id;
-			var resultData = new Object();
-			resultData._id = id;
-			resultData.records = Buffer.from(JSON.stringify(resultSet));
 			try {
-				await targetObject.saveTransactionalData(resultData);
-				//test for if result is saved
-				const readResult = await targetObject.getData(id)
+				await targetObject.uploadStreamToS3(id, stream);
 			} catch (err) {
-				logger.error('failed to save result data for', resultData._id)
+				logger.error('failed to save result data for ', id)
 				logger.error('error during save resultlData onerror ' + err)
 			}
-			logger.debug('result data saved for id', resultData._id)
+			logger.debug('result data saved for id', id)
 		}
 	} catch (error) {
 		logger.error(error);
