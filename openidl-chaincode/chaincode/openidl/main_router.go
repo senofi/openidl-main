@@ -121,6 +121,8 @@ func (this *SmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 		return this.CountLikes(stub, args[0])
 	case "CreateConsent":
 		return this.CreateConsent(stub, args[0])
+	case "CreateReconsent":
+		return this.CreateReconsent(stub, args[0])
 	case "CreateConsentCountEntry":
 		return this.CreateConsentCountEntry(stub, args[0])
 	case "CountConsents":
