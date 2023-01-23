@@ -176,9 +176,7 @@ func (this *SmartContract) CreateReconsent(stub shim.ChaincodeStubInterface, arg
 	logger.Debug("CreateConsent: Consent Committed to World State, Raising a CreateConsentEvent")
 
 	// Create chaincode event
-		_ = stub.SetEvent(CREATE_CONSENT_EVENT, consentInBytes)
-
-	}
+	_ = stub.SetEvent(CREATE_CONSENT_EVENT, consentInBytes)
 
 	return shim.Success(nil)
 }
