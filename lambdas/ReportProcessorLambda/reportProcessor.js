@@ -1,22 +1,15 @@
 const config = require('config');
-const  logger  = require('loglevel');
+const logger = require('loglevel');
 logger.setLevel(config.get('loglevel'));
 const S3BucketManager = require('./aws-module.js');
 class ReportProcessor {
 	async readResult(params) {
 		const s3b = new S3BucketManager();
-		let data;
 		try {
-		  var resArray = []
-			data = await s3b.getTransactionalData(params);
+			let data = await s3b.getTransactionalData(params);
+			logger.info("data from s3: ", data);
 			data = JSON.parse(data.Body);
-      for (var i = 0; i < data.length; i = i + 1) {
-				const buff = Buffer.from(data[i].data);
-				const dataString = buff.toString();
-        const dataJson = JSON.parse(dataString)
-        resArray = resArray.concat(dataJson)
-			}
-			return resArray;
+			return data;
 		} catch (err) {
 			logger.error("Error in reading result: ", err)
 		}
@@ -36,36 +29,35 @@ class ReportProcessor {
 		try {
 			data = await s3b.getAllObjectsWithPrefix(params, datacallId);
 		} catch (err) {
-		  throw new Error("Error in getting all consent files. ", err)
+			throw new Error("Error in getting all consent files. ", err)
 		}
 		if (!data.Contents || data.Contents.length < 1) {
-		  throw new Error("No Consent file to delete!")
+			throw new Error("No Consent file to delete!")
 		}
-	  const resKeys = [];
-		for (var i = 0; i< data.Contents.length; i = i+1) {
-			const resItem = {Key: data.Contents[i].Key}
+		const resKeys = [];
+		for (var i = 0; i < data.Contents.length; i = i + 1) {
+			const resItem = { Key: data.Contents[i].Key }
 			resKeys.push(resItem)
 		}
 		logger.info("Object keys to be deleted: ", resKeys)
 		try {
 			await s3b.deleteObjects(params, resKeys);
 		} catch (err) {
-			logger.error("Error in deleting Consent files. ", err) 
+			logger.error("Error in deleting Consent files. ", err)
 		}
-		
+
 	}
 
 	async createReportContent(resultData, dmvData) {
 		const reportData = [];
-		for (var i = 0; i < dmvData.length; i = i + 1) {
-			var isInsured = "no";
-			for (var j = 0; j < resultData.length; j = j + 1) {
-				if (dmvData[i].VINHash == resultData[j]._id) {
-					isInsured = "yes";
-					break;
-				}
+		const resultDataIds = resultData.map(data => data._id);
+		const resultDataSetObject = new Set(resultDataIds);
+		for (let i = 0; i < dmvData.length; i = i + 1) {
+			const row = { "vin": dmvData[i].VIN, "isInsured": "no" };
+			const isDmvDataExists = resultDataSetObject.has(dmvData[i].VINHash);
+			if (isDmvDataExists) {
+				row["isInsured"] = "yes";
 			}
-			const row = { "vin": dmvData[i].VIN, "isInsured": isInsured };
 			reportData.push(row);
 		}
 		return reportData
