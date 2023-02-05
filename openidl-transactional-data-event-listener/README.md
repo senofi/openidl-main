@@ -115,7 +115,7 @@ The hosts configuration file is located at `/etc/hosts`. Add the lines below to 
 
 * Windows
 
-The hosts configuration file is located at `c:\Windows\System32\Drivers\etc\hosts`. Add the lines below to that file.
+The hosts configuration file is located at `C:\Windows\System32\Drivers\etc\hosts`. Add the lines below to that file.
 ```
 127.0.0.1 orderer.example.com
 127.0.0.1 peer0.aais.example.com
