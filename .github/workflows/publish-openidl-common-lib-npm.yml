@@ -1,7 +1,6 @@
 name: Publish openIDL common-lib
 
 on:
-  workflow_call:
   workflow_dispatch:
 
 jobs:
