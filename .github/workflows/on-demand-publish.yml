@@ -1,0 +1,32 @@
+name: On-demand build & publish
+
+on:
+  workflow_dispatch:
+
+jobs:
+  openidl-common-lib:
+    uses: senofi/openidl-main/.github/workflows/publish-openidl-common-lib-npm.yml@testnet-nd-poc
+  openidl-mapper:
+    needs: openidl-common-lib
+    uses: senofi/openidl-main/.github/workflows/publish-mapper.yml@testnet-nd-poc
+  openidl-utilities:
+    needs: openidl-common-lib
+    uses: senofi/openidl-main/.github/workflows/publish-openidl-utilities.yml@testnet-nd-poc
+  openidl-data-call-app:
+    needs: openidl-common-lib
+    uses: senofi/openidl-main/.github/workflows/publish-openidl-data-call-app.yml@testnet-nd-poc
+  openidl-data-call-mood-listener:
+    needs: openidl-common-lib
+    uses: senofi/openidl-main/.github/workflows/publish-openidl-data-call-mood-listener.yml@testnet-nd-poc
+  openidl-data-call-processor:
+    needs: openidl-common-lib
+    uses: senofi/openidl-main/.github/workflows/publish-openidl-data-call-processor.yml@testnet-nd-poc
+  openidl-insurance-data-manager:
+    needs: openidl-common-lib
+    uses: senofi/openidl-main/.github/workflows/publish-openidl-insurance-data-manager.yml@testnet-nd-poc
+  openidl-data-event-listener:
+    needs: openidl-common-lib
+    uses: senofi/openidl-main/.github/workflows/publish-openidl-transactional-data-event-listener.yml@testnet-nd-poc
+  openidl-ui-workspace:
+    needs: openidl-common-lib
+    uses: senofi/openidl-main/.github/workflows/publish-openidl-ui-workspace.yml@testnet-nd-poc

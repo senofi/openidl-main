@@ -1,13 +1,6 @@
-name: Publish openIDL common-lib to Github NPM
+name: Publish openIDL common-lib
+
 on:
-  push:
-    branches:
-      - openidl-nd-poc-main       
-      - develop
-      - remove-huge-data-logs
-    paths:
-      - 'openidl-common-lib/**'
-  
   workflow_dispatch:
 
 jobs:
@@ -15,27 +8,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Create .npmrc
-        run: |
-          cd openidl-common-lib/
-          echo "//npm.pkg.github.com/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
-          echo "@openidl-org:registry=https://npm.pkg.github.com" >> .npmrc
-          echo "always-auth=true" >> .npmrc
-          cat .npmrc
+        uses: actions/checkout@v3
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
+          node-version: '16.x'
           registry-url: 'https://npm.pkg.github.com/'
       - name: Publish package on NPM
-        run: |
-          cd openidl-common-lib/
-          # VERSION=$(npm version patch)
-          # echo "VERSION=$VERSION" >> $GITHUB_ENV
-          npm publish --registry=https://npm.pkg.github.com/
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          registry: https://npm.pkg.github.com
+          token: '${{ secrets.GITHUB_TOKEN }}'
+          access: public
+          package: openidl-common-lib/package.json
       # push the version changes to GitHub
       # - run: |
       #     git config --global user.name "GitHub CD bot"

@@ -4,7 +4,7 @@ const logger = log4js.getLogger('Processor');
 logger.level = config.logLevel;
 const mongoDataProcessor = require('./data-processor-mongo');
 const dataProcessor = require('../controllers/data-processor');
-const openidlCommonLib = require('@openidl-org/openidl-common-lib');
+const openidlCommonLib = require('@senofi/openidl-common-lib');
 let DBManagerFactory = openidlCommonLib.DBManagerFactory;
 let dbManagerFactoryObject = new DBManagerFactory();
 

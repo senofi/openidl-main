@@ -11,7 +11,7 @@ const kvsConfig = require('../config/local-kvs-config.json');
 const networkConfig = require('../config/connection-profile.json');
 const {
     Transaction
-} = require('@openidl-org/openidl-common-lib');
+} = require('@senofi/openidl-common-lib');
 let pollIntervalInDays = "1";
 let ChannelTransactionMap = new Map();
 logger.level = config.logLevel;

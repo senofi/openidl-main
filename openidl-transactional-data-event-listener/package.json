@@ -20,7 +20,7 @@
     "log4js": "^4.3.2",
     "mongodb": "^3.6.10",
     "node-cron": "^3.0.0",
-    "@openidl-org/openidl-common-lib": "^0.5.9",
+    "@senofi/openidl-common-lib": "^0.7.0",
     "node-schedule": "^2.1.0",
     "object-sizeof": "1.4.0"
   },
