@@ -20,8 +20,8 @@ const log4js = require('log4js');
 const config = require('config');
 const cron = require('node-cron');
 const schedule = require('node-schedule');
-var bodyParser = require('body-parser')
-var jsonParser = bodyParser.json()
+const bodyParser = require('body-parser')
+const jsonParser = bodyParser.json()
 
 
 const openidlCommonLib = require('@senofi/openidl-common-lib');
@@ -82,28 +82,26 @@ async function init() {
     logger.info("job scheduling done  ", job);
     let dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
     let listenerConfig = {};
-    let listernerChannels = new Array();
-    for (let index = 0; index < channelConfig.listenerChannels.length; index++) {
-        let channelName = channelConfig.listenerChannels[index].channelName;
-        let listenerChannel = {};
+    let listenerChannels = [];
+    channelConfig.listenerChannels.forEach (listenerChannel =>  {
+        let channelName = listenerChannel.channelName;
         logger.debug("channelName" + channelName);
         listenerChannel["channelName"] = channelName;
 
         let events = [];
-        for (let index1 = 0; index1 < channelConfig.listenerChannels[index].events.length; index1++) {
-            let eventName = channelConfig.listenerChannels[index].events[index1];
+        listenerChannel.event.forEach( eventName => {
             logger.debug("EVENT NAME " + Object.keys(eventName));
             // const eventFun = mainEvent.eventFunction[Object.keys(eventName)];
             let event = {};
             event[Object.keys(eventName)] = mainEvent.eventFunction[Object.keys(eventName)];
             events.push(event)
-        }
+        });
         listenerChannel["events"] = events;
         logger.debug("listenerChannel" + listenerChannel);
-        listernerChannels.push(listenerChannel);
+        listenerChannels.push(listenerChannel);
 
-    }
-    listenerConfig['listenerChannels'] = listernerChannels;
+    });
+    listenerConfig['listenerChannels'] = listenerChannels;
     await walletHelper.init(JSON.parse(process.env.KVS_CONFIG));
     let idExists = await walletHelper.identityExists(channelConfig.identity.user);
     if (!idExists) {
@@ -114,8 +112,7 @@ async function init() {
     logger.debug(channelConfig.identity.user);
     identity['user'] = channelConfig.identity.user;
     identity['wallet'] = wallet;
-    let applicationName = channelConfig.applicationName;
-    listenerConfig["applicationName"] = applicationName;
+    listenerConfig["applicationName"] = channelConfig.applicationName;
     listenerConfig['identity'] = identity;
 
 
