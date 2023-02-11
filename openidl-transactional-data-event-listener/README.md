@@ -101,6 +101,26 @@ For development, testing, and debugging purposes, it is very convenient to run t
     ```
 * Application will be using local CouchDB running on port `9984` as user certificate key value store
 
+### 7. Configure hosts mappings
+The application will connect to the nodes by using the following URIs `orderer.example.com`, `peer0.aais.example.com`, `peer0.analytics.example.com`. However, it won't succeed because the actual URI for the nodes in local environment is `localhost`. In order to tackle that hosts mappings have to be added to the hosts configuration on the local machine like this:
+
+* MacOS/Linux
+
+The hosts configuration file is located at `/etc/hosts`. Add the lines below to that file.
+```
+127.0.0.1 orderer.example.com
+127.0.0.1 peer0.aais.example.com
+127.0.0.1 peer0.analytics.example.com
+```
+
+* Windows
+
+The hosts configuration file is located at `C:\Windows\System32\Drivers\etc\hosts`. Add the lines below to that file.
+```
+127.0.0.1 orderer.example.com
+127.0.0.1 peer0.aais.example.com
+127.0.0.1 peer0.analytics.example.com
+```
 ### Start the Node.js server
 
 1. Run the `npm install` command and verify that there are no errors.
