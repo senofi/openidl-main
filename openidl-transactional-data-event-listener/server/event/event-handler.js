@@ -22,22 +22,16 @@ const sizeof = require('object-sizeof');
 const config = require('config');
 const logger = log4js.getLogger('event -eventHandler ');
 let InstanceFactory = require('../middleware/instance-factory');
-const targetChannelConfig = require('../config/target-channel-config');
-const networkConfig = require('../config/connection-profile.json');
 const {
     Transaction
 } = require('@senofi/openidl-common-lib');
+const setChanelTransaction = require("../helpers/chanel-transaction-manager");
 let ChannelTransactionMap = new Map();
 logger.level = config.logLevel;
 
 Transaction.initWallet(JSON.parse(process.env.KVS_CONFIG));
-for (let channelIndex = 0; channelIndex < targetChannelConfig.targetChannels.length; channelIndex++) {
-    const targetChannelTransaction = new Transaction(targetChannelConfig.users[0].org, targetChannelConfig.users[0].user, targetChannelConfig.targetChannels[channelIndex].channelName, targetChannelConfig.targetChannels[channelIndex].chaincodeName, targetChannelConfig.users[0].mspId);
-    targetChannelTransaction.init(networkConfig);
-    ChannelTransactionMap.set(targetChannelConfig.targetChannels[channelIndex].channelName, targetChannelTransaction);
-
-}
-var eventFunction = {};
+setChanelTransaction();
+let eventFunction = {};
 // Changed event name to disable event listener
 eventFunction.TransactionalDataAvailable = async function processTransactionalDataAvailableEvent(payload, blockNumber) {
     try {
@@ -77,14 +71,14 @@ eventFunction.TransactionalDataAvailable = async function processTransactionalDa
             let factoryObject = new InstanceFactory();
             let targetObject = await factoryObject.getInstance(config.insuranceDataStorageEnv);
 
-            var insuranceData = new Object();
+            let insuranceData = {};
             let id = data.dataCallId + '/' + data.carrierId + '-' + data.dataCallVersion + '-' + data.pageNumber + '-' + data.sequenceNum + '.json';
             logger.info("created id is: ", id)
             //check whether record already exist with this '_id'
             //then get '_rev '
             try {
                 let revId = await targetObject.getTransactionalData(id);
-                if (revId != "error") {
+                if (revId !== "error") {
                     logger.debug('revId' + revId)
                     insuranceData._rev = revId;
                 }

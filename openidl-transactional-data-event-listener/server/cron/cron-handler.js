@@ -1,29 +1,23 @@
 'use strict';
 const log4js = require('log4js');
 const logger = log4js.getLogger('cron');
-const { EventEmitter } = require("events");
+const {EventEmitter} = require("events");
 const em = new EventEmitter();
 const matureEventHandler = require('../matureEvent/matureEvent');
 const config = require("../config/default.json");
 
-const targetChannelConfig = require('../config/target-channel-config');
 const kvsConfig = require('../config/local-kvs-config.json');
-const networkConfig = require('../config/connection-profile.json');
 const {
     Transaction
 } = require('@senofi/openidl-common-lib');
+const setChanelTransaction = require("../helpers/chanel-transaction-manager");
 let pollIntervalInDays = "1";
 let ChannelTransactionMap = new Map();
 logger.level = config.logLevel;
 Transaction.initWallet(kvsConfig);
 logger.debug(typeof kvsConfig)
 logger.debug("kvs config: ", JSON.stringify(kvsConfig))
-for (let channelIndex = 0; channelIndex < targetChannelConfig.targetChannels.length; channelIndex++) {
-    const targetChannelTransaction = new Transaction(targetChannelConfig.users[0].org, targetChannelConfig.users[0].user, targetChannelConfig.targetChannels[channelIndex].channelName, targetChannelConfig.targetChannels[channelIndex].chaincodeName, targetChannelConfig.users[0].mspId);
-    targetChannelTransaction.init(networkConfig);
-    ChannelTransactionMap.set(targetChannelConfig.targetChannels[channelIndex].channelName, targetChannelTransaction);
-
-}
+setChanelTransaction();
 const CronHandler = {};
 CronHandler.init = () => {
     em.on('triggerEvent', (data) => {
@@ -40,8 +34,8 @@ CronHandler.pollForMaturedDataCall = async (deadlineWindow) => {
         let defaultChannelTransaction = ChannelTransactionMap.get("defaultchannel");
 
         logger.info("** Transaction started for ListDataCallsByCriteria at : Start_Time=" + new Date().toISOString());
-        
-        if (!deadlineWindow || !deadlineWindow.startTime || !deadlineWindow.endTime)  {
+
+        if (!deadlineWindow || !deadlineWindow.startTime || !deadlineWindow.endTime) {
             logger.debug("Constructing Deadline window...")
             const startTime = new Date()
             const endTime = new Date()
@@ -82,6 +76,7 @@ CronHandler.pollForMaturedDataCall = async (deadlineWindow) => {
     }
     return true;
 };
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
