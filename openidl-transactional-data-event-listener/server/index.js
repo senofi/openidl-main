@@ -29,10 +29,8 @@ const cronHandler = require('./cron/cron-handler');
 openidlCommonLib.EnvConfig.init();
 
 const EventListener = openidlCommonLib.EventListener;
-const walletHelper = openidlCommonLib.Wallet;
-const channelConfig = require('./config/listener-channel-config.json');
 const networkConfig = require('./config/connection-profile.json');
-const mainEvent = require('./event/event-handler');
+const {setListenerConfig} = require("./helpers/listener-config-manager");
 let DBManagerFactory = openidlCommonLib.DBManagerFactory;
 let dbManagerFactoryObject = new DBManagerFactory();
 
@@ -81,41 +79,7 @@ async function init() {
     const job = schedule.scheduleJob(pollIntervalString, async () => await cronHandler.pollForMaturedDataCall());
     logger.info("job scheduling done  ", job);
     let dbManager = await dbManagerFactoryObject.getInstance(JSON.parse(process.env.OFF_CHAIN_DB_CONFIG));
-    let listenerConfig = {};
-    let listenerChannels = [];
-    channelConfig.listenerChannels.forEach (listenerChannel =>  {
-        let channelName = listenerChannel.channelName;
-        logger.debug("channelName" + channelName);
-        listenerChannel["channelName"] = channelName;
-
-        let events = [];
-        listenerChannel.event.forEach( eventName => {
-            logger.debug("EVENT NAME " + Object.keys(eventName));
-            // const eventFun = mainEvent.eventFunction[Object.keys(eventName)];
-            let event = {};
-            event[Object.keys(eventName)] = mainEvent.eventFunction[Object.keys(eventName)];
-            events.push(event)
-        });
-        listenerChannel["events"] = events;
-        logger.debug("listenerChannel" + listenerChannel);
-        listenerChannels.push(listenerChannel);
-
-    });
-    listenerConfig['listenerChannels'] = listenerChannels;
-    await walletHelper.init(JSON.parse(process.env.KVS_CONFIG));
-    let idExists = await walletHelper.identityExists(channelConfig.identity.user);
-    if (!idExists) {
-        throw new Error("Invalid Identity, no certificate found in certificate store");
-    }
-    const wallet = walletHelper.getWallet();
-    let identity = {};
-    logger.debug(channelConfig.identity.user);
-    identity['user'] = channelConfig.identity.user;
-    identity['wallet'] = wallet;
-    listenerConfig["applicationName"] = channelConfig.applicationName;
-    listenerConfig['identity'] = identity;
-
-
+    let listenerConfig = await setListenerConfig();
     try {
         await EventListener.init(networkConfig, listenerConfig, dbManager, config.targetDB);
         await EventListener.processInvoke();
@@ -123,4 +87,5 @@ async function init() {
         logger.error('eventHandler init error' + err);
     }
 }
+
 init();
