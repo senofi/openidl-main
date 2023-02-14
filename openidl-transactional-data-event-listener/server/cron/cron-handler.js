@@ -10,14 +10,13 @@ const kvsConfig = require('../config/local-kvs-config.json');
 const {
     Transaction
 } = require('@senofi/openidl-common-lib');
-const setChanelTransaction = require("../helpers/chanel-transaction-manager");
+const createTargetChannelTransactions = require("../helpers/chanel-transaction-manager");
 let pollIntervalInDays = "1";
-let ChannelTransactionMap = new Map();
 logger.level = config.logLevel;
 Transaction.initWallet(kvsConfig);
 logger.debug(typeof kvsConfig)
 logger.debug("kvs config: ", JSON.stringify(kvsConfig))
-setChanelTransaction();
+const ChannelTransactionMap = createTargetChannelTransactions();
 const CronHandler = {};
 CronHandler.init = () => {
     em.on('triggerEvent', (data) => {

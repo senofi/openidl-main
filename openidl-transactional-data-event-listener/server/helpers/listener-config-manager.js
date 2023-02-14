@@ -5,7 +5,7 @@ const log4js = require('log4js');
 const walletHelper = openidlCommonLib.Wallet;
 const logger = log4js.getLogger('index');
 
-export async function setListenerConfig() {
+async function createListenerConfig() {
     const listenerConfig = {};
     listenerConfig.listenerChannels = channelConfig.listenerChannels.map(listenerChannel => {
         const {channelName, event} = listenerChannel;
@@ -33,3 +33,5 @@ export async function setListenerConfig() {
 
     return listenerConfig;
 }
+
+module.exports = createListenerConfig;

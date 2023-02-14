@@ -25,12 +25,11 @@ let InstanceFactory = require('../middleware/instance-factory');
 const {
     Transaction
 } = require('@senofi/openidl-common-lib');
-const setChanelTransaction = require("../helpers/chanel-transaction-manager");
-let ChannelTransactionMap = new Map();
+const createTargetChannelTransactions = require("../helpers/chanel-transaction-manager");
 logger.level = config.logLevel;
 
 Transaction.initWallet(JSON.parse(process.env.KVS_CONFIG));
-setChanelTransaction();
+const ChannelTransactionMap = createTargetChannelTransactions();
 let eventFunction = {};
 // Changed event name to disable event listener
 eventFunction.TransactionalDataAvailable = async function processTransactionalDataAvailableEvent(payload, blockNumber) {
