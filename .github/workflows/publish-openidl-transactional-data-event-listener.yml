@@ -27,14 +27,6 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Check test status and prevent merge on failure
-        if: always()
-        run: |
-          if [ ${{ job.status }} == 'failure' ]; then
-          echo "Tests failed, merge not allowed."
-          exit 1
-          fi    
-
       - name: Log into GitHub Docker Registry
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v1
