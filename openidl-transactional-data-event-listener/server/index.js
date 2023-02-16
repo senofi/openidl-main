@@ -32,12 +32,13 @@ const expressRoutes = require('./express');
 const logger = log4js.getLogger('index');
 logger.level = config.logLevel;
 const expressLogger = log4js.getLogger('express');
+expressLogger.level = 'INFO'
 
 // Setup express
 const app = express();
 app.use(bodyParser.json());
 app.use(httpsRedirect);
-app.use(log4js.connectLogger(expressLogger, { level: 'auto' }));
+app.use(log4js.connectLogger(expressLogger, { level: log4js.levels.INFO }));
 app.enable('trust proxy');
 
 expressRoutes(app);
