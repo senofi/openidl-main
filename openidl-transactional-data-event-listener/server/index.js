@@ -35,7 +35,7 @@ const expressLogger = log4js.getLogger('express');
 
 // Setup express
 const app = express();
-app.use(bodyParser);
+app.use(bodyParser.json());
 app.use(httpsRedirect);
 app.use(log4js.connectLogger(expressLogger, { level: 'auto' }));
 app.enable('trust proxy');
