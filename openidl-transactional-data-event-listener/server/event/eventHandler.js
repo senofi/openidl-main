@@ -25,7 +25,7 @@ let InstanceFactory = require('../middleware/instance-factory');
 const {
     Transaction
 } = require('@senofi/openidl-common-lib');
-const createTargetChannelTransactions = require("../helpers/chanel-transaction-manager");
+const createTargetChannelTransactions = require("../service/channelTransactionService");
 logger.level = config.logLevel;
 
 Transaction.initWallet(JSON.parse(process.env.KVS_CONFIG));
