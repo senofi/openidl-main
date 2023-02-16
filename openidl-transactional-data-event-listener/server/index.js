@@ -20,13 +20,13 @@ const config = require('config');
 const bodyParser = require('body-parser');
 const openidlCommonLib = require('@senofi/openidl-common-lib');
 
+// Init common lib env variables (call before injecting local depencencies because they rely on the ENV variable to be injected)
+openidlCommonLib.EnvConfig.init();
+
 const { initCronJob } = require('./cron/cronJob');
 const httpsRedirect = require('./express/middleware/httpsRedirect');
-const { initEventListener } = require('./service/eventListenerService');
+const { initEventListener } = require('./event/eventListener');
 const expressRoutes = require('./express');
-
-// Init common lib
-openidlCommonLib.EnvConfig.init();
 
 //Set up logging
 const logger = log4js.getLogger('index');

@@ -1,4 +1,4 @@
-const { mainEvent } = require('./eventHandler');
+const mainEvent = require('./eventHandler');
 const openidlCommonLib = require('@senofi/openidl-common-lib');
 const channelConfig = require('../config/listener-channel-config.json');
 const log4js = require('log4js');
@@ -9,10 +9,10 @@ async function createListenerConfig() {
 	const listenerConfig = {};
 	listenerConfig.listenerChannels = channelConfig.listenerChannels.map(
 		(listenerChannel) => {
-			const { channelName, event } = listenerChannel;
+			const { channelName, events } = listenerChannel;
 			logger.debug(`channelName: ${channelName}`);
 
-			const events = event.map((eventName) => {
+			const mappedEvents = events.map((eventName) => {
 				logger.debug(`EVENT NAME: ${Object.keys(eventName)}`);
 				return {
 					[Object.keys(eventName)]:
@@ -20,7 +20,7 @@ async function createListenerConfig() {
 				};
 			});
 			logger.debug(`listenerChannel: ${listenerChannel}`);
-			return { channelName, events };
+			return { channelName, events: mappedEvents };
 		}
 	);
 	await walletHelper.init(JSON.parse(process.env.KVS_CONFIG));

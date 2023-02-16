@@ -11,7 +11,7 @@ const matureEventHandler = require('../matureEvent/matureEvent');
 const kvsConfig = require('../config/local-kvs-config.json');
 const createTargetChannelTransactions = require('./channelTransactionService');
 
-const logger = log4js.getLogger('cron');
+const logger = log4js.getLogger('poll-data-service');
 logger.level = config.logLevel;
 logger.debug(typeof kvsConfig);
 logger.debug('kvs config: ', JSON.stringify(kvsConfig));
