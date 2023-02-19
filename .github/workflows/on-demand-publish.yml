@@ -5,28 +5,28 @@ on:
 
 jobs:
   openidl-common-lib:
-    uses: ./.github/workflows/publish-openidl-common-lib-npm.yml
+    uses: publish-openidl-common-lib-npm.yml
   openidl-mapper:
     needs: openidl-common-lib
-    uses: ./.github/workflows/publish-mapper.yml
+    uses: publish-mapper.yml
   openidl-utilities:
     needs: openidl-common-lib
-    uses: ./.github/workflows/publish-openidl-utilities.yml
+    uses: publish-openidl-utilities.yml
   openidl-data-call-app:
     needs: openidl-common-lib
-    uses: ./.github/workflows/publish-openidl-data-call-app.yml
+    uses: publish-openidl-data-call-app.yml
   openidl-data-call-mood-listener:
     needs: openidl-common-lib
-    uses: ./.github/workflows/publish-openidl-data-call-mood-listener.yml
+    uses: publish-openidl-data-call-mood-listener.yml
   openidl-data-call-processor:
     needs: openidl-common-lib
-    uses: ./.github/workflows/publish-openidl-data-call-processor.yml
+    uses: publish-openidl-data-call-processor.yml
   openidl-insurance-data-manager:
     needs: openidl-common-lib
-    uses: ./.github/workflows/publish-openidl-insurance-data-manager.yml
+    uses: publish-openidl-insurance-data-manager.yml
   openidl-data-event-listener:
     needs: openidl-common-lib
-    uses: ./.github/workflows/publish-openidl-transactional-data-event-listener.yml
+    uses: publish-openidl-transactional-data-event-listener.yml
   openidl-ui-workspace:
     needs: openidl-common-lib
-    uses: ./.github/workflows/publish-openidl-ui-workspace.yml
+    uses: publish-openidl-ui-workspace.yml
