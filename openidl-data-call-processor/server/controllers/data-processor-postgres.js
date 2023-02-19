@@ -77,7 +77,7 @@ class DataProcessorPostgres {
                 dataCallId: datacallid,
                 dataCallVersion: versionid,
                 carrierId: carrierId,
-                sequenceNum: "1",
+                sequenceNum: 1,
                 totalRecordsNum: records.length,
                 recordsNum: records.length,
                 records: records
