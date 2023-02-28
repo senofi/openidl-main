@@ -7,6 +7,7 @@ const config = require('../config/default.json');
 
 const logger = log4js.getLogger('cronJob');
 
+logger.debug(`[ENTER] initCronJob `);
 const initCronJob = () => {
 	const { pollIntervalString } = config;
 	logger.info('poll interval config: ', pollIntervalString);

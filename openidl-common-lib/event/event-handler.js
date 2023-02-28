@@ -78,7 +78,7 @@ const mainHandler = async (channelName) => {
     await sleep(5000);
     logger.debug(`eventHandler mainHandler method entry for channel ${channelName}`);
     const blockInfo = await getBlockInfoFromCloudant(`${this.applicationName}-${channelName}`);
-
+    logger.debug(`BLOCK BLOCK INFO IS >>>>>> ${blockInfo}`);
     logger.debug(`block info from cloudant for channel ${channelName}`);
     logger.debug(`BLOCK FROM CLOUDANT IS ${JSON.stringify(blockInfo)}`);
     if (blockInfo && blockInfo.blockNumber) {
@@ -98,6 +98,8 @@ const mainHandler = async (channelName) => {
 const getBlockInfoFromCloudant = async (channelId) => {
   logger.info(`getBlockInfoFromCloudant method entry for channel ${channelId}`);
   logger.info(`getting data${this.blockManagementDB}`);
+  logger.debug(`[ERROR] chanelID>>>> ${channelId}`);
+  logger.debug(`[ERROR] blockmanagement DB >>>> ${this.blockManagementDB}`);
   try {
     return new Promise((resolve, reject) => {
       this.blockManagementDB.get(channelId, this.eventListenersDB).then((data) => {
@@ -105,6 +107,7 @@ const getBlockInfoFromCloudant = async (channelId) => {
       });
     });
   } catch (err) {
+    logger.debug(`[ERROR] getBlockInfoFromCloudant ${err}`);
   }
 };
 
