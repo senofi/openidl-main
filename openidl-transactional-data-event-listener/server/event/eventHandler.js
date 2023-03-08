@@ -27,6 +27,7 @@ const {
 } = require('@senofi/openidl-common-lib');
 const createTargetChannelTransactions = require("../service/channelTransactionService");
 logger.level = config.logLevel;
+logger.info("Init wallet: " + process.env.KVS_CONFIG);
 
 Transaction.initWallet(JSON.parse(process.env.KVS_CONFIG));
 const ChannelTransactionMap = createTargetChannelTransactions();

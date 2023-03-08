@@ -1,3 +1,6 @@
+// mock value for KVS_CONFIG
+process.env.KVS_CONFIG = '{}';
+
 const chai = require('chai');
 const expect = chai.expect;
 const config = require('config');
@@ -13,9 +16,6 @@ const payload = JSON.stringify(eventPayload);
 const sinon = require("sinon");
 const factoryObject = new InstanceFactory();
 let targetObject;
-/*factoryObject.getInstance(config.insuranceDataStorageEnv).then(function (res) {
-    targetObject = res;
-})*/
 
 
 describe('TransactionalDataAvailable Event Test', () => {
