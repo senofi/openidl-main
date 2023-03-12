@@ -19,7 +19,7 @@ jobs:
       packages: write
 
     outputs:
-      image: ${{ steps.meta.outputs.image }}
+      image: ${{ env.REGISTRY }}/${{ github.REPOSITORY_OWNER }}/openidl-chaincode
       digest: ${{ steps.build_docker_image.outputs.digest }}
 
     steps:
@@ -38,8 +38,6 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ github.REPOSITORY_OWNER }}/openidl-chaincode
-        outputs:
-          image: ${{ env.REGISTRY }}/${{ github.REPOSITORY_OWNER }}/openidl-chaincode
 
       - name: Build and push Docker image
         id: build_docker_image
