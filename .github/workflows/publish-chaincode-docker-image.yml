@@ -18,6 +18,10 @@ jobs:
       contents: read
       packages: write
 
+    outputs:
+      imageid: ${{ steps.build_docker_image.outputs.imageid }}
+      digest: ${{ steps.build_docker_image.outputs.digest }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -44,16 +48,18 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Build and push the metadata package for default channel
-        uses: ./.github/workflows/publish-chaincode-metadata-package.yml
-        with:
-          chaincode_metadata_label: openidl-cc-default
-          chaincode_docker_image: ${{ steps.build_docker_image.outputs.imageid }}
-          chaincode_docker_image_digest: ${{ steps.build_docker_image.outputs.digest }}
+  build-and-push-metadata-package-for-default-channel:
+    needs: build-and-push-chaincode-image
+    uses: ./.github/workflows/publish-chaincode-metadata-package.yml
+    with:
+      chaincode_metadata_label: openidl-cc-default
+      chaincode_docker_image: ${{ needs.build-and-push-chaincode-image.outputs.imageid }}
+      chaincode_docker_image_digest: ${{ needs.build-and-push-chaincode-image.outputs.digest }}
 
-      - name: Build and push the metadata package for analytics channel
-        uses: ./.github/workflows/publish-chaincode-metadata-package.yml
-        with:
-          chaincode_metadata_label: openidl-cc-analytics-carrier
-          chaincode_docker_image: ${{ steps.build_docker_image.outputs.imageid }}
-          chaincode_docker_image_digest: ${{ steps.build_docker_image.outputs.digest }}
+  build-and-push-metadata-package-for-analytics-channel:
+    needs: build-and-push-chaincode-image
+    uses: ./.github/workflows/publish-chaincode-metadata-package.yml
+    with:
+      chaincode_metadata_label: openidl-cc-analytics-carrier
+      chaincode_docker_image: ${{ needs.build-and-push-chaincode-image.outputs.imageid }}
+      chaincode_docker_image_digest: ${{ needs.build-and-push-chaincode-image.outputs.digest }}
