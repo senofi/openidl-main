@@ -42,9 +42,14 @@ jobs:
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
     - name: Run build with Gradle Wrapper
+      working-directory: openidl-chaincode/chaincode/openidl-metadata
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
+        echo "Github username: ${GITHUB_ACTOR}"
+        echo "Version: ${NEW_VERSION}"
         ./gradlew publish \
           -PchaincodeLabel=${{ inputs.chaincode_metadata_label }} \
           -PimageLocationUrl=ghcr.io/${{ inputs.chaincode_docker_image }} \
           -PimageDigest=${{ inputs.chaincode_docker_image_digest }}
-      working-directory: openidl-chaincode/chaincode/openidl-metadata
