@@ -18,7 +18,7 @@ on:
         default: 'sha256:22e14d78fa4d3cbf1465fd52e7d49e4ba119de55fe697996612fc38b07ea8f35'
 
 jobs:
-  build-gradle-project:
+  publish-chaincode-metadata-package:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout project sources
