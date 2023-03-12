@@ -69,7 +69,6 @@ publishing {
         maven(MavenPublication) {
             groupId 'openidl-chaincode'
             artifactId chaincodeLabel
-            version '1.0-SNAPSHOT'
             artifact chaincodeTarArtifact
         }
     }
