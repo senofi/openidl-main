@@ -20,8 +20,8 @@ task buildCodeTar(type: Tar) {
     archiveFileName = 'code.tgz'
     compression = Compression.GZIP
 
-    into ('/'){
-        from "$buildDir/generated-src/code"
+    into ('.'){
+        from "$buildDir/generated-src/code/"
         include '**'
     }
 }

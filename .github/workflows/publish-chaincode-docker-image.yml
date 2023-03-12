@@ -53,7 +53,7 @@ jobs:
     uses: ./.github/workflows/publish-chaincode-metadata-package.yml
     with:
       chaincode_metadata_label: openidl-cc-default
-      chaincode_docker_image: ${{ needs.build-and-push-chaincode-image.outputs.imageid }}
+      chaincode_docker_image: ${{ env.REGISTRY }}/${{ github.REPOSITORY_OWNER }}/openidl-chaincode
       chaincode_docker_image_digest: ${{ needs.build-and-push-chaincode-image.outputs.digest }}
 
   build-and-push-metadata-package-for-analytics-channel:
@@ -61,5 +61,5 @@ jobs:
     uses: ./.github/workflows/publish-chaincode-metadata-package.yml
     with:
       chaincode_metadata_label: openidl-cc-analytics-carrier
-      chaincode_docker_image: ${{ needs.build-and-push-chaincode-image.outputs.imageid }}
+      chaincode_docker_image: ${{ env.REGISTRY }}/${{ github.REPOSITORY_OWNER }}/openidl-chaincode
       chaincode_docker_image_digest: ${{ needs.build-and-push-chaincode-image.outputs.digest }}

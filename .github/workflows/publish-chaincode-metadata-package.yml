@@ -51,5 +51,5 @@ jobs:
         echo "Version: ${NEW_VERSION}"
         ./gradlew publish \
           -PchaincodeLabel=${{ inputs.chaincode_metadata_label }} \
-          -PimageLocationUrl=ghcr.io/${{ inputs.chaincode_docker_image }} \
+          -PimageLocationUrl=${{ inputs.chaincode_docker_image }} \
           -PimageDigest=${{ inputs.chaincode_docker_image_digest }}
