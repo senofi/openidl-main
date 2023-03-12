@@ -6,25 +6,31 @@ on:
       chaincode_metadata_label:
         description: 'Chaincode metadata label'
         required: true
+        type: string
       chaincode_docker_image:
         description: 'Docker image'
         required: true
+        type: string
       chaincode_docker_image_digest:
         description: 'Docker image SHA256 digest'
         required: true
+        type: string
   workflow_dispatch:
     inputs:
       chaincode_metadata_label:
         description: 'Chaincode metadata label'
         required: true
+        type: string
         default: 'openidl-cc-default'
       chaincode_docker_image:
         description: 'Docker image'
         required: true
+        type: string
         default: 'senofi/openidl-chaincode'
       chaincode_docker_image_digest:
         description: 'Docker image SHA256 digest'
         required: true
+        type: string
         default: 'sha256:22e14d78fa4d3cbf1465fd52e7d49e4ba119de55fe697996612fc38b07ea8f35'
 
 jobs:
