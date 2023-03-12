@@ -19,7 +19,7 @@ jobs:
       packages: write
 
     outputs:
-      imageid: ${{ steps.build_docker_image.outputs.imageid }}
+      image: ${{ steps.meta.outputs.image }}
       digest: ${{ steps.build_docker_image.outputs.digest }}
 
     steps:
@@ -38,6 +38,8 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ github.REPOSITORY_OWNER }}/openidl-chaincode
+        outputs:
+          image: ${{ env.REGISTRY }}/${{ github.REPOSITORY_OWNER }}/openidl-chaincode
 
       - name: Build and push Docker image
         id: build_docker_image
@@ -53,7 +55,7 @@ jobs:
     uses: ./.github/workflows/publish-chaincode-metadata-package.yml
     with:
       chaincode_metadata_label: openidl-cc-default
-      chaincode_docker_image: ${{ env.REGISTRY }}/${{ github.REPOSITORY_OWNER }}/openidl-chaincode
+      chaincode_docker_image: ${{ needs.build-and-push-chaincode-image.outputs.image }}
       chaincode_docker_image_digest: ${{ needs.build-and-push-chaincode-image.outputs.digest }}
 
   build-and-push-metadata-package-for-analytics-channel:
@@ -61,5 +63,5 @@ jobs:
     uses: ./.github/workflows/publish-chaincode-metadata-package.yml
     with:
       chaincode_metadata_label: openidl-cc-analytics-carrier
-      chaincode_docker_image: ${{ env.REGISTRY }}/${{ github.REPOSITORY_OWNER }}/openidl-chaincode
+      chaincode_docker_image: ${{ needs.build-and-push-chaincode-image.outputs.image }}
       chaincode_docker_image_digest: ${{ needs.build-and-push-chaincode-image.outputs.digest }}
