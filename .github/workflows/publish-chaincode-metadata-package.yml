@@ -1,6 +1,7 @@
-name: Publish chaincode manifest bundle
+name: Publish chaincode metadata package
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       chaincode_metadata_label:
@@ -10,7 +11,7 @@ on:
       chaincode_docker_image:
         description: 'Docker image'
         required: true
-        default: 'ghcr.io/senofi/openidl-chaincode'
+        default: 'senofi/openidl-chaincode'
       chaincode_docker_image_digest:
         description: 'Docker image SHA256 digest'
         required: true
@@ -26,8 +27,8 @@ jobs:
       uses: gradle/gradle-build-action@v2
     - name: Run build with Gradle Wrapper
       run: |
-        ./gradlew build \
+        ./gradlew publish \
           -PchaincodeLabel=${{ inputs.chaincode_metadata_label }} \
-          -PimageLocationUrl=${{ inputs.chaincode_docker_image }} \
+          -PimageLocationUrl=ghcr.io/${{ inputs.chaincode_docker_image }} \
           -PimageDigest=${{ inputs.chaincode_docker_image_digest }}
       working-directory: openidl-chaincode/chaincode/openidl-metadata
