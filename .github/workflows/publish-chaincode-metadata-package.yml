@@ -46,10 +46,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
+        NEW_VERSION=$GITHUB_RUN_NUMBER
         echo "Github username: ${GITHUB_ACTOR}"
         echo "Version: ${NEW_VERSION}"
         ./gradlew publish \
           -PchaincodeLabel=${{ inputs.chaincode_metadata_label }} \
           -PimageLocationUrl=${{ inputs.chaincode_docker_image }} \
-          -PimageDigest=${{ inputs.chaincode_docker_image_digest }}
+          -PimageDigest=${{ inputs.chaincode_docker_image_digest }} \
+          -Pversion=$NEW_VERSION
