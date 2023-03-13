@@ -22,7 +22,12 @@ task buildCodeTar(type: Tar) {
 
     into ('.'){
         from "$buildDir/generated-src/code/"
-        include '**'
+        include 'image.json'
+    }
+
+    into ('/'){
+        from "$buildDir/generated-src/code/"
+        include 'META-INF/**'
     }
 }
 
