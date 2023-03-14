@@ -5,6 +5,10 @@ on:
     paths:
       - "openidl-transactional-data-event-listener/**"
 
+env:
+  REGISTRY: ghcr.io/${{ github.repository }}
+  IMAGE_NAME: openidl-transactional-data-event-listener
+
 defaults:
   run:
     shell: bash
