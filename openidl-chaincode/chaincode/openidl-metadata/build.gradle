@@ -17,7 +17,7 @@ task generateSources(type: Copy) {
 task buildCodeTar(type: Tar) {
     extension = 'tgz'
     destinationDir = file('build/archive')
-    archiveFileName = 'code.tgz'
+    archiveFileName = 'code.tar.gz'
     compression = Compression.GZIP
 
     into ('.'){
