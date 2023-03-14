@@ -1,9 +1,15 @@
-name: CI
+name: Run Data Event Listener tests
 
 on:
   pull_request:
     paths:
       - "openidl-transactional-data-event-listener/**"
+
+defaults:
+  run:
+    shell: bash
+    working-directory: openidl-transactional-data-event-listener
+
 jobs:
   test:
     runs-on: ubuntu-latest
