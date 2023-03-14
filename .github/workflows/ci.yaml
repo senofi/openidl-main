@@ -2,9 +2,8 @@ name: CI
 
 on:
   pull_request:
-    branches:
-      - senofi-develop
-
+    paths:
+      - "openidl-transactional-data-event-listener/**"
 jobs:
   test:
     runs-on: ubuntu-latest
