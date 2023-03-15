@@ -8,14 +8,11 @@ on:
 env:
   REGISTRY: ghcr.io/${{ github.repository }}
   IMAGE_NAME: openidl-transactional-data-event-listener
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-defaults:
-  run:
-    shell: bash
-    working-directory: openidl-transactional-data-event-listener
 
 jobs:
-  test:
+  openidl-transactional-data-event-listener:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -27,6 +24,8 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: openidl-transactional-data-event-listener
 
       - name: Run tests
         run: npm test
+        working-directory: openidl-transactional-data-event-listener
