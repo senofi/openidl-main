@@ -101,15 +101,15 @@ class HashiCorpVault {
 			try {
 				const { data } = await nodeVault.read(`${this.vaultConfig.orgName}/data/${this.vaultConfig.vaultPath}/${label}`);
 				// Fix to work with fabric operations console
-				const {credentials, msp_id: mspId, type} = JSON.parse(data.data.data)
-				const {certificate, private_key: privateKey} = credentials;
+				const {credentials, msp_id, mspId, type} = JSON.parse(data.data.data)
+				const {certificate, private_key, privateKey} = credentials;
 				const identityData = {
 					credentials: {
-						privateKey,
+						privateKey: private_key || privateKey,
 						certificate
 					},
 					type,
-					mspId
+					mspId: msp_id || mspId
 				}
 				id = data.data.id;
 				identity = identityData;
