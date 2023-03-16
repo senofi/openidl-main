@@ -100,8 +100,19 @@ class HashiCorpVault {
 			nodeVault.token = result.auth.client_token; // Add token to vault object for subsequent requests.
 			try {
 				const { data } = await nodeVault.read(`${this.vaultConfig.orgName}/data/${this.vaultConfig.vaultPath}/${label}`);
+				// Fix to work with fabric operations console
+				const {credentials, msp_id: mspId, type} = JSON.parse(data.data.data)
+				const {certificate, private_key: privateKey} = credentials;
+				const identityData = {
+					credentials: {
+						privateKey,
+						certificate
+					},
+					type,
+					mspId
+				}
 				id = data.data.id;
-				identity = data.data.data;
+				identity = identityData;
 			} catch (err) {
 				//404 error in case secret does not exist
 			}
