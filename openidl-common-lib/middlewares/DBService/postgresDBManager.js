@@ -40,11 +40,11 @@ class PostgresDBManager {
 
   /**
    * Executes the given SQL script with cursor.
-   * @param {String} sqlScript 
+   * @param {String} sqlScript SQL script to be executed.
    * @returns Cursor object that can be used to read the result set in chunks.
    */
   async executeSqlWithCursor(sqlScript) {
-    const client = await this.pool.connect()
+    const client = await this.pool.connect();
     logger.debug('Execute SQL with cursor: ', sqlScript);
 
     try {
