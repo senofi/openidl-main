@@ -21,6 +21,7 @@ class DataProcessorPostgres {
         this.value = null;
         this.dbManager = null;
         this.createView = false;
+        this.maximumBatchSize = process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] || 5242880
     }
 
     async isView() {
@@ -174,7 +175,7 @@ class DataProcessorPostgres {
 
     calculateRecordsPerPageBasedOnOneRecordSize(obj) {
         const sizeInBytes = sizeof(obj)
-        return parseFloat(5242880) / sizeInBytes
+        return this.maximumBatchSize / sizeInBytes
       }
 
     async readFromCursor(cursor, rowsCount) {
