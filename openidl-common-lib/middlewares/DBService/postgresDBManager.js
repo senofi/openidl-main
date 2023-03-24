@@ -20,7 +20,7 @@ class PostgresDBManager {
       password: this.dbService.password,
       max: 1,
       idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 2000,
+      connectionTimeoutMillis: 10000,
     });
   }
 
@@ -44,12 +44,13 @@ class PostgresDBManager {
    * @returns Cursor object that can be used to read the result set in chunks.
    */
   async executeSqlWithCursor(sqlScript) {
+    const client = await this.pool.connect()
     logger.debug('Execute SQL with cursor: ', sqlScript);
 
     try {
-      return await this.pool.query(new Cursor(sqlScript, null, {
-        rowMode: 'array'
-      }));
+      const cursor = await client.query(new Cursor(sqlScript));
+      client.release();
+      return cursor;
     } catch (err) {
       logger.error('ERROR executing query with cursor', err);
       return false;
