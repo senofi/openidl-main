@@ -11,10 +11,12 @@ const consentPayload = require("../test/data/processConsentPayload.json");
 const listConsent = require("../test/data/listConsentByDataCallPayload.json");
 const mongoRecords = require("../test/data/insuranceRecords_hartFort.json");
 const extractionPatternPayload = require("../test/data/checkExtractionPatternPayload.json");
+const sizeof = require('object-sizeof');
 let exPayload = JSON.stringify(exPattern);
 let consentPL = JSON.stringify(consentPayload);
 
 process.env.KVS_CONFIG = '{}';
+process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] = 300000;
 
 class Transaction {
     transientTransaction(methodName, params) {
@@ -52,9 +54,9 @@ describe('Data call postgres processor extraction pattern event function test', 
         postgres: {
             host: 'localhost',
             port: 5432,
-            database: 'testdb',
+            database: 'openidl-data-call-processor',
             username: 'postgres',
-            password: 'mysecretpassword',
+            password: 'postgres',
         },
         defaultDbType: 'mongo'
     };
@@ -65,15 +67,25 @@ describe('Data call postgres processor extraction pattern event function test', 
 
         process.env['OFF_CHAIN_DB_CONFIG'] =
             JSON.stringify(localDbConfig);
-
     })
     after(() => {
         sinon.restore();
     })
     it.only('it should send the extracted data from the extraction pattern', () => {
         eventFunction.ConsentedEvent(consentPL, "50001", new Transaction).then(function (result) {
+            console.log('============', result)
             expect(result).to.equal(true);
         });
+    });
+});
+
+describe('Postgres processor page size calculation function test ', () => {
+    it('it should calculate records per page based on one record size', () => {
+        const testDataProcessor = new dataProcessor(consentPayload.datacallID, consentPayload.dataCallVersion, consentPayload.carrierID, exPattern.extractionPattern, new Transaction, 'view');
+        const mockStringObject = JSON.stringify({ "name": "test" });
+        const sizeOfMockObject = sizeof(mockStringObject);
+        const recordsPerPage = testDataProcessor.calculateRecordsPerPageBasedOnOneRecordSize(mockStringObject);
+        expect(recordsPerPage).to.equal(process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] / sizeOfMockObject);
     });
 
 });
