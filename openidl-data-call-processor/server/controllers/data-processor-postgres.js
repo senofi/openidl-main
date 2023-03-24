@@ -53,7 +53,7 @@ class DataProcessorPostgres {
             while(recordsCount === pageSize) {
                 const records = await this.readFromCursor(cursor, pageSize)
                 recordsCount = records.length;
-                logger.info(`Extraction result: ${records}`);
+                logger.info(`Extraction result: ${JSON.stringify(records)}`);
     
                 await this.pushToPDC(this.carrierId, records, page, this.dataCallId, 'v1', this.targetChannelTransaction);
                 await this.submitTransaction(this.dataCallId, "v1", this.carrierId);
