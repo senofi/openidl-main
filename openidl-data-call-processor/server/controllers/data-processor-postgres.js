@@ -28,8 +28,6 @@ class DataProcessorPostgres {
 		this.value = null;
 		this.dbManager = null;
 		this.createView = false;
-		this.maximumBatchSize =
-			process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] || 5242880;
 	}
 
 	async isView() {
@@ -57,12 +55,12 @@ class DataProcessorPostgres {
 		);
 		logger.info('Db manager:', dbManager);
 
-		await executeExtractionPatternMap(extractionPattern, dbManager);
+		await this.executeExtractionPatternMap(extractionPattern, dbManager);
 
-		const pageSize = getPageSize(extractionPattern, dbManager);
+		const pageSize = await this.getPageSize(extractionPattern, dbManager);
 		let recordsCount = pageSize;
 		let page = 1;
-		const cursor = await executeExtractionPatternReduceWithCursor(
+		const cursor = await this.executeExtractionPatternReduceWithCursor(
 			extractionPattern,
 			dbManager
 		);
@@ -260,7 +258,8 @@ class DataProcessorPostgres {
 
 	calculateMaximumRecordsCountAccordingSizeLimit(obj) {
 		const sizeInBytes = sizeof(obj);
-		return this.maximumBatchSize / sizeInBytes;
+        const maximumBatchSize = process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] || 5242880
+		return maximumBatchSize / sizeInBytes;
 	}
 
 	async readFromCursor(cursor, rowsCount) {
