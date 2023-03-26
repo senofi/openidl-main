@@ -57,11 +57,11 @@ class Transaction {
 describe('Data call postgres processor extraction pattern event function test', () => {
 	const localDbConfig = {
 		postgres: {
-			host: 'localhost',
-			port: 5432,
-			database: 'openidl-data-call-processor',
-			username: 'postgres',
-			password: 'postgres'
+            host: 'localhost',
+            port: 5432,
+            database: 'testdb',
+            username: 'postgres',
+            password: 'mysecretpassword',
 		},
 		defaultDbType: 'mongo'
 	};
@@ -79,15 +79,15 @@ describe('Data call postgres processor extraction pattern event function test', 
 	after(() => {
 		sinon.restore();
 	});
-	// it.only('it should send the extracted data from the extraction pattern', () => {
-	//     eventFunction.ConsentedEvent(consentPL, "50001", new Transaction).then(function (result) {
-	//         expect(result).to.equal(true);
-	//     });
-	// });
+	it.only('it should send the extracted data from the extraction pattern', () => {
+	    eventFunction.ConsentedEvent(consentPL, "50001", new Transaction).then(function (result) {
+	        expect(result).to.equal(true);
+	    });
+	});
 });
 
-describe('Postgres processor calculation of maximum records count according to size limit ', () => {
-	it('it should calculate records per page based on one record size', () => {
+describe('Postgres processor calculateMaximumRecordsCountAccordingSizeLimit function test', () => {
+	it('it should calculate maximum records count according to size limit', () => {
 		const testDataProcessor = new dataProcessor(
 			consentPayload.datacallID,
 			consentPayload.dataCallVersion,
@@ -151,6 +151,69 @@ describe('Postgres processor page size based on one record', () => {
 				process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] / sizeOfMockObject
 			)
 		);
+	});
+});
+
+describe('Postgres processor processRecords function test', () => {
+    const localDbConfig = {
+		postgres: {
+			host: 'localhost',
+			port: 5432,
+			database: 'openidl-data-call-processor',
+			username: 'postgres',
+			password: 'postgres'
+		},
+		defaultDbType: 'postgres'
+	};
+    before(() => {
+		process.env['OFF_CHAIN_DB_CONFIG'] = JSON.stringify(localDbConfig);
+        process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] = 1200;
+	});
+	after(() => {
+		sinon.restore();
+	});
+
+	it('it should send data in batches', async () => {
+		const testDataProcessor = new dataProcessor(
+			consentPayload.datacallID,
+			consentPayload.dataCallVersion,
+			consentPayload.carrierID,
+			exPattern.extractionPattern,
+			new Transaction(),
+			'view'
+		);
+
+		const getCursor = function() {
+			let cursorInitialPosition = 0;
+			return {
+				read: (count, callback) => {
+                    const currentCount = cursorInitialPosition + count;
+					const records = mongoRecords.slice(
+						cursorInitialPosition,
+						currentCount
+					);
+					cursorInitialPosition += count;
+					callback(null, records);
+				},
+				close: () => {}
+			};
+		};
+		sinon.stub(testDataProcessor, 'executeExtractionPatternMap').returns();
+		sinon
+			.stub(testDataProcessor, 'executeExtractionPatternReduceWithCursor')
+			.returns(
+				new Promise((resolve, reject) => {
+					resolve(getCursor());
+				})
+			);
+		sinon.stub(testDataProcessor, 'submitTransaction').returns();
+        sinon.stub(testDataProcessor, 'pushToPDC').returns();
+        // sinon.spy(testDataProcessor, 'pushToPDC')
+        await testDataProcessor.processRecords({}, extractionPatternPayload);
+        expect(testDataProcessor.pushToPDC.called).to.eq(true);
+        expect(testDataProcessor.pushToPDC.callCount).to.eq(4);
+        expect(testDataProcessor.submitTransaction.called).to.eq(true);
+        expect(testDataProcessor.submitTransaction.callCount).to.eq(4);
 	});
 });
 
