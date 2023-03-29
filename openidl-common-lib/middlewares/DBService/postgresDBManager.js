@@ -29,9 +29,7 @@ class PostgresDBManager {
     logger.debug('Execute SQL: ', sqlScript);
 
     try {
-      const result = await this.pool.query(sqlScript);
-      logger.trace('Result: ', result);
-      return result;
+      return await this.pool.query(sqlScript);
     } catch (err) {
       logger.error('ERROR executing query', err);
       return false;
