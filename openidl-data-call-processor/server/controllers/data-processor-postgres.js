@@ -60,6 +60,7 @@ class DataProcessorPostgres {
 		const pageSize = await this.getPageSize(extractionPattern, dbManager);
 		let recordsCount = pageSize;
 		let page = 1;
+		let sequenceNum = 1;
 		const cursor = await this.executeExtractionPatternReduceWithCursor(
 			extractionPattern,
 			dbManager
@@ -69,14 +70,17 @@ class DataProcessorPostgres {
 				const records = await this.readFromCursor(cursor, pageSize);
 				recordsCount = records.length;
 				logger.info(`Extraction result: ${JSON.stringify(records)}`);
+				sequenceNum = page;
 
 				await this.pushToPDC(
 					this.carrierId,
 					records,
 					page,
+					sequenceNum,
 					this.dataCallId,
 					'v1',
-					this.targetChannelTransaction
+					this.targetChannelTransaction,
+					recordsCount
 				);
 				await this.submitTransaction(
 					this.dataCallId,
@@ -116,6 +120,8 @@ class DataProcessorPostgres {
 		carrierId,
 		records,
 		pageNumber,
+		sequenceNum,
+		totalRecordsCount,
 		datacallid,
 		versionid,
 		target
@@ -123,10 +129,12 @@ class DataProcessorPostgres {
 		try {
 			let insuranceObject = this.constructInstanceObject(
 				pageNumber,
+				sequenceNum,
 				datacallid,
 				versionid,
 				carrierId,
-				records
+				records,
+				totalRecordsCount
 			);
 			logger.debug('insuranceObject ' + JSON.stringify(insuranceObject));
 			if (insuranceObject.records.length === 0) {
@@ -210,17 +218,22 @@ class DataProcessorPostgres {
 
 	constructInstanceObject(
 		pageNumber,
+		sequenceNum,
 		dataCallId,
 		dataCallVersion,
 		carrierId,
-		records
+		records,
+		totalRecordsNum
 	) {
 		return {
-			pageNumber,
-			dataCallId,
-			dataCallVersion,
-			carrierId,
-			records
+			pageNumber: pageNumber,
+			sequenceNum: sequenceNum,
+			dataCallId: dataCallId,
+			dataCallVersion: dataCallVersion,
+			carrierId: carrierId,
+			totalRecordsNum: totalRecordsNum,
+			recordsNum: records.length,
+			records: records
 		};
 	}
 
@@ -234,10 +247,12 @@ class DataProcessorPostgres {
 			const oneRowResult = await this.readFromCursor(cursor, 1);
 			const oneRowInstanceObject = this.constructInstanceObject(
 				1,
+				1,
 				this.dataCallId,
 				'v1',
 				this.carrierId,
-				oneRowResult
+				oneRowResult,
+				1
 			);
 			return Math.floor(
 				this.calculateMaximumRecordsCountAccordingSizeLimit(
