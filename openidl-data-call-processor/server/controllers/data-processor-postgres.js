@@ -155,7 +155,7 @@ class DataProcessorPostgres {
 						'Page Number' +
 						pageNumber
 				);
-				await target.transientTransaction(
+				await this.targetChannelTransaction.transientTransaction(
 					'SaveInsuranceData',
 					insurance_private,
 					pageNumber
