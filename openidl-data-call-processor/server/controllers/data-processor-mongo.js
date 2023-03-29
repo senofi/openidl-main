@@ -347,9 +347,9 @@ class DataProcessorMongo {
                 let insurance_private = {
                     "transactional-data-": data
                 };
-                logger.info("Transaction before PDC :- Size of the payload = " + sizeof(insuranceObject) + "START_TIME = " + new Date().toISOString() + " Number of records : " + insuranceObject.records.length + "Page Number" + pageNumber);
-                await target.transientTransaction('SaveInsuranceData', insurance_private, pageNumber);
-                logger.info("Transaction after PDC :- END_TIME = " + new Date().toISOString() + "DATACALL_ID :- " + insuranceObject.dataCallId + "CARRIER_ID :- " + insuranceObject.carrierId + "Page Number" + pageNumber);
+                logger.info("Transaction before PDC :- Size of the payload = " + sizeof(insuranceObject) + "START_TIME = " + new Date().toISOString() + " Number of records: " + insuranceObject.records.length + " Page Number: " + pageNumber);
+                await this.targetChannelTransaction.transientTransaction('SaveInsuranceData', insurance_private, pageNumber);
+                logger.info("Transaction after PDC :- END_TIME = " + new Date().toISOString() + "DATACALL_ID :- " + insuranceObject.dataCallId + "CARRIER_ID: " + insuranceObject.carrierId + " Page Number: " + pageNumber);
             }
         } catch (ex) {
             throw ex
