@@ -12,12 +12,9 @@ const consentPayload = require('../test/data/processConsentPayload.json');
 const listConsent = require('../test/data/listConsentByDataCallPayload.json');
 const mongoRecords = require('../test/data/insuranceRecords_hartFort.json');
 const extractionPatternPayload = require('../test/data/checkExtractionPatternPayload.json');
-const sizeof = require('object-sizeof');
-let exPayload = JSON.stringify(exPattern);
 let consentPL = JSON.stringify(consentPayload);
 
 process.env.KVS_CONFIG = '{}';
-process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] = 300000;
 
 class Transaction {
 	transientTransaction(methodName, params) {
@@ -57,11 +54,11 @@ class Transaction {
 describe('Data call postgres processor extraction pattern event function test', () => {
 	const localDbConfig = {
 		postgres: {
-            host: 'localhost',
-            port: 5432,
-            database: 'testdb',
-            username: 'postgres',
-            password: 'mysecretpassword',
+			host: 'localhost',
+			port: 5432,
+			database: 'testdb',
+			username: 'postgres',
+			password: 'mysecretpassword'
 		},
 		defaultDbType: 'mongo'
 	};
@@ -79,14 +76,22 @@ describe('Data call postgres processor extraction pattern event function test', 
 	after(() => {
 		sinon.restore();
 	});
-	it.only('it should send the extracted data from the extraction pattern', () => {
-	    eventFunction.ConsentedEvent(consentPL, "50001", new Transaction).then(function (result) {
-	        expect(result).to.equal(true);
-	    });
+	it('it should send the extracted data from the extraction pattern', () => {
+		eventFunction
+			.ConsentedEvent(consentPL, '50001', new Transaction())
+			.then(function (result) {
+				expect(result).to.equal(true);
+			});
 	});
 });
 
 describe('Postgres processor calculateMaximumRecordsCountAccordingSizeLimit function test', () => {
+    before(() => {
+		process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] = 300000;
+	});
+    after(() => {
+		sinon.restore();
+	});
 	it('it should calculate maximum records count according to size limit', () => {
 		const testDataProcessor = new dataProcessor(
 			consentPayload.datacallID,
@@ -96,11 +101,11 @@ describe('Postgres processor calculateMaximumRecordsCountAccordingSizeLimit func
 			new Transaction(),
 			'view'
 		);
-		const mockStringObject = JSON.stringify({ name: 'test' });
-		const sizeOfMockObject = sizeof(mockStringObject);
+		const mockObject = { name: 'test' };
+		const sizeOfMockObject = JSON.stringify(mockObject).length;
 		const recordsPerPage =
 			testDataProcessor.calculateMaximumRecordsCountAccordingSizeLimit(
-				mockStringObject
+				mockObject
 			);
 		expect(recordsPerPage).to.equal(
 			process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] / sizeOfMockObject
@@ -109,6 +114,9 @@ describe('Postgres processor calculateMaximumRecordsCountAccordingSizeLimit func
 });
 
 describe('Postgres processor page size based on one record', () => {
+    before(() => {
+		process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] = 300000;
+	});
 	after(() => {
 		sinon.restore();
 	});
@@ -137,14 +145,20 @@ describe('Postgres processor page size based on one record', () => {
 				})
 			);
 		const oneRowMongoRecords = mongoRecords.slice(0, 1);
-		const inctanceObject = testDataProcessor.constructInstanceObject(
+		const insuranceObject = testDataProcessor.constructInsuranceObject(
 			1,
 			consentPayload.datacallID,
 			'v1',
 			consentPayload.carrierID,
-			oneRowMongoRecords
+			oneRowMongoRecords,
+			1
 		);
-		const sizeOfMockObject = sizeof(JSON.stringify(inctanceObject));
+		const insurancePrivateObject =
+			testDataProcessor.createInsurancePrivateObject(insuranceObject);
+            console.log('UNserance object test: ', insurancePrivateObject);
+            console.log('max test: ', process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'])
+		const sizeOfMockObject = JSON.stringify(insurancePrivateObject).length;
+        console.log('size of mock object: ', sizeOfMockObject)
 		const recordsPerPage = await testDataProcessor.getPageSize({}, {});
 		expect(recordsPerPage).to.equal(
 			Math.floor(
@@ -155,7 +169,7 @@ describe('Postgres processor page size based on one record', () => {
 });
 
 describe('Postgres processor processRecords function test', () => {
-    const localDbConfig = {
+	const localDbConfig = {
 		postgres: {
 			host: 'localhost',
 			port: 5432,
@@ -165,9 +179,9 @@ describe('Postgres processor processRecords function test', () => {
 		},
 		defaultDbType: 'postgres'
 	};
-    before(() => {
+	before(() => {
 		process.env['OFF_CHAIN_DB_CONFIG'] = JSON.stringify(localDbConfig);
-        process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] = 1200;
+		process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] = 900;
 	});
 	after(() => {
 		sinon.restore();
@@ -183,11 +197,11 @@ describe('Postgres processor processRecords function test', () => {
 			'view'
 		);
 
-		const getCursor = function() {
+		const getCursor = function () {
 			let cursorInitialPosition = 0;
 			return {
 				read: (count, callback) => {
-                    const currentCount = cursorInitialPosition + count;
+					const currentCount = cursorInitialPosition + count;
 					const records = mongoRecords.slice(
 						cursorInitialPosition,
 						currentCount
@@ -207,13 +221,12 @@ describe('Postgres processor processRecords function test', () => {
 				})
 			);
 		sinon.stub(testDataProcessor, 'submitTransaction').returns();
-        sinon.stub(testDataProcessor, 'pushToPDC').returns();
-        // sinon.spy(testDataProcessor, 'pushToPDC')
-        await testDataProcessor.processRecords({}, extractionPatternPayload);
-        expect(testDataProcessor.pushToPDC.called).to.eq(true);
-        expect(testDataProcessor.pushToPDC.callCount).to.eq(4);
-        expect(testDataProcessor.submitTransaction.called).to.eq(true);
-        expect(testDataProcessor.submitTransaction.callCount).to.eq(4);
+		sinon.stub(testDataProcessor, 'pushToPDC').returns();
+		await testDataProcessor.processRecords({}, extractionPatternPayload);
+		expect(testDataProcessor.pushToPDC.called).to.eq(true);
+		expect(testDataProcessor.pushToPDC.callCount).to.eq(4);
+		expect(testDataProcessor.submitTransaction.called).to.eq(true);
+		expect(testDataProcessor.submitTransaction.callCount).to.eq(4);
 	});
 });
 

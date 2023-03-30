@@ -60,7 +60,6 @@ class DataProcessorPostgres {
 		const pageSize = await this.getPageSize(extractionPattern, dbManager);
 		let recordsCount = pageSize;
 		let page = 1;
-		let sequenceNum = 1;
 		const cursor = await this.executeExtractionPatternReduceWithCursor(
 			extractionPattern,
 			dbManager
@@ -70,17 +69,14 @@ class DataProcessorPostgres {
 				const records = await this.readFromCursor(cursor, pageSize);
 				recordsCount = records.length;
 				logger.info(`Extraction result: ${JSON.stringify(records)}`);
-				sequenceNum = page;
 
 				await this.pushToPDC(
 					this.carrierId,
 					records,
 					page,
-					sequenceNum,
 					recordsCount,
 					this.dataCallId,
-					'v1',
-					recordsCount
+					'v1'
 				);
 				await this.submitTransaction(
 					this.dataCallId,
@@ -120,15 +116,13 @@ class DataProcessorPostgres {
 		carrierId,
 		records,
 		pageNumber,
-		sequenceNum,
 		totalRecordsCount,
 		datacallid,
 		versionid
 	) {
 		try {
-			let insuranceObject = this.constructInstanceObject(
+			let insuranceObject = this.constructInsuranceObject(
 				pageNumber,
-				sequenceNum,
 				datacallid,
 				versionid,
 				carrierId,
@@ -139,11 +133,7 @@ class DataProcessorPostgres {
 			if (insuranceObject.records.length === 0) {
 				logger.info('Insurance Records not available in SQL Database');
 			} else {
-				let data = JSON.stringify(insuranceObject); // Convert transient data object to JSON string
-				data = new Buffer(data).toString('base64'); // convert the JSON string to base64 encoded string
-				let insurance_private = {
-					'transactional-data-': data
-				};
+				let insurance_private = this.createInsurancePrivateObject(insuranceObject);
 				logger.info(
 					'Transaction before PDC :- Size of the payload = ' +
 						sizeof(insuranceObject) +
@@ -215,9 +205,8 @@ class DataProcessorPostgres {
 		return '';
 	}
 
-	constructInstanceObject(
+	constructInsuranceObject(
 		pageNumber,
-		sequenceNum,
 		dataCallId,
 		dataCallVersion,
 		carrierId,
@@ -226,7 +215,7 @@ class DataProcessorPostgres {
 	) {
 		return {
 			pageNumber: pageNumber,
-			sequenceNum: sequenceNum,
+			sequenceNum: pageNumber,
 			dataCallId: dataCallId,
 			dataCallVersion: dataCallVersion,
 			carrierId: carrierId,
@@ -236,6 +225,14 @@ class DataProcessorPostgres {
 		};
 	}
 
+    createInsurancePrivateObject(insuranceObject) {
+        let insuranceObjectJson = JSON.stringify(insuranceObject); // Convert transient data object to JSON string
+        const encodedInsuranceObject = Buffer.from(insuranceObjectJson).toString('base64') // convert the JSON string to base64 encoded string
+        return {
+            'transactional-data-': encodedInsuranceObject
+        };
+    }
+
 	async getPageSize(extractionPattern, dbManager) {
         let cursor;
 		try {
@@ -244,8 +241,7 @@ class DataProcessorPostgres {
 				dbManager
 			);
 			const oneRowResult = await this.readFromCursor(cursor, 1);
-			const oneRowInstanceObject = this.constructInstanceObject(
-				1,
+			const oneRowInsuranceObject = this.constructInsuranceObject(
 				1,
 				this.dataCallId,
 				'v1',
@@ -253,9 +249,10 @@ class DataProcessorPostgres {
 				oneRowResult,
 				1
 			);
+            const insurancePrivateObject = this.createInsurancePrivateObject(oneRowInsuranceObject);
 			return Math.floor(
 				this.calculateMaximumRecordsCountAccordingSizeLimit(
-					JSON.stringify(oneRowInstanceObject)
+					insurancePrivateObject
 				)
 			);
 		} catch (err) {
@@ -271,7 +268,7 @@ class DataProcessorPostgres {
 	}
 
 	calculateMaximumRecordsCountAccordingSizeLimit(obj) {
-		const sizeInBytes = sizeof(obj);
+		const sizeInBytes = JSON.stringify(obj).length;
         const maximumBatchSize = process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] || 5242880
 		return maximumBatchSize / sizeInBytes;
 	}
