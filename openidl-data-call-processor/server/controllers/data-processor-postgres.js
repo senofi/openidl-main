@@ -77,9 +77,9 @@ class DataProcessorPostgres {
 					records,
 					page,
 					sequenceNum,
+					recordsCount,
 					this.dataCallId,
 					'v1',
-					this.targetChannelTransaction,
 					recordsCount
 				);
 				await this.submitTransaction(
@@ -123,8 +123,7 @@ class DataProcessorPostgres {
 		sequenceNum,
 		totalRecordsCount,
 		datacallid,
-		versionid,
-		target
+		versionid
 	) {
 		try {
 			let insuranceObject = this.constructInstanceObject(
@@ -152,7 +151,7 @@ class DataProcessorPostgres {
 						new Date().toISOString() +
 						' Number of records : ' +
 						insuranceObject.records.length +
-						'Page Number' +
+						' Page Number: ' +
 						pageNumber
 				);
 				await this.targetChannelTransaction.transientTransaction(
