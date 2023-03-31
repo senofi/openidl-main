@@ -68,7 +68,7 @@ class DataProcessorPostgres {
 			while (recordsCount === pageSize) {
 				const records = await this.readFromCursor(cursor, pageSize);
 				recordsCount = records.length;
-				logger.info(`Extraction result: ${JSON.stringify(records)}`);
+				// logger.info(`Extraction result: ${JSON.stringify(records)}`);
 
 				await this.pushToPDC(
 					this.carrierId,
@@ -241,18 +241,9 @@ class DataProcessorPostgres {
 				dbManager
 			);
 			const oneRowResult = await this.readFromCursor(cursor, 1);
-			const oneRowInsuranceObject = this.constructInsuranceObject(
-				1,
-				this.dataCallId,
-				'v1',
-				this.carrierId,
-				oneRowResult,
-				1
-			);
-            const insurancePrivateObject = this.createInsurancePrivateObject(oneRowInsuranceObject);
 			return Math.floor(
 				this.calculateMaximumRecordsCountAccordingSizeLimit(
-					insurancePrivateObject
+					oneRowResult
 				)
 			);
 		} catch (err) {
@@ -268,7 +259,7 @@ class DataProcessorPostgres {
 	}
 
 	calculateMaximumRecordsCountAccordingSizeLimit(obj) {
-		const sizeInBytes = JSON.stringify(obj).length;
+		const sizeInBytes = Buffer.from(JSON.stringify(obj)).toString('base64').length;
         const maximumBatchSize = process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'] || 5242880
 		return maximumBatchSize / sizeInBytes;
 	}
