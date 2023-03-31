@@ -129,7 +129,6 @@ class DataProcessorPostgres {
 				records,
 				totalRecordsCount
 			);
-			logger.debug('insuranceObject ' + JSON.stringify(insuranceObject));
 			if (insuranceObject.records.length === 0) {
 				logger.info('Insurance Records not available in SQL Database');
 			} else {
