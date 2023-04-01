@@ -103,7 +103,8 @@ class DataProcessorPostgres {
 		try {
 			await this.targetChannelTransaction.submitTransaction(
 				'UpdateConsentStatus',
-				JSON.stringify(payload)
+				JSON.stringify(payload),
+				3
 			);
 		} catch (ex) {
 			logger.error(
@@ -146,7 +147,8 @@ class DataProcessorPostgres {
 				await this.targetChannelTransaction.transientTransaction(
 					'SaveInsuranceData',
 					insurance_private,
-					pageNumber
+					pageNumber,
+					3
 				);
 				logger.info(
 					'Transaction after PDC :- END_TIME = ' +
