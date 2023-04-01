@@ -15,11 +15,10 @@ class PostgresDBManager {
     this.pool = new Pool({
       host: this.dbService.host,
       port: this.dbService.port,
-      // database: this.dbService.database,
       user: this.dbService.username,
       password: this.dbService.password,
-      max: 1,
-      idleTimeoutMillis: 30000,
+      max: 3,
+      idleTimeoutMillis: 0,
       connectionTimeoutMillis: 10000,
     });
   }
@@ -47,7 +46,6 @@ class PostgresDBManager {
 
     try {
       const cursor = await client.query(new Cursor(sqlScript));
-      client.release();
       return cursor;
     } catch (err) {
       logger.error('ERROR executing query with cursor', err);
