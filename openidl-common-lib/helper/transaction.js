@@ -131,7 +131,7 @@ class transaction {
             gateway.disconnect();
         }
     };
-    async transientTransaction(functionName, parameters, pageNumber, retryCountPending,) {
+    async transientTransaction(functionName, parameters, pageNumber, retryCountPending) {
         logger.debug('inside transaction.transientTransaction() functionName...' + functionName);
         logger.debug('inside transaction.transientTransaction() parameters...');
         const gateway = new Gateway();
