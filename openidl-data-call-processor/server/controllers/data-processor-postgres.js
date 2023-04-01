@@ -76,15 +76,15 @@ class DataProcessorPostgres {
 					page,
 					recordsCount,
 					this.dataCallId,
-					'v1'
-				);
-				await this.submitTransaction(
-					this.dataCallId,
-					'v1',
-					this.carrierId
+					dataCallVersion
 				);
 				page++;
 			}
+			await this.submitTransaction(
+				this.dataCallId,
+				dataCallVersion,
+				this.carrierId
+			);
 		} catch (err) {
 			logger.error('Error while saving data to PDC', err);
 		} finally {
@@ -160,6 +160,7 @@ class DataProcessorPostgres {
 				);
 			}
 		} catch (ex) {
+			logger.error("Error processing push to PDC: ", ex)
 			throw ex;
 		}
 	}
