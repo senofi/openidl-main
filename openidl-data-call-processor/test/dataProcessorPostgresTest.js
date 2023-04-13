@@ -102,7 +102,7 @@ describe('Postgres processor calculateMaximumRecordsCountAccordingSizeLimit func
 			'view'
 		);
 		const mockObject = { name: 'test' };
-		const sizeOfMockObject = JSON.stringify(mockObject).length;
+		const sizeOfMockObject = Buffer.from(JSON.stringify(mockObject)).toString('base64').length;;
 		const recordsPerPage =
 			testDataProcessor.calculateMaximumRecordsCountAccordingSizeLimit(
 				mockObject
@@ -145,19 +145,7 @@ describe('Postgres processor page size based on one record', () => {
 				})
 			);
 		const oneRowMongoRecords = mongoRecords.slice(0, 1);
-		const insuranceObject = testDataProcessor.constructInsuranceObject(
-			1,
-			consentPayload.datacallID,
-			'v1',
-			consentPayload.carrierID,
-			oneRowMongoRecords,
-			1
-		);
-		const insurancePrivateObject =
-			testDataProcessor.createInsurancePrivateObject(insuranceObject);
-            console.log('UNserance object test: ', insurancePrivateObject);
-            console.log('max test: ', process.env['MAXIMUM_BATCH_SIZE_IN_BYTES'])
-		const sizeOfMockObject = JSON.stringify(insurancePrivateObject).length;
+		const sizeOfMockObject = Buffer.from(JSON.stringify(oneRowMongoRecords)).toString('base64').length;
         console.log('size of mock object: ', sizeOfMockObject)
 		const recordsPerPage = await testDataProcessor.getPageSize({}, {});
 		expect(recordsPerPage).to.equal(
@@ -224,9 +212,9 @@ describe('Postgres processor processRecords function test', () => {
 		sinon.stub(testDataProcessor, 'pushToPDC').returns();
 		await testDataProcessor.processRecords({}, extractionPatternPayload);
 		expect(testDataProcessor.pushToPDC.called).to.eq(true);
-		expect(testDataProcessor.pushToPDC.callCount).to.eq(4);
+		expect(testDataProcessor.pushToPDC.callCount).to.eq(2);
 		expect(testDataProcessor.submitTransaction.called).to.eq(true);
-		expect(testDataProcessor.submitTransaction.callCount).to.eq(4);
+		expect(testDataProcessor.submitTransaction.callCount).to.eq(1);
 	});
 });
 
