@@ -55,7 +55,7 @@ eventFunction.TransactionalDataAvailable = async function processTransactionalDa
             logger.debug('processTransactionalDataAvailableEvent: GetInsuranceData submitTransaction invoke ');
             logger.info("** Transaction started for GetInsuranceData at : Start_Time=" + new Date().toISOString());
             try {
-                queryResponse = await CarrierChannelTransaction.executeTransaction('GetInsuranceData', JSON.stringify(data));
+                queryResponse = await CarrierChannelTransaction.executeTransaction('GetInsuranceData', JSON.stringify(data), 3);
                 queryResponse = JSON.parse(queryResponse.toString('utf8'))
             } catch (err) {
                 logger.error('failed to get insurance data for ', data)

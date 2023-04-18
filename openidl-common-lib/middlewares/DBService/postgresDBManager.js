@@ -1,6 +1,6 @@
 const log4js = require('log4js');
 const { Pool } = require('pg');
-// const Cursor = require('pg-cursor');
+const Cursor = require('pg-cursor');
 
 const logger = log4js.getLogger('postgres-db-manager');
 
@@ -15,12 +15,11 @@ class PostgresDBManager {
     this.pool = new Pool({
       host: this.dbService.host,
       port: this.dbService.port,
-      // database: this.dbService.database,
       user: this.dbService.username,
       password: this.dbService.password,
-      max: 1,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 2000,
+      max: 3,
+      idleTimeoutMillis: 0,
+      connectionTimeoutMillis: 10000,
     });
   }
 
@@ -29,11 +28,27 @@ class PostgresDBManager {
     logger.debug('Execute SQL: ', sqlScript);
 
     try {
-      const result = await this.pool.query(sqlScript);
-      logger.trace('Result: ', result);
-      return result;
+      return await this.pool.query(sqlScript);
     } catch (err) {
       logger.error('ERROR executing query', err);
+      return false;
+    }
+  }
+
+  /**
+   * Executes the given SQL script with cursor.
+   * @param {String} sqlScript SQL script to be executed.
+   * @returns Cursor object that can be used to read the result set in chunks.
+   */
+  async executeSqlWithCursor(sqlScript) {
+    const client = await this.pool.connect();
+    logger.debug('Execute SQL with cursor: ', sqlScript);
+
+    try {
+      const cursor = await client.query(new Cursor(sqlScript));
+      return cursor;
+    } catch (err) {
+      logger.error('ERROR executing query with cursor', err);
       return false;
     }
   }
