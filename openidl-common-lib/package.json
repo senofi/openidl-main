@@ -1,6 +1,6 @@
 {
   "name": "@senofi/openidl-common-lib",
-  "version": "0.7.57",
+  "version": "0.7.59",
   "private": false,
   "main": "index.js",
   "publishConfig": {
