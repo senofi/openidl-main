@@ -13,8 +13,8 @@ logger.debug(`[ENTER] initEventListener = ${networkConfig}`);
 const initEventListener = async () => {
 	const options = JSON.parse(process.env.OFF_CHAIN_DB_CONFIG);
 	const dbManager = await dbManagerFactoryObject.getInstance(
-		{ mongo: options },
-		options.persistentStore
+		options,
+		options.defaultDbType
 	);
 	const listenerConfig = await createListenerConfig();
 	logger.debug(`[PARAMS] networkConfig = ${networkConfig}`);
