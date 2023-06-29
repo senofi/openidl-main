@@ -33,3 +33,7 @@ func InvokeChaincodeOnChannel(stub shim.ChaincodeStubInterface, chanicodeName st
 	invokeResponse = stub.InvokeChaincode(chanicodeName, invokeRequest, channelID)
 	return invokeResponse
 }
+
+func getCommonChannelName(stub shim.ChaincodeStubInterface) string {
+	return stub.GetState("COMMON_CHANNEL_KEY")
+}
