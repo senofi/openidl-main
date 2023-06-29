@@ -329,7 +329,11 @@ func (this *SmartContract) CheckExtractionPatternIsSet(stub shim.ChaincodeStubIn
 	var GetDataCallByIdAndVersionFunc = "GetDataCallByIdAndVersion"
 	getDataCallRequest := ToChaincodeArgs(GetDataCallByIdAndVersionFunc, getDataCallReqJson)
 	logger.Debug("CheckExtractionPatternIsSet: getDataCallRequest", getDataCallRequest)
-	getDataCallResponse := stub.InvokeChaincode(DEFAULT_CHAINCODE_NAME, getDataCallRequest, DEFAULT_CHANNEL)
+	commonChannelName, _ := getCommonChannelName(stub)
+	if err != nil {
+		return shim.Error(errors.New("Error getting the common channel name").Error())
+	}
+	getDataCallResponse := stub.InvokeChaincode(DEFAULT_CHAINCODE_NAME, getDataCallRequest, commonChannelName)
 	logger.Debug("CheckExtractionPatternIsSet: getDataCallResponse > ", getDataCallResponse)
 	logger.Debug("CheckExtractionPatternIsSet: getDataCallResponse.Status ", getDataCallResponse.Status)
 	logger.Debug("CheckExtractionPatternIsSet: getDataCallResponse.Payload", string(getDataCallResponse.Payload))

@@ -11,20 +11,25 @@ import (
 	logger "github.com/sirupsen/logrus"
 )
 
-/**
+/*
+*
 * function-name :CreateConsent (invoke)
 * @params{json}:
-{
-	"dataCallID":"Mandatory",
-	"dataCallVersion":"Mandatory",
-	"carrierID":"Mandatory",*
-	"createdTs":"Mandatory",
-	"createdBy":"Mandatory"
-}
- @Success: nil
- @Failure:{"message":"", "errorCode":"sys_err or bus_error"}
- * @Description : CreateConsent function contains business logic to insert consent calls
-**/
+
+	{
+		"dataCallID":"Mandatory",
+		"dataCallVersion":"Mandatory",
+		"carrierID":"Mandatory",*
+		"createdTs":"Mandatory",
+		"createdBy":"Mandatory"
+	}
+
+	@Success: nil
+	@Failure:{"message":"", "errorCode":"sys_err or bus_error"}
+	* @Description : CreateConsent function contains business logic to insert consent calls
+
+*
+*/
 func (this *SmartContract) CreateConsent(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("CreateConsent: enter")
 	defer logger.Debug("CreateConsent: exit")
@@ -51,7 +56,11 @@ func (this *SmartContract) CreateConsent(stub shim.ChaincodeStubInterface, args 
 	var GetDataCallByIdAndVersionFunc = "GetDataCallByIdAndVersion"
 	getDataCallRequest := ToChaincodeArgs(GetDataCallByIdAndVersionFunc, getDataCallReqJson)
 	logger.Debug("CreateConsent: getDataCallRequest", getDataCallRequest)
-	getDataCallResponse := stub.InvokeChaincode(DEFAULT_CHAINCODE_NAME, getDataCallRequest, DEFAULT_CHANNEL)
+	commonChannelName, _ := getCommonChannelName(stub)
+	if err != nil {
+		return shim.Error(errors.New("Error getting the common channel name").Error())
+	}
+	getDataCallResponse := stub.InvokeChaincode(DEFAULT_CHAINCODE_NAME, getDataCallRequest, commonChannelName)
 	logger.Debug("CreateConsent: getDataCallResponse > ", getDataCallResponse)
 	logger.Debug("CreateConsent: getDataCallResponse.Status ", getDataCallResponse.Status)
 	logger.Debug("CreateConsent: getDataCallResponse.Payload", string(getDataCallResponse.Payload))
@@ -98,21 +107,26 @@ func (this *SmartContract) CreateConsent(stub shim.ChaincodeStubInterface, args 
 	return shim.Success(nil)
 }
 
-/**
+/*
+*
 * function-name :CreateReconsent (invoke)
 * @params{json}:
-{
-	"dataCallID":"Mandatory",
-	"dataCallVersion":"Mandatory",
-	"carrierID":"Mandatory",*
-	"createdTs":"Mandatory",
-	"createdBy":"Mandatory"
-}
- @Success: nil
- @Failure:{"message":"", "errorCode":"sys_err or bus_error"}
- * @Description : CreateReconsent function contains business logic to insert consent calls even
- * if there is already a consent  from the carrier
-**/
+
+	{
+		"dataCallID":"Mandatory",
+		"dataCallVersion":"Mandatory",
+		"carrierID":"Mandatory",*
+		"createdTs":"Mandatory",
+		"createdBy":"Mandatory"
+	}
+
+	@Success: nil
+	@Failure:{"message":"", "errorCode":"sys_err or bus_error"}
+	* @Description : CreateReconsent function contains business logic to insert consent calls even
+	* if there is already a consent  from the carrier
+
+*
+*/
 func (this *SmartContract) CreateReconsent(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("CreateReconsent: enter")
 	defer logger.Debug("CreateReconsent: exit")
@@ -139,7 +153,11 @@ func (this *SmartContract) CreateReconsent(stub shim.ChaincodeStubInterface, arg
 	var GetDataCallByIdAndVersionFunc = "GetDataCallByIdAndVersion"
 	getDataCallRequest := ToChaincodeArgs(GetDataCallByIdAndVersionFunc, getDataCallReqJson)
 	logger.Debug("CreateReconsent: getDataCallRequest", getDataCallRequest)
-	getDataCallResponse := stub.InvokeChaincode(DEFAULT_CHAINCODE_NAME, getDataCallRequest, DEFAULT_CHANNEL)
+	commonChannelName, _ := getCommonChannelName(stub)
+	if err != nil {
+		return shim.Error(errors.New("Error getting the common channel name").Error())
+	}
+	getDataCallResponse := stub.InvokeChaincode(DEFAULT_CHAINCODE_NAME, getDataCallRequest, commonChannelName)
 	logger.Debug("CreateReconsent: getDataCallResponse > ", getDataCallResponse)
 	logger.Debug("CreateReconsent: getDataCallResponse.Status ", getDataCallResponse.Status)
 	logger.Debug("CreateReconsent: getDataCallResponse.Payload", string(getDataCallResponse.Payload))
@@ -263,17 +281,20 @@ func (this *SmartContract) CreateConsentCountEntry(stub shim.ChaincodeStubInterf
 	return shim.Success(nil)
 }
 
-/**
+/*
+*
 * Function-name : CountConsents (invoke)
 * for a datacall
 * @params :
-{
-	"datacallID":"Mandatory",
-	"dataCallVersion":"Mandatory",
-	"carrierID":""Mandatory,
-	"createdTs":"Mandatory",
-	"createdBy":"Mandatory"
-}
+
+	{
+		"datacallID":"Mandatory",
+		"dataCallVersion":"Mandatory",
+		"carrierID":""Mandatory,
+		"createdTs":"Mandatory",
+		"createdBy":"Mandatory"
+	}
+
 *@property {string} 0 - stringified JSON object.
 * * @Success: nil
 * @Failure:{"message":"", "errorCode":"sys_err or bus_error"}
@@ -329,7 +350,7 @@ func (this *SmartContract) CountConsents(stub shim.ChaincodeStubInterface, args 
 	return shim.Success(newConsentCountEntry)
 }
 
-//updates consent count for a data call based on dataCallID and dataCallVersion
+// updates consent count for a data call based on dataCallID and dataCallVersion
 func (this *SmartContract) UpdateConsentCountForDataCall(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("UpdateConsentCountForDataCall: enter")
 	defer logger.Debug("UpdateConsentCountForDataCall: exit")
