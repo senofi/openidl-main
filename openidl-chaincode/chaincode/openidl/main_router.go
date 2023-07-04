@@ -59,6 +59,7 @@ func (s *SmartContract) Init(stub shim.ChaincodeStubInterface) pb.Response {
 		logger.SetLevel(logger.DebugLevel)
 	}
 	init_args := stub.GetStringArgs()
+	logger.Debug("Init args > ", init_args)
 	if len(init_args) > 1 {
 		logger.Info("Storing common channel name on the ledger > ", init_args[0])
 		stub.PutState(COMMON_CHANNEL_NAME_KEY, []byte(init_args[0]))
