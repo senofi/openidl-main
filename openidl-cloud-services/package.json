@@ -1,0 +1,11 @@
+{
+  "name": "openidl-cloud-services",
+  "version": "1.0.0",
+  "description": "OpenIDL module that provides APIs for cloud services agnostic to the cloud services provider.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC"
+}
