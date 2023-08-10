@@ -35,11 +35,6 @@ class AWSSecretsManagerClient extends AbstractSecretsClient {
         return this.client;
     }
 
-    async init() {
-        await this._getClient();
-        return this;
-    }
-
     async getSecret(name) {
         const client = await this._getClient()
         return client.getSecretValue({SecretId: name}).promise().then(data => JSON.parse(data.SecretString))
