@@ -1,87 +1,102 @@
-const { BlobServiceClient, StorageSharedKeyCredential } = require('@azure/storage-blob');
+const {BlobServiceClient, StorageSharedKeyCredential} = require('@azure/storage-blob');
 const log4js = require('log4js');
 const config = require('config');
-const blobConfig = require('../config/azure-blob-config.json');
 const AbstractFileStorageClient = require('./abstract-file-storage-client');
-
-// Example config json
-// {
-//     "accountName": "<your_account_name>",
-//     "accountKey": "<your_account_key>",
-//     "blobServiceUrl": "https://<your_account_name>.blob.core.windows.net",
-//     "containerName": "<your_container_name>"
-// }
 
 // Set up logging
 const logger = log4js.getLogger('azureblob-manager');
 logger.level = config.logLevel;
 
-const sharedKeyCredential = new StorageSharedKeyCredential(blobConfig.accountName, blobConfig.accountKey);
-
 class AzureBlobClient extends AbstractFileStorageClient {
     constructor() {
         super();
+        const blobConfig = require('../config/azure-blob-config.json');
+        this.containerName = blobConfig.containerName;
+        const sharedKeyCredential = new StorageSharedKeyCredential(blobConfig.accountName, blobConfig.accountKey);
         this.blobServiceClient = new BlobServiceClient(
             blobConfig.blobServiceUrl,
             sharedKeyCredential
         );
     }
 
-    async getContainerClient(containerName) {
+    async _getContainerClient(containerName) {
         return this.blobServiceClient.getContainerClient(containerName);
     }
 
-    async getTransactionalDataByDatacall(dataCallId) {
-        logger.info("Inside getTransactionalDataByDataCall, datacallId is ", dataCallId);
-        const containerClient = await this.getContainerClient(blobConfig.containerName);
+    async _streamToBuffer(readableStream) {
+        return new Promise((resolve, reject) => {
+            const chunks = [];
+            readableStream.on("data", (data) => {
+                chunks.push(data instanceof Buffer ? data : Buffer.from(data));
+            });
+            readableStream.on("end", () => {
+                resolve(Buffer.concat(chunks));
+            });
+            readableStream.on("error", reject);
+        });
+    }
 
+    async getObjectsByPrefix(prefix) {
+        const containerClient = await this._getContainerClient(this.containerName);
         try {
             let result = [];
-            for await (const blob of containerClient.findBlobsByHierarchy('/', { prefix: dataCallId })) {
+            for await (const blob of containerClient.listBlobsFlat( { prefix: `${prefix}` })) {
                 result.push(blob);
             }
-            return result;
+            return Promise.resolve(result);
         } catch (err) {
             logger.error(err);
+            return Promise.reject(err)
         }
     }
 
-    async getData(id) {
-        logger.info("Inside getData, id is ", id);
-        const containerClient = await this.getContainerClient(blobConfig.containerName);
+    async getObjectById(id) {
+        const containerClient = await this._getContainerClient(this.containerName);
         const blobClient = containerClient.getBlobClient(id);
 
         try {
-            const data = await blobClient.download();
-            return data;
+            const response = await blobClient.download();
+            const buffer = await this._streamToBuffer(response.readableStreamBody);
+            return JSON.parse(buffer.toString());
         } catch (err) {
             logger.error(err);
+            return Promise.reject(err);
         }
     }
 
-    async saveTransactionalData(input) {
-        logger.debug('Inside saveTransactionalData');
-        const containerClient = await this.getContainerClient(blobConfig.containerName);
-        const blockBlobClient = containerClient.getBlockBlobClient(input._id);
+    async saveObject(id, body) {
+        const containerClient = await this._getContainerClient(this.containerName);
+        const blockBlobClient = containerClient.getBlockBlobClient(id);
 
         try {
-            await blockBlobClient.upload(JSON.stringify(input.records), input.records.length);
-            logger.debug('Records Inserted Successfully');
+            await blockBlobClient.upload(JSON.stringify(body), body.length);
         } catch (err) {
             logger.error(err);
+            return Promise.reject(err);
         }
     }
 
-    async uploadStreamToBlob(input, streamData) {
-        logger.debug('Inside uploadStreamToBlob');
-        const containerClient = await this.getContainerClient(blobConfig.containerName);
-        const blockBlobClient = containerClient.getBlockBlobClient(input);
+    async uploadStream(id, streamData) {
+        const containerClient = await this._getContainerClient(this.containerName);
+        const blockBlobClient = containerClient.getBlockBlobClient(id);
 
         try {
             await blockBlobClient.uploadStream(streamData);
-            logger.debug('Records Inserted Successfully');
         } catch (err) {
             logger.error(err);
+            return Promise.reject(err);
+        }
+    }
+
+    async deleteObject(id) {
+        const containerClient = await this._getContainerClient(this.containerName);
+        const blobClient = containerClient.getBlobClient(id);
+
+        try {
+            await blobClient.deleteIfExists();
+        } catch (err) {
+            logger.error(err);
+            return Promise.reject(err);
         }
     }
 }

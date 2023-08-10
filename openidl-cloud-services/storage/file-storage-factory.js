@@ -27,6 +27,19 @@ class FileStorageFactory {
 
         return instance;
     }
+
+    static getInstanceWithParam(env) {
+        switch (env) {
+            case  cloudEnv.AWS:
+                return new S3BucketClient();
+                break;
+            case cloudEnv.AZURE:
+                return new AzureBlobClient();
+                break;
+            default:
+                throw new Error(`Invalid CLOUD_ENV value. Must be one of ${Object.values(cloudEnv)}.`);
+        }
+    }
 }
 
 
