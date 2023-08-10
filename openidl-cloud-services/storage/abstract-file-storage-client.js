@@ -11,44 +11,55 @@ class AbstractFileStorageClient {
     }
 
     /**
-     * Retrieves transactional data by a specific data call ID.
+     * Retrieves objects by a specific prefix.
      *
-     * @param {string} dataCallId - The identifier for the data call.
-     * @returns {Promise<object[]>} - A promise that resolves to an array of objects representing the data.
+     * @param {string} prefix - The prefix by which to search for objects.
+     * @returns {Promise<Array.<object>>} - A promise that resolves to an array of objects representing the data.
      */
-    async getTransactionalDataByDatacall(dataCallId) {
-        throw new Error('You have to implement the method getTransactionalDataByDatacall!');
+    async getObjectsByPrefix(prefix) {
+        throw new Error('You have to implement the method getObjectsByPrefix!');
     }
 
     /**
-     * Retrieves data by a specific ID.
+     * Retrieves data object by a specific ID.
      *
-     * @param {string} id - The identifier for the data.
+     * @param {string} id - The identifier for the data object.
      * @returns {Promise<object>} - A promise that resolves to the data object.
      */
-    async getData(id) {
-        throw new Error('You have to implement the method getData!');
+    async getObjectById(id) {
+        throw new Error('You have to implement the method getObjectById!');
     }
 
     /**
-     * Saves transactional data.
+     * Saves object.
      *
-     * @param {object} input - The data to be saved, including an identifier and records.
-     * @returns {Promise<void>} - A promise indicating completion of the operation.
+     * @param {string} id - The identifier for the data object.
+     * @param {object} body - The data object to be saved.
+     * @returns {Promise<object>} - A promise that resolves to the saved data object.
      */
-    async saveTransactionalData(input) {
-        throw new Error('You have to implement the method saveTransactionalData!');
+    async saveObject(id, body) {
+        throw new Error('You have to implement the method saveObject!');
     }
 
     /**
      * Uploads a stream to the file storage.
      *
-     * @param {string} input - The identifier for the data.
+     * @param {string} id - The identifier for the data.
      * @param {Stream} streamData - The data stream to be uploaded.
+     * @returns {Promise<object>} - A promise indicating completion of the operation.
+     */
+    async uploadStream(id, streamData) {
+        throw new Error('You have to implement the method uploadStream!');
+    }
+
+    /**
+     * Deletes object with a specific ID.
+     *
+     * @param {string} id - The identifier for the data object.
      * @returns {Promise<void>} - A promise indicating completion of the operation.
      */
-    async uploadStream(input, streamData) {
-        throw new Error('You have to implement the method uploadStream!');
+    async deleteObject(id) {
+        throw new Error('You have to implement the method deleteObject!');
     }
 }
 
