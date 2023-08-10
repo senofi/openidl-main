@@ -41,3 +41,6 @@ jenkins-jobs/*
 # Gradle
 .gradle/
 build/
+
+# IDE
+.idea/
