@@ -17,14 +17,14 @@ class SecretsClientFactory {
      * @returns {AbstractSecretsClient} The corresponding AbstractSecretsClient instance.
      * @throws {Error} Throws an error if the provider is not supported.
      */
-    static async getInstance() {
+    static getInstance() {
         if (instance) {
             return instance;
         }
 
         switch (process.env.CLOUD_ENV) {
             case cloudEnv.AWS:
-                instance = await new AWSSecretsManagerClient().init() // Provide necessary configuration
+                instance = new AWSSecretsManagerClient() // Provide necessary configuration
                 return instance;
             case cloudEnv.AZURE:
                 instance = new AzureKeyVaultClient();
