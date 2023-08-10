@@ -4,7 +4,7 @@
   "description": "OpenIDL module that provides APIs for cloud services agnostic to the cloud services provider.",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "nyc mocha --timeout 600000 --recursive --exit"
   },
   "author": "Senofi",
   "license": "ISC",
@@ -20,6 +20,12 @@
     "log4js": "^4.3.2",
     "node-vault": "^0.9.22",
     "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^8.4.0",
+    "nyc": "^15.1.0",
+    "sinon": "7.2.7"
   },
   "engines": {
     "node": "14.17.x",
