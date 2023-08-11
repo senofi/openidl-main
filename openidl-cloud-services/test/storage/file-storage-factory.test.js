@@ -1,5 +1,6 @@
 const { expect } = require('chai');
-const FileStorageFactory = require('../../storage/file-storage-factory');
+const config = require('config')
+const sinon = require('sinon');
 const S3BucketClient = require('../../storage/s3bucket-client');
 const AzureBlobClient = require('../../storage/azureblob-client');
 const cloudEnv = require('../../constants/cloud-env');
@@ -8,13 +9,17 @@ describe('FileStorageFactory', () => {
     describe('AWS environment', () => {
         before(() => {
             process.env['CLOUD_ENV'] = cloudEnv.AWS;
+            sinon.stub(config, 'get').returns('test');
         });
 
         after(() => {
             process.env['CLOUD_ENV'] = '';
+            sinon.restore();
+            delete require.cache[require.resolve('../../storage/file-storage-factory')];
         });
 
         it('should return the same S3BucketClient instance for the same environment twice', async () => {
+            const FileStorageFactory = require('../../storage/file-storage-factory');
             const storageClient1 = FileStorageFactory.getInstance();
             const storageClient2 = FileStorageFactory.getInstance();
 
@@ -27,13 +32,17 @@ describe('FileStorageFactory', () => {
     describe('Azure environment', () => {
         before(() => {
             process.env['CLOUD_ENV'] = cloudEnv.AZURE;
+            sinon.stub(config, 'get').returns('test');
         });
 
         after(() => {
             process.env['CLOUD_ENV'] = '';
+            sinon.restore();
+            delete require.cache[require.resolve('../../storage/file-storage-factory')];
         });
 
         it('should return the same AzureBlobClient instance for the same environment twice', async () => {
+            const FileStorageFactory = require('../../storage/file-storage-factory');
             const storageClient1 = FileStorageFactory.getInstance();
             const storageClient2 = FileStorageFactory.getInstance();
 

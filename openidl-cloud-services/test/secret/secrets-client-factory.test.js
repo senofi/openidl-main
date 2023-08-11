@@ -1,20 +1,21 @@
-const { expect } = require('chai');
-const SecretsClientFactory = require('../../secret/secrets-client-factory');
+const {expect} = require('chai');
+const sinon = require('sinon');
+const config = require('config');
 const AWSSecretsManagerClient = require('../..//secret/aws-secrets-manager-client');
 const AzureKeyVaultClient = require('../../secret/azure-key-vault-secrets-client');
 const KubernetesClient = require('../../secret/kubernetes-secrets-client');
 const cloudEnv = require('../../constants/cloud-env');
 
-
-process.env['CLOUD_ENV'] = cloudEnv.AWS;
-describe('AWS environment', () => {
+describe('SecretsClientFactory resolving secrets client AWS environment', () => {
     before(() => {
         process.env['CLOUD_ENV'] = cloudEnv.AWS;
     })
     after(() => {
         process.env['CLOUD_ENV'] = '';
+        delete require.cache[require.resolve('../../secret/secrets-client-factory')];
     });
     it('should return the same AWSSecretsManagerClient instance for the same environment twice', async () => {
+        const SecretsClientFactory = require('../../secret/secrets-client-factory');
         const secretsClient1 = SecretsClientFactory.getInstance();
         const secretsClient2 = SecretsClientFactory.getInstance();
 
@@ -24,16 +25,20 @@ describe('AWS environment', () => {
     });
 });
 
-describe('Azure environment', () => {
+describe('SecretsClientFactory resolving secrets client Azure environment', () => {
     before(() => {
+        sinon.stub(config, 'get').returns('test');
         process.env['CLOUD_ENV'] = cloudEnv.AZURE;
     });
 
     after(() => {
         process.env['CLOUD_ENV'] = '';
+        sinon.restore();
+        delete require.cache[require.resolve('../../secret/secrets-client-factory')];
     });
 
     it('should return the same AzureKeyVaultClient instance for the same environment twice', async () => {
+        const SecretsClientFactory = require('../../secret/secrets-client-factory');
         const secretsClient1 = SecretsClientFactory.getInstance();
         const secretsClient2 = SecretsClientFactory.getInstance();
 
@@ -43,16 +48,18 @@ describe('Azure environment', () => {
     });
 });
 
-describe('Kubernetes environment', () => {
+describe('SecretsClientFactory resolving secrets client Kubernetes environment', () => {
     before(() => {
         process.env['CLOUD_ENV'] = cloudEnv.KUBERNETES;
     });
 
     after(() => {
         process.env['CLOUD_ENV'] = '';
+        delete require.cache[require.resolve('../../secret/secrets-client-factory')];
     });
 
     it('should return the same KubernetesClient instance for the same environment twice', async () => {
+        const SecretsClientFactory = require('../../secret/secrets-client-factory');
         const secretsClient1 = SecretsClientFactory.getInstance();
         const secretsClient2 = SecretsClientFactory.getInstance();
 
@@ -61,5 +68,3 @@ describe('Kubernetes environment', () => {
         expect(secretsClient1).to.equal(secretsClient2);
     });
 });
-
-// Implement tests to check if SecretsClientFactory returns the correct client based on the CLOUD_ENV environment variable.

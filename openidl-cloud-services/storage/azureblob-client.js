@@ -10,11 +10,10 @@ logger.level = config.logLevel;
 class AzureBlobClient extends AbstractFileStorageClient {
     constructor() {
         super();
-        const blobConfig = require('../config/azure-blob-config.json');
-        this.containerName = blobConfig.containerName;
-        const sharedKeyCredential = new StorageSharedKeyCredential(blobConfig.accountName, blobConfig.accountKey);
+        this.containerName = config.get('containerName');
+        const sharedKeyCredential = new StorageSharedKeyCredential(config.get('accountName'), config.get('accountKey'));
         this.blobServiceClient = new BlobServiceClient(
-            blobConfig.blobServiceUrl,
+            config.get('blobServiceUrl'),
             sharedKeyCredential
         );
     }
@@ -40,7 +39,7 @@ class AzureBlobClient extends AbstractFileStorageClient {
         const containerClient = await this._getContainerClient(this.containerName);
         try {
             let result = [];
-            for await (const blob of containerClient.listBlobsFlat( { prefix: `${prefix}` })) {
+            for await (const blob of containerClient.listBlobsFlat({prefix: `${prefix}`})) {
                 result.push(blob);
             }
             return Promise.resolve(result);
