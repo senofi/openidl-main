@@ -2,6 +2,7 @@ const AWS = require('aws-sdk');
 const log4js = require('log4js');
 const config = require('config');
 const AbstractFileStorageClient = require('./abstract-file-storage-client');
+const getAccessParams = require('../utils/awsAccessParams');
 
 //set up logging
 const logger = log4js.getLogger('s3bucket-client');
@@ -10,35 +11,16 @@ logger.level = config.logLevel;
 class S3BucketClient extends AbstractFileStorageClient {
     constructor() {
         super();
-        this.bucketConfig = require('../config/s3-bucket-config.json')
-        this.bucketName = this.bucketConfig.bucketName;
-        //configuring the AWS environment
-        AWS.config.update({
-            accessKeyId: this.bucketConfig.accessKeyId, secretAccessKey: this.bucketConfig.secretAccessKey
-        });
+        this.bucketName = config.get('bucketName')
     }
 
-    async _getAccessParams() {
-        const sts = new AWS.STS({
-            //region: 'us-east-2',
-            accessKeyId: this.bucketConfig.accessKeyId, secretAccessKey: this.bucketConfig.secretAccessKey
-
-        });
-        const params = this.bucketConfig.roleParams;
-
-        const accessParamInfo = await sts.assumeRole(params).promise();
-
-        const accessparams = {
-            accessKeyId: accessParamInfo.Credentials.AccessKeyId,
-            secretAccessKey: accessParamInfo.Credentials.SecretAccessKey,
-            sessionToken: accessParamInfo.Credentials.SessionToken,
-        };
-        return accessparams;
+    async _getClient() {
+        const accessParams = await getAccessParams();
+        return new AWS.S3(accessParams);
     }
 
     async getObjectsByPrefix(prefix) {
-        const accessParams = await this._getAccessParams();
-        let bucket = new AWS.S3(accessParams);
+        let bucket = await this._getClient();
         let getObjectParam = {Bucket: this.bucketName, Prefix: prefix};
         try {
             return bucket.listObjects(getObjectParam).promise();
@@ -49,8 +31,7 @@ class S3BucketClient extends AbstractFileStorageClient {
     }
 
     async getObjectById(id) {
-        const accessParams = await this._getAccessParams();
-        let bucket = new AWS.S3(accessParams);
+        let bucket = await this._getClient();
         let getObjectParam = {Bucket: this.bucketName, Key: id};
         try {
             const response = await bucket.getObject(getObjectParam).promise();
@@ -63,8 +44,7 @@ class S3BucketClient extends AbstractFileStorageClient {
     }
 
     async saveObject(id, body) {
-        const accessparams = await this._getAccessParams();
-        let bucket = new AWS.S3(accessparams);
+        let bucket = await this._getClient();
         let insertObjectParam = {Bucket: this.bucketName, Key: id, Body: JSON.stringify(body)};
         try {
             return bucket.upload(insertObjectParam).promise();
@@ -75,8 +55,7 @@ class S3BucketClient extends AbstractFileStorageClient {
     }
 
     async uploadStream(id, streamData) {
-        const accessparams = await this._getAccessParams();
-        let bucket = new AWS.S3(accessparams);
+        let bucket = await this._getClient();
         const insertObjectParam = {Bucket: this.bucketName, Key: id, Body: streamData};
         try {
             return bucket.upload(insertObjectParam).promise();
@@ -87,8 +66,7 @@ class S3BucketClient extends AbstractFileStorageClient {
     }
 
     async deleteObject(id) {
-        const accessParams = await this._getAccessParams();
-        let bucket = new AWS.S3(accessParams);
+        let bucket = await this._getClient();
         let deleteObjectParam = {Bucket: this.bucketName, Key: id};
 
         try {

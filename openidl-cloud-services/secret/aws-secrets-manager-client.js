@@ -1,28 +1,11 @@
 const AWS = require('aws-sdk');
 const config = require('config');
 const AbstractSecretsClient = require('./abstract-secrets-client');
+const getAccessParams = require('../utils/awsAccessParams');
 
 class AWSSecretsManagerClient extends AbstractSecretsClient {
     constructor() {
         super();
-    }
-
-    static async _getAccessParams() {
-        const sts = new AWS.STS({
-            region: config.get('region'),
-            accessKeyId: config.get('accessKeyId'),
-            secretAccessKey: config.get('secretAccessKey')
-        });
-        const roleParams = config.get('roleParams');
-
-        const accessParamInfo = await sts.assumeRole(roleParams).promise();
-
-        return {
-            accessKeyId: accessParamInfo.Credentials.AccessKeyId,
-            secretAccessKey: accessParamInfo.Credentials.SecretAccessKey,
-            sessionToken: accessParamInfo.Credentials.SessionToken,
-            region: config.get('region')
-        };
     }
 
     async _getClient() {
@@ -30,7 +13,7 @@ class AWSSecretsManagerClient extends AbstractSecretsClient {
             return this.client;
         }
 
-        const accessParams = await AWSSecretsManagerClient._getAccessParams();
+        const accessParams = await getAccessParams();
         this.client = new AWS.SecretsManager(accessParams);
         return this.client;
     }
