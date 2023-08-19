@@ -1,9 +1,9 @@
 const {expect} = require('chai');
 const sinon = require('sinon');
 const config = require('config');
-const AWSSecretsManagerClient = require('../..//secret/aws-secrets-manager-client');
-const AzureKeyVaultClient = require('../../secret/azure-key-vault-secrets-client');
-const KubernetesClient = require('../../secret/kubernetes-secrets-client');
+const AWSSecretsManagerClient = require('../../secret/impl/aws-secrets-manager-client');
+const AzureKeyVaultClient = require('../../secret/impl/azure-key-vault-secrets-client');
+const KubernetesClient = require('../../secret/impl/kubernetes-secrets-client');
 const cloudEnv = require('../../constants/cloud-env');
 
 describe('SecretsClientFactory resolving secrets client AWS environment', () => {

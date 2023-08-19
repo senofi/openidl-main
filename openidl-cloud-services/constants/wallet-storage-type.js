@@ -1,6 +1,6 @@
 const walletStorageType = Object.freeze({
-    HASHICORP_VAULT: 'HASHICORP_VAULT',
-    COUCHDB: 'COUCHDB'
+    VAULT: 'vault',
+    COUCHDB: 'couchdb'
 })
 
 module.exports = walletStorageType;
