@@ -1,9 +1,9 @@
 const {expect} = require('chai');
 const sinon = require('sinon');
 const config = require('config');
-const AWSSecretsManagerClient = require('../../secret/impl/aws-secrets-manager-client');
-const AzureKeyVaultClient = require('../../secret/impl/azure-key-vault-secrets-client');
-const KubernetesClient = require('../../secret/impl/kubernetes-secrets-client');
+const AWSSecretsManagerClient = require('../../cloud-services/secret/impl/aws-secrets-manager-client');
+const AzureKeyVaultClient = require('../../cloud-services/secret/impl/azure-key-vault-secrets-client');
+const KubernetesClient = require('../../cloud-services/secret/impl/kubernetes-secrets-client');
 const cloudEnv = require('../../constants/cloud-env');
 
 describe('SecretsClientFactory resolving secrets client AWS environment', () => {
@@ -15,7 +15,7 @@ describe('SecretsClientFactory resolving secrets client AWS environment', () => 
         delete require.cache[require.resolve('../../secret/secrets-client-factory')];
     });
     it('should return the same AWSSecretsManagerClient instance for the same environment twice', async () => {
-        const SecretsClientFactory = require('../../secret/secrets-client-factory');
+        const SecretsClientFactory = require('../../cloud-services/secret/secrets-client-factory');
         const secretsClient1 = SecretsClientFactory.getInstance();
         const secretsClient2 = SecretsClientFactory.getInstance();
 
@@ -38,7 +38,7 @@ describe('SecretsClientFactory resolving secrets client Azure environment', () =
     });
 
     it('should return the same AzureKeyVaultClient instance for the same environment twice', async () => {
-        const SecretsClientFactory = require('../../secret/secrets-client-factory');
+        const SecretsClientFactory = require('../../cloud-services/secret/secrets-client-factory');
         const secretsClient1 = SecretsClientFactory.getInstance();
         const secretsClient2 = SecretsClientFactory.getInstance();
 
@@ -59,7 +59,7 @@ describe('SecretsClientFactory resolving secrets client Kubernetes environment',
     });
 
     it('should return the same KubernetesClient instance for the same environment twice', async () => {
-        const SecretsClientFactory = require('../../secret/secrets-client-factory');
+        const SecretsClientFactory = require('../../cloud-services/secret/secrets-client-factory');
         const secretsClient1 = SecretsClientFactory.getInstance();
         const secretsClient2 = SecretsClientFactory.getInstance();
 

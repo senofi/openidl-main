@@ -19,3 +19,4 @@ module.exports.DBManagerFactory = require('./middlewares/DBService/DBManagerFact
 module.exports.EnvConfig = require('./helper/envconfig');
 
 module.exports.Email = require('./helper/sendemail');
+module.exports.CloudServices = require('./cloud-services');
