@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const AWSSecretsManagerClient = require('../../secret/aws-secrets-manager-client');
+const AWSSecretsManagerClient = require('../../secret/impl/aws-secrets-manager-client');
 
 describe('AWSSecretsManagerClient', () => {
     it('should fetch and parse secret value', async () => {
