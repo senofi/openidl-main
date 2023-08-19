@@ -87,7 +87,7 @@ async function init() {
 
     }
     listenerConfig['listenerChannels'] = listernerChannels;
-    await walletHelper.init(JSON.parse(process.env.KVS_CONFIG));
+    await walletHelper.init();
     var idExists = await walletHelper.identityExists(channelConfig.identity.user);
     if (!idExists) {
         throw new Error("Invalid Identity, no certificate found in certificate store");

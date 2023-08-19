@@ -58,7 +58,7 @@ fabricEnrollment.registerUser = async (user) => {
     console.log("Registering User in Fabric CA...");
 
     if (isPersistentStore) {
-        await walletHelper.init(JSON.parse(process.env.KVS_CONFIG));
+        await walletHelper.init();
     } else {
         throw new Error("PersistentStore not there!");
     }
@@ -108,7 +108,7 @@ fabricEnrollment.enrollUser = async (user) => {
             "key": enrollInfo.key
         }
         if (isPersistentStore) {
-            await walletHelper.init(JSON.parse(process.env.KVS_CONFIG));
+            await walletHelper.init();
             await walletHelper.importIdentity(user.user, enrollInfo);
         } else {
             logger.info("Storing User Certificate on File System...");

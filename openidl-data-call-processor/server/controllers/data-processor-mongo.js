@@ -4,10 +4,9 @@ const logger = log4js.getLogger('data-processor-Mongo');
 logger.level = config.logLevel;
 const sleep = require('sleep');
 const sizeof = require('object-sizeof');
-const openidlCommonLib = require('@senofi/openidl-common-lib');
+const openidlCommonLib = require('openidl-common-lib');
 const arrayChunkBySize = require('array-chunk-by-size');
-
-let InstanceFactory = require('../middleware/instance-factory');
+const { InsuranceDataStoreClientFactory } = require('openidl-cloud-services')
 
 let emailService = openidlCommonLib.Email;
 const emailkey = require('../config/default.json').send_grid_apikey;
@@ -15,7 +14,7 @@ const emailData = require('../config/email.json').Config;
 
 // Venkat Jira 104
 let pdcFailureStatus;
-let S3FailureStatus;
+let fileStorageFailureStatus;
 let transferDocuments
 
 class DataProcessorMongo {
@@ -124,7 +123,7 @@ class DataProcessorMongo {
             logger.debug("After sleep.....");
             let index = 0;
             pdcFailureStatus = false;
-            S3FailureStatus = false;
+            fileStorageFailureStatus = false;
             for (const item of jsonDocument.totalchunks) {
                 transferDocuments = [];
                 logger.debug("item.pdcstatus        " + item.pdcstatus)
@@ -137,7 +136,7 @@ class DataProcessorMongo {
                     logger.debug(" PDCS3 dbManager=" + dbManager)
                     transferDocuments = await this.getInsuranceDataNew(item.chunkid, jsonDocument.collectionname, dbManager);
                     try {
-                        // PDC Service 
+                        // PDC Service
                         await this.saveInsuranceRecordNew(jsonDocument.carrierid, transferDocuments, index, jsonDocument.datacallid, jsonDocument.versionid, target)
                         item.pdcstatus = "Completed"
                         item.pdccomments = item.pdccomments + " Executed at - " + new Date().toISOString() + " | ";
@@ -162,9 +161,7 @@ class DataProcessorMongo {
                         logger.info("Current Process is S3 Bucket update of Chunkid is " + item.chunkid)
                         if (transferDocuments.length == 0) transferDocuments = await this.getInsuranceDataNew(item.chunkid, jsonDocument.collectionname, dbManager);
                         try {
-                            // PDC Service 
-                            let factoryObject = new InstanceFactory();
-                            let targetObject = await factoryObject.getInstance(config.insuranceDataStorageEnv);
+                            let targetObject = await InsuranceDataStoreClientFactory.getInstance();
 
                             var insuranceData = new Object();
                             let id = jsonDocument.carrierid + '-' + jsonDocument.datacallid + '-' + jsonDocument.versionid + '-' + item.chunkid
@@ -188,7 +185,7 @@ class DataProcessorMongo {
                                 item.s3comments = item.s3comments + " Executed at - " + new Date().toISOString() + " | ";
                                 logger.debug('transactional data saved for id', insuranceData._id)
                             } catch (err) {
-                                S3FailureStatus = true;
+                                fileStorageFailureStatus = true;
                                 item.s3status = "Failed"
                                 item.s3comments = item.s3comments + " Failed at - " + new Date().toISOString() + " | ";
                                 logger.error('failed to save transactional data for', insuranceData._id)
@@ -196,11 +193,10 @@ class DataProcessorMongo {
                             }
 
                             insuranceData = null
-                            factoryObject = null
 
                         } catch (ex) {
 
-                            S3FailureStatus = true;
+                            fileStorageFailureStatus = true;
                             item.s3status = "Failed"
 
                             item.s3comments = item.s3comments + " Failed at - " + new Date().toISOString() + " | ";
@@ -209,7 +205,7 @@ class DataProcessorMongo {
                         }
                     } else {
                         logger.debug("PDC transaction has to be taken care first before exection of S3 bucket")
-                        S3FailureStatus = true;
+                        fileStorageFailureStatus = true;
                     }
 
                 } else {
@@ -224,7 +220,7 @@ class DataProcessorMongo {
 
             }
 
-            if ((!pdcFailureStatus) && (!S3FailureStatus)) {
+            if ((!pdcFailureStatus) && (!fileStorageFailureStatus)) {
                 jsonDocument.overallStatus = "Completed"
             }
             else {

@@ -18,7 +18,7 @@
 const express = require('express');
 const log4js = require('log4js');
 const config = require('config');
-const openidlCommonLib = require('@senofi/openidl-common-lib');
+const openidlCommonLib = require('openidl-common-lib');
 openidlCommonLib.EnvConfig.init();
 
 const EventListener = openidlCommonLib.EventListener;
@@ -87,7 +87,7 @@ async function init() {
       listernerChannels.push(listenerChannel);
     }
     listenerConfig['listenerChannels'] = listernerChannels;
-    await walletHelper.init(JSON.parse(process.env.KVS_CONFIG));
+    await walletHelper.init();
 
     var idExists = await walletHelper.identityExists(channelConfig.identity.user);
     if (!idExists) {
