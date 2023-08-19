@@ -6,7 +6,7 @@ const sleep = require('sleep');
 const sizeof = require('object-sizeof');
 const openidlCommonLib = require('openidl-common-lib');
 const arrayChunkBySize = require('array-chunk-by-size');
-const { InsuranceDataStoreClientFactory } = require('openidl-cloud-services')
+const { InsuranceDataStoreClientFactory } = openidlCommonLib.CloudServices;
 
 let emailService = openidlCommonLib.Email;
 const emailkey = require('../config/default.json').send_grid_apikey;

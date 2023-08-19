@@ -22,7 +22,7 @@ const sizeof = require('object-sizeof');
 const config = require('config');
 const logger = log4js.getLogger('event -eventHandler ');
 const {TransactionalDataStorageClientFactory} = require(
-    'openidl-cloud-services')
+    'openidl-common-lib/cloud-services')
 const {
   Transaction
 } = require('openidl-common-lib');

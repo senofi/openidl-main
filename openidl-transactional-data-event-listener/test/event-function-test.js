@@ -14,7 +14,7 @@ const getInsuranceDataResponse = require(
 const payload = JSON.stringify(eventPayload);
 const sinon = require("sinon");
 const {TransactionalDataStorageClientFactory} = require(
-    'openidl-cloud-services');
+    'openidl-common-lib/cloud-services');
 let targetObject;
 
 describe('TransactionalDataAvailable Event Test', () => {

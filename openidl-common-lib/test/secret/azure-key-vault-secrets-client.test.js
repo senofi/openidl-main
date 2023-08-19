@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const { SecretClient } = require('@azure/keyvault-secrets');
 const config = require('config');
-const AzureKeyVaultSecretsClient = require('../../secret/impl/azure-key-vault-secrets-client');
+const AzureKeyVaultSecretsClient = require('../../cloud-services/secret/impl/azure-key-vault-secrets-client');
 
 describe('AzureKeyVaultSecretsClient', () => {
     const configStub = sinon.stub(config, 'get');

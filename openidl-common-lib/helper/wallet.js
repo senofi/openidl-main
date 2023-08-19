@@ -6,7 +6,7 @@ const log4js = require('log4js');
 const {
   Wallets,
 } = require('fabric-network');
-const { WalletStorageClientFactory } = require('openidl-cloud-services');
+const { WalletStorageClientFactory } = require('../cloud-services');
 
 const logger = log4js.getLogger('helpers - wallet');
 logger.level = process.env.LOG_LEVEL || 'debug';
