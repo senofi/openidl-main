@@ -2,40 +2,45 @@ const log4js = require('log4js');
 const config = require('config');
 const logger = log4js.getLogger('event -eventHandler ');
 const Stream = require('stream');
-const {TransactionalDataStorageClientFactory} = require(
-    'openidl-cloud-services')
+const { InsuranceDataStoreClientFactory } = require(
+  'openidl-common-lib').CloudServices;
 
 const MatureEvent = {};
 
 MatureEvent.handleMatureEvent = async (data) => {
   try {
-    logger.info("in handleMatureEvent", data);
+    logger.info('in handleMatureEvent', data);
 
-    const targetObject = await TransactionalDataStorageClientFactory.getInstance();
+    const targetObject = await InsuranceDataStoreClientFactory.getInstance();
 
-    logger.debug("config storage env ", config.insuranceDataStorageEnv);
-    logger.debug("targetObject: ", typeof targetObject);
+    logger.debug('config storage env ', config.insuranceDataStorageEnv);
+    logger.debug('targetObject: ', typeof targetObject);
 
-    logger.info("Gathering all results");
+    logger.info('Gathering all results');
     const allInsuranceData = await targetObject.getTransactionalDataByDataCall(
-        data.dataCalls.id);
-    logger.info("all insurance data fetched.");
+      data.dataCalls.id);
+    logger.info('all insurance data fetched.');
 
     if (allInsuranceData.Contents.length === 0) {
-      logger.error("Mature data call has no consent!");
+      logger.error('Mature data call has no consent!');
       return;
     }
 
     const stream = new Stream.PassThrough();
     let totalRecords = 0;
-    const promises = allInsuranceData.Contents.map(async ({Key}) => {
+    const promises = allInsuranceData.Contents.map(async ({ Key }) => {
       const data = await targetObject.getData(Key);
-      const {records, recordsNum} = JSON.parse(data.Body);
+      const {
+        records,
+        recordsNum
+      } = JSON.parse(data.Body);
       totalRecords += recordsNum;
       return records;
     });
     const records = await Promise.all(promises);
-    const combinedRecords = records.flat().map(JSON.stringify).join(",");
+    const combinedRecords = records.flat()
+    .map(JSON.stringify)
+    .join(',');
     stream.write(`[${combinedRecords}]`);
     stream.end();
 
@@ -45,7 +50,7 @@ MatureEvent.handleMatureEvent = async (data) => {
 
     if (totalRecords !== records.flat().length) {
       throw new Error(
-          `Error occurred while combining data chunks for data call with id: ${data.dataCalls.id}`);
+        `Error occurred while combining data chunks for data call with id: ${data.dataCalls.id}`);
     }
 
   } catch (error) {
