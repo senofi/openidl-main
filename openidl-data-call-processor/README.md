@@ -96,7 +96,8 @@ Application currently supports both AWS Cognito and IBM App ID. You can go with 
     {
         "persistentStore": "mongo",
         "mongodb": "openidl-offchain-db",
-        "simpleURI": "mongodb://localhost:27017"
+        "simpleURI": "mongodb://localhost:27017",
+        "defaultDbType": "mongo"
     }
     ```
 * Application will be using local MongoDB running on port `27017` as the persistent data store
@@ -127,13 +128,17 @@ Application currently supports both AWS Cognito and IBM App ID. You can go with 
 ### 6. Configure local-kvs-config.json
 
 * Create `local-kvs-config.json` file under `server/config`
-* Paste the following JSON in `local-kvs-config.json` file
-    ``` 
-    {
-        "walletType": "couchdb",
-        "url": "http://admin:adminpw@localhost:9984"
-    }
-    ```
+  * Paste the following JSON in `local-kvs-config.json` file
+      ``` 
+      {
+          "walletType": "couchdb",
+          "secretName": "couchDbConfig",
+          "couchDbConfig": {
+            "url": "http://admin:adminpw@localhost:9984"
+          },
+          "secretsStoreType": "local"
+      }
+      ```
 * Application will be using local CouchDB running on port `9984` as user certificate key value store
 
 ### 7. Configure s3-bucket-config.json
@@ -151,9 +156,22 @@ https://aws.amazon.com/premiumsupport/knowledge-center/create-access-key/)).
           "RoleSessionName": "openidl",
           "DurationSeconds": "900",
           "ExternalId": "******"
-    }
+        }
     }
     ```
+
+### 7.1. If AzureBlob is used instead of S3
+#### Example of Azure Blob config file (in case Azure Blob is used instead of S3)
+* The insurance data store can be changed to Azure Blob by changing `insuranceDataStorageEnv` in default configuration to `azure-blob`.
+* Create `azure-blob-config.json` file under `server/config` with the following content:
+```
+{
+  "accountName": "",
+  "accountKey": "",
+  "blobServiceUrl": "",
+  "containerName": ""
+}
+```
 ### 8. Configure email.json
 
 * Create `email.json` file under `server/config`

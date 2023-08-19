@@ -45,7 +45,8 @@ The following configuration files are either to be created or edited(if already 
     {
         "persistentStore": "mongo",
         "mongodb": "openidl-offchain-db",
-        "simpleURI": "mongodb://localhost:27017"
+        "simpleURI": "mongodb://localhost:27017",
+        "defaultDbType": "mongo"
     }
     ```
 * Application will be using local MongoDB running on port `27017` as the persistent data store
@@ -65,10 +66,14 @@ The following configuration files are either to be created or edited(if already 
 * Create `local-kvs-config.json` file under server/config
 * Paste the following JSON in 'local-kvs-config.json' file
     ``` 
-    {
-        "walletType": "couchdb",
-        "url": "http://admin:adminpw@localhost:9984"
-    }
+      {
+          "walletType": "couchdb",
+          "secretName": "couchDbConfig",
+          "couchDbConfig": {
+            "url": "http://admin:adminpw@localhost:9984"
+          },
+          "secretsStoreType": "local"
+      }
     ```
 * Application will be using local CouchDB running on port `9984` as user certificate key value store
 

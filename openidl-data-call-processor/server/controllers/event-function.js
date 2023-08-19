@@ -25,7 +25,7 @@ const networkConfig = require('../config/connection-profile.json');
 const Processor = require('./processor');
 const {
     Transaction
-} = require('@senofi/openidl-common-lib');
+} = require('openidl-common-lib');
 
 var eventFunction = {};
 
