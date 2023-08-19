@@ -32,6 +32,7 @@
     "log4js": "^4.3.2",
     "mongodb": "^3.6.10",
     "node-vault": "^0.9.22",
+    "openidl-cloud-services": "*",
     "passport": "^0.4.0",
     "passport-cognito": "^0.2.2",
     "pg": "^8.8.0",

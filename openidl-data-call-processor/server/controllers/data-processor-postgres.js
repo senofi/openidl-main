@@ -3,9 +3,7 @@ const config = require('../config/default.json');
 const logger = log4js.getLogger('data-processor-postgres');
 logger.level = config.logLevel;
 const sizeof = require('object-sizeof');
-const { DBManagerFactory } = require('@senofi/openidl-common-lib');
-
-let InstanceFactory = require('../middleware/instance-factory');
+const { DBManagerFactory } = require('openidl-common-lib');
 
 class DataProcessorPostgres {
 	constructor(

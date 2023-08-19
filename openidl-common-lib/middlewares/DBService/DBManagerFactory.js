@@ -17,7 +17,7 @@ class DBManagerFactory {
     try {
       switch (databaseType) {
         case 'mongo':
-          const mongoDBInstance = new MongoDBManager(options.mongo);
+          const mongoDBInstance = new MongoDBManager(options);
           return mongoDBInstance;
         case 'cloudant':
           return new CloudantDBManager(options.cloudant);

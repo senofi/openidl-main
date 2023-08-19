@@ -4,7 +4,6 @@ const sinon = require("sinon");
 const eventFunction = require("../server/controllers/event-function").eventFunction;
 const dataProcessor = require("../server/controllers/data-processor-mongo");
 const processor = require("../server/controllers/processor");
-const config = require('config');
 const exPattern = require("../test/data/extractionPatternPayload.json");
 const consentPayload = require("../test/data/processConsentPayload.json");
 const listConsent = require("../test/data/listConsentByDataCallPayload.json");
