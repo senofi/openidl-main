@@ -1,8 +1,8 @@
 const { expect } = require('chai');
 const config = require('config')
 const sinon = require('sinon');
-const S3BucketClient = require('../../storage/s3bucket-client');
-const AzureBlobClient = require('../../storage/azureblob-client');
+const S3BucketClient = require('../../file-storage/impl/s3bucket-client');
+const AzureBlobClient = require('../../file-storage/impl/azureblob-client');
 const cloudEnv = require('../../constants/cloud-env');
 
 describe('FileStorageFactory', () => {
@@ -15,11 +15,11 @@ describe('FileStorageFactory', () => {
         after(() => {
             process.env['CLOUD_ENV'] = '';
             sinon.restore();
-            delete require.cache[require.resolve('../../storage/file-storage-factory')];
+            delete require.cache[require.resolve('../../storage/storage-client-factory')];
         });
 
         it('should return the same S3BucketClient instance for the same environment twice', async () => {
-            const FileStorageFactory = require('../../storage/file-storage-factory');
+            const FileStorageFactory = require('../../file-storage/file-storage-client-factory');
             const storageClient1 = FileStorageFactory.getInstance();
             const storageClient2 = FileStorageFactory.getInstance();
 
@@ -38,11 +38,11 @@ describe('FileStorageFactory', () => {
         after(() => {
             process.env['CLOUD_ENV'] = '';
             sinon.restore();
-            delete require.cache[require.resolve('../../storage/file-storage-factory')];
+            delete require.cache[require.resolve('../../storage/storage-client-factory')];
         });
 
         it('should return the same AzureBlobClient instance for the same environment twice', async () => {
-            const FileStorageFactory = require('../../storage/file-storage-factory');
+            const FileStorageFactory = require('../../file-storage/file-storage-client-factory');
             const storageClient1 = FileStorageFactory.getInstance();
             const storageClient2 = FileStorageFactory.getInstance();
 
