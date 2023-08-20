@@ -22,10 +22,10 @@ const sizeof = require('object-sizeof');
 const config = require('config');
 const logger = log4js.getLogger('event -eventHandler ');
 const {TransactionalDataStorageClientFactory} = require(
-    'openidl-common-lib/cloud-services')
+    '@senofi/openidl-common-lib').CloudServices;
 const {
   Transaction
-} = require('openidl-common-lib');
+} = require('@senofi/openidl-common-lib');
 const createTargetChannelTransactions = require(
     "../service/channelTransactionService");
 logger.level = config.logLevel;
