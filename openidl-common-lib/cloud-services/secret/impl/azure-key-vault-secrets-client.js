@@ -1,5 +1,6 @@
-const {ClientSecretCredential} = require("@azure/identity");
+const {ClientSecretCredential} = require('@azure/identity');
 const {SecretClient} = require('@azure/keyvault-secrets');
+const { isEmpty } = require('lodash');
 const AbstractSecretsClient = require('../abstract-secrets-client');
 
 class AzureKeyVaultSecretsClient extends AbstractSecretsClient {

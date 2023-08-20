@@ -2,10 +2,10 @@ const {expect} = require('chai');
 const sinon = require('sinon');
 const config = require('config');
 const {Wallets} = require('fabric-network');
-const HashicorpVaultClient = require('../../cloud-services/wallet-storage/hashicorp-vault-client');
-const CouchDBWalletClient = require('../../cloud-services/wallet-storage/couchdb-wallet-client');
-const walletStorageType = require('../../cloud-services/constants/wallet-storage-type');
-const SecretsClientFactory = require('../../cloud-services/secret/secrets-client-factory');
+const HashicorpVaultClient = require('../../wallet-storage/hashicorp-vault-client');
+const CouchDBWalletClient = require('../../wallet-storage/couchdb-wallet-client');
+const walletStorageType = require('../../constants/wallet-storage-type');
+const SecretsClientFactory = require('../../secret/secrets-client-factory');
 
 describe('WalletStorageFactoryClient', () => {
     describe('Hashicorp Vault storage', () => {
@@ -34,7 +34,7 @@ describe('WalletStorageFactoryClient', () => {
         });
 
         it('should return the same HashicorpVaultClient instance for the same storage type twice', async () => {
-            const WalletStorageFactoryClient = require('../../cloud-services/wallet-storage/wallet-storage-client-factory');
+            const WalletStorageFactoryClient = require('../../wallet-storage/wallet-storage-client-factory');
             const storageClient1 = await WalletStorageFactoryClient.getInstance();
             const storageClient2 = await WalletStorageFactoryClient.getInstance();
 
@@ -66,7 +66,7 @@ describe('WalletStorageFactoryClient', () => {
         });
 
         it('should return the same CouchDBWalletClient instance for the same storage type twice', async () => {
-            const WalletStorageFactoryClient = require('../../cloud-services/wallet-storage/wallet-storage-client-factory');
+            const WalletStorageFactoryClient = require('../../wallet-storage/wallet-storage-client-factory');
             const storageClient1 = await WalletStorageFactoryClient.getInstance();
             const storageClient2 = await WalletStorageFactoryClient.getInstance();
 
