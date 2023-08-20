@@ -1,5 +1,5 @@
 const { targetDB } = require('config');
-const openidlCommonLib = require('openidl-common-lib');
+const openidlCommonLib = require('@senofi/openidl-common-lib');
 
 const networkConfig = require('../config/connection-profile.json');
 const { createListenerConfig } = require('./listenerConfig');
