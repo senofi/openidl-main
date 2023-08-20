@@ -3,7 +3,7 @@ const config = require('config');
 const logger = log4js.getLogger('event -eventHandler ');
 const Stream = require('stream');
 const { InsuranceDataStoreClientFactory } = require(
-  'openidl-common-lib').CloudServices;
+  '@senofi/openidl-common-lib').CloudServices;
 
 const MatureEvent = {};
 
