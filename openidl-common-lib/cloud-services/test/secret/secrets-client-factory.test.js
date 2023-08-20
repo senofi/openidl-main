@@ -1,21 +1,19 @@
 const {expect} = require('chai');
-const sinon = require('sinon');
-const config = require('config');
-const AWSSecretsManagerClient = require('../../cloud-services/secret/impl/aws-secrets-manager-client');
-const AzureKeyVaultClient = require('../../cloud-services/secret/impl/azure-key-vault-secrets-client');
-const KubernetesClient = require('../../cloud-services/secret/impl/kubernetes-secrets-client');
-const cloudEnv = require('../../constants/cloud-env');
+const AWSSecretsManagerClient = require('../../secret/impl/aws-secrets-manager-client');
+const AzureKeyVaultClient = require('../../secret/impl/azure-key-vault-secrets-client');
+const KubernetesClient = require('../../secret/impl/kubernetes-secrets-client');
+const secretsStoreType = require('../../constants/secrets-store-type');
 
 describe('SecretsClientFactory resolving secrets client AWS environment', () => {
     before(() => {
-        process.env['CLOUD_ENV'] = cloudEnv.AWS;
+        process.env['KVS_CONFIG'] = JSON.stringify({ secretsStoreType: secretsStoreType.AWS_SECRETS_MANAGER });
     })
     after(() => {
-        process.env['CLOUD_ENV'] = '';
         delete require.cache[require.resolve('../../secret/secrets-client-factory')];
+        process.env['KVS_CONFIG'] = JSON.stringify({})
     });
     it('should return the same AWSSecretsManagerClient instance for the same environment twice', async () => {
-        const SecretsClientFactory = require('../../cloud-services/secret/secrets-client-factory');
+        const SecretsClientFactory = require('../../secret/secrets-client-factory');
         const secretsClient1 = SecretsClientFactory.getInstance();
         const secretsClient2 = SecretsClientFactory.getInstance();
 
@@ -27,18 +25,20 @@ describe('SecretsClientFactory resolving secrets client AWS environment', () => 
 
 describe('SecretsClientFactory resolving secrets client Azure environment', () => {
     before(() => {
-        sinon.stub(config, 'get').returns('test');
-        process.env['CLOUD_ENV'] = cloudEnv.AZURE;
-    });
-
+        process.env['KVS_CONFIG'] = JSON.stringify({
+            secretsStoreType: secretsStoreType.AZURE_KEY_VAULT,
+            azureTenantId: 'mockedTenantId',
+            azureClientId: 'mockedClientId',
+            azureClientSecret: 'mockedClientSecret',
+            azureVaultUrl: 'mockedVaultUrl'});
+    })
     after(() => {
-        process.env['CLOUD_ENV'] = '';
-        sinon.restore();
         delete require.cache[require.resolve('../../secret/secrets-client-factory')];
+        process.env['KVS_CONFIG'] = JSON.stringify({})
     });
 
     it('should return the same AzureKeyVaultClient instance for the same environment twice', async () => {
-        const SecretsClientFactory = require('../../cloud-services/secret/secrets-client-factory');
+        const SecretsClientFactory = require('../../secret/secrets-client-factory');
         const secretsClient1 = SecretsClientFactory.getInstance();
         const secretsClient2 = SecretsClientFactory.getInstance();
 
@@ -50,16 +50,16 @@ describe('SecretsClientFactory resolving secrets client Azure environment', () =
 
 describe('SecretsClientFactory resolving secrets client Kubernetes environment', () => {
     before(() => {
-        process.env['CLOUD_ENV'] = cloudEnv.KUBERNETES;
+        process.env['KVS_CONFIG'] = JSON.stringify({ secretsStoreType: secretsStoreType.KUBERNETES_SECRETS });
     });
 
     after(() => {
-        process.env['CLOUD_ENV'] = '';
         delete require.cache[require.resolve('../../secret/secrets-client-factory')];
+        process.env['KVS_CONFIG'] = JSON.stringify({})
     });
 
     it('should return the same KubernetesClient instance for the same environment twice', async () => {
-        const SecretsClientFactory = require('../../cloud-services/secret/secrets-client-factory');
+        const SecretsClientFactory = require('../../secret/secrets-client-factory');
         const secretsClient1 = SecretsClientFactory.getInstance();
         const secretsClient2 = SecretsClientFactory.getInstance();
 

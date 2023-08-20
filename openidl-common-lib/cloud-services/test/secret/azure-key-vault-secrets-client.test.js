@@ -2,18 +2,23 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const { SecretClient } = require('@azure/keyvault-secrets');
 const config = require('config');
-const AzureKeyVaultSecretsClient = require('../../cloud-services/secret/impl/azure-key-vault-secrets-client');
+const AzureKeyVaultSecretsClient = require('../../secret/impl/azure-key-vault-secrets-client');
 
 describe('AzureKeyVaultSecretsClient', () => {
-    const configStub = sinon.stub(config, 'get');
-    const secretClientStub = sinon.stub(SecretClient.prototype, 'getSecret').resolves({
-        value: JSON.stringify({ key: 'value' })
-     });
+    let configStub;
+    let secretClientStub;
     beforeEach(() => {
-        configStub.withArgs('azureTenantId').returns('mockedTenantId');
-        configStub.withArgs('azureClientId').returns('mockedClientId');
-        configStub.withArgs('azureClientSecret').returns('mockedClientSecret');
-        configStub.withArgs('azureVaultUrl').returns('mockedVaultUrl');
+        configStub = sinon.stub(config, 'get');
+        secretClientStub = sinon.stub(SecretClient.prototype, 'getSecret').resolves({
+            value: JSON.stringify({ key: 'value' })
+        });
+
+        process.env['KVS_CONFIG'] = JSON.stringify({
+            azureTenantId: 'mockedTenantId',
+            azureClientId: 'mockedClientId',
+            azureClientSecret: 'mockedClientSecret',
+            azureVaultUrl: 'mockedVaultUrl'
+        });
     })
     afterEach(() => {
         configStub.restore();
