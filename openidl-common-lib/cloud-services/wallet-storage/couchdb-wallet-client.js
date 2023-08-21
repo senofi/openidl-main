@@ -26,8 +26,9 @@ class CouchDBWalletClient extends AbstractWalletStorageClient {
    * @return {Promise<AbstractWalletStorageClient>} An instance of CouchDBWalletStorage.
    */
   async init() {
+    const kvsConfig = JSON.parse(process.env.KVS_CONFIG);
     const secretsClient = await SecretsClientFactory.getInstance();
-    const couchDbConfig = await secretsClient.getSecret(this.COUCH_DB_SECRET_CONFIG_NAME);
+    const couchDbConfig = await secretsClient.getSecret(kvsConfig.walletStorageSecretName || this.COUCH_DB_SECRET_CONFIG_NAME);
     this.wallet = await Wallets.newCouchDBWallet(couchDbConfig.url);
     return this;
   }

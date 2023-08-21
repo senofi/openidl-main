@@ -91,7 +91,7 @@ The following configuration files are either to be created or edited(if already 
     ``` 
       {
           "walletType": "couchdb",
-          "secretName": "couchDbConfig",
+          "walletStorageSecretName": "couchDbConfig",
           "couchDbConfig": {
             "url": "http://admin:adminpw@localhost:9984"
           },

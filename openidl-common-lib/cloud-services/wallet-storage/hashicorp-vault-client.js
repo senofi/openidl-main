@@ -33,7 +33,7 @@ class HashicorpVaultClient extends AbstractWalletStorageClient {
     const kvsConfig = JSON.parse(process.env.KVS_CONFIG);
     const secretsClient = await SecretsClientFactory.getInstance();
     const vaultConfig = await secretsClient.getSecret(
-        kvsConfig.secretName || this.VAULT_CONFIG_SECRET_NAME);
+        kvsConfig.walletStorageSecretName || this.VAULT_CONFIG_SECRET_NAME);
 
     if (!vaultConfig) {
       throw new Error('No vaultConfig given');
