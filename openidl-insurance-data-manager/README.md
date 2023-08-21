@@ -133,7 +133,7 @@ Application currently supports both AWS Cognito and IBM App ID. You can go with 
     ``` 
       {
           "walletType": "couchdb",
-          "secretName": "couchDbConfig",
+          "walletStorageSecretName": "couchDbConfig",
           "couchDbConfig": {
             "url": "http://admin:adminpw@localhost:9984"
           },

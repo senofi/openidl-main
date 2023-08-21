@@ -121,7 +121,7 @@ For development, testing, and debugging purposes, it is very convenient to run t
     ``` 
       {
           "walletType": "couchdb",
-          "secretName": "couchDbConfig",
+          "walletStorageSecretName": "couchDbConfig",
           "couchDbConfig": {
             "url": "http://admin:adminpw@localhost:9984"
           },
