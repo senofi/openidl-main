@@ -19,6 +19,7 @@ const log4js = require('log4js');
 const logger = log4js.getLogger('middleware - auth-handler');
 const appIdAuthHandler = require("./appid-auth-handler");
 const cognitoAuthHandler = require("./cognito-auth-handler");
+const oAuth2Handler = require("./oauth2-handler");
 logger.level = process.env.LOG_LEVEL || 'debug';
 
 /**
@@ -31,7 +32,7 @@ const authHandler = {};
 */
 authHandler.setHandler = (options) => {
     logger.info('Inside authHandler setHandler');
-    
+
     if (!options || !options.idpType) {
         logger.error('Identity provider config not found!!');
     }
@@ -44,11 +45,15 @@ authHandler.setHandler = (options) => {
             cognitoAuthHandler.init(options);
             logger.info('authHandler setHandler: ', options.idpType);
             return cognitoAuthHandler;
+        case 'oauth2':
+            oAuth2Handler.init(options);
+            logger.info('authHandler setHandler: ', options.idpType);
+            return oAuth2Handler;
         default:
             logger.error("Incorrect Usage of identity provider type. Refer README for more details");
             break;
     }
-  
+
 }
 
 module.exports = authHandler;
