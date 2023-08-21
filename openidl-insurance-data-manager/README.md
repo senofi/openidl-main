@@ -36,8 +36,31 @@ If you do not have Node.js installed already, [download](https://nodejs.org/en/d
 * Open a command line terminal at the location of project has to be created : `git clone git@github.com:openidl-org/openidl-main.git `
 * Example of develop branch : `git checkout -b develop`
 
-## Installing openidl-common-lib npm module 
+## Installing openidl-common-lib npm module
+
+### Using the published version of openidl-common-lib
+
 This repository leverages common functionality from [openidl-common-lib](https://github.com/openidl-org/openidl-main/tree/main/openidl-common-lib) . To install this dependency, replace `{GITHUB_TOKEN}` in `.npmrc` with your own Git personal access token. For details on how to get an access token, please see [Personal access tokens](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) on the GitHub site. Access Token should have at least `read:packages` permissions
+
+### Using the local version of openidl-common-lib
+
+For local development especially when changes to the openidl-common-lib have to be made, the local version of openidl-common-lib can be used. To do that, follow the steps below:
+
+* Link the openidl-common-lib to the local npm registry and install its node modules:
+  * `cd openidl-common-lib`
+  * `npm link`
+  * `npm install`
+* Link the openidl-common-lib to the openidl-insurance-data-manager:
+  * `cd openidl-insurance-data-manager`
+  * `npm @senofi/openidl-common-lib`
+
+#### To undo the above steps (when the local version of openidl-common-lib is no longer needed), follow the steps below:
+* To unlink the openidl-common-lib from the openidl-insurance-data-manager:
+  * `cd openidl-insurance-data-manager`
+  * `npm unlink @senofi/openidl-common-lib`
+* To unlink the openidl-common-lib from the local npm registry:
+  * `cd openidl-common-lib`
+  * `npm unlink`
 
 ## Configure to Run locally
 
