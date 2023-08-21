@@ -17,7 +17,7 @@ if (NODE_ENV === 'development' || NODE_ENV == "local") {
 };
 global.fetch = require('node-fetch');
 
-const idpCredentials = JSON.parse(process.env.IDP_CONFIG);;
+const idpCredentials = JSON.parse(process.env.IDP_CONFIG);
 const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials);
 
 app.use(cors());
