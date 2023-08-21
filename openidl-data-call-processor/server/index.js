@@ -18,7 +18,7 @@
 const express = require('express');
 const log4js = require('log4js');
 const config = require('config');
-const openidlCommonLib = require('openidl-common-lib');
+const openidlCommonLib = require('@senofi/openidl-common-lib');
 openidlCommonLib.EnvConfig.init();
 
 const EventListener = openidlCommonLib.EventListener;
