@@ -1,11 +1,16 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const AWSSecretsManagerClient = require('../../cloud-services/secret/impl/aws-secrets-manager-client');
+const AWSSecretsManagerClient = require('../../../cloud-services/secret/impl/aws-secrets-manager-client');
 
 describe('AWSSecretsManagerClient', () => {
+    before(() => {
+        process.env['KVS_CONFIG'] = JSON.stringify({ expectedSecretValue: 'expectedSecretValue' });
+    })
     it('should fetch and parse secret value', async () => {
         const secretsManagerClient = new AWSSecretsManagerClient();
-        const expectedSecretValue = { secretValue: 'secretValue' };
+        const expectedSecretValue = {
+            SecretString: JSON.stringify({ expectedSecretValue: 'expectedSecretValue' }),
+        };
 
         const mockClient = sinon.stub(secretsManagerClient, '_getClient').returns({
             getSecretValue: () => {
