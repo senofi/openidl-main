@@ -1,6 +1,6 @@
 {
   "name": "@senofi/openidl-common-lib",
-  "version": "0.7.71",
+  "version": "1.0.6",
   "private": false,
   "main": "index.js",
   "publishConfig": {
@@ -30,7 +30,7 @@
     "@ibm-functions/iam-token-manager": "^1.0.3",
     "@kubernetes/client-node": "^0.18.1",
     "@sendgrid/mail": "^7.2.1",
-    "aws-sdk": "2.474.0",
+    "aws-sdk": "2.814.0",
     "config": "^2.0.1",
     "fabric-ca-client": "^2.2.3",
     "fabric-network": "^2.2.3",

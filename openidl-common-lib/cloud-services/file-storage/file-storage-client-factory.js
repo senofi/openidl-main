@@ -16,7 +16,7 @@ class FileStorageClientFactory {
     }
 
     switch (config.get('fileStoreType')) {
-      case  fileStoreType.S3:
+      case fileStoreType.S3:
         instance = new S3BucketClient();
         break;
       case fileStoreType.AZURE_BLOB:

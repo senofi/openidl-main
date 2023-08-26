@@ -2,16 +2,21 @@ const { expect } = require('chai');
 const S3BucketClient = require('../../../cloud-services/file-storage/impl/s3bucket-client');
 const AzureBlobClient = require('../../../cloud-services/file-storage/impl/azureblob-client');
 const fileStoreType = require('../../../cloud-services/constants/file-store-type');
+const sinon = require('sinon');
 
 describe('FileStorageFactory', () => {
     describe('AWS environment', () => {
+        let configStub;
         before(() => {
-            process.env['KVS_CONFIG'] = JSON.stringify({fileStoreType: fileStoreType.S3});
+            configStub = sinon.stub(require('config'), 'get');
+            configStub.withArgs('fileStoreType').returns(fileStoreType.S3)
+            process.env['S3_BUCKET_CONFIG'] = JSON.stringify({
+                "bucketName": "openidl-analytics",
+    })
         });
-
         after(() => {
             delete require.cache[require.resolve('../../../cloud-services/file-storage/file-storage-client-factory')];
-            process.env['KVS_CONFIG'] = JSON.stringify({});
+            configStub.restore();
         });
 
         it('should return the same S3BucketClient instance for the same environment twice', async () => {
@@ -26,13 +31,21 @@ describe('FileStorageFactory', () => {
     });
 
     describe('Azure environment', () => {
+        let configStub;
         before(() => {
-            process.env['KVS_CONFIG'] = JSON.stringify({ fileStoreType: fileStoreType.AZURE_BLOB });
+            configStub = sinon.stub(require('config'), 'get');
+            configStub.withArgs('fileStoreType').returns(fileStoreType.AZURE_BLOB)
+            process.env['AZURE_BLOB_CONFIG'] = JSON.stringify({
+                 "accountName": "testName",
+                 "accountKey": "testKey",
+                 "blobServiceUrl": "testUrl",
+                 "containerName": "testContainerName"
+            })
         });
 
         after(() => {
             delete require.cache[require.resolve('../../../cloud-services/file-storage/file-storage-client-factory')];
-            process.env['KVS_CONFIG'] = JSON.stringify({});
+            configStub.restore();
         });
 
         it('should return the same AzureBlobClient instance for the same environment twice', async () => {
