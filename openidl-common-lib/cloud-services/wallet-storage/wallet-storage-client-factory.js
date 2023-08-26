@@ -28,8 +28,8 @@ class WalletStorageFactoryClient {
 
       default:
         throw new Error(
-            `Invalid WALLET_STORAGE env variable value. Must be one of ${Object.values(
-                walletStorageType)}.`);
+            `Invalid walletType! Must be one of ${Object.values(
+                walletStorageType)}. Check walletType' in configurations.`);
     }
   }
 }
