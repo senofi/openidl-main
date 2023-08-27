@@ -1,13 +1,14 @@
 const {expect} = require('chai');
-const sinon = require('sinon');
 const HashicorpVaultClient = require('../../../cloud-services/wallet-storage/hashicorp-vault-client');
 const CouchDBWalletClient = require('../../../cloud-services/wallet-storage/couchdb-wallet-client');
 const walletStorageType = require('../../../cloud-services/constants/wallet-storage-type');
-const config = require('config');
+const sinon = require('sinon');
 
 describe('WalletStorageFactoryClient', () => {
     describe('Hashicorp Vault storage', () => {
+        let hashicorpVaultClientStub;
         before(() => {
+            hashicorpVaultClientStub = sinon.stub(HashicorpVaultClient.prototype, 'init').resolves(new HashicorpVaultClient());
             process.env['KVS_CONFIG'] = JSON.stringify({
                 walletType: walletStorageType.VAULT,
             });
@@ -19,7 +20,6 @@ describe('WalletStorageFactoryClient', () => {
 
         it('should return the same HashicorpVaultClient instance for the same storage type twice', async () => {
             const WalletStorageFactoryClient = require('../../../cloud-services/wallet-storage/wallet-storage-client-factory');
-            console.log("WALLET TYPE: ", process.env['KVS_CONFIG'])
             const storageClient1 = await WalletStorageFactoryClient.getInstance();
             const storageClient2 = await WalletStorageFactoryClient.getInstance();
 
@@ -30,7 +30,9 @@ describe('WalletStorageFactoryClient', () => {
     });
 
     describe('CouchDB storage', () => {
+        let couchDBWalletClientStub;
         before(() => {
+            couchDBWalletClientStub = sinon.stub(CouchDBWalletClient.prototype, 'init').resolves(new CouchDBWalletClient());
             process.env['KVS_CONFIG'] = JSON.stringify({
                 walletType: walletStorageType.COUCHDB,
             });
