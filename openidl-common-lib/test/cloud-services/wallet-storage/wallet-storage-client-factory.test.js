@@ -1,19 +1,21 @@
 const {expect} = require('chai');
-const sinon = require('sinon');
-const {Wallets} = require('fabric-network');
 const HashicorpVaultClient = require('../../../cloud-services/wallet-storage/hashicorp-vault-client');
 const CouchDBWalletClient = require('../../../cloud-services/wallet-storage/couchdb-wallet-client');
 const walletStorageType = require('../../../cloud-services/constants/wallet-storage-type');
+const sinon = require('sinon');
 
 describe('WalletStorageFactoryClient', () => {
     describe('Hashicorp Vault storage', () => {
+        let hashicorpVaultClientStub;
         before(() => {
-            process.env['KVS_CONFIG'] = JSON.stringify({walletType: walletStorageType.VAULT});
+            hashicorpVaultClientStub = sinon.stub(HashicorpVaultClient.prototype, 'init').resolves(new HashicorpVaultClient());
+            process.env['KVS_CONFIG'] = JSON.stringify({
+                walletType: walletStorageType.VAULT,
+            });
         });
 
         after(() => {
             delete require.cache[require.resolve('../../../cloud-services/wallet-storage/wallet-storage-client-factory')];
-            process.env['KVS_CONFIG'] = JSON.stringify({});
         });
 
         it('should return the same HashicorpVaultClient instance for the same storage type twice', async () => {
@@ -28,14 +30,16 @@ describe('WalletStorageFactoryClient', () => {
     });
 
     describe('CouchDB storage', () => {
+        let couchDBWalletClientStub;
         before(() => {
-            process.env['KVS_CONFIG'] = JSON.stringify({walletType: walletStorageType.COUCHDB});
-            sinon.stub(Wallets, 'newCouchDBWallet').returns({});
+            couchDBWalletClientStub = sinon.stub(CouchDBWalletClient.prototype, 'init').resolves(new CouchDBWalletClient());
+            process.env['KVS_CONFIG'] = JSON.stringify({
+                walletType: walletStorageType.COUCHDB,
+            });
         });
 
         after(() => {
             delete require.cache[require.resolve('../../../cloud-services/wallet-storage/wallet-storage-client-factory')];
-            process.env['KVS_CONFIG'] = JSON.stringify({});
         });
 
         it('should return the same CouchDBWalletClient instance for the same storage type twice', async () => {
