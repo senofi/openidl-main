@@ -23,7 +23,7 @@ class HashicorpVaultClient extends AbstractWalletStorageClient {
     const result = await nodeVault.userpassLogin({
       "username": this.vaultConfig.username,
       "password": this.vaultConfig.password,
-      // "mount_point": this.vaultConfig.orgName
+      "mount_point": this.vaultConfig.orgName
     });
     nodeVault.token = result.auth.client_token; // Add token to vault object for subsequent requests.
     return nodeVault;
