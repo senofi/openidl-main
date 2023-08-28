@@ -12,13 +12,21 @@ app.use(express.urlencoded({
     extended: true
 }));
 
+const changeLoginResponseMiddleware = (req, res, next) => {
+  console.log('changeLoginResponseMiddleware ======================')
+  // Set new header test-location with the value of the Location header and then remove the location header
+  res.set('test-location', res.get('Location'));
+  res.removeHeader('Location');
+  next();
+}
+
 // for local development, UI will use 4200 port and API will use 8080
 // if (NODE_ENV !== 'production') {
 //     API_URL = "";
 // }
 //module.exports = function(app) {
 // Application Login
-router.route(API_URL + '/login').post(authHandler.authenticate, authHandler.getUserAttributes, commonController.login);
+router.route(API_URL + '/login').post(authHandler.authenticate, authHandler.getUserAttributes, commonController.login,changeLoginResponseMiddleware);
 // /authHandler.authenticate, authHandler.getUserAttributes, authHandler.storeTokenInCookie,
 
 // Application logout
