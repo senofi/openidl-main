@@ -51,56 +51,66 @@ export class LoginComponent implements OnInit {
     if (this.userForm.valid) {
       this.model = value;
       this.isSpinner = true;
+      console.log('asdasdas')
       this.authService.authenticate(this.model).subscribe(
         (response) => {
-          console.log('Login response: ', response);
-          const userToken = response.result.userToken;
-          this.storageService.setItem(
-            'role',
-            response.result.attributes.role.replace('-', '').toLowerCase()
-          );
-          this.storageService.setItem(
-            'org',
-            response.result.attributes.organizationId.toLowerCase()
-          );
+          console.log('asdasd')
 
-          // this.storageService.setItem('jurisdiction', (response.result.attributes.organizationId).split(' ')[0]);
-          // this.storageService.setItem('jurisdiction', (response.result.attributes.stateName));
-
-          if (
-            response.result.attributes.stateName != null ||
-            typeof response.result.attributes.stateName !== 'undefined'
-          ) {
-            this.storageService.setItem(
-              'jurisdiction',
-              response.result.attributes.stateName
-            );
-            console.log(
-              'jurisdiction 1: ',
-              response.result.attributes.stateName
-            );
-          } else {
-            this.storageService.setItem(
-              'jurisdiction',
-              response.result.attributes.organizationId.split(' ')[0]
-            );
-            console.log(
-              'jurisdiction 2: ',
-              response.result.attributes.organizationId.split(' ')[0]
-            );
+          if (response.status === 302 || response.status === 301) {
+            const redirectUrl = response.headers.get('test-location');
+            if (redirectUrl) {
+              window.location.href = redirectUrl;
+            }
           }
 
-          this.storageService.setItem('apiToken', userToken);
-          this.storageService.setItem('loginResult', response.result);
-          this.storageService.setItem('userToken', response.result.userToken);
-          this.storageService.setItem('searchMode', 'NORMAL');
-          this.storageService.setItem('searchValue', '');
-          this.isSpinner = false;
-          this.userForm = this.formBuilder.group({
-            username: ['', Validators.required],
-            password: ['', Validators.required],
-          });
-          this.router.navigate(['/datacallList']);
+          // console.log('Login response: ', response);
+          // const userToken = response.result.userToken;
+          // this.storageService.setItem(
+          //   'role',
+          //   response.result.attributes.role.replace('-', '').toLowerCase()
+          // );
+          // this.storageService.setItem(
+          //   'org',
+          //   response.result.attributes.organizationId.toLowerCase()
+          // );
+          //
+          // // this.storageService.setItem('jurisdiction', (response.result.attributes.organizationId).split(' ')[0]);
+          // // this.storageService.setItem('jurisdiction', (response.result.attributes.stateName));
+          //
+          // if (
+          //   response.result.attributes.stateName != null ||
+          //   typeof response.result.attributes.stateName !== 'undefined'
+          // ) {
+          //   this.storageService.setItem(
+          //     'jurisdiction',
+          //     response.result.attributes.stateName
+          //   );
+          //   console.log(
+          //     'jurisdiction 1: ',
+          //     response.result.attributes.stateName
+          //   );
+          // } else {
+          //   this.storageService.setItem(
+          //     'jurisdiction',
+          //     response.result.attributes.organizationId.split(' ')[0]
+          //   );
+          //   console.log(
+          //     'jurisdiction 2: ',
+          //     response.result.attributes.organizationId.split(' ')[0]
+          //   );
+          // }
+          //
+          // this.storageService.setItem('apiToken', userToken);
+          // this.storageService.setItem('loginResult', response.result);
+          // this.storageService.setItem('userToken', response.result.userToken);
+          // this.storageService.setItem('searchMode', 'NORMAL');
+          // this.storageService.setItem('searchValue', '');
+          // this.isSpinner = false;
+          // this.userForm = this.formBuilder.group({
+          //   username: ['', Validators.required],
+          //   password: ['', Validators.required],
+          // });
+          // this.router.navigate(['/datacallList']);
         },
         (error) => {
           this.isError = true;
