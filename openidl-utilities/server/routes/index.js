@@ -34,9 +34,10 @@ logger.level = config.logLevel;
 /**
  * Add routes
  */
-router.use('/fabric-user-enrollment', authHandler.validateToken, fabricUserEnrollment.enroll);
-router.use('/app-user-enrollment', authHandler.validateToken, appUser.register);
-router.use('/app-user-login', authHandler.authenticate, authHandler.getUserAttributes, appUser.login);
-router.use('/app-user-attributes', authHandler.validateToken, appUser.updateUserAttributes);
+router.use('/fabric-user-enrollment', authHandler.authenticate, fabricUserEnrollment.enroll);
+router.use('/app-user-enrollment', authHandler.authenticate, appUser.register);
+router.use('/app-user-login', authHandler.authenticate);
+router.use('/app-user-login', authHandler.authenticate, authHandler.getUserAttributes);
+router.use('/app-user-attributes', authHandler.authenticate, appUser.updateUserAttributes);
 
 module.exports = router;
