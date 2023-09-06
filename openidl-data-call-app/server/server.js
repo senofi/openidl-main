@@ -65,7 +65,7 @@ app.use(bodyParser.json({
 
 logger.debug('setting up app: registering routes, middleware...');
 
-/** 
+/**
  * middleware for authentication
  */
 
@@ -82,7 +82,7 @@ app.use(session({
         secure: true,
         httpOnly: true,
         sameSite: 'lax'
-    } 
+    }
 }));
 
 logger.debug('setting up app: initializing passport');
@@ -137,9 +137,7 @@ app.use(errorHandler.handleError);
 const host = process.env.HOST || config.host;
 const port = process.env.PORT || config.port;
 
-transactionFactory.init(
-    JSON.parse(process.env.KVS_CONFIG),
-    networkConfig)
+transactionFactory.init(networkConfig)
     .then(data => {
         console.log('transaction factory init done');
         app.listen(port, () => {

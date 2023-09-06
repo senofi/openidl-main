@@ -25,7 +25,30 @@ If you do not have Node.js installed already, [download](https://nodejs.org/en/d
 * Example of develop branch : `git checkout -b develop`
 
 ## Installing openidl-common-lib npm module 
+
+### Using the published version of openidl-common-lib
+
 This repository leverages common functionality from [openidl-common-lib](https://github.com/openidl-org/openidl-main/tree/main/openidl-common-lib) . To install this dependency, replace `{GITHUB_TOKEN}` in `.npmrc` with your own Git personal access token. For details on how to get an access token, please see [Personal access tokens](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) on the GitHub site. Access Token should have at least `read:packages` permissions
+
+### Using the local version of openidl-common-lib
+
+For local development especially when changes to the openidl-common-lib have to be made, the local version of openidl-common-lib can be used. To do that, follow the steps below:
+
+* Link the openidl-common-lib to the local npm registry and install its node modules:
+    * `cd openidl-common-lib`
+    * `npm link`
+    * `npm install`
+* Link the openidl-common-lib to the openidl-data-call-processor:
+    * `cd openidl-data-call-processor`
+    * `npm @senofi/openidl-common-lib`
+
+#### To undo the above steps (when the local version of openidl-common-lib is no longer needed), follow the steps below:
+* To unlink the openidl-common-lib from the openidl-data-call-processor:
+    * `cd openidl-data-call-processor`
+    * `npm unlink @senofi/openidl-common-lib`
+* To unlink the openidl-common-lib from the local npm registry:
+    * `cd openidl-common-lib`
+    * `npm unlink`
 
 ## Configure to Run locally
 
@@ -96,7 +119,8 @@ Application currently supports both AWS Cognito and IBM App ID. You can go with 
     {
         "persistentStore": "mongo",
         "mongodb": "openidl-offchain-db",
-        "simpleURI": "mongodb://localhost:27017"
+        "simpleURI": "mongodb://localhost:27017",
+        "defaultDbType": "mongo"
     }
     ```
 * Application will be using local MongoDB running on port `27017` as the persistent data store
@@ -127,13 +151,17 @@ Application currently supports both AWS Cognito and IBM App ID. You can go with 
 ### 6. Configure local-kvs-config.json
 
 * Create `local-kvs-config.json` file under `server/config`
-* Paste the following JSON in `local-kvs-config.json` file
-    ``` 
-    {
-        "walletType": "couchdb",
-        "url": "http://admin:adminpw@localhost:9984"
-    }
-    ```
+  * Paste the following JSON in `local-kvs-config.json` file
+      ``` 
+      {
+          "walletType": "couchdb",
+          "walletStorageSecretName": "couchDbConfig",
+          "couchDbConfig": {
+            "url": "http://admin:adminpw@localhost:9984"
+          },
+          "secretsStoreType": "local"
+      }
+      ```
 * Application will be using local CouchDB running on port `9984` as user certificate key value store
 
 ### 7. Configure s3-bucket-config.json
@@ -151,9 +179,22 @@ https://aws.amazon.com/premiumsupport/knowledge-center/create-access-key/)).
           "RoleSessionName": "openidl",
           "DurationSeconds": "900",
           "ExternalId": "******"
-    }
+        }
     }
     ```
+
+### 7.1. If AzureBlob is used instead of S3
+#### Example of Azure Blob config file (in case Azure Blob is used instead of S3)
+* The insurance data store can be changed to Azure Blob by changing `insuranceDataStorageEnv` in default configuration to `azure-blob`.
+* Create `azure-blob-config.json` file under `server/config` with the following content:
+```
+{
+  "accountName": "",
+  "accountKey": "",
+  "blobServiceUrl": "",
+  "containerName": ""
+}
+```
 ### 8. Configure email.json
 
 * Create `email.json` file under `server/config`

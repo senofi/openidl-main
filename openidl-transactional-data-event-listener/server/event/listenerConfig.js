@@ -23,7 +23,7 @@ async function createListenerConfig() {
 			return { channelName, events: mappedEvents };
 		}
 	);
-	await walletHelper.init(JSON.parse(process.env.KVS_CONFIG));
+	await walletHelper.init();
 	const idExists = await walletHelper.identityExists(
 		channelConfig.identity.user
 	);

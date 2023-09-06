@@ -24,7 +24,30 @@ If you do not have Node.js installed already, [download](https://nodejs.org/en/d
 * Example of develop branch : `git checkout -b develop`
 
 ## Installing openidl-common-lib npm module 
+
+### Using the published version of openidl-common-lib
+
 This repository leverages common functionality from [openidl-common-lib](https://github.com/openidl-org/openidl-main/tree/main/openidl-common-lib) . To install this dependency, replace `{GITHUB_TOKEN}` in `.npmrc` with your own Git personal access token. For details on how to get an access token, please see [Personal access tokens](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) on the GitHub site. Access Token should have at least `read:packages` permissions
+
+### Using the local version of openidl-common-lib
+
+For local development especially when changes to the openidl-common-lib have to be made, the local version of openidl-common-lib can be used. To do that, follow the steps below:
+
+* Link the openidl-common-lib to the local npm registry and install its node modules:
+    * `cd openidl-common-lib`
+    * `npm link`
+    * `npm install`
+* Link the openidl-common-lib to the openidl-transactional-data-event-listener:
+    * `cd openidl-transactional-data-event-listener`
+    * `npm @senofi/openidl-common-lib`
+
+#### To undo the above steps (when the local version of openidl-common-lib is no longer needed), follow the steps below:
+* To unlink the openidl-common-lib from the openidl-transactional-data-event-listener:
+    * `cd openidl-transactional-data-event-listener`
+    * `npm unlink @senofi/openidl-common-lib`
+* To unlink the openidl-common-lib from the local npm registry:
+    * `cd openidl-common-lib`
+    * `npm unlink`
 
 ## Configure to Run locally
 
@@ -46,7 +69,8 @@ For development, testing, and debugging purposes, it is very convenient to run t
     {
         "persistentStore": "mongo",
         "mongodb": "openidl-offchain-db",
-        "simpleURI": "mongodb://localhost:27017"
+        "simpleURI": "mongodb://localhost:27017",
+        "defaultDbType": "mongo"
     }
     ```
 * Application will be using local MongoDB running on port `27017` as the persistent data store
@@ -84,6 +108,7 @@ For development, testing, and debugging purposes, it is very convenient to run t
           "RoleSessionName": "openidl",
           "DurationSeconds": "900",
           "ExternalId": "XXXXXXXX"
+      }
     }
     ```
 * The access key ID and  secret access key are obtained from AWS
@@ -94,10 +119,14 @@ For development, testing, and debugging purposes, it is very convenient to run t
 * Create `local-kvs-config.json` file under server/config
 * Paste the following JSON in 'local-kvs-config.json' file
     ``` 
-    {
-        "walletType": "couchdb",
-        "url": "http://admin:adminpw@localhost:9984"
-    }
+      {
+          "walletType": "couchdb",
+          "walletStorageSecretName": "couchDbConfig",
+          "couchDbConfig": {
+            "url": "http://admin:adminpw@localhost:9984"
+          },
+          "secretsStoreType": "local"
+      }
     ```
 * Application will be using local CouchDB running on port `9984` as user certificate key value store
 

@@ -5,8 +5,6 @@ logger.level = config.logLevel;
 const sizeof = require('object-sizeof');
 const { DBManagerFactory } = require('@senofi/openidl-common-lib');
 
-let InstanceFactory = require('../middleware/instance-factory');
-
 class DataProcessorPostgres {
 	constructor(
 		id,

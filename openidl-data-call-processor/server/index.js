@@ -87,7 +87,7 @@ async function init() {
       listernerChannels.push(listenerChannel);
     }
     listenerConfig['listenerChannels'] = listernerChannels;
-    await walletHelper.init(JSON.parse(process.env.KVS_CONFIG));
+    await walletHelper.init();
 
     var idExists = await walletHelper.identityExists(channelConfig.identity.user);
     if (!idExists) {

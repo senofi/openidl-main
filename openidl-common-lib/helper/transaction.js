@@ -30,8 +30,8 @@ class transaction {
     init(connProfilePath) {
         this.ccp = connProfilePath;
     }
-    static initWallet(options) {
-        walletHelper.init(options);
+    static initWallet() {
+        walletHelper.init();
     }
 
     /**
