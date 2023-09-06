@@ -7,9 +7,13 @@ const WalletStorageClientFactory = require(
 const InsuranceDataStoreClientFactory = require(
   './insurance-data-store/insurance-data-store-client-factory',
 );
+const UserDataStoreClientFactory = require(
+  './user-store/user-store-client-factory',
+);
 
 module.exports = {
   FileStorageFactory,
   WalletStorageClientFactory,
   InsuranceDataStoreClientFactory,
+  UserDataStoreClientFactory,
 };

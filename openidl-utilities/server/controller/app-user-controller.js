@@ -28,30 +28,6 @@ logger.level = config.logLevel;
  */
 const appRegistrationAPI = {};
 
-appRegistrationAPI.login = async (req, res) => {
-    logger.info('app user login method entry -');
-    let payload;
-    let jsonRes;
-    payload = req.body;
-    logger.info(payload)
-
-    if (res.locals && res.locals.user) {
-        jsonRes = {
-            statusCode: 200,
-            success: true,
-            result: res.locals.user
-        };
-
-    } else {
-        jsonRes = {
-            statusCode: 500,
-            success: false,
-            message: 'Authentication failed,Please contact system administrator'
-        };
-    }
-    appRegistrationAPI.sendResponse(res, jsonRes);
-};
-
 appRegistrationAPI.register = async (req, res) => {
 
     logger.info("app user register method entry -");
@@ -61,35 +37,19 @@ appRegistrationAPI.register = async (req, res) => {
     logger.info(payload)
 
     try {
-        const idpConfig = JSON.parse(process.env.IDP_CONFIG);
-        switch (idpConfig.idpType) {
-            case "appid":
-                await appUserRegistration.createUserInCloudDirectory(payload);
-                await appUserRegistration.signInUserToAppId(payload);
-                await appUserRegistration.updateUserProfileInAppId(payload);
-                break;
-            case "cognito":
-                await appUserRegistration.createUserInCognito(payload);
-                break;
-            default:
-                logger.error("Incorrect Usage of identity provider type. Refer README for more details");
-                break;
-
-        }
-
+        await appUserRegistration.createUserInLocalDb(payload);
         logger.info("User created  = " + new Date().toISOString());
         jsonRes = {
             statusCode: 200,
             success: true,
             message: 'User Created'
         };
-
     } catch (err) {
-        logger.error('User Registration error ', err);
+        logger.error('Error while creating user ', err);
         jsonRes = {
             statusCode: 500,
             success: false,
-            message: `FAILED: User registration failed.` + err,
+            message: `FAILED: User creation failed.` + err,
         };
     }
     appRegistrationAPI.sendResponse(res, jsonRes);
@@ -103,26 +63,13 @@ appRegistrationAPI.updateUserAttributes = async (req, res) => {
     logger.info(payload)
 
     try {
-        const idpConfig = JSON.parse(process.env.IDP_CONFIG);
-        switch (idpConfig.idpType) {
-            case "appid":
-                logger.warning("Update Attributes not implemented for IBM App Id");
-                break;
-            case "cognito":
-                await appUserRegistration.updateCognitoUserAttributes(payload);
-                break;
-            default:
-                logger.error("Incorrect Usage of identity provider type. Refer README for more details");
-                break;
-
-        }
+        await appUserRegistration.updateUserInLocalDb(payload);
         logger.info('User attributes updated  = ' + new Date().toISOString());
         jsonRes = {
             statusCode: 200,
             success: true,
             message: 'User attributes updated'
         };
-
     } catch (err) {
         logger.error('User attributes update error ', err);
         jsonRes = {
