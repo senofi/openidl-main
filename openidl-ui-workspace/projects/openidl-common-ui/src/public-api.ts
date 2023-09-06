@@ -11,6 +11,7 @@ export * from './lib/services/storage.service';
 export * from './lib/services/notifier.service';
 export * from './lib/services/dialog.service';
 export * from './lib/config/app.config';
+export * from './lib/config/auth.config';
 export * from './lib/config/messageBundle';
 
 export * from './lib/components/dialogs/dialog.module';
