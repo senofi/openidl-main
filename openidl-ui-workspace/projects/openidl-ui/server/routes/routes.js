@@ -42,7 +42,7 @@ router.route(API_URL + '/jurisdiction').get(authHandler.isLoggedIn, authHandler.
 router.route(API_URL + '/lob').get(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.getLOBs);
 
 // Get Block history
-router.route(API_URL + '/block-explorer').get(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.getBlockHistory);
+router.route(API_URL + '/block-explorer').get(authHandler.authenticate, authHandler.getUserRole, authHandler.validateToken, commonController.getBlockHistory);
 
 // Data call related tasks such as create, update etc
 router.route(API_URL + '/data-call').post(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.dataCall);
@@ -50,7 +50,7 @@ router.route(API_URL + '/data-call').post(authHandler.isLoggedIn, authHandler.ge
 /**
  * Search data call based on wildcard string
  */
-router.route(API_URL + '/search-data-calls').get(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.getSearchDataCalls);
+router.route(API_URL + '/search-data-calls').get(authHandler.authenticate, authHandler.getUserRole, authHandler.validateToken, commonController.getSearchDataCalls);
 
 // Get draft version
 router.route(API_URL + '/data-call-versions/:id').get(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.dataCallVersions);

@@ -6,6 +6,7 @@ import {
   NO_ERRORS_SCHEMA,
 } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { OAuthModule } from 'angular-oauth2-oidc';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -49,6 +50,7 @@ import { UpdateReportComponent } from './components/update-report/update-report.
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    OAuthModule.forRoot(),
     FormsModule,
     PipesModule,
     ConfigModule,
