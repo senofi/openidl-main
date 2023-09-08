@@ -32,6 +32,7 @@ const authHandler = {};
 */
 authHandler.setHandler = (options) => {
     logger.info('Inside authHandler setHandler');
+    console.log('options: ', JSON.stringify(options));
 
     if (!options || !options.idpType) {
         logger.error('Identity provider config not found!!');

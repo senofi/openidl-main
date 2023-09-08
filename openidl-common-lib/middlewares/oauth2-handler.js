@@ -13,7 +13,7 @@ const getJwtOptions = (config) => {
       jwksUri: `${config.issuer}/.well-known/jwks.json`,
     }),
     algorithms: ['RS256'],
-    issuer: config.issuer
+    issuer: config.issuer,
   };
 };
 
@@ -70,6 +70,7 @@ jwtHandler.authenticate = (req, res, next) => {
   logger.debug(req.headers);
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
     console.log('In callback', err, user, info);
+    console.log('user: ', JSON.stringify(user));
     if (err || info) {
       logger.debug('if err or infor');
       logger.debug('err: ', JSON.stringify(err, null, 2));
@@ -79,6 +80,8 @@ jwtHandler.authenticate = (req, res, next) => {
         message: info.message,
       });
     } else {
+      // TODO: check if user is populated object
+      console.log('user: ', JSON.stringify(user));
       next();
     }
   })(req, res, next);
@@ -148,8 +151,8 @@ jwtHandler.getUserAttributes = async (req, res, next) => {
   const tokenPayload = jwt.decode(accessTokenString);
   const username = tokenPayload.username;
 
-  const userAttributes = await UserDataStoreClientFactory.getInstance()
-  .getUser(username);
+  const userDataStore = await UserDataStoreClientFactory.getInstance();
+  const userAttributes = await userDataStore.getUserByUsername(username);
 
   res.locals.user.attributes = userAttributes;
   res.locals.user.userToken = req.session.passport.user.accessTokenString;
@@ -164,9 +167,9 @@ jwtHandler.getUserRole = async (req, res, next) => {
   const tokenPayload = jwt.decode(accessTokenString);
   const username = tokenPayload.username;
 
-  const userAttributes = await UserDataStoreClientFactory.getInstance()
-  .getUser(username);
-
+  const userDataStoreClient = await UserDataStoreClientFactory.getInstance();
+  const userAttributes = await userDataStoreClient.getUserByUsername(username);
+console.log('userAttributes: ', JSON.stringify(userAttributes));
   res.locals.role = userAttributes.role;
 
   if (!res.locals.role) {
@@ -178,11 +181,11 @@ jwtHandler.getUserRole = async (req, res, next) => {
   if (res.locals.role === 'regulator') {
     logger.debug('Juridiction');
     logger.debug(res.locals.juridiction);
-    res.locals.juridiction = req.user.stateName;
+    res.locals.juridiction = userAttributes.stateName;
   } else {
     logger.debug('Juridiction');
     logger.debug(res.locals.juridiction);
-    res.locals.juridiction = req.user.organizationId.split(' ')[0];
+    res.locals.juridiction = userAttributes.organizationId.split(' ')[0];
   }
   next();
 };

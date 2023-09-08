@@ -11,7 +11,7 @@ var APIHandler = {
 
     /**
      * Passes all the invoke requests to appropriate APIHandler SDK function
-     * 
+     *
      * @param {JSON} requestParameters The request body
      * @returns {JSON}
      */
@@ -68,4 +68,4 @@ function requestPayload(restServiceMethod, bodyParameter, token) {
 }
 
 
-module.exports.Methods = APIHandler; 
+module.exports.Methods = APIHandler;
