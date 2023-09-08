@@ -26,7 +26,7 @@ router.route(API_URL + '/list-data-calls-by-criteria').get(authHandler.isLoggedI
 /**
  * Search data call based on wildcard string
  */
-router.route(API_URL + '/search-data-calls').get(authHandler.authenticate, authHandler.getUserRole, authHandler.validateToken, commonController.getSearchDataCalls);
+router.route(API_URL + '/search-data-calls').get(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.getSearchDataCalls);
 
 // Get getIconBucketUrl
 router.route(API_URL + '/icon-bucket-url').get(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.getIconBucketUrl);

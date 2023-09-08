@@ -14,5 +14,9 @@
 	"current-jurisdiction": {
 		"value": "North Dakota",
 		"env": "CURRENT_JURISDICTION"
-	}
+	},
+  "off-chain-db-credentials": {
+    "env": "OFF_CHAIN_DB_CONFIG",
+    "file": "local-db-config.json"
+  }
 }
