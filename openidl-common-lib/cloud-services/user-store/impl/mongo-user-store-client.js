@@ -25,11 +25,13 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
 
     this.db = client.db(mongoConfig.mongodb);
 
+    // eslint-disable-next-line no-underscore-dangle
     this.collection = await this._createOrUpdateCollection();
 
     return this;
   }
 
+  // eslint-disable-next-line no-underscore-dangle
   async _createOrUpdateCollection() {
     const validator = {
       $jsonSchema: {
@@ -72,6 +74,8 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
       await this.db.createCollection(this.collectionName, { validator });
       collection = this.db.collection(this.collectionName);
       collection.createIndex({ username: 1 }, { unique: true });
+      // eslint-disable-next-line no-underscore-dangle
+      await this._insertAdmin();
       logger.info(`Collection ${this.collectionName} created with validator.`);
     } else {
       // Collection exists, update its validator
@@ -80,24 +84,36 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
         validator,
       });
       collection = this.db.collection(this.collectionName);
-      console.log(`Validator for collection ${this.collectionName} updated.`);
+      logger.info(`Validator for collection ${this.collectionName} updated.`);
     }
     return collection;
+  }
+
+  // eslint-disable-next-line no-underscore-dangle
+  async _insertAdmin() {
+    const admin = {
+      username: 'admin',
+      stateName: 'New York',
+      stateCode: 'NY',
+      role: 'admin',
+      organizationId: 'admin',
+    };
+    return this.collection.insertOne(admin);
   }
 
   async getUserByUsername(username) {
     return new Promise((resolve, reject) => {
       try {
         this.collection
-          .findOne({ username }, (error, result) => {
-            if (error) {
-              logger.error(`Error fetching user by username ${username} from MongoDB! Error:`, error);
-              reject(error);
-            } else {
-              logger.debug(`User with username ${username} fetched successfully from MongoDB!`);
-              resolve(result);
-            }
-          });
+        .findOne({ username }, (error, result) => {
+          if (error) {
+            logger.error(`Error fetching user by username ${username} from MongoDB! Error:`, error);
+            reject(error);
+          } else {
+            logger.debug(`User with username ${username} fetched successfully from MongoDB!`);
+            resolve(result);
+          }
+        });
       } catch (err) {
         logger.error('Error updating record in mongodb', err);
         reject(err);
@@ -109,15 +125,15 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
     return new Promise((resolve, reject) => {
       try {
         this.collection
-          .insertOne(user, (error, result) => {
-            if (error) {
-              logger.error(`Error storing user ${user} in MongoDB! Error:`, error);
-              reject(error);
-            } else {
-              logger.debug(`User ${user} stored successfully in MongoDB!`);
-              resolve(result);
-            }
-          });
+        .insertOne(user, (error, result) => {
+          if (error) {
+            logger.error(`Error storing user ${user} in MongoDB! Error:`, error);
+            reject(error);
+          } else {
+            logger.debug(`User ${user} stored successfully in MongoDB!`);
+            resolve(result);
+          }
+        });
       } catch (err) {
         logger.error('Error updating record in mongodb', err);
         reject(err);
@@ -129,15 +145,15 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
     return new Promise((resolve, reject) => {
       try {
         this.collection
-          .updateOne({ username: user.username }, user, { upsert: true }, (error, result) => {
-            if (error) {
-              logger.error(`Error upserting user ${user} in MongoDB! Error:`, error);
-              reject(error);
-            } else {
-              logger.debug(`User ${user} upserted successfully in MongoDB!`);
-              resolve(result);
-            }
-          });
+        .updateOne({ username: user.username }, user, { upsert: true }, (error, result) => {
+          if (error) {
+            logger.error(`Error upserting user ${user} in MongoDB! Error:`, error);
+            reject(error);
+          } else {
+            logger.debug(`User ${user} upserted successfully in MongoDB!`);
+            resolve(result);
+          }
+        });
       } catch (err) {
         logger.error('Error updating record in mongodb', err);
         reject(err);
@@ -149,15 +165,15 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
     return new Promise((resolve, reject) => {
       try {
         this.collection
-          .updateOne({ username: user.username }, user, (error, result) => {
-            if (error) {
-              logger.error(`Error updating user ${user} in MongoDB! Error:`, error);
-              reject(error);
-            } else {
-              logger.debug(`User ${user} updated successfully in MongoDB!`);
-              resolve(result);
-            }
-          });
+        .updateOne({ username: user.username }, user, (error, result) => {
+          if (error) {
+            logger.error(`Error updating user ${user} in MongoDB! Error:`, error);
+            reject(error);
+          } else {
+            logger.debug(`User ${user} updated successfully in MongoDB!`);
+            resolve(result);
+          }
+        });
       } catch (err) {
         logger.error('Error updating record in mongodb', err);
         reject(err);
@@ -169,15 +185,15 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
     return new Promise((resolve, reject) => {
       try {
         this.collection
-          .deleteOne({ username: user.username }, (error, result) => {
-            if (error) {
-              logger.error(`Error deleting user ${user} in MongoDB! Error:`, error);
-              reject(error);
-            } else {
-              logger.debug(`User ${user} deleted successfully in MongoDB!`);
-              resolve(result);
-            }
-          });
+        .deleteOne({ username: user.username }, (error, result) => {
+          if (error) {
+            logger.error(`Error deleting user ${user} in MongoDB! Error:`, error);
+            reject(error);
+          } else {
+            logger.debug(`User ${user} deleted successfully in MongoDB!`);
+            resolve(result);
+          }
+        });
       } catch (err) {
         logger.error('Error updating record in mongodb', err);
         reject(err);
