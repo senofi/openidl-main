@@ -12,21 +12,13 @@ app.use(express.urlencoded({
     extended: true
 }));
 
-const changeLoginResponseMiddleware = (req, res, next) => {
-  console.log('changeLoginResponseMiddleware ======================')
-  // Set new header test-location with the value of the Location header and then remove the location header
-  res.set('test-location', res.get('Location'));
-  res.removeHeader('Location');
-  next();
-}
-
 // for local development, UI will use 4200 port and API will use 8080
 // if (NODE_ENV !== 'production') {
 //     API_URL = "";
 // }
 //module.exports = function(app) {
 // Application Login
-router.route(API_URL + '/login').post(authHandler.authenticate, authHandler.getUserAttributes, commonController.login,changeLoginResponseMiddleware);
+router.route(API_URL + '/login').post(authHandler.authenticate, authHandler.getUserAttributes, commonController.login);
 // /authHandler.authenticate, authHandler.getUserAttributes, authHandler.storeTokenInCookie,
 
 // Application logout
@@ -42,7 +34,7 @@ router.route(API_URL + '/jurisdiction').get(authHandler.isLoggedIn, authHandler.
 router.route(API_URL + '/lob').get(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.getLOBs);
 
 // Get Block history
-router.route(API_URL + '/block-explorer').get(authHandler.authenticate, authHandler.getUserRole, authHandler.validateToken, commonController.getBlockHistory);
+router.route(API_URL + '/block-explorer').get(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.getBlockHistory);
 
 // Data call related tasks such as create, update etc
 router.route(API_URL + '/data-call').post(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.dataCall);
@@ -50,7 +42,7 @@ router.route(API_URL + '/data-call').post(authHandler.isLoggedIn, authHandler.ge
 /**
  * Search data call based on wildcard string
  */
-router.route(API_URL + '/search-data-calls').get(authHandler.authenticate, authHandler.getUserRole, authHandler.validateToken, commonController.getSearchDataCalls);
+router.route(API_URL + '/search-data-calls').get(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.getSearchDataCalls);
 
 // Get draft version
 router.route(API_URL + '/data-call-versions/:id').get(authHandler.isLoggedIn, authHandler.getUserRole, authHandler.validateToken, commonController.dataCallVersions);
