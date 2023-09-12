@@ -15,7 +15,7 @@
  */
 
 const TokenManager = require('ibmcloud-appid').TokenManager;
-const loginConfig = require('./config/local-cognito-config.json');
+const loginConfig = require('./config/local-auth-config.json');
 
 getApiToken = async() => {
     let apiToken;

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {OAuthService} from 'angular-oauth2-oidc';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(private oauthService: OAuthService, private router: Router) {
+  }
 
   ngOnInit() {
+  }
+
+  logout() {
+    this.oauthService.revokeTokenAndLogout();
+    this.router.navigate(['/login']);
   }
 
 }
