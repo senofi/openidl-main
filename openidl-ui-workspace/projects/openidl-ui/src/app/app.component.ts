@@ -18,9 +18,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     sessionStorage.removeItem('isModalOpen');
-    console.log(this.authConfigService)
     this.authConfigService.loadConfig().then(result => {
-      console.log('Loaded auth config', this.authConfigService.getAuthConfig())
       this.oauthService.configure(this.authConfigService.getAuthConfig());
       this.oauthService.tokenValidationHandler = new JwksValidationHandler();
       this.oauthService.loadDiscoveryDocumentAndTryLogin().then(e => {
