@@ -87,7 +87,6 @@ jwtHandler.authenticate = (req, res, next) => {
       next();
     }
   })(req, res, next);
-  console.log('asdasdasd');
 };
 
 jwtHandler.validateToken = (req, res, next) => {
@@ -171,7 +170,6 @@ jwtHandler.getUserRole = async (req, res, next) => {
 
   const userDataStoreClient = await UserDataStoreClientFactory.getInstance();
   const userAttributes = await userDataStoreClient.getUserByUsername(username);
-  console.log('userAttributes: ', JSON.stringify(userAttributes));
   res.locals.role = userAttributes.role;
 
   if (!res.locals.role) {
