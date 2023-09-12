@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.oauthService.initLoginFlow()
+    this.oauthService.initLoginFlow();
   }
 
   closeNotify() {
