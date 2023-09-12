@@ -2,11 +2,19 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AuthConfig} from 'angular-oauth2-oidc';
 
+interface ExtendedAuthConfig extends AuthConfig {
+  scopes_supported: string[];
+  token_endpoint: string;
+  userinfo_endpoint: string;
+  jwks_uri: string;
+  authorization_endpoint: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthConfigService {
-  private config: AuthConfig;
+  private config: ExtendedAuthConfig;
 
   constructor(private http: HttpClient) {
     console.log('AuthConfigService constructor');
@@ -16,12 +24,12 @@ export class AuthConfigService {
     return () => configService.loadConfig();
   }
 
-  loadConfig(): Promise<AuthConfig> {
+  loadConfig(): Promise<ExtendedAuthConfig> {
     console.log('Loading auth config');
     return this.http
     .get('/api/auth-config')
     .toPromise()
-    .then((config) => {
+    .then((config: ExtendedAuthConfig) => {
       console.log('Loaded auth config', config)
       this.config = config;
       console.log('Loaded auth config 2', config)
@@ -29,7 +37,7 @@ export class AuthConfigService {
     });
   }
 
-  getAuthConfig(): AuthConfig {
+  getAuthConfig(): ExtendedAuthConfig {
     console.log('Getting auth config', this.config)
     if (!this.config) {
       throw Error('Config has not been loaded yet.');
