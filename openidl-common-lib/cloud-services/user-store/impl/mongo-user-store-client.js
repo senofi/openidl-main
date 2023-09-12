@@ -14,10 +14,12 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
     super();
     this.collection = null;
     this.collectionName = 'users';
+    this.adminAttributes = {}
   }
 
   async init() {
     const offChainDbConfig = JSON.parse(process.env.OFF_CHAIN_DB_CONFIG);
+    this.adminAttributes = offChainDbConfig.admin
 
     const mongoConfig = offChainDbConfig.mongo;
 
@@ -89,9 +91,8 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
 
   // eslint-disable-next-line no-underscore-dangle
   async _insertAdmin() {
-    const adminAttributes = JSON.parse(process.env.ADMIN_ATTRIBUTES);
     const admin = {
-      ...adminAttributes,
+      ...this.adminAttributes,
       role: 'admin',
     };
     return this.collection.insertOne(admin);
