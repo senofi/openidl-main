@@ -3,15 +3,22 @@ const MongoUserStoreClient = require(
 );
 
 let instance = null;
+let instanceCreationPromise = null;
 
 class UserDataStoreClientFactory {
   static async getInstance() {
     if (instance) {
-      return instance;
+      return Promise.resolve(instance);
+    }
+    if (!instanceCreationPromise) {
+      instanceCreationPromise = new MongoUserStoreClient().init()
+        .then((createdInstance) => {
+          instance = createdInstance;
+          return instance;
+        });
     }
 
-    instance = await new MongoUserStoreClient().init();
-    return instance;
+    return instanceCreationPromise;
   }
 }
 

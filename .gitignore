@@ -17,7 +17,7 @@ openidl-carrier-ui/package-lock.json
 openidl-ui/.env
 openidl-ui-workspace/package-lock.json
 openidl-ui-workspace/projects/openidl-carrier-ui/server/config/local-appid-config.json
-openidl-ui-workspace/projects/openidl-ui/server/config/local-cognito-config.json
+openidl-ui-workspace/projects/openidl-ui/server/config/local-auth-config.json
 **/*for testing*.*
 openidl-local-reference-implementation/config/config.json
 **/npmls.txt

@@ -69,8 +69,12 @@ jwtHandler.authenticate = (req, res, next) => {
   logger.debug(req.body);
   logger.debug(req.headers);
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
-    console.log('In callback', err, user, info);
-    console.log('user: ', JSON.stringify(user));
+
+    if (info && info.name === 'TokenExpiredError') {
+      return res.status(401)
+      .json(info);
+    }
+
     if (err || info) {
       logger.debug('if err or infor');
       logger.debug('err: ', JSON.stringify(err, null, 2));
@@ -80,8 +84,6 @@ jwtHandler.authenticate = (req, res, next) => {
         message: info.message,
       });
     } else {
-      // TODO: check if user is populated object
-      console.log('user: ', JSON.stringify(user));
       next();
     }
   })(req, res, next);
@@ -89,24 +91,24 @@ jwtHandler.authenticate = (req, res, next) => {
 };
 
 jwtHandler.validateToken = (req, res, next) => {
-    logger.info('*****************************************************************************');
+  logger.info('*****************************************************************************');
 
-    logger.info(`request.headers.host ${req.headers.host}`);
+  logger.info(`request.headers.host ${req.headers.host}`);
 
-    logger.info(`request.headers.authorization ${req.headers.authorization}`);
-    try {
-      logger.debug(`request.headers ${JSON.stringify(req.headers)}`);
-    } catch (ex) {
-      logger.info(`error while parsing  req.headers ${ex}`);
-    }
+  logger.info(`request.headers.authorization ${req.headers.authorization}`);
+  try {
+    logger.debug(`request.headers ${JSON.stringify(req.headers)}`);
+  } catch (ex) {
+    logger.info(`error while parsing  req.headers ${ex}`);
+  }
 
-    logger.info(`request.body.batchID  ${req.body.batchId}`);
+  logger.info(`request.body.batchID  ${req.body.batchId}`);
 
-    logger.info(`request.body.chunkID  ${req.body.chunkId}`);
+  logger.info(`request.body.chunkID  ${req.body.chunkId}`);
 
-    logger.info('****************************************************************************');
+  logger.info('****************************************************************************');
 
-    jwtHandler.authenticate(req, res, next);
+  jwtHandler.authenticate(req, res, next);
 };
 
 /**
@@ -169,7 +171,7 @@ jwtHandler.getUserRole = async (req, res, next) => {
 
   const userDataStoreClient = await UserDataStoreClientFactory.getInstance();
   const userAttributes = await userDataStoreClient.getUserByUsername(username);
-console.log('userAttributes: ', JSON.stringify(userAttributes));
+  console.log('userAttributes: ', JSON.stringify(userAttributes));
   res.locals.role = userAttributes.role;
 
   if (!res.locals.role) {

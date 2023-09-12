@@ -27,9 +27,6 @@ export class DataService {
     // Following change to the end point is made as the end point is moved to UI server
 
     this.API_ENDPOINT = '/api';
-    console.log('API_ENDPOINT');
-    console.log(this.API_ENDPOINT);
-    console.log('this.oauthService.getAccessToken()', this.oauthService.getAccessToken());
     if (this.oauthService.getAccessToken()) {
       this.apiToken = this.oauthService.getAccessToken();
       // this.apiToken = this.storageService.getItem('apiToken');

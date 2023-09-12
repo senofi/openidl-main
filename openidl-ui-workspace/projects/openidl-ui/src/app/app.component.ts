@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from '../environments/environment';
-import {OAuthService} from 'angular-oauth2-oidc';
-import {authCodeFlowConfig} from './auth.config';
+import {JwksValidationHandler, OAuthService} from 'angular-oauth2-oidc';
+import {AuthConfigService} from "../../../openidl-common-ui/src/lib/services/auth.config.service";
 
 @Component({
   selector: 'app-root',
@@ -12,21 +12,21 @@ export class AppComponent implements OnInit {
   title = 'Openidl app';
   API_ENDPOINT = environment.DATA_CALL_APP_URL;
 
-  constructor(private oauthService: OAuthService) {
+  constructor(private oauthService: OAuthService, private authConfigService: AuthConfigService) {
     localStorage.setItem('API_ENDPOINT', JSON.stringify(this.API_ENDPOINT));
   }
 
   ngOnInit() {
     sessionStorage.removeItem('isModalOpen');
-    this.oauthService.configure(authCodeFlowConfig);
-    this.oauthService.loadDiscoveryDocumentAndTryLogin().then(e => {
-      this.oauthService.tryLoginCodeFlow().then(e => {
-        console.log('Logged in');
-      }).catch(err => {
-        console.log('Error while login');
-      });
+    console.log(this.authConfigService)
+    this.authConfigService.loadConfig().then(result => {
+      console.log('Loaded auth config', this.authConfigService.getAuthConfig())
+      this.oauthService.configure(this.authConfigService.getAuthConfig());
+      this.oauthService.tokenValidationHandler = new JwksValidationHandler();
+      this.oauthService.loadDiscoveryDocumentAndTryLogin().then(e => {
+        this.oauthService.setupAutomaticSilentRefresh();
+      })
     })
-
   }
 
 }
