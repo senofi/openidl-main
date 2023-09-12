@@ -35,8 +35,9 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     if (this.oauthService.hasValidAccessToken()) {
       this.router.navigate(['/datacallList']); // Update with your home route
+    } else {
+      this.clearStorage();
     }
-    this.clearStorage();
   }
 
   login() {
