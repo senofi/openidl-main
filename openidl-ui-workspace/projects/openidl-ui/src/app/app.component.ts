@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from '../environments/environment';
-import {JwksValidationHandler, OAuthService} from 'angular-oauth2-oidc';
+import { OAuthService} from 'angular-oauth2-oidc';
+import {JwksValidationHandler} from 'angular-oauth2-oidc-jwks';
 import {AuthConfigService} from "../../../openidl-common-ui/src/lib/services/auth.config.service";
 
 @Component({

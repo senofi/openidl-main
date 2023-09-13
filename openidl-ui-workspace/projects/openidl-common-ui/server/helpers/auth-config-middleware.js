@@ -1,13 +1,20 @@
 const rp = require('request-promise');
 const idpCredentials = JSON.parse(process.env.IDP_CONFIG);
 
+const getJwksConfig = async (url) => {
+  return rp(url)
+}
+
 module.exports = (req, res) => {
   rp(`${idpCredentials.issuer}/.well-known/openid-configuration`)
-  .then((response) => {
+  .then( async (response) => {
+    const parsedOpenidConfig = JSON.parse(response)
+    const jwksConfig = await getJwksConfig(parsedOpenidConfig.jwks_uri)
     res.json({
       issuer: idpCredentials.issuer,
       clientId: idpCredentials.clientId,
-      ...JSON.parse(response)
+      ...parsedOpenidConfig,
+      jwks: JSON.parse(jwksConfig)
     });
   })
   .catch((err) => {
