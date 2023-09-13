@@ -48,8 +48,6 @@ export class LoginComponent implements OnInit {
 	}
 
 	clearStorage() {
-		this.storageService.clearItem('apiToken');
-		this.storageService.clearItem('tokenType');
 		this.storageService.clearItem('datacall');
 		this.storageService.clearItem('jurisdiction');
 		this.storageService.clearItem('org');
