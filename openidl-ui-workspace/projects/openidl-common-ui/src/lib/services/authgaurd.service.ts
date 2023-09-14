@@ -28,11 +28,6 @@ export class AuthGaurdService implements CanActivate {
   constructor(private oauthService: OAuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-
-    if (state.url.includes('code=')) {
-      // Allow processing of the URL if it contains the auth code
-      return true;
-    }
     if (this.oauthService.hasValidAccessToken()) {
       return true;
     } else {
