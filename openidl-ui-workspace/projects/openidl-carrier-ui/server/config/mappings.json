@@ -1,6 +1,6 @@
 {
 	"idp-credentials": {
-		"file": "local-cognito-config.json",
+		"file": "local-auth-config.json",
 		"env": "IDP_CONFIG"
 	},
 	"port": {
@@ -14,5 +14,9 @@
 	"icon-bucket-url": {
 		"value": "https://aais-logos-1641417850.s3.amazonaws.com/",
 		"env": "ICON_BUCKET_URL"
-	}
+	},
+  "off-chain-db-credentials": {
+    "env": "OFF_CHAIN_DB_CONFIG",
+    "file": "local-db-config.json"
+  }
 }

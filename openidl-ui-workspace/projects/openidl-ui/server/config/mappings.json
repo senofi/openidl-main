@@ -1,6 +1,6 @@
 {
 	"idp-credentials": {
-		"file": "local-cognito-config.json",
+		"file": "local-auth-config.json",
 		"env": "IDP_CONFIG"
 	},
 	"port": {
