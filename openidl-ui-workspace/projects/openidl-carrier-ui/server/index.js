@@ -1,6 +1,7 @@
 'use strict';
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const app = express();
 const NODE_ENV = process.env.NODE_ENV || 'qa';
 const helmet = require("helmet");
@@ -79,16 +80,16 @@ if (NODE_ENV === 'production') {
 
 }
 console.log("----------------app started");
-if (NODE_ENV === 'production' || NODE_ENV === 'qa' || NODE_ENV == 'local') {
-  app.use(express.static('dist/openidl-carrier-ui'));
-}
-// app.get('/', (req, res) => {
-//   res.json({
-//     'message': 'Welcome to openidl ui application.'
-//   });
-// });
 
 app.use('/', routes)
+
+if (NODE_ENV === 'production' || NODE_ENV === 'qa' || NODE_ENV == 'local') {
+  app.use(express.static('dist/openidl-carrier-ui'));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve('dist/openidl-carrier-ui/index.html'));
+  });
+}
 
 var portNumber = process.env.PORT;
 app.listen(portNumber, function () {
