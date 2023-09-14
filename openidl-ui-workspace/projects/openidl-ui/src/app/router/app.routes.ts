@@ -1,15 +1,19 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { CreateDatacallComponent } from '../create-datacall/create-datacall.component';
-import { DatacallListComponent } from './../datacall-list/datacall-list.component';
-import { LoginComponent } from './../login/login.component';
-import { AuthGaurdService } from 'openidl-common-ui';
-import { ViewDatacallDraftComponent } from '../view-datacall-draft/view-datacall-draft.component';
-import { ViewDatacallIssuedComponent } from '../view-datacall-issued/view-datacall-issued.component';
-import { ViewReportComponent } from '../view-report/view-report.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {CreateDatacallComponent} from '../create-datacall/create-datacall.component';
+import {DatacallListComponent} from './../datacall-list/datacall-list.component';
+import {LoginComponent} from './../login/login.component';
+import {AuthGaurdService} from 'openidl-common-ui';
+import {ViewDatacallDraftComponent} from '../view-datacall-draft/view-datacall-draft.component';
+import {ViewDatacallIssuedComponent} from '../view-datacall-issued/view-datacall-issued.component';
+import {ViewReportComponent} from '../view-report/view-report.component';
+import {
+  AuthCallbackComponent
+} from "openidl-common-ui";
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  {path: 'login', component: LoginComponent},
+  {path: 'auth-callback', component: AuthCallbackComponent},
   {
     path: 'createDatacall',
     component: CreateDatacallComponent,
@@ -36,12 +40,13 @@ const routes: Routes = [
     component: ViewReportComponent,
     canActivate: [AuthGaurdService],
   },
-  { path: '**', redirectTo: '/login' },
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  {path: '**', redirectTo: '/login'},
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA,} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA,} from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
 import {OAuthModule} from 'angular-oauth2-oidc';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -26,7 +26,7 @@ import {DatacallHistoryComponent} from './components/datacall-history/datacall-h
 import {BlocksHistoryComponent} from './components/blocks-history/blocks-history.component';
 import {ReportTableComponent} from './components/report-table/report-table.component';
 import {UpdateReportComponent} from './components/update-report/update-report.component';
-import {AuthConfigService} from "./services/auth.config.service";
+import {AuthCallbackComponent} from "./components/auth-callback/auth-callback.component";
 
 @NgModule({
   declarations: [
@@ -43,7 +43,8 @@ import {AuthConfigService} from "./services/auth.config.service";
     UpdateReportComponent,
     ReportTableComponent,
     CustomDateFormat,
-    CustomDateFormat1
+    CustomDateFormat1,
+    AuthCallbackComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +57,7 @@ import {AuthConfigService} from "./services/auth.config.service";
     LoginModule,
     ReactiveFormsModule,
     MaterialModule,
-    DialogModule,
+    DialogModule
   ],
   exports: [
     FormComponent,
@@ -72,15 +73,9 @@ import {AuthConfigService} from "./services/auth.config.service";
     ReportTableComponent,
     MaterialModule,
     DialogModule,
+    AuthCallbackComponent
   ],
-  providers: [
-  //   {
-  //   provide: APP_INITIALIZER,
-  //   useFactory: AuthConfigService.initConfig,
-  //   deps: [AuthConfigService],
-  //   multi: true,
-  // },
-  ],
+  providers: [],
   bootstrap: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 })

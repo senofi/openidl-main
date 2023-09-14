@@ -44,7 +44,7 @@ export class AuthConfigService {
     }
     return {
       ...this.config,
-      redirectUri: window.location.origin + '/datacallList',
+      redirectUri: window.location.origin + '/auth-callback',
       responseType: 'code',
       scope: 'openid phone email',
       // showDebugInformation: true,
