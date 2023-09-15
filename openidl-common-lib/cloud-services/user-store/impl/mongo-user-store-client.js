@@ -39,8 +39,7 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
       connectionURI = mongoConfig.connection.mongodb.composed[0];
     }
 
-    const client = new MongoClient();
-    await client.connect(connectionURI, options);
+    const client = await MongoClient.connect(connectionURI, options);
 
     this.db = client.db(mongoConfig.mongodb);
 
