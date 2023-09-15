@@ -14,17 +14,33 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
     super();
     this.collection = null;
     this.collectionName = 'users';
-    this.adminAttributes = {}
+    this.adminAttributes = {};
   }
 
   async init() {
     const offChainDbConfig = JSON.parse(process.env.OFF_CHAIN_DB_CONFIG);
-    this.adminAttributes = offChainDbConfig.admin
+    this.adminAttributes = offChainDbConfig.admin;
 
     const mongoConfig = offChainDbConfig.mongo;
+    const { simpleURI } = mongoConfig;
+    const options = {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    };
+    let connectionURI = simpleURI;
 
-    const client = new MongoClient(mongoConfig.simpleURI);
-    await client.connect();
+    if (!simpleURI) {
+      const ca = mongoConfig.connection.mongodb.certificate.certificate_base64;
+
+      options.ssl = true;
+      options.sslValidate = false;
+      options.sslCA = ca;
+
+      connectionURI = mongoConfig.connection.mongodb.composed[0];
+    }
+
+    const client = new MongoClient();
+    await client.connect(connectionURI, options);
 
     this.db = client.db(mongoConfig.mongodb);
 
