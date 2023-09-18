@@ -55,11 +55,11 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
       $jsonSchema: {
         bsonType: 'object',
         title: 'User Validation',
-        required: ['id', 'stateName', 'stateCode', 'role', 'organizationId'],
+        required: ['userId', 'stateName', 'stateCode', 'role', 'organizationId'],
         properties: {
-          id: {
+          userId: {
             bsonType: 'string',
-            description: '\'id\' must be a string and is required',
+            description: '\'userId\' must be a string and is required',
           },
           stateName: {
             bsonType: 'string',
@@ -89,7 +89,7 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
       // Collection does not exist, create it
       await this.db.createCollection(this.collectionName, { validator });
       this.collection = await this.db.collection(this.collectionName);
-      await this.collection.createIndex({ id: 1 }, { unique: true });
+      await this.collection.createIndex({ userId: 1 }, { unique: true });
       // eslint-disable-next-line no-underscore-dangle
       await this._insertAdmin();
       logger.info(`Collection ${this.collectionName} created with validator.`);
@@ -113,16 +113,16 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
     return this.collection.insertOne(admin);
   }
 
-  async getUserById(id) {
+  async getUserById(userId) {
     return new Promise((resolve, reject) => {
       try {
         this.collection
-          .findOne({ id }, (error, result) => {
+          .findOne({ userId }, (error, result) => {
             if (error) {
-              logger.error(`Error fetching user by ID ${id} from MongoDB! Error:`, error);
+              logger.error(`Error fetching user by ID ${userId} from MongoDB! Error:`, error);
               reject(error);
             } else {
-              logger.debug(`User with ID ${id} fetched successfully from MongoDB!`);
+              logger.debug(`User with ID ${userId} fetched successfully from MongoDB!`);
               resolve(result);
             }
           });
@@ -157,7 +157,7 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
     return new Promise((resolve, reject) => {
       try {
         this.collection
-          .updateOne({ id: user.id }, user, { upsert: true }, (error, result) => {
+          .updateOne({ userId: user.userId }, user, { upsert: true }, (error, result) => {
             if (error) {
               logger.error(`Error upserting user ${user} in MongoDB! Error:`, error);
               reject(error);
@@ -177,7 +177,7 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
     return new Promise((resolve, reject) => {
       try {
         this.collection
-          .updateOne({ id: user.id }, user, (error, result) => {
+          .updateOne({ userId: user.userId }, user, (error, result) => {
             if (error) {
               logger.error(`Error updating user ${user} in MongoDB! Error:`, error);
               reject(error);
@@ -197,7 +197,7 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
     return new Promise((resolve, reject) => {
       try {
         this.collection
-          .deleteOne({ id: user.id }, (error, result) => {
+          .deleteOne({ userId: user.userId }, (error, result) => {
             if (error) {
               logger.error(`Error deleting user ${user} in MongoDB! Error:`, error);
               reject(error);
