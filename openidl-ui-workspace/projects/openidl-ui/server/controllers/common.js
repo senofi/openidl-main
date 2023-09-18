@@ -21,7 +21,7 @@ app.use(express.urlencoded({
 common.ifUrlSafe  = (url) => {
     if (urlRegex().test(url)) {
         return false;
-    } 
+    }
     if (ipRegex().test(url)) {
         return false
     }
@@ -68,7 +68,7 @@ common.handleRequest = (req, res, url) => {
             method: req.method,
             headers: {
                 'content-type': req.headers['content-type'],
-                'authorization': 'Bearer ' + req.headers['usertoken']
+                'authorization': req.headers['authorization']
             }
         };
         if (req.method == 'POST' || req.method == 'PUT') {

@@ -21,7 +21,7 @@ app.use(express.urlencoded({
 common.ifUrlSafe  = (url) => {
     if (urlRegex().test(url)) {
         return false;
-    } 
+    }
     if (ipRegex().test(url)) {
         return false
     }
@@ -40,7 +40,7 @@ common.getQueryString = (queryObj) => {
 
 common.getSearchDataCalls = (req, res) => {
     var queryString = common.getQueryString(req.query);
-    
+
     var url = '/search-data-calls?' + queryString;
     logger.debug('ROLE In LIST');
     logger.debug(res.locals.role);
@@ -68,7 +68,7 @@ common.handleRequest = (req, res, url) => {
             method: req.method,
             headers: {
                 'content-type': req.headers['content-type'],
-                'authorization': 'Bearer ' + req.headers['usertoken']
+                'authorization': req.headers['authorization']
             }
         };
         if (req.method == 'POST' || req.method == 'PUT') {
