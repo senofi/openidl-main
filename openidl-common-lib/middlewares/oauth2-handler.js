@@ -151,10 +151,10 @@ jwtHandler.getUserAttributes = async (req, res, next) => {
 
   const accessTokenString = _getAccessToken(req);
   const tokenPayload = jwt.decode(accessTokenString);
-  const username = tokenPayload.username;
+  const id = tokenPayload.sub;
 
   const userDataStore = await UserDataStoreClientFactory.getInstance();
-  const userAttributes = await userDataStore.getUserByUsername(username);
+  const userAttributes = await userDataStore.getUserById(id);
 
   res.locals.user.attributes = userAttributes;
   next();
@@ -166,10 +166,10 @@ jwtHandler.getUserAttributes = async (req, res, next) => {
 jwtHandler.getUserRole = async (req, res, next) => {
   const accessTokenString = _getAccessToken(req);
   const tokenPayload = jwt.decode(accessTokenString);
-  const username = tokenPayload.username;
+  const id = tokenPayload.sub;
 
   const userDataStoreClient = await UserDataStoreClientFactory.getInstance();
-  const userAttributes = await userDataStoreClient.getUserByUsername(username);
+  const userAttributes = await userDataStoreClient.getUserById(id);
   res.locals.role = userAttributes.role;
 
   if (!res.locals.role) {

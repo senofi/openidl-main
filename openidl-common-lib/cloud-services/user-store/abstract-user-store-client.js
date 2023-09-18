@@ -9,8 +9,8 @@ class AbstractUserStoreClient {
     throw new Error('Must override init method');
   }
 
-  async getUserByUsername(username) {
-    throw new Error('Must override getUserByUsername method');
+  async getUserById(username) {
+    throw new Error('Must override getUserById method');
   }
 
   async storeUser(user) {
