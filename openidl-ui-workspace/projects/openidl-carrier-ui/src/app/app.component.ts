@@ -4,6 +4,7 @@ import {OAuthService} from "angular-oauth2-oidc";
 import {JwksValidationHandler} from 'angular-oauth2-oidc-jwks';
 import {AuthConfigService} from "../../../openidl-common-ui/src/lib/services/auth.config.service";
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -17,20 +18,22 @@ export class AppComponent implements OnInit {
     localStorage.setItem('API_ENDPOINT', JSON.stringify(this.API_ENDPOINT));
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     sessionStorage.removeItem('isModalOpen');
 
-    this.authConfigService.loadConfig().then(result => {
+    await this.authConfigService.loadConfig().then(async result => {
       const config = this.authConfigService.getAuthConfig();
       this.oauthService.configure({
         ...config,
         responseType: 'code',
         tokenEndpoint: config.token_endpoint,
         userinfoEndpoint: config.userinfo_endpoint,
-        loginUrl: config.authorization_endpoint
+        loginUrl: config.authorization_endpoint,
+        logoutUrl: window.location.origin + '/login',
+
       });
       this.oauthService.tokenValidationHandler = new JwksValidationHandler();
-      this.oauthService.tryLogin().then(e => {
+      await this.oauthService.tryLogin().then(async loggedIn => {
         this.oauthService.setupAutomaticSilentRefresh();
       })
     })

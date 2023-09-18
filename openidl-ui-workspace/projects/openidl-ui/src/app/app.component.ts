@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
         tokenEndpoint: config.token_endpoint,
         userinfoEndpoint: config.userinfo_endpoint,
         loginUrl: config.authorization_endpoint,
+        logoutUrl: window.location.origin + '/login',
       });
       this.oauthService.tokenValidationHandler = new JwksValidationHandler();
       this.oauthService.tryLogin().then(e => {
