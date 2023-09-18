@@ -7,7 +7,7 @@ const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials);
 const commonController = require('../controllers/common');
 const router = express.Router();
 const API_URL = '/api';
-const {authConfigMiddleware} = require('../../../openidl-common-ui/server');
+const {authConfigMiddleware, userAttributesMiddleware} = require('../../../openidl-common-ui/server');
 app.use(express.json());
 app.use(express.urlencoded({
     extended: true
@@ -20,6 +20,9 @@ router.route(API_URL + '/login').post(authHandler.authenticate, authHandler.getU
 
 // UI Auth Configurations
 router.route(API_URL + '/auth-config').get(authConfigMiddleware);
+
+// User attributes
+router.route(API_URL + '/user-attributes').get(authHandler.validateToken, authHandler.getUserAttributes, userAttributesMiddleware);
 
 // Application logout
 router.route(API_URL + '/logout').post(authHandler.logout, commonController.logout);

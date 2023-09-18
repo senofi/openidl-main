@@ -13,6 +13,7 @@ export * from './lib/services/dialog.service';
 export * from './lib/config/app.config';
 export * from './lib/config/auth.config';
 export * from './lib/config/messageBundle';
+export * from './lib/services/user-attributes.service';
 
 export * from './lib/components/dialogs/dialog.module';
 export * from './lib/components/dialogs/base-dialog.component/base-dialog.component';

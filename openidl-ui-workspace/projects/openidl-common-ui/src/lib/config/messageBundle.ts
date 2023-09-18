@@ -14,6 +14,11 @@ export const MESSAGE = {
 			message: 'Invalid Nifi Role',
 			type: 'error',
 			title: 'Error'
+		},
+		ERROR_WHEN_FETCHING_USER_ATTRIBUTES: {
+			message: 'Error when fetching user attributes from server',
+			type: 'error',
+			title: 'Error'
 		}
 	},
 

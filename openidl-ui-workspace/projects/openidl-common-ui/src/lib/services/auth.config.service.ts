@@ -17,7 +17,6 @@ export class AuthConfigService {
   private config: ExtendedAuthConfig;
 
   constructor(private http: HttpClient) {
-    console.log('AuthConfigService constructor');
   }
 
   static initConfig(configService: AuthConfigService) {
@@ -25,20 +24,16 @@ export class AuthConfigService {
   }
 
   loadConfig(): Promise<ExtendedAuthConfig> {
-    console.log('Loading auth config');
     return this.http
     .get('/api/auth-config')
     .toPromise()
     .then((config: ExtendedAuthConfig) => {
-      console.log('Loaded auth config', config)
       this.config = config;
-      console.log('Loaded auth config 2', config)
       return config;
     });
   }
 
   getAuthConfig(): ExtendedAuthConfig {
-    console.log('Getting auth config', this.config)
     if (!this.config) {
       throw Error('Config has not been loaded yet.');
     }

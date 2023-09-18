@@ -84,6 +84,7 @@ jwtHandler.authenticate = (req, res, next) => {
         message: info.message,
       });
     } else {
+      res.locals.user = {};
       next();
     }
   })(req, res, next);
@@ -156,7 +157,6 @@ jwtHandler.getUserAttributes = async (req, res, next) => {
   const userAttributes = await userDataStore.getUserByUsername(username);
 
   res.locals.user.attributes = userAttributes;
-  res.locals.user.userToken = req.session.passport.user.accessTokenString;
   next();
 };
 

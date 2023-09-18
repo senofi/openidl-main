@@ -4,7 +4,6 @@ import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {OAuthService} from 'angular-oauth2-oidc';
 
 import {catchError, map} from 'rxjs/operators';
-import {StorageService} from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,28 +15,23 @@ export class DataService {
   private apiToken;
 
   constructor(
-    private http: HttpClient,
-    private storageService: StorageService,
-    private oauthService: OAuthService
+      private http: HttpClient,
+      private oauthService: OAuthService
   ) {
   }
 
   getToken() {
-    console.log('in getToken');
     // Following change to the end point is made as the end point is moved to UI server
 
     this.API_ENDPOINT = '/api';
     if (this.oauthService.getAccessToken()) {
       this.apiToken = this.oauthService.getAccessToken();
-      // this.apiToken = this.storageService.getItem('apiToken');
     } else {
       this.apiToken = '';
     }
     this.httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-
-        UserToken: this.apiToken,
         Authorization: 'Bearer ' + this.apiToken
       })
     };
@@ -54,52 +48,47 @@ export class DataService {
     return this.http
     .get(this.API_ENDPOINT + uri + status, this.httpOptions)
     .pipe(
-      map((response: HttpResponse<any>) => {
-        const serviceResponse = response;
-        console.log('statuscode', serviceResponse['success']);
-        if (serviceResponse && serviceResponse.status === 200) {
-          // serviceResponse['success'] === true
-          return serviceResponse['result'];
-        } else {
-          console.log('Data could not be retrieved');
-          throwError(serviceResponse['message']);
-        }
-      }),
-      catchError(this.handleError)
+        map((response: HttpResponse<any>) => {
+          const serviceResponse = response;
+          if (serviceResponse && serviceResponse.status === 200) {
+            // serviceResponse['success'] === true
+            return serviceResponse['result'];
+          } else {
+            throwError(serviceResponse['message']);
+          }
+        }),
+        catchError(this.handleError)
     );
   }
 
   getData(uri) {
     this.getToken();
     return this.http.get(this.API_ENDPOINT + uri, this.httpOptions).pipe(
-      map((response: Response) => {
-        const serviceResponse = response;
-        console.log('statuscode', serviceResponse['success']);
-        if (serviceResponse && serviceResponse['success'] === true) {
-          return serviceResponse['result'];
-        } else {
-          console.log('Data could not be retrieved');
-          throwError(serviceResponse['message']);
-        }
-      }),
-      catchError(this.handleError)
+        map((response: Response) => {
+          const serviceResponse = response;
+          if (serviceResponse && serviceResponse['success'] === true) {
+            return serviceResponse['result'];
+          } else {
+            throwError(serviceResponse['message']);
+          }
+        }),
+        catchError(this.handleError)
     );
   }
 
   deleteData(uri) {
     this.getToken();
     return this.http.delete(this.API_ENDPOINT + uri, this.httpOptions).pipe(
-      map((response: Response) => {
-        const serviceResponse = response;
+        map((response: Response) => {
+          const serviceResponse = response;
 
-        if (serviceResponse && serviceResponse['success'] === true) {
-          return serviceResponse['result'];
-        } else {
-          console.log('Data could not be retrieved');
-          throwError(serviceResponse['message']);
-        }
-      }),
-      catchError(this.handleError)
+          if (serviceResponse && serviceResponse['success'] === true) {
+            return serviceResponse['result'];
+          } else {
+            throwError(serviceResponse['message']);
+          }
+        }),
+        catchError(this.handleError)
     );
   }
 
@@ -107,30 +96,30 @@ export class DataService {
     this.getToken();
     return this.http
     .post(
-      this.API_ENDPOINT + uri,
-      JSON.stringify(requstObject),
-      this.httpOptions
+        this.API_ENDPOINT + uri,
+        JSON.stringify(requstObject),
+        this.httpOptions
     )
     .pipe(
-      map((response: Response) => {
-        const serviceResponse = response;
+        map((response: Response) => {
+          const serviceResponse = response;
 
-        if (
-          serviceResponse &&
-          serviceResponse['success'] === true
-        ) {
-          console.log('New Data call created successfully');
-          return (
-            serviceResponse['message'] ||
-            serviceResponse['result']
-          );
-        } else {
-          console.log('Technical error');
+          if (
+              serviceResponse &&
+              serviceResponse['success'] === true
+          ) {
+            console.log('New Data call created successfully');
+            return (
+                serviceResponse['message'] ||
+                serviceResponse['result']
+            );
+          } else {
+            console.log('Technical error');
 
-          throwError('Technical Error occurred'); // serviceResponse.message
-        }
-      }),
-      catchError(this.handleError)
+            throwError('Technical Error occurred'); // serviceResponse.message
+          }
+        }),
+        catchError(this.handleError)
     );
   }
 
@@ -138,43 +127,43 @@ export class DataService {
     this.getToken();
     return this.http
     .put(
-      this.API_ENDPOINT + uri,
-      JSON.stringify(requstObject),
-      this.httpOptions
+        this.API_ENDPOINT + uri,
+        JSON.stringify(requstObject),
+        this.httpOptions
     )
     .pipe(
-      map((response: Response) => {
-        const serviceResponse = response;
+        map((response: Response) => {
+          const serviceResponse = response;
 
-        if (
-          serviceResponse &&
-          serviceResponse['success'] === true
-        ) {
-          console.log('New Data call created successfully');
-          return serviceResponse['message'];
-        } else {
-          console.log('Technical error');
-          throwError('Technical Error occurred'); // serviceResponse.message
-        }
-      }),
-      catchError(this.handleError)
+          if (
+              serviceResponse &&
+              serviceResponse['success'] === true
+          ) {
+            console.log('New Data call created successfully');
+            return serviceResponse['message'];
+          } else {
+            console.log('Technical error');
+            throwError('Technical Error occurred'); // serviceResponse.message
+          }
+        }),
+        catchError(this.handleError)
     );
   }
 
   getHistory(id) {
     this.getToken();
     return this.http.get(this.API_ENDPOINT + '' + id).pipe(
-      map((response: Response) => {
-        const serviceResponse = response;
+        map((response: Response) => {
+          const serviceResponse = response;
 
-        if (serviceResponse && serviceResponse['success'] === true) {
-          return serviceResponse['result'];
-        } else {
-          console.log('Data could not be retrieved');
-          throwError(serviceResponse['message']);
-        }
-      }),
-      catchError(this.handleError)
+          if (serviceResponse && serviceResponse['success'] === true) {
+            return serviceResponse['result'];
+          } else {
+            console.log('Data could not be retrieved');
+            throwError(serviceResponse['message']);
+          }
+        }),
+        catchError(this.handleError)
     );
   }
 
@@ -183,9 +172,9 @@ export class DataService {
     this.getToken();
     return this.http
     .post(
-      this.API_ENDPOINT + 'file',
-      formData,
-      this.httpOptionsMultipart
+        this.API_ENDPOINT + 'file',
+        formData,
+        this.httpOptionsMultipart
     )
     .pipe(map(this.extractData), catchError(this.handleError));
   }

@@ -278,7 +278,6 @@ export class TableComponent implements OnInit, AfterViewInit {
 					? (this.pageIndex = 0)
 					: (this.pageIndex = 1)
 				: this.recordsPerPage * (this.currentIndex - 1) + 1;
-		console.log('getDataCallsByStatus   ' + this.pageIndex);
 		this.queryParameter =
 			this.storageService.getItem('searchMode') == 'NORMAL'
 				? 'status=' +
