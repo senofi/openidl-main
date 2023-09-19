@@ -53,7 +53,6 @@ export class LoginComponent implements OnInit {
     this.storageService.clearItem('jurisdiction');
     this.storageService.clearItem('org');
     this.storageService.clearItem('role');
-    this.storageService.clearItem('loginResult');
     this.storageService.clearItem('isAbandon');
     this.storageService.clearItem('currentTab');
     this.storageService.clearItem('searchMode');

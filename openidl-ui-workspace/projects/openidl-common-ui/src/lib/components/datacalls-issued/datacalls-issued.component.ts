@@ -13,6 +13,7 @@ import { DataService } from '../../services/data.service';
 import { UpdateReportComponent } from '../update-report/update-report.component';
 import { MESSAGE } from '../../config/messageBundle';
 import { DialogService } from '../../services/dialog.service';
+import {OAuthService} from "angular-oauth2-oidc";
 
 @Component({
 	selector: 'app-datacalls-issued',
@@ -66,7 +67,8 @@ export class DatacallsIssuedComponent implements OnInit {
 	proposedDeliveryDate: any;
 	registerForm: FormGroup;
 	buttonText: any = 'Consent to the Report';
-	loginResult: any;
+  organizationId: string;
+  username: string;
 	consentCount: any;
 	likeCount: any;
 	action: any = 'Consent';
@@ -102,7 +104,8 @@ export class DatacallsIssuedComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private storageService: StorageService,
 		private dataService: DataService,
-		private dialogService: DialogService
+		private dialogService: DialogService,
+    private oAuthService: OAuthService
 	) {}
 
 	ngOnInit() {
@@ -112,7 +115,10 @@ export class DatacallsIssuedComponent implements OnInit {
 		// Get current role required to conditionally render the view
 		this.role = this.storageService.getItem('role');
 		// storing org id, role, username etc
-		this.loginResult = this.storageService.getItem('loginResult');
+    this.organizationId = this.storageService.getItem('org');
+    this.oAuthService.loadUserProfile().then((userProfile) => {
+      this.username = userProfile['email'];
+    });
 
 		// Set flags according to the current role
 		if (this.role && this.role === 'regulator') {
@@ -256,7 +262,7 @@ export class DatacallsIssuedComponent implements OnInit {
 			'/' +
 			this.draft.version +
 			'/' +
-			this.loginResult.attributes.organizationId;
+			this.organizationId;
 		this.isSmallSpinner = true;
 		this.dataService.getData(uri).subscribe(
 			(response) => {
@@ -691,9 +697,9 @@ export class DatacallsIssuedComponent implements OnInit {
 			const requestData = {
 				datacallID: this.draft.id,
 				dataCallVersion: this.draft.version,
-				carrierID: this.loginResult.attributes.organizationId,
-				carrierName: this.loginResult.username,
-				createdBy: this.loginResult.username
+				carrierID: this.organizationId,
+				carrierName: this.username,
+				createdBy: this.username
 			};
 			this.isSmallSpinner = true;
 			this.dataService.postData(uri, requestData).subscribe(
