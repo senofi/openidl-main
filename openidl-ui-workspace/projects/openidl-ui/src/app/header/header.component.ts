@@ -23,6 +23,7 @@ export class HeaderComponent implements OnInit {
   roleIcon;
   role;
   orgLogo;
+  orgLogoError;
   org;
   isSpinner: Boolean = false;
   isResetWorldState: Boolean = false;
@@ -37,7 +38,6 @@ export class HeaderComponent implements OnInit {
 
   constructor(
       private storageService: StorageService,
-      private authService: AuthService,
       private dataService: DataService,
       private router: Router,
       private dialogService: DialogService,
@@ -174,5 +174,9 @@ export class HeaderComponent implements OnInit {
           this.isResetBtn = false;
         }
     );
+  }
+
+  onImageError(event: any): void {
+    this.orgLogoError = true;
   }
 }

@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
   appConst;
   role;
   orgLogo;
+  orgLogoError;
   roleIcon;
   org;
   isSpinner: Boolean = false;
@@ -83,5 +84,9 @@ export class HeaderComponent implements OnInit {
 
   orgIcon(org) {
     return this.storageService.getItem('iconBucketUrl') + org + '-logo.png';
+  }
+
+  onImageError(event: any): void {
+    this.orgLogoError = true;
   }
 }

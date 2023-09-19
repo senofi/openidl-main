@@ -9,7 +9,7 @@
 		<span class="divider"></span>
 		<img [src]="roleIcon" class="logo" />
 		<span class="divider"></span>
-		<img [src]="orgLogo" class="logo" />
+		<img *ngIf="orgLogoError" [src]="orgLogo" class="logo" (error)="onImageError($event)"/>
 	</span>
 	<span class="spacer"></span>
 	<button
