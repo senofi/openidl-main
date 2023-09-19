@@ -6,7 +6,7 @@ const AbstractUserStoreClient = require(
   '../abstract-user-store-client',
 );
 
-const logger = log4js.getLogger('mongdb-user-store-client');
+const logger = log4js.getLogger('mongodb-user-store-client');
 logger.level = config.logLevel;
 
 class MongoUserStoreClient extends AbstractUserStoreClient {
