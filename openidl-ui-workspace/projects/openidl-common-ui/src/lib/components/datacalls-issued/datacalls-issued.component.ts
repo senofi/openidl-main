@@ -104,8 +104,7 @@ export class DatacallsIssuedComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private storageService: StorageService,
 		private dataService: DataService,
-		private dialogService: DialogService,
-    private oAuthService: OAuthService
+		private dialogService: DialogService
 	) {}
 
 	ngOnInit() {
@@ -116,9 +115,7 @@ export class DatacallsIssuedComponent implements OnInit {
 		this.role = this.storageService.getItem('role');
 		// storing org id, role, username etc
     this.organizationId = this.storageService.getItem('org');
-    this.oAuthService.loadUserProfile().then((userProfile) => {
-      this.username = userProfile['email'];
-    });
+    this.username = this.storageService.getItem('username');
 
 		// Set flags according to the current role
 		if (this.role && this.role === 'regulator') {
