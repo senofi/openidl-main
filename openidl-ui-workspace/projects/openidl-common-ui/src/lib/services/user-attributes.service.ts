@@ -50,7 +50,7 @@ export class UserAttributesService {
       })
     };
     return this.http
-    .get(this.API_ENDPOINT + '/user-attributes', this.httpOptions).toPromise().then((response) => {
+    .get(this.API_ENDPOINT + '/user-attributes', this.httpOptions).toPromise().then(async (response) => {
       const attributes = response as unknown as UserAttributes;
       this.storageService.setItem('searchMode', 'NORMAL');
       this.storageService.setItem('searchValue', '');
@@ -68,6 +68,10 @@ export class UserAttributesService {
           'jurisdiction',
           attributes.organizationId
       );
+
+      // @ts-ignore
+      const {info} = await this.oauthService.loadUserProfile()
+      this.storageService.setItem('username', info.email);
     });
   }
 
@@ -77,7 +81,7 @@ export class UserAttributesService {
     this.storageService.clearItem('org');
     this.storageService.clearItem('role');
     this.storageService.clearItem('currentTab');
-    this.storageService.clearItem('loginResult');
+    this.storageService.clearItem('username');
   }
 
 }

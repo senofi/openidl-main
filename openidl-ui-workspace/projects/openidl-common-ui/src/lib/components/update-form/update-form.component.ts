@@ -18,9 +18,9 @@ import {
 import { MatDatepicker } from '@angular/material/datepicker';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
-  
+
 const moment = _rollupMoment || _moment;
-  
+
 export const STANDARD_FORMATS1 = {
 	parse: {
 		dateInput: 'MM/DD/YYYY',
@@ -101,11 +101,12 @@ export class UpdateFormComponent implements OnInit {
 	registerForm: FormGroup;
 	checked = 0;
 	draftlist = [];
-	loginResult: any;
+  organizationId: any;
+  username: any;
 	title: any;
 	message: any;
 	type: any;
-	role;
+	role: any;
 	datacall;
 	buttonText: any = 'Like Data Call';
 	forumurl: string = '';
@@ -171,7 +172,8 @@ export class UpdateFormComponent implements OnInit {
 		const viewAbandoned = this.storageService.getItem('viewAbandoned');
 
 		// storing org id, role, username etc
-		this.loginResult = this.storageService.getItem('loginResult');
+    this.organizationId = this.storageService.getItem('org');
+    this.username = this.storageService.getItem('username');
 
 		// Conditionally setting the abandoned view
 		if (viewAbandoned && viewAbandoned === 'true') {
@@ -588,7 +590,7 @@ export class UpdateFormComponent implements OnInit {
 			'/' +
 			this.model.version +
 			'/' +
-			this.loginResult.attributes.organizationId;
+			this.organizationId;
 		this.isSmallSpinner = true;
 		this.dataService.getData(likeUri).subscribe(
 			(response) => {
@@ -1050,9 +1052,9 @@ export class UpdateFormComponent implements OnInit {
 		const requestData = {
 			datacallID: this.datacall.id,
 			dataCallVersion: this.model.version,
-			OrganizationType: this.loginResult.attributes.role,
-			OrganizationID: this.loginResult.attributes.organizationId,
-			UpdatedBy: this.loginResult.username,
+			OrganizationType: this.role,
+			OrganizationID: this.organizationId,
+			UpdatedBy: this.username,
 			Liked: this.isLike
 		};
 
@@ -1204,7 +1206,7 @@ export class UpdateFormComponent implements OnInit {
 		ctrlValue.year(normalizedYear.year());
 		this.registerForm.get('transactionMonth').setValue(ctrlValue);
 	}
-	
+
 	chosenMonthHandler(
 		normalizedMonth: Moment,
 		datepicker: MatDatepicker<Moment>
