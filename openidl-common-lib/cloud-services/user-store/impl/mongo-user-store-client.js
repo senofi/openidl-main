@@ -94,11 +94,6 @@ class MongoUserStoreClient extends AbstractUserStoreClient {
       await this._insertAdmin();
       logger.info(`Collection ${this.collectionName} created with validator.`);
     } else {
-      // Collection exists, update its validator
-      await this.db.command({
-        collMod: this.collectionName,
-        validator,
-      });
       this.collection = this.db.collection(this.collectionName);
       logger.info(`Validator for collection ${this.collectionName} updated.`);
     }
