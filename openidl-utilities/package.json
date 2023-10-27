@@ -21,7 +21,7 @@
         "express": "~4.16.0",
         "express-session": "^1.15.1",
         "fabric-ca-client": "^2.2.3",
-        "fabric-network": "^2.2.3",
+        "fabric-network": "^2.2.13",
         "file-system": "^2.2.2",
         "fs-extra": "7.0.1",
         "ibmcloud-appid": "^6.0.0",
