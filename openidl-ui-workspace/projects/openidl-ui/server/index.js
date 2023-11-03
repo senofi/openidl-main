@@ -2,6 +2,7 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
+const path = require('path');
 const NODE_ENV = process.env.NODE_ENV || 'qa';
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
@@ -17,7 +18,7 @@ if (NODE_ENV === 'development' || NODE_ENV == "local") {
 };
 global.fetch = require('node-fetch');
 
-const idpCredentials = JSON.parse(process.env.IDP_CONFIG);;
+const idpCredentials = JSON.parse(process.env.IDP_CONFIG);
 const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials);
 
 app.use(cors());
@@ -75,16 +76,15 @@ if (NODE_ENV === 'production') {
 
 }
 
-if (NODE_ENV === 'production' || NODE_ENV === 'qa' || NODE_ENV === 'local') {
-    app.use(express.static('dist/openidl-ui'));
-}
-// app.get('/', (req, res) => {
-//   res.json({
-//     'message': 'Welcome to openidl ui application.'
-//   });
-// });
-
 app.use('/', routes)
+
+if (NODE_ENV === 'production' || NODE_ENV === 'qa' || NODE_ENV == 'local') {
+    app.use(express.static('dist/openidl-ui'));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve('dist/openidl-ui/index.html'));
+    });
+}
 
 var portNumber = process.env.PORT;
 app.listen(portNumber, function () {

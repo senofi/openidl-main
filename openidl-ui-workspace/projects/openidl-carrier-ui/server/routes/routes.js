@@ -2,11 +2,12 @@
 const express = require('express');
 const app = express();
 const openidlCommonLib = require('@senofi/openidl-common-lib');
-const idpCredentials = JSON.parse(process.env.IDP_CONFIG);;
+const idpCredentials = JSON.parse(process.env.IDP_CONFIG);
 const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials);
 const commonController = require('../controllers/common');
 const router = express.Router();
 const API_URL = '/api';
+const {authConfigMiddleware, userAttributesMiddleware} = require('../../../openidl-common-ui/server');
 app.use(express.json());
 app.use(express.urlencoded({
     extended: true
@@ -16,6 +17,12 @@ app.use(express.urlencoded({
 // Application Login
 router.route(API_URL + '/login').post(authHandler.authenticate, authHandler.getUserAttributes, commonController.login);
 // /authHandler.authenticate, authHandler.getUserAttributes, authHandler.storeTokenInCookie,
+
+// UI Auth Configurations
+router.route(API_URL + '/auth-config').get(authConfigMiddleware);
+
+// User attributes
+router.route(API_URL + '/user-attributes').get(authHandler.validateToken, authHandler.getUserAttributes, userAttributesMiddleware);
 
 // Application logout
 router.route(API_URL + '/logout').post(authHandler.logout, commonController.logout);

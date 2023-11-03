@@ -21,10 +21,16 @@ const openidlCommonLib = require('@senofi/openidl-common-lib');
 
 const idpCredentials = JSON.parse(process.env.IDP_CONFIG);
 const authHandler = openidlCommonLib.AuthHandler.setHandler(idpCredentials);
+const authorizeMiddleware = require('./middleware/authorize-middleware');
 
 const fabricUserEnrollment = require('../controller/fabric-user-controller');
 const appUser = require('../controller/app-user-controller');
 const router = express.Router();
+
+/**
+ * Admin roles is the only one allowed to access the routes
+ */
+const adminRole = 'admin';
 
 /**
  * Set up logging
@@ -34,9 +40,16 @@ logger.level = config.logLevel;
 /**
  * Add routes
  */
-router.use('/fabric-user-enrollment', authHandler.validateToken, fabricUserEnrollment.enroll);
-router.use('/app-user-enrollment', authHandler.validateToken, appUser.register);
-router.use('/app-user-login', authHandler.authenticate, authHandler.getUserAttributes, appUser.login);
-router.use('/app-user-attributes', authHandler.validateToken, appUser.updateUserAttributes);
+router.use('/fabric-user-enrollment', authHandler.authenticate, authHandler.getUserAttributes,
+  authorizeMiddleware(adminRole),
+  fabricUserEnrollment.enroll);
+router.use('/app-user-enrollment', authHandler.authenticate, authHandler.getUserAttributes,
+  authorizeMiddleware(adminRole),
+  appUser.register);
+router.use('/app-user-login', authHandler.authenticate, authHandler.getUserAttributes,
+  authorizeMiddleware(adminRole));
+router.use('/app-user-attributes', authHandler.authenticate, authHandler.getUserAttributes,
+  authorizeMiddleware(adminRole),
+  appUser.updateUserAttributes);
 
 module.exports = router;

@@ -13,9 +13,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 const TokenManager = require('ibmcloud-appid').TokenManager;
-const loginConfig = require('./config/local-appid-config.json');
+const loginConfig = require('./config/local-auth-config.json');
 
 getApiToken = async() => {
     let apiToken;

@@ -377,7 +377,7 @@
 	<app-update-report
 		*ngIf="isStatAgent"
 		[datacall]="draft"
-		[username]="this.loginResult.username"
+		[username]="this.username"
 		(updateReportEvent)="updateReport($event)"
 	></app-update-report>
 </div>
