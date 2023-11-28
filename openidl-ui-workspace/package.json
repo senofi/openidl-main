@@ -34,7 +34,7 @@
 		"express": "^4.17.1",
 		"express-session": "^1.17.2",
 		"helmet": "^3.6.0",
-		"ibmcloud-appid": "^6.1.1",
+		"ibmcloud-appid": "^6.2.1",
 		"log4js": "^4.3.2",
 		"moment": "^2.29.1",
 		"nconf": "^0.11.2",
