@@ -24,7 +24,7 @@
         "fabric-network": "^2.2.3",
         "file-system": "^2.2.2",
         "fs-extra": "7.0.1",
-        "ibmcloud-appid": "^6.0.0",
+        "ibmcloud-appid": "^6.2.1",
         "js-yaml": "^4.1.0",
         "jsonwebtoken": "^8.5.1",
         "jsrsasign": "^10.3.0",
