@@ -29,7 +29,7 @@
     "@cloudant/cloudant": "4.2.1",
     "@ibm-functions/iam-token-manager": "^1.0.3",
     "@kubernetes/client-node": "^0.18.1",
-    "@sendgrid/mail": "^7.2.1",
+    "@sendgrid/mail": "^8.0.0",
     "aws-sdk": "2.814.0",
     "config": "^2.0.1",
     "fabric-ca-client": "^2.2.3",
