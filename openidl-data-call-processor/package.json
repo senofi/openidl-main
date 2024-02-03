@@ -13,7 +13,7 @@
         "jest": "jest --config ./jest.config.js"
     },
     "dependencies": {
-        "@cloudant/cloudant": "^3.0.1",
+        "@cloudant/cloudant": "^4.5.1",
         "@senofi/openidl-common-lib": "^1.0.9",
         "@sendgrid/mail": "^7.2.1",
         "array-chunk-by-size": "^2.1.1",
