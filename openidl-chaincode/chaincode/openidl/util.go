@@ -38,7 +38,7 @@ func getCommonChannelName(stub shim.ChaincodeStubInterface) (string, error) {
 	var key string = COMMON_CHANNEL_NAME_KEY
 	channelName, err := stub.GetState(key)
 	if err != nil {
-		logger.Error("Error retreiving common channel name for key ", key)
+		logger.Error("Error retrieving common channel name for key ", key)
 		return "", err
 	}
 	if channelName == nil {
