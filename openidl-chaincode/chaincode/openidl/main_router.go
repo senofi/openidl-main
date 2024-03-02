@@ -58,7 +58,12 @@ func (s *SmartContract) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	} else {
 		logger.SetLevel(logger.DebugLevel)
 	}
-
+	init_args := stub.GetStringArgs()
+	logger.Debug("Init args > ", init_args)
+	if len(init_args) > 0 {
+		logger.Info("Storing common channel name on the ledger > ", init_args[0])
+		stub.PutState(COMMON_CHANNEL_NAME_KEY, []byte(init_args[0]))
+	}
 	/*init_args := stub.GetStringArgs()
 	logger.Debug("Init args > ", init_args)
 	if len(init_args) == 2 {
@@ -74,7 +79,7 @@ func (s *SmartContract) Init(stub shim.ChaincodeStubInterface) pb.Response {
 // Invoke is called per transaction on the chaincode. Each transaction is
 // either a 'get' or a 'set' on the asset created by Init function. The 'set'
 // method may create a new asset by specifying a new key-value pair.
-//func (s *SmartContract) Invoke2(ctx contractapi.TransactionContextInterface, id string) error {
+// func (s *SmartContract) Invoke2(ctx contractapi.TransactionContextInterface, id string) error {
 func (this *SmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	logger.Info("Invoke: enter")
 	defer logger.Debug("Invoke: exit")

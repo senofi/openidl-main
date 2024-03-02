@@ -36,7 +36,11 @@ func (this *SmartContract) ToggleLike(stub shim.ChaincodeStubInterface, args str
 	var GetDataCallByIdAndVersionFunc = "GetDataCallByIdAndVersion"
 	getDataCallRequest := ToChaincodeArgs(GetDataCallByIdAndVersionFunc, getDataCallReqJson)
 	logger.Debug("ToggleLike: getDataCallRequest", getDataCallRequest)
-	getDataCallResponse := stub.InvokeChaincode(DEFAULT_CHAINCODE_NAME, getDataCallRequest, DEFAULT_CHANNEL)
+	commonChannelName, _ := getCommonChannelName(stub)
+	if err != nil {
+		return shim.Error(errors.New("Error getting the common channel name").Error())
+	}
+	getDataCallResponse := stub.InvokeChaincode(DEFAULT_CHAINCODE_NAME, getDataCallRequest, commonChannelName)
 	logger.Debug("ToggleLike: getDataCallResponse > ", getDataCallResponse)
 	logger.Debug("ToggleLike: getDataCallResponse.Status ", getDataCallResponse.Status)
 	logger.Debug("ToggleLike: getDataCallResponse.Payload", string(getDataCallResponse.Payload))
@@ -442,7 +446,7 @@ func (this *SmartContract) CountLikes(stub shim.ChaincodeStubInterface, args str
 	return shim.Success(newLikeCountEntry)
 }
 
-//updates like count for a data call based on dataCallID and dataCallVersion
+// updates like count for a data call based on dataCallID and dataCallVersion
 func (this *SmartContract) UpdateLikeCountForDataCall(stub shim.ChaincodeStubInterface, args string) pb.Response {
 	logger.Debug("UpdateLikeCountForDataCall: enter")
 	defer logger.Debug("UpdateLikeCountForDataCall: exit")
