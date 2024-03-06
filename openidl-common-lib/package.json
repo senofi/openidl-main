@@ -1,6 +1,6 @@
 {
   "name": "@senofi/openidl-common-lib",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "private": false,
   "main": "index.js",
   "publishConfig": {
@@ -32,13 +32,12 @@
     "@sendgrid/mail": "^8.0.0",
     "aws-sdk": "2.1354.0",
     "config": "^2.0.1",
-    "fabric-ca-client": "^2.2.3",
     "fabric-network": "^2.2.3",
     "ibmcloud-appid": "^6.0.0",
     "lodash": "^4.17.21",
     "log4js": "^6.4.0",
     "mongodb": "^3.6.10",
-    "node-vault": "^0.10.0",
+    "node-vault": "^0.10.2",
     "passport": "^0.6.0",
     "passport-cognito": "^0.2.2",
     "pg": "^8.8.0",
