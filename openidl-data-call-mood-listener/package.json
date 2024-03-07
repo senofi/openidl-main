@@ -13,10 +13,10 @@
     },
     "dependencies": {
         "@senofi/openidl-common-lib": "^1.0.1",
-        "@sendgrid/mail": "^7.2.1",
+        "@sendgrid/mail": "^8.0.0",
         "config": "^2.0.1",
-        "express": "~4.16.0",
-        "log4js": "^4.3.2",
+        "express": "~4.17.3",
+        "log4js": "^6.4.0",
         "sinon": "^7.4.1",
         "uuid": "^3.3.2"
     },
