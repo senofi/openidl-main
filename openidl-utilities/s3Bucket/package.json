@@ -9,6 +9,6 @@
   "author": "bkumar44@in.ibm.com",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "2.478.0"
+    "aws-sdk": "2.1354.0"
   }
 }
