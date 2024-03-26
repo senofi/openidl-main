@@ -26,6 +26,8 @@ class InsuranceDataStoreClientFactory {
         instance = await new MongoTransactionStorageClient().init();
         break;
       case insuranceDataStoreType.S3_BUCKET:
+        instance = await new FileTransactionalDataStorageClient().init();
+        break;
       case insuranceDataStoreType.AZURE_BLOB:
         instance = await new FileTransactionalDataStorageClient().init();
         break;
