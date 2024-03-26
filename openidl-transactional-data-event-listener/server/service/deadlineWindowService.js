@@ -13,6 +13,7 @@ const getDefaultDeadlineWindow = () => {
 	deadlineWindow = {};
 	deadlineWindow.startTime = startTime.toISOString();
 	deadlineWindow.endTime = endTime.toISOString();
+	return deadlineWindow;
 };
 
 module.exports = {
