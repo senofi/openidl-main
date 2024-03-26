@@ -16,7 +16,7 @@
     "@sendgrid/mail": "^7.2.1",
     "@senofi/openidl-common-lib": "^1.0.1",
     "config": "^2.0.1",
-    "express": "~4.16.0",
+    "express": "~4.19.2",
     "log4js": "^4.3.2",
     "node-schedule": "^2.1.0",
     "object-sizeof": "1.4.0"
