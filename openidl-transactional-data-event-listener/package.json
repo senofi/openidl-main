@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@sendgrid/mail": "^8.0.0",
-    "@senofi/openidl-common-lib": "^1.0.1",
+    "@senofi/openidl-common-lib": "^1.0.15",
     "config": "^2.0.1",
     "express": "~4.17.3",
     "log4js": "^6.4.0",
