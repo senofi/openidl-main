@@ -33,7 +33,7 @@ class InsuranceDataStoreClientFactory {
         break;
       default:
         throw new Error(
-            `Invalid insuranceDataStorageEnv value. Must be one of ${Object.values(
+            `Invalid insuranceDataStorageEnv value ${config.get(InsuranceDataStoreClientFactory.INSURANCE_DATA_STORAGE_ENV_CONFIG_NAME)}. Must be one of ${Object.values(
                 insuranceDataStoreType)}.`);
     }
 
