@@ -14,8 +14,7 @@ class FileInsuranceDataStoreClient extends AbstractTransactionalDataStorageClien
   }
 
   async init() {
-    switch (config.get(
-        InsuranceDataStoreClientFactory.INSURANCE_DATA_STORAGE_ENV_CONFIG_NAME)) {
+    switch (config.get('insuranceDataStorageEnv')) {
       case  insuranceDataStoreType.S3_BUCKET:
         this.client = FileStorageClientFactory.getS3Instance();
         break;
@@ -24,7 +23,7 @@ class FileInsuranceDataStoreClient extends AbstractTransactionalDataStorageClien
         break;
       default:
         throw new Error(
-            `Invalid insuranceDataStorageEnv value. Must be one of ${Object.values(
+            `Invalid insuranceDataStorageEnv ${config.get('insuranceDataStorageEnv')} value. Must be one of ${Object.values(
                 insuranceDataStoreType)}.`);
     }
     return this;
