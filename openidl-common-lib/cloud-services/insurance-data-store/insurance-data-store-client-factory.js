@@ -26,12 +26,14 @@ class InsuranceDataStoreClientFactory {
         instance = await new MongoTransactionStorageClient().init();
         break;
       case insuranceDataStoreType.S3_BUCKET:
+        instance = await new FileTransactionalDataStorageClient().init();
+        break;
       case insuranceDataStoreType.AZURE_BLOB:
         instance = await new FileTransactionalDataStorageClient().init();
         break;
       default:
         throw new Error(
-            `Invalid insuranceDataStorageEnv value. Must be one of ${Object.values(
+            `Invalid insuranceDataStorageEnv value ${config.get(InsuranceDataStoreClientFactory.INSURANCE_DATA_STORAGE_ENV_CONFIG_NAME)}. Must be one of ${Object.values(
                 insuranceDataStoreType)}.`);
     }
 

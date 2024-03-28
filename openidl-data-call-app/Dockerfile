@@ -1,4 +1,4 @@
-FROM node:14.18-alpine
+FROM node:21.6.2-alpine
 ARG arg
 RUN apk update && apk upgrade && \
     apk add --no-cache \
