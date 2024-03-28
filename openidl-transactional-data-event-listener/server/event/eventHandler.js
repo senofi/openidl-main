@@ -21,7 +21,7 @@ const log4js = require('log4js');
 const sizeof = require('object-sizeof');
 const config = require('config');
 const logger = log4js.getLogger('event -eventHandler ');
-const {TransactionalDataStorageClientFactory} = require(
+const {InsuranceDataStoreClientFactory} = require(
     '@senofi/openidl-common-lib').CloudServices;
 const {
   Transaction
@@ -82,7 +82,7 @@ eventFunction.TransactionalDataAvailable = async function processTransactionalDa
       logger.debug('processTransactionalDataAvailableEvent: iteration for ',
           data)
 
-      let targetObject = await TransactionalDataStorageClientFactory.getInstance();
+      let targetObject = await InsuranceDataStoreClientFactory.getInstance();
 
       let insuranceData = {};
       let id = data.dataCallId + '/' + data.carrierId + '-'
