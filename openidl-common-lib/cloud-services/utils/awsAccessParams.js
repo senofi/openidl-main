@@ -6,7 +6,7 @@ const getAccessParams = async (config) => {
     accessKeyId: config['accessKeyId'],
     secretAccessKey: config['secretAccessKey']
   });
-  const roleParams = config.get('roleParams');
+  const roleParams = config['roleParams'];
 
   const accessParamInfo = await sts.assumeRole(roleParams).promise();
 

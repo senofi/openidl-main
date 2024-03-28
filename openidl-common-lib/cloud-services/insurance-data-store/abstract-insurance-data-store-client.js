@@ -4,7 +4,7 @@ class AbstractInsuranceDataStoreClient {
       throw new TypeError("Cannot construct Abstract instances directly");
     }
 
-    if (this.initConnection === undefined) {
+    if (this.init === undefined) {
       throw new TypeError("Must override method initConnection");
     }
 

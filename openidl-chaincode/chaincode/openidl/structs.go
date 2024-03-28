@@ -64,10 +64,11 @@ const (
 	DEFAULT_CHANNEL        = "defaultchannel"
 	DEFAULT_CHAINCODE_NAME = "openidl-cc-default"
 	// DEFAULT_CHAINCODE_NAME = "openidl-chaincode/defaultchannel"
-	LOGGING_LEVEL = "LOGGING_LEVEL"
+	LOGGING_LEVEL           = "LOGGING_LEVEL"
+	COMMON_CHANNEL_NAME_KEY = "commonChannelKey"
 )
 
-//channel and chaincode map for cross-channel query
+// channel and chaincode map for cross-channel query
 var ccName = map[string]string{
 	"aais-faircover": "openidl-cc-aais-faircover",
 	"aais-carrier1":  "openidl-cc-aais-carrier1",
@@ -86,16 +87,16 @@ type DataCallList struct {
 	TotalNoOfRecords int                `json:"totalNoOfRecords"`
 }
 
-//struct to store audit record
+// struct to store audit record
 type InsuranceRecordAudit struct {
 	DataCallId      string `json:"dataCallId"`
 	DataCallVersion string `json:"dataCallVersion"`
 	CarrierId       string `json:"carrierId"`
-	SequenceNum     int `json:"sequenceNum"`
+	SequenceNum     int    `json:"sequenceNum"`
 }
 
-//todo--add validation logic to match ext_pattern for value field  ValueValue---Records
-//struct to strore Insurance Data value
+// todo--add validation logic to match ext_pattern for value field  ValueValue---Records
+// struct to strore Insurance Data value
 type InsuranceData struct {
 	CarrierId       string        `json:"carrierId"`
 	DataCallId      string        `json:"dataCallId"`
@@ -140,11 +141,11 @@ type InsuranceRecordEventPayload struct {
 	DataCallVersion string `json:"dataCallVersion"`
 	CarrierId       string `json:"carrierId"`
 	PageNumber      int    `json:"pageNumber"`
-	RecordsNum      int           `json:"recordsNum"`
-	SequenceNum     int           `json:"sequenceNum"`
+	RecordsNum      int    `json:"recordsNum"`
+	SequenceNum     int    `json:"sequenceNum"`
 }
 
-//struct to return as ExtractionPattern event payload
+// struct to return as ExtractionPattern event payload
 type ExtractionPatternPayload struct {
 	DataCallId          string `json:"dataCallId"`
 	DataCallVsersion    string `json:"dataCallVersion"`
@@ -168,7 +169,7 @@ type View struct {
 	Reduce string `json:"reduce"`
 }
 
-//struct to record ExtractionPattern
+// struct to record ExtractionPattern
 type ExtractionPattern struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
@@ -306,14 +307,14 @@ type ToggleDataCallCount struct {
 	NewStatus      string `json:"newStatus"`
 }
 
-//Struct for GetReportById
+// Struct for GetReportById
 type GetReportById struct {
 	DataCallID      string `json:"dataCallID"`
 	DataCallVersion string `json:"dataCallVersion"`
 	Hash            string `json:"hash"`
 }
 
-//Struct for GetHighestOrderReportByDataCall
+// Struct for GetHighestOrderReportByDataCall
 type GetHighestOrderReport struct {
 	DataCallID      string `json:"dataCallID"`
 	DataCallVesrion string `json:"dataCallVersion"`
