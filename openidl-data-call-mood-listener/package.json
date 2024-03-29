@@ -12,7 +12,7 @@
         "dev-test": "nyc mocha --timeout 600000 --exit"
     },
     "dependencies": {
-        "@senofi/openidl-common-lib": "^1.2.1",
+        "@senofi/openidl-common-lib": "^1.2.3",
         "@sendgrid/mail": "^8.0.0",
         "config": "^2.0.1",
         "express": "~4.17.3",
