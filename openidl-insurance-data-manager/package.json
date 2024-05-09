@@ -27,7 +27,7 @@
     "log4js": "^6.9.1",
     "node-fetch": "^2.6.1",
     "sort-json-array": "^0.1.7",
-    "swagger-ui-express": "^3.0.10",
+    "swagger-ui-express": "^4.3.0",
     "uuid": "^3.3.2"
   },
   "engines": {
