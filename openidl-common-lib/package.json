@@ -23,7 +23,7 @@
     "test": "nyc mocha --timeout 600000 --recursive --exit"
   },
   "dependencies": {
-    "@azure/identity": "^3.2.4",
+    "@azure/identity": "^4.2.1",
     "@azure/keyvault-secrets": "^4.7.0",
     "@azure/storage-blob": "^12.15.0",
     "@cloudant/cloudant": "4.5.1",
