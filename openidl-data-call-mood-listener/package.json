@@ -15,7 +15,7 @@
         "@senofi/openidl-common-lib": "^1.2.3",
         "@sendgrid/mail": "^8.0.0",
         "config": "^2.0.1",
-        "express": "~4.17.3",
+        "express": "~4.20.0",
         "log4js": "^6.9.1",
         "sinon": "^7.4.1",
         "uuid": "^3.3.2"
