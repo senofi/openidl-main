@@ -17,6 +17,7 @@ class PostgresDBManager {
       port: this.dbService.port,
       user: this.dbService.username,
       password: this.dbService.password,
+      ssl: true,
       max: 3,
       idleTimeoutMillis: 0,
       connectionTimeoutMillis: 10000,
