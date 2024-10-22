@@ -13,7 +13,7 @@
     "dev-test": "cross-env NODE_CONFIG_DIR=./server/config nyc mocha --timeout 600000 --exit"
   },
   "dependencies": {
-    "@sendgrid/mail": "^8.0.0",
+    "@sendgrid/mail": "^8.1.4",
     "@senofi/openidl-common-lib": "^1.2.3",
     "config": "^2.0.1",
     "express": "~4.17.3",
