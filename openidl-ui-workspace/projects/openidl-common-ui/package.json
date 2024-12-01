@@ -16,6 +16,6 @@
 		"ngx-csv": "^0.3.2"
 	},
 	"dependencies": {
-		"tslib": "^2.2.0"
+		"tslib": "^2.6.0"
 	}
 }
