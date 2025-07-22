@@ -32,7 +32,7 @@
 		"cookie-parser": "^1.4.5",
 		"cors": "^2.8.5",
 		"express": "^4.17.1",
-		"express-session": "^1.17.2",
+		"express-session": "^1.18.2",
 		"helmet": "^3.6.0",
 		"ibmcloud-appid": "^6.1.1",
 		"log4js": "^6.9.1",
