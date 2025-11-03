@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@elastic/elasticsearch": "^7.12.0",
-    "csvtojson": "^2.0.10",
+    "csvtojson": "^2.0.13",
     "deep-equal": "^2.0.5",
     "elasticsearch": "^16.7.2",
     "json-diff": "^0.5.4",
