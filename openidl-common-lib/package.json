@@ -28,7 +28,7 @@
     "@azure/storage-blob": "^12.15.0",
     "@cloudant/cloudant": "4.5.1",
     "@ibm-functions/iam-token-manager": "^1.0.3",
-    "@kubernetes/client-node": "^0.20.0",
+    "@kubernetes/client-node": "^0.21.0",
     "@sendgrid/mail": "^8.0.0",
     "aws-sdk": "2.1354.0",
     "config": "^2.0.1",
