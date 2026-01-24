@@ -23,7 +23,7 @@
         "helmet": "3.21.2",
         "http-errors": "~1.6.2",
         "js-yaml": "^3.12.0",
-        "lodash": "^4.17.21",
+        "lodash": "^4.17.23",
         "log4js": "^6.9.1",
         "moment": "^2.29.4",
         "node-fetch": "^2.6.1",
